@@ -1,0 +1,13 @@
+[project]
+name = "eren-api"
+version = "0.1.0"
+description = "EREN API service (FastAPI). Programmatic gateway into the Cognitive Operating System."
+requires-python = ">=3.11"
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

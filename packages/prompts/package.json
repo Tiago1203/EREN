@@ -1,0 +1,8 @@
+{
+  "name": "@eren/prompts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Versioned prompt library for EREN cognitive engines.",
+  "main": "src/index.ts",
+  "types": "src/index.ts"
+}

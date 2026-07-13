@@ -1,0 +1,7 @@
+{
+  "name": "@eren/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "EREN desktop application shell (placeholder — no framework wired yet).",
+  "main": "src/index.ts"
+}

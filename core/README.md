@@ -1,0 +1,30 @@
+# core/
+
+The **cognitive core** of EREN — the domain and cognition layer that makes
+EREN a Cognitive Operating System rather than an application.
+
+Each subdirectory is a specialized engine with a single responsibility. They
+are interface-agnostic: they know nothing about web, API, or desktop delivery.
+`apps/*` compose these engines; `core/*` never depends on `apps/*`.
+
+> **Status:** placeholder scaffolding. No business logic, AI, or agents are
+> implemented yet.
+
+## Engines
+
+| Engine | Responsibility |
+| --- | --- |
+| [`orchestrator/`](./orchestrator) | Coordinates engines and manages the cognitive request lifecycle. |
+| [`planner/`](./planner) | Decomposes goals into executable, ordered steps. |
+| [`reasoning/`](./reasoning) | Explainable reasoning strategies over evidence. |
+| [`memory/`](./memory) | Short- and long-term institutional memory. |
+| [`diagnostic/`](./diagnostic) | Clinical-engineering fault analysis and troubleshooting. |
+| [`workflow/`](./workflow) | Long-running multi-step operational processes. |
+| [`knowledge/`](./knowledge) | Structures and serves institutional knowledge. |
+| [`tools/`](./tools) | Registry/adapters for controlled capabilities and integrations. |
+
+## Dependency rules
+
+- `core/*` may depend on `packages/*` (shared contracts/utilities).
+- `core/*` must **not** depend on `apps/*`.
+- Cross-engine calls go **through** the orchestrator where possible.
