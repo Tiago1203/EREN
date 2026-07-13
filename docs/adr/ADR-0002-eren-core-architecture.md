@@ -3,6 +3,17 @@
 ## Status
 Accepted
 
+> **Nota de consistencia (2026-07-13):** los ocho motores canónicos actuales en
+> `core/` son **orchestrator, planner, reasoning, memory, knowledge, diagnostic,
+> workflow, tools**, sobre una capa de contratos común (`core/contracts`). El
+> catálogo original de este ADR incluía Learning, Permission y Audit como
+> motores; hoy se tratan como capacidades transversales/futuras (ver más abajo la
+> sección actualizada de motores). Los motores existen como **esqueletos vacíos y
+> documentados**: no hay lógica, IA ni tecnologías (LangGraph, Qdrant, Redis,
+> RabbitMQ/Kafka, OpenTelemetry) implementadas aún — son dirección objetivo. Ver
+> [CORE_SPECIFICATION.md](../../CORE_SPECIFICATION.md) y
+> [`core/contracts/README.md`](../../core/contracts/README.md).
+
 ## Context
 
 ### Problema
@@ -110,77 +121,80 @@ graph TB
 
 ### Motores Cognitivos de EREN CORE
 
-**1. Reasoning Engine**
-- **Propósito**: Orquestar razonamiento lógico y deductivo
-- **Responsabilidades**:
-  - Clasificación de intentos
-  - Planificación de razonamiento
-  - Coordinación de otros motores
-  - Síntesis de resultados
-- **Tecnologías**: LangGraph, Chain of Thought, Tree of Thoughts
+> Ocho motores canónicos actuales en `core/`. Cada uno implementa el contrato
+> homónimo en `core/contracts`; el orchestrator coordina a los demás. Las
+> tecnologías listadas son **dirección objetivo**, no implementadas aún.
 
-**2. Knowledge Engine**
-- **Propósito**: Gestionar y recuperar conocimiento estructurado
+**1. Orchestrator Engine**
+- **Propósito**: Coordinar los motores y el ciclo de vida de la petición cognitiva
 - **Responsabilidades**:
-  - Ingesta de conocimiento
-  - Indexación y embeddings
-  - Búsqueda vectorial híbrida
-  - Validación de conocimiento
-- **Tecnologías**: Qdrant, OpenAI Embeddings, Reranking
+  - Clasificación/enrutamiento de la petición
+  - Decidir qué motores intervienen y en qué orden
+  - Mover datos entre motores y gestionar estado intermedio
+  - Ensamblar el resultado final explicable
+- **Contrato**: `CognitiveEngine` (coordinador)
 
-**3. Memory Engine**
+**2. Planner Engine**
+- **Propósito**: Descomponer objetivos en planes ordenados y ejecutables
+- **Responsabilidades**:
+  - Descomposición de tareas y secuenciación
+  - Manejo de dependencias
+  - Re-planificación dinámica
+- **Contrato**: `Planner[Goal, Plan]`
+
+**3. Reasoning Engine**
+- **Propósito**: Razonamiento explicable sobre evidencia
+- **Responsabilidades**:
+  - Aplicar estrategias de razonamiento
+  - Producir conclusiones con justificación auditable
+  - Evaluación de confianza
+- **Contrato**: `Reasoning[Question, Evidence, Conclusion]`
+
+**4. Memory Engine**
 - **Propósito**: Gestionar memoria a corto y largo plazo
 - **Responsabilidades**:
-  - Memoria de conversaciones
-  - Memoria de contexto de usuario
-  - Memoria episódica de casos
-  - Memoria semántica de conceptos
-- **Tecnologías**: Redis, PostgreSQL, Vector DB
+  - Memoria de conversaciones y contexto de usuario
+  - Memoria episódica/semántica
+  - Consolidación y olvido selectivo
+- **Contrato**: `Memory[Record, Query]`
 
-**4. Learning Engine**
-- **Propósito**: Aprendizaje automático de patrones
+**5. Knowledge Engine**
+- **Propósito**: Estructurar, indexar y servir conocimiento institucional
 - **Responsabilidades**:
-  - Entrenamiento de modelos
-  - Predicción de fallas
-  - Optimización de procesos
-  - Detección de anomalías
-- **Tecnologías**: scikit-learn, PyTorch (futuro)
+  - Ingesta de conocimiento (KB, Case Base, Document Base)
+  - Indexación y búsqueda
+  - Citación de fuentes
+- **Contrato**: `Knowledge[Item, Query]`
 
-**5. Planning Engine**
-- **Propósito**: Planificación de tareas complejas
+**6. Diagnostic Engine**
+- **Propósito**: Análisis de fallas de equipos clínicos
 - **Responsabilidades**:
-  - Descomposición de tareas
-  - Planificación de workflows
-  - Optimización de recursos
-  - Programación de mantenimiento
-- **Tecnologías**: Graph algorithms, Optimization
+  - Análisis de síntomas
+  - Hipótesis de diagnóstico priorizadas y justificadas
+  - Recomendación de soluciones
+- **Contrato**: `Diagnostic[Symptoms, Diagnosis]`
 
-**6. Tool Engine**
-- **Propósito**: Ejecución de herramientas externas
+**7. Workflow Engine**
+- **Propósito**: Procesos operativos duraderos multi-paso
+- **Responsabilidades**:
+  - Definición y ejecución de workflows
+  - Coordinación de pasos y estados
+  - Progreso de instancias
+- **Contrato**: `Workflow[Definition, Instance, State]`
+
+**8. Tool Engine**
+- **Propósito**: Registro/adaptadores para capacidades externas controladas
 - **Responsabilidades**:
   - Registro de herramientas
-  - Ejecución segura
-  - Manejo de errores
-  - Timeout handling
-- **Tecnologías**: Python subprocess, API clients
+  - Invocación uniforme y gobernable
+  - Manejo de errores/timeout
+- **Contrato**: `Tool[TInput, TOutput]` (por adaptador; no es un `CognitiveEngine`)
 
-**7. Permission Engine**
-- **Propósito**: Control de permisos y autorización
-- **Responsabilidades**:
-  - Verificación de permisos
-  - Role-based access control
-  - Attribute-based access control
-  - Auditoría de accesos
-- **Tecnologías**: Custom RBAC/ABAC
-
-**8. Audit Engine**
-- **Propósito**: Auditoría completa de acciones
-- **Responsabilidades**:
-  - Logging estructurado
-  - Tracing distribuido
-  - Metrics collection
-  - Alert generation
-- **Tecnologías**: OpenTelemetry, Prometheus, Loki
+> **Capacidades transversales/futuras** (antes modeladas como motores): Learning
+> (ML), Permission/autorización y Audit. Se tratan como infraestructura
+> transversal o motores futuros — ver
+> [docs/core/eren-core-cognitive-engines.md](../core/eren-core-cognitive-engines.md)
+> y [MASTER_ROADMAP.md](../../MASTER_ROADMAP.md).
 
 ### Arquitectura de Comunicación
 

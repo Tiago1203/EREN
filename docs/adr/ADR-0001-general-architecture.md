@@ -3,6 +3,21 @@
 ## Status
 Accepted
 
+> **Nota de numeración (2026-07-13):** existen dos archivos con el prefijo
+> `ADR-0001` en este directorio (este, sobre arquitectura general, y
+> `ADR-0001-cognitive-operating-system.md`). Se conservan ambos por historial; el
+> índice ([README.md](./README.md)) documenta la duplicidad. Este ADR debe leerse
+> como el **destino arquitectónico** aceptado.
+>
+> **Nota de consistencia (2026-07-13):** el repositorio implementa hoy la *base*
+> de esta arquitectura como un **monorepo** (apps thin, `core/` con ocho motores
+> + `core/contracts`, `packages/`, `infrastructure/`). Los elementos distribuidos
+> (event bus, CQRS, microservicios, Qdrant, Redis, runtime multiagente) siguen
+> siendo dirección objetivo, **no implementada aún**. Ver
+> [ARCHITECTURE_OVERVIEW.md](../../ARCHITECTURE_OVERVIEW.md),
+> [SYSTEM_DESIGN.md](../../SYSTEM_DESIGN.md) y
+> [MASTER_ROADMAP.md](../../MASTER_ROADMAP.md).
+
 ## Contexto
 
 EREN es una plataforma de Inteligencia Artificial para Ingeniería Clínica que debe:

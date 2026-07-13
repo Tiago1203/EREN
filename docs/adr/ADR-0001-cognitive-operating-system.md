@@ -3,6 +3,15 @@
 ## Status
 Accepted
 
+> **Nota de consistencia (2026-07-13):** La arquitectura actual materializa este
+> COS como un **monorepo** con una capa cognitiva `core/` de **ocho motores**
+> (orchestrator, planner, reasoning, memory, knowledge, diagnostic, workflow,
+> tools) sobre una **capa de contratos** (`core/contracts`). Las
+> responsabilidades de permisos, auditoría y aprendizaje descritas más abajo se
+> tratan hoy como capacidades transversales/futuras. Ver
+> [ARCHITECTURE_OVERVIEW.md](../../ARCHITECTURE_OVERVIEW.md) y
+> [CORE_SPECIFICATION.md](../../CORE_SPECIFICATION.md).
+
 ## Context
 
 ### Problema
@@ -47,14 +56,19 @@ Un Cognitive Operating System es una plataforma que:
 EREN se compone de tres capas fundamentales:
 
 **Capa 1: EREN CORE (Cognitive Operating System)**
-- Reasoning Engine: Razonamiento lógico y deductivo
-- Knowledge Engine: Gestión y recuperación de conocimiento
+
+Motores cognitivos canónicos actuales (`core/`), sobre `core/contracts`:
+- Orchestrator Engine: Coordina los motores y el ciclo de vida de la petición cognitiva
+- Planner Engine: Descompone objetivos en planes ordenados y re-planifica
+- Reasoning Engine: Razonamiento explicable sobre evidencia
 - Memory Engine: Memoria a corto y largo plazo
-- Learning Engine: Aprendizaje automático
-- Planning Engine: Planificación de tareas complejas
-- Tool Engine: Ejecución de herramientas externas
-- Permission Engine: Control de permisos y autorización
-- Audit Engine: Auditoría completa de acciones
+- Knowledge Engine: Gestión y recuperación de conocimiento institucional
+- Diagnostic Engine: Análisis de fallas de equipos clínicos
+- Workflow Engine: Procesos operativos duraderos multi-paso
+- Tool Engine: Registro/adaptadores para capacidades externas controladas
+
+> Capacidades transversales/futuras (no motores canónicos hoy): aprendizaje
+> (Learning), permisos/autorización (Permission) y auditoría (Audit).
 
 **Capa 2: Dominios de Negocio**
 - Equipment Domain: Gestión de equipos médicos

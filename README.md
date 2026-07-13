@@ -3,9 +3,9 @@
 > **Sistema Operativo Cognitivo especializado en Ingeniería Clínica**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Next.js](https://img.shields.io/badge/Next.js-14-black.svg)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
+[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black.svg)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue.svg)](https://www.typescriptlang.org/)
 
 ---
 
@@ -14,6 +14,15 @@
 EREN es un **Cognitive Operating System (COS)** especializado en Ingeniería Clínica. No es una aplicación, no es un chatbot, no es un asistente. Es un sistema operativo cognitivo que orquesta procesos de pensamiento, gestiona conocimiento institucional, y amplifica la capacidad humana.
 
 **Para la máxima autoridad del proyecto, ver [VISION.md](./VISION.md).**
+
+> **Estado actual:** el repositorio está en fase de **scaffolding de arquitectura**.
+> Existen el monorepo, el esqueleto del backend (FastAPI), los esqueletos de los
+> ocho motores cognitivos y la capa de contratos. **Aún no hay lógica de negocio,
+> IA ni agentes implementados.** Documentos canónicos:
+> [ARCHITECTURE_OVERVIEW.md](./ARCHITECTURE_OVERVIEW.md) ·
+> [SYSTEM_DESIGN.md](./SYSTEM_DESIGN.md) ·
+> [CORE_SPECIFICATION.md](./CORE_SPECIFICATION.md) ·
+> [MASTER_ROADMAP.md](./MASTER_ROADMAP.md).
 
 ---
 
@@ -40,7 +49,7 @@ Capturar, preservar y amplificar el conocimiento técnico de ingeniería clínic
 ### Objetivos Técnicos
 
 1. **Arquitectura para 15 Años**: Sistema diseñado para escalar a 10,000+ hospitales
-2. **Motores Cognitivos Especializados**: Reasoning, Knowledge, Memory, Learning, Planning
+2. **Motores Cognitivos Especializados**: Orchestrator, Planner, Reasoning, Memory, Knowledge, Diagnostic, Workflow, Tools
 3. **IA Responsable**: Explicabilidad obligatoria, auditoría completa, control humano
 4. **Seguridad por Diseño**: Compliance con HIPAA/GDPR, encryption, RLS
 5. **Multi-Interfaz**: Conversacional, visual, programática, móvil
@@ -73,15 +82,18 @@ Capturar, preservar y amplificar el conocimiento técnico de ingeniería clínic
 
 ### Tres Capas Fundamentales
 
-**Capa 1: EREN CORE (Cognitive Operating System)**
-- Reasoning Engine: Razonamiento lógico y deductivo
-- Knowledge Engine: Gestión y recuperación de conocimiento
+**Capa 1: EREN CORE (Cognitive Operating System)** — ocho motores canónicos sobre `core/contracts`:
+- Orchestrator Engine: Coordina los motores y el ciclo de vida cognitivo
+- Planner Engine: Descompone objetivos en planes ordenados
+- Reasoning Engine: Razonamiento explicable sobre evidencia
 - Memory Engine: Memoria a corto y largo plazo
-- Learning Engine: Aprendizaje automático
-- Planning Engine: Planificación de tareas complejas
-- Tool Engine: Ejecución de herramientas externas
-- Permission Engine: Control de permisos y autorización
-- Audit Engine: Auditoría completa de acciones
+- Knowledge Engine: Gestión y recuperación de conocimiento institucional
+- Diagnostic Engine: Análisis de fallas de equipos clínicos
+- Workflow Engine: Procesos operativos duraderos multi-paso
+- Tool Engine: Registro/adaptadores de capacidades externas
+
+> Aprendizaje (Learning), permisos (Permission) y auditoría (Audit) se tratan como
+> capacidades transversales/futuras. Detalle en [CORE_SPECIFICATION.md](./CORE_SPECIFICATION.md).
 
 **Capa 2: Dominios de Negocio**
 - Equipment Domain: Gestión de equipos médicos
@@ -171,68 +183,53 @@ npm run lint    # lint de la app web
 - **Investigadores**: Acceso a datos para investigación biomédica
 - **Estudiantes**: Formación en ingeniería clínica
 
-## Alcance de v0.1.0 (MVP)
+## Estado actual vs. Roadmap
 
-### Motores Cognitivos Fundamentales
+> **Importante:** lo listado en el *roadmap* abajo describe funcionalidad
+> **planificada**, no implementada. Hoy el repositorio contiene únicamente
+> *scaffolding* de arquitectura. Ver [MASTER_ROADMAP.md](./MASTER_ROADMAP.md).
 
-**EREN CORE v0.1.0 incluye 5 motores cognitivos:**
-1. **Reasoning Engine**: Razonamiento lógico básico
-2. **Knowledge Engine**: Gestión y recuperación de conocimiento
-3. **Memory Engine**: Memoria de conversaciones y contexto
-4. **Tool Engine**: Ejecución de herramientas externas
-5. **Permission Engine**: Control de permisos y autorización
+### Implementado hoy (scaffolding)
 
-### Funcionalidades Incluidas
+- **Monorepo** (`apps/`, `core/`, `packages/`, `infrastructure/`, `docs/`, `tests/`) con npm workspaces y README por carpeta.
+- **apps/web**: app Next.js existente reubicada en `apps/web` (`@eren/web`), comportamiento preservado.
+- **apps/api**: esqueleto FastAPI de arquitectura limpia; único endpoint `GET /api/v1/health`.
+- **core/**: ocho motores como clases vacías documentadas.
+- **core/contracts/**: interfaces SOLID (`CognitiveEngine`, `Tool`, `Planner`, `Memory`, `Knowledge`, `Workflow`, `Diagnostic`, `Reasoning`).
 
-#### Core
-- Sistema de autenticación multi-hospital
-- Gestión de inventario de equipos médicos
-- Registro de órdenes de mantenimiento
-- Sistema de casos resueltos
-- Búsqueda vectorial de conocimiento técnico
-- Interfaz conversacional (chat)
+### Planificado — v0.1.0 (MVP)
 
-#### Bases de Conocimiento
-- Knowledge Base: Manuales técnicos y documentación
-- Case Base: Casos de mantenimiento resueltos
-- Memory Base: Memoria de conversaciones y contexto
-- Document Base: Protocolos y normativas
+- Autenticación multi-hospital (Supabase Auth)
+- Inventario de equipos y órdenes de mantenimiento
+- Case Base y búsqueda vectorial de conocimiento técnico
+- Punto de entrada conversacional a través de `core/orchestrator`
+- Cuatro bases de conocimiento (KB, CB, MB, DB)
 
-#### Infraestructura
-- Backend FastAPI con arquitectura limpia
-- Frontend Next.js con TypeScript
-- Base de datos Supabase (PostgreSQL)
-- Vector database Qdrant
-- Docker para contenedores
-- Logging estructurado
-- Tests básicos
+### Planificado — versiones posteriores
 
-### Funcionalidades NO Incluidas (Futuro)
+- Learning (ML), permisos granulares y auditoría avanzada
+- Multi-hospital colaborativo; integraciones HL7/DICOM/FHIR; móvil nativo
 
-- Learning Engine (aprendizaje automático) - v2.0.0
-- Planning Engine (planificación compleja) - v2.0.0
-- Diagnostic Engine (diagnóstico avanzado) - v3.0.0
-- Workflow Engine (workflows automatizados) - v2.0.0
-- Audit Engine (auditoría avanzada) - v2.0.0
-- Multi-hospital colaborativo - v3.0.0
-- Integración con sistemas hospitalarios (HL7, DICOM) - v3.0.0
-- Móvil (app nativa) - v2.0.0
+> Desglose completo por versión en [docs/roadmap/complete-roadmap.md](./docs/roadmap/complete-roadmap.md).
 
 ## Tecnologías
 
-### Frontend
-- **Next.js 14**: Framework React con App Router
-- **TypeScript 5.0**: Type safety
-- **TailwindCSS**: Estilos utility-first
-- **shadcn/ui**: Componentes UI modernos
-- **Lucide React**: Iconos
+### Frontend (`apps/web`)
+- **Next.js 16** (App Router, React 19)
+- **TypeScript 5**: Type safety
+- **Tailwind CSS 4** (vía `@tailwindcss/postcss`): estilos utility-first
+- **Supabase** (`@supabase/ssr`, `@supabase/supabase-js`): auth/sesión
 
-### Backend
-- **Python 3.11+**: Lenguaje principal
+### Backend (`apps/api`)
+- **Python 3.12**: Lenguaje principal
 - **FastAPI**: Framework web asíncrono
-- **uv**: Gestión de paquetes Python
-- **Pydantic**: Validación de datos
-- **LangChain**: Framework para agentes de IA
+- **uv**: Gestión de paquetes y entornos Python
+- **Pydantic v2**: Validación de datos
+- **SQLAlchemy 2 (async) + Alembic**: ORM y migraciones
+- **Ruff** y **Pytest**: lint/formato y tests
+
+> **Nota:** frameworks de IA/agentes (p. ej. LangChain/LangGraph) son dirección
+> objetivo, aún **no** integrados.
 
 ### Base de Datos
 - **Supabase**: PostgreSQL como servicio
@@ -241,28 +238,23 @@ npm run lint    # lint de la app web
   - Storage (archivos)
   - Realtime (WebSockets)
 
-### Vector Database
-- **Qdrant**: Base de datos vectorial
-  - Búsqueda semántica
-  - Similitud de documentos
-  - Escalabilidad horizontal
+### Vector Database (planificado)
+- **Qdrant**: Base de datos vectorial (búsqueda semántica, similitud, escala horizontal)
 
-### IA/ML
-- **OpenAI GPT-4**: Modelos de lenguaje (inicial)
+### IA/ML (planificado)
+- **OpenAI GPT-4** / modelos de lenguaje
 - **LangGraph**: Orquestación de agentes
 - **Embeddings**: OpenAI text-embedding-3
 
-### Infraestructura
-- **Docker**: Contenedores
-- **Docker Compose**: Orquestación local
-- **GitHub**: Control de versiones
-- **GitHub Actions**: CI/CD (futuro)
+### Infraestructura (parcial / planificado)
+- **GitHub**: Control de versiones (en uso)
+- **Docker** / **Docker Compose**: contenedores y orquestación local (planificado)
+- **GitHub Actions**: CI/CD (planificado)
 
 ### Desarrollo
 - **uv**: Gestión de entornos Python
-- **pnpm**: Gestión de paquetes Node.js
-- **WSL2**: Entorno de desarrollo en Windows
-- **VS Code/Cursor/DevIn**: Editores de código
+- **npm workspaces**: Gestión de paquetes Node.js (monorepo)
+- **VS Code/Cursor/Devin**: Editores de código
 
 ## Filosofía del Proyecto
 
@@ -281,20 +273,23 @@ EREN se rige por los principios establecidos en [VISION.md](./VISION.md) y [EREN
 
 ## Roadmap Resumido
 
+> Hoja de ruta **planificada**. El detalle reconciliado con el estado actual está
+> en [MASTER_ROADMAP.md](./MASTER_ROADMAP.md).
+
 ### v0.1.0 - MVP (Q3 2026)
-- EREN CORE con 5 motores cognitivos fundamentales
+- Primeros motores operativos: orchestrator, knowledge, memory, reasoning, tools
 - Interfaz conversacional como punto de entrada
 - 4 bases de conocimiento (KB, CB, MB, DB)
-- 50 hospitales piloto
+- 2 hospitales piloto
 
 ### v0.2.0 - Core (Q4 2026)
-- Learning Engine y Planning Engine
-- Workflow Engine y Audit Engine
+- Planner Engine y Workflow Engine operativos
+- Permisos granulares (transversal)
 - Mejoras en UI/UX
 - Tests completos
 
 ### v0.3.0 - Advanced (Q1 2027)
-- Diagnostic Engine
+- Diagnostic Engine operativo
 - Multi-hospital colaborativo (opcional)
 - Móvil web
 - Integración básica HL7
@@ -337,8 +332,15 @@ EREN se rige por los principios establecidos en [VISION.md](./VISION.md) y [EREN
 - [TECH_BIBLE.md](./TECH_BIBLE.md) - Constitución técnica del proyecto
 - [PROJECT_BOOTSTRAP.md](./PROJECT_BOOTSTRAP.md) - Guía profesional de instalación
 
-**Arquitectura**
+**Documentos Canónicos de Arquitectura**
+- [ARCHITECTURE_OVERVIEW.md](./ARCHITECTURE_OVERVIEW.md) - Mapa de alto nivel de la arquitectura actual
+- [SYSTEM_DESIGN.md](./SYSTEM_DESIGN.md) - Diseño a nivel de componentes y runtime
+- [CORE_SPECIFICATION.md](./CORE_SPECIFICATION.md) - Especificación del núcleo cognitivo (`core/`)
+- [MASTER_ROADMAP.md](./MASTER_ROADMAP.md) - Hoja de ruta reconciliada con el estado actual
+
+**Arquitectura (detalle)**
 - [docs/adr/](./docs/adr/) - Architecture Decision Records (índice por categorías)
+- [core/contracts/](./core/contracts/) - Capa de contratos SOLID de los motores
 - [docs/core/](./docs/core/) - EREN CORE: diseño de motores cognitivos
 - [docs/domain/](./docs/domain/) - Dominios de negocio (DDD)
 - [docs/knowledge/](./docs/knowledge/) - Arquitectura del conocimiento

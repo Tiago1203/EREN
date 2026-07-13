@@ -2,7 +2,32 @@
 
 Este directorio contiene los Architecture Decision Records de EREN. Los ADRs documentan decisiones arquitectónicas importantes, su contexto, consecuencias y alternativas consideradas.
 
-## Índice Oficial por Categorías
+> **Documentos canónicos relacionados:**
+> [ARCHITECTURE_OVERVIEW.md](../../ARCHITECTURE_OVERVIEW.md) ·
+> [SYSTEM_DESIGN.md](../../SYSTEM_DESIGN.md) ·
+> [CORE_SPECIFICATION.md](../../CORE_SPECIFICATION.md) ·
+> [MASTER_ROADMAP.md](../../MASTER_ROADMAP.md)
+
+## ADRs escritos (archivos existentes)
+
+Estos son los únicos ADRs que existen como archivo en este directorio hoy:
+
+- [ADR-0001: EREN es un Cognitive Operating System, no un chatbot](./ADR-0001-cognitive-operating-system.md) — **Accepted**
+- [ADR-0001: Arquitectura General de EREN](./ADR-0001-general-architecture.md) — **Accepted**
+- [ADR-0002: Arquitectura General de EREN CORE](./ADR-0002-eren-core-architecture.md) — **Accepted**
+
+> **⚠️ Numeración duplicada:** existen dos archivos con el prefijo `ADR-0001`
+> (`-cognitive-operating-system` y `-general-architecture`). Se conservan ambos
+> por historial y no se renombran para no romper enlaces. El primero define la
+> **identidad** del producto (COS); el segundo, la **arquitectura general**. Una
+> futura re-numeración deberá tratarse en su propio ADR.
+
+## Índice planificado por categorías
+
+> **Nota:** el índice siguiente es un **catálogo planificado**. Salvo los tres
+> ADRs listados arriba, estas entradas **aún no tienen archivo**: son decisiones
+> previstas, no ADRs escritos ni aceptados. Se conservan como hoja de ruta de
+> documentación.
 
 ### Arquitectura
 
@@ -23,26 +48,35 @@ Este directorio contiene los Architecture Decision Records de EREN. Los ADRs doc
 
 ### Frontend
 
-- **ADR-0020**: Selección de Next.js 14 como Framework Frontend
+- **ADR-0020**: Selección de Next.js (App Router) como Framework Frontend
 - **ADR-0021**: Estrategia de TypeScript Strict Mode
 - **ADR-0022**: Arquitectura de Componentes con shadcn/ui
 - **ADR-0023**: Gestión de Estado con Zustand
 - **ADR-0024**: Estrategia de Server Components vs Client Components
 - **ADR-0025**: Optimización de Performance y Bundle Size
 
-### IA
+### IA / Motores Cognitivos
+
+> Los ocho motores canónicos actuales son: orchestrator, planner, reasoning,
+> memory, knowledge, diagnostic, workflow, tools (ver
+> [CORE_SPECIFICATION.md](../../CORE_SPECIFICATION.md)). Learning, Permission y
+> Audit se planifican como capacidades transversales/futuras.
 
 - **ADR-0030**: Arquitectura de Motores Cognitivos
-- **ADR-0031**: Reasoning Engine Design
-- **ADR-0032**: Knowledge Engine Design
-- **ADR-0033**: Memory Engine Design
-- **ADR-0034**: Learning Engine Design
-- **ADR-0035**: Planning Engine Design
-- **ADR-0036**: Tool Engine Design
-- **ADR-0037**: Permission Engine Design
-- **ADR-0038**: Audit Engine Design
-- **ADR-0039**: Estrategia de Multi-LLM Abstraction
-- **ADR-0040**: Estrategia de Embeddings y Búsqueda Vectorial
+- **ADR-0031**: Orchestrator Engine Design
+- **ADR-0032**: Planner Engine Design
+- **ADR-0033**: Reasoning Engine Design
+- **ADR-0034**: Memory Engine Design
+- **ADR-0035**: Knowledge Engine Design
+- **ADR-0036**: Diagnostic Engine Design
+- **ADR-0037**: Workflow Engine Design
+- **ADR-0038**: Tool Engine Design
+- **ADR-0039**: Capa de Contratos de Motores (SOLID / `core/contracts`)
+- **ADR-0040**: Estrategia de Multi-LLM Abstraction
+- **ADR-0041**: Estrategia de Embeddings y Búsqueda Vectorial
+- **ADR-0042**: Learning Engine Design (futuro / transversal)
+- **ADR-0043**: Permission Engine Design (futuro / transversal)
+- **ADR-0044**: Audit Engine Design (futuro / transversal)
 
 ### Seguridad
 
@@ -187,16 +221,16 @@ Cada ADR sigue el formato estándar de Architecture Decision Records:
 
 ## ADRs Activos
 
-Los siguientes ADRs están actualmente activos:
+Los siguientes ADRs están escritos y aceptados (Accepted):
 
-- ADR-0001: ¿Por qué EREN es un Cognitive Operating System y no un chatbot? (Pending)
-- ADR-0002: Arquitectura General de EREN CORE (Pending)
+- [ADR-0001: EREN es un Cognitive Operating System, no un chatbot](./ADR-0001-cognitive-operating-system.md)
+- [ADR-0001: Arquitectura General de EREN](./ADR-0001-general-architecture.md)
+- [ADR-0002: Arquitectura General de EREN CORE](./ADR-0002-eren-core-architecture.md)
 
 ## ADRs Propuestos
 
-Los siguientes ADRs están propuestos pero no aceptados:
-
-- (Ninguno actualmente)
+El resto de entradas del índice por categorías son decisiones **planificadas** que
+aún no tienen archivo. Se documentarán con el formato oficial cuando se aborden.
 
 ## ADRs Deprecados
 
@@ -212,5 +246,5 @@ Los siguientes ADRs han sido reemplazados por versiones más recientes:
 
 ---
 
-**Última actualización**: 2026-07-10  
-**Alineado con**: VISION.md v1.0.0
+**Última actualización**: 2026-07-13  
+**Alineado con**: VISION.md, ARCHITECTURE_OVERVIEW.md, CORE_SPECIFICATION.md, MASTER_ROADMAP.md
