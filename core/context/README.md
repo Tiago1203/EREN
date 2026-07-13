@@ -1,194 +1,195 @@
-# core/context/ — Cognitive Context
+# core/context/ — Cognitive Context & Blackboard System
 
-The **Context Engine** owns `CognitiveContext`: the single object that travels
-through every cognitive engine during one interaction. It is EREN's shared,
-serializable "state of the conversation".
+> **EREN NO crea copias del contexto. Todos los motores enriquecen el MISMO contexto.**
 
-> **Status:** architecture only. This module contains a **declarative Pydantic
-> v2 model and its documentation** — no business logic, no AI, no LLM calls.
-> Populating, validating, and persisting the context belongs to the engines and
-> services that consume it, not here.
+El **Cognitive Context & Blackboard System (CCBS)** es el nucleo del procesamiento
+cognitivo de EREN. Todos los motores comparten UN contexto unico.
 
-## Why it exists
+---
 
-Cognitive engines (orchestrator, planner, reasoning, memory, knowledge,
-diagnostic, workflow, tools) must collaborate without coupling to each other.
-Instead of passing ad-hoc arguments between them, EREN passes **one context
-object** that each engine reads from and writes back to. This gives the system:
+## Paradigma
 
-- **A single source of truth** for an interaction's state.
-- **Explainability & auditability**: the context accumulates the plan, the
-  engines/tools executed, the knowledge retrieved and the citations, so the
-  final answer is fully traceable.
-- **Loose coupling**: engines depend on the context shape, not on each other.
-- **Multi-tenant safety**: user, organization and hospital identity travel with
-  every request.
+```
+ANTIGUO: Motores crean copias del contexto
+==========================================
 
-## Shape of the context
+Motor A -> Copia A -> Copia B <- Motor B no ve a Motor A
+                              |
+                         Copia C <- Motor C no ve nada
 
-`CognitiveContext` composes cohesive sub-models. Every field has an empty
-default, so the context can be built up incrementally as it flows through the
-pipeline.
 
-| Group | Sub-model | Fields |
-| --- | --- | --- |
-| Identity | `Identity` | `request_id`, `session_id`, `timestamp` |
-| User | `UserInfo` | `user_id`, `user_role`, `organization_id` |
-| Clinical | `ClinicalContext` | `hospital_id`, `department`, `device_id`, `device_type`, `manufacturer`, `model` |
-| Conversation | `Conversation` | `original_input`, `normalized_input`, `detected_language`, `conversation_history` |
-| Cognitive state | `CognitiveState` | `detected_intent`, `confidence`, `current_plan`, `current_step`, `executed_engines`, `executed_tools` |
-| Memory | `MemoryState` | `short_term_memory`, `long_term_memory` |
-| Knowledge | `KnowledgeState` | `retrieved_documents`, `retrieved_cases`, `regulations` |
-| Result | `ResultState` | `intermediate_results`, `final_response` |
-| Metadata | `ExecutionMetadata` | `execution_time`, `warnings`, `citations` |
+NUEVO: UN contexto compartido
+=============================
 
-Supporting value models: `ConversationTurn`, `MemoryRecord`,
-`RetrievedDocument`, `RetrievedCase`, `Regulation`, `Citation`; enums:
-`UserRole`, `MessageRole`.
-
-## Composition (class diagram)
-
-```mermaid
-classDiagram
-    class CognitiveContext {
-        +Identity identity
-        +UserInfo user
-        +ClinicalContext clinical
-        +Conversation conversation
-        +CognitiveState cognitive_state
-        +MemoryState memory
-        +KnowledgeState knowledge
-        +ResultState result
-        +ExecutionMetadata metadata
-    }
-    class Identity {
-        +str request_id
-        +str session_id
-        +datetime timestamp
-    }
-    class UserInfo {
-        +str user_id
-        +UserRole user_role
-        +str organization_id
-    }
-    class ClinicalContext {
-        +str hospital_id
-        +str department
-        +str device_id
-        +str device_type
-        +str manufacturer
-        +str model
-    }
-    class Conversation {
-        +str original_input
-        +str normalized_input
-        +str detected_language
-        +ConversationTurn[] conversation_history
-    }
-    class CognitiveState {
-        +str detected_intent
-        +float confidence
-        +str[] current_plan
-        +int current_step
-        +str[] executed_engines
-        +str[] executed_tools
-    }
-    class MemoryState {
-        +MemoryRecord[] short_term_memory
-        +MemoryRecord[] long_term_memory
-    }
-    class KnowledgeState {
-        +RetrievedDocument[] retrieved_documents
-        +RetrievedCase[] retrieved_cases
-        +Regulation[] regulations
-    }
-    class ResultState {
-        +dict intermediate_results
-        +str final_response
-    }
-    class ExecutionMetadata {
-        +float execution_time
-        +str[] warnings
-        +Citation[] citations
-    }
-
-    CognitiveContext *-- Identity
-    CognitiveContext *-- UserInfo
-    CognitiveContext *-- ClinicalContext
-    CognitiveContext *-- Conversation
-    CognitiveContext *-- CognitiveState
-    CognitiveContext *-- MemoryState
-    CognitiveContext *-- KnowledgeState
-    CognitiveContext *-- ResultState
-    CognitiveContext *-- ExecutionMetadata
-    Conversation *-- ConversationTurn
-    MemoryState *-- MemoryRecord
-    KnowledgeState *-- RetrievedDocument
-    KnowledgeState *-- RetrievedCase
-    KnowledgeState *-- Regulation
-    ExecutionMetadata *-- Citation
+                    +------------------+
+                    | CognitiveContext |
+                    |   (UNICO)       |
+                    +--------+---------+
+                             |
+     +-----------------------+-----------------------+
+     |                       |                       |
+     v                       v                       v
+Motor A                  Motor B                Motor C
+(escribe/leer)          (escribe/leer)        (escribe/leer)
 ```
 
-## How it flows through the engines
+---
 
-The orchestrator creates one context per interaction and threads it through the
-engines. Each engine **enriches** the context and passes it on; the object is
-the carrier of state, not an actor.
+## Componentes
 
-```mermaid
-flowchart LR
-    IN([User input]) --> ORCH[Orchestrator]
-    ORCH -->|creates & threads| CTX{{CognitiveContext}}
-    CTX --> PLAN[Planner]
-    PLAN -->|current_plan / current_step| CTX
-    CTX --> MEM[Memory]
-    MEM -->|short/long_term_memory| CTX
-    CTX --> KNOW[Knowledge]
-    KNOW -->|retrieved_documents / cases / regulations| CTX
-    CTX --> REAS[Reasoning]
-    REAS -->|intermediate_results / citations| CTX
-    CTX --> ORCH
-    ORCH -->|final_response| OUT([Response])
+| Archivo | Descripcion |
+|---------|-------------|
+| `cognitive_context.py` | CognitiveContext - contexto compartido |
+| `blackboard.py` | CognitiveBlackboard - espacio compartido |
+| `context_manager.py` | ContextManager - gestion de contextos |
+| `context_history.py` | ContextHistory - auditoria |
+| `context_snapshot.py` | ContextSnapshot - snapshots |
+| `context_types.py` | Tipos: Evidence, Hypothesis, Confidence... |
+| `exceptions.py` | Jerarquia de excepciones |
+| `models.py` | Modelos Pydantic (legacy) |
+
+---
+
+## CognitiveContext
+
+```python
+@dataclass
+class CognitiveContext:
+    # Identity
+    context_id: str
+    version: int
+    
+    # Context
+    user: UserContext
+    hospital: HospitalContext
+    device: DeviceContext
+    incident: IncidentContext
+    
+    # Processing
+    status: ContextStatus
+    current_stage: ProcessingStage
+    
+    # Results
+    intent: IntentResult
+    evidence: tuple[Evidence, ...]
+    hypotheses: tuple[Hypothesis, ...]
+    diagnosis: DiagnosisResult
+    response: ResponseResult
+    
+    # Confidence
+    overall_confidence: Confidence
+    
+    # Blackboard
+    blackboard: tuple[BlackboardEntry, ...]
 ```
 
-```mermaid
-sequenceDiagram
-    participant Caller
-    participant Orchestrator
-    participant Engine as Cognitive Engine
-    Caller->>Orchestrator: input
-    Orchestrator->>Orchestrator: create CognitiveContext
-    loop for each planned step
-        Orchestrator->>Engine: read CognitiveContext
-        Engine-->>Orchestrator: enriched CognitiveContext
-    end
-    Orchestrator-->>Caller: result.final_response (+ citations, warnings)
+---
+
+## CognitiveBlackboard
+
+Todos los motores pueden:
+- **Leer** entradas de otros motores
+- **Escribir** sus propias entradas
+- **Nunca** modificar el trabajo de otros
+
+```python
+blackboard = CognitiveBlackboard()
+
+# Motor A escribe evidencia
+blackboard.write_evidence(
+    engine_id="diagnostic_engine",
+    evidence=Evidence(...),
+)
+
+# Motor B lee evidencia
+evidence = blackboard.read_evidence()
+
+# Motor B anade hipotesis
+blackboard.write_hypothesis(
+    engine_id="reasoning_engine",
+    hypothesis=Hypothesis(...),
+)
 ```
 
-## Design notes
+---
 
-- **Pydantic v2** models with `extra="forbid"` to keep the contract explicit.
-- **Empty defaults everywhere** so the context can be assembled incrementally.
-- `current_plan` is modeled as ordered step descriptions (`list[str]`) to keep
-  the context **decoupled** from the Planner's own `Plan`/`PlanStep` types. The
-  orchestrator maps between them.
-- `intermediate_results` is an open map keyed by engine/tool name; each engine
-  owns the interpretation of its own entry.
-- The pre-existing lightweight `CognitiveContext` dataclass in
-  `core/orchestrator/models.py` is a **local** orchestration placeholder; this
-  package is the **canonical** context model. Aligning the orchestrator to use
-  it is future work and is intentionally **not** done here (this change must not
-  modify other engines).
+## Estados del Contexto
+
+```
+INITIALIZING -> PROCESSING -> COMPLETED
+                    |
+              PENDING_EVIDENCE
+              PENDING_HYPOTHESIS
+              PENDING_DIAGNOSIS
+                    |
+              FAILED / CANCELLED
+```
+
+---
+
+## API Rapida
+
+```python
+from core.context import (
+    CognitiveContext,
+    CognitiveBlackboard,
+    ContextManager,
+    Evidence,
+    Hypothesis,
+)
+
+# Crear contexto
+context = CognitiveContext.create(
+    correlation_id="corr-123",
+    session_id="session-456",
+)
+
+# Anadir evidencia
+context = context.add_evidence(
+    Evidence(
+        evidence_id="ev-1",
+        content="Device error E101",
+        confidence=Confidence(level=ConfidenceLevel.HIGH, score=0.9),
+    )
+)
+
+# Anadir hipotesis
+context = context.add_hypothesis(
+    Hypothesis(hypothesis_id="hyp-1", description="Sensor malfunction")
+)
+
+# Completar
+context = context.complete(
+    response=ResponseResult(content="Diagnostico: Sensor malfunction")
+)
+```
+
+---
+
+## Context Manager
+
+```python
+manager = ContextManager()
+
+# Crear
+context = manager.create_context(correlation_id="corr-123")
+
+# Buscar
+contexts = manager.find_by_session("session-456")
+
+# Estadisticas
+stats = manager.get_statistics()
+```
+
+---
+
+## Documentacion
+
+- [Documentacion arquitectonica](../docs/core/cognitive-context-system.md)
 
 ## Boundaries
 
-This module does **not**:
-
-- populate or normalize any field (no NLP, no language detection, no retrieval);
-- call any engine, tool, LLM, or external service;
-- persist or load the context;
-- enforce tenancy or authorization.
-
-Those responsibilities live in the engines and services that consume the
-context. See [`../../CORE_SPECIFICATION.md`](../../CORE_SPECIFICATION.md) and
-[ADR-0003](../../docs/adr/ADR-0003-cognitive-context.md).
+- **Architecture only** - no AI, no business logic
+- **Immutable context** - modifications create new versions
+- **Thread-safe** - designed for concurrent access
+- **Pydantic models** - legacy models preserved in `models.py`
