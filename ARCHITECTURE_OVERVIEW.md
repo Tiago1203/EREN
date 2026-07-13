@@ -43,7 +43,8 @@ biomedical engineers. The authoritative product definition lives in
 ┌──────────────────────────────────────────────────────────────┐
 │  Cognitive core — core/                                       │
 │  orchestrator · planner · reasoning · memory · knowledge      │
-│  diagnostic · workflow · tools      (+ core/contracts)        │
+│  diagnostic · workflow · tools                                │
+│  (+ core/contracts · core/context)                            │
 └──────────────────────────────────────────────────────────────┘
                               ↓ depends on
 ┌──────────────────────────────────────────────────────────────┐
@@ -66,6 +67,7 @@ eren/
 │   └── desktop/         # Native desktop client (placeholder)
 ├── core/                # Cognitive core (interface-agnostic engines)
 │   ├── contracts/       # Common interfaces every engine implements
+│   ├── context/         # CognitiveContext: object shared across engines
 │   ├── orchestrator/    # Coordinates engines & the cognitive request lifecycle
 │   ├── planner/         # Decomposes goals into ordered plans
 │   ├── reasoning/       # Explainable reasoning over evidence
