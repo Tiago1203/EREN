@@ -2,19 +2,43 @@
 
 Provides pluggable confidence calculation algorithms.
 
-Architecture only — no AI, no business logic.
+Architecture only -- no AI, no business logic.
 """
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Protocol
 
 from .reasoning_types import ConfidenceLevel, ConfidenceScore, Evidence, Hypothesis
 
 if TYPE_CHECKING:
     pass
+
+
+# =============================================================================
+# Shared Helper (Eliminated Duplication)
+# =============================================================================
+
+
+def probability_to_level(prob: float) -> ConfidenceLevel:
+    """Convert probability (0.0-1.0) to confidence level.
+    
+    This helper is shared by all calculators to eliminate duplication.
+    """
+    if prob >= 0.95:
+        return ConfidenceLevel.CERTAIN
+    elif prob >= 0.8:
+        return ConfidenceLevel.VERY_HIGH
+    elif prob >= 0.6:
+        return ConfidenceLevel.HIGH
+    elif prob >= 0.4:
+        return ConfidenceLevel.MODERATE
+    elif prob >= 0.2:
+        return ConfidenceLevel.LOW
+    elif prob >= 0.1:
+        return ConfidenceLevel.VERY_LOW
+    else:
+        return ConfidenceLevel.NONE
 
 
 # =============================================================================
@@ -75,7 +99,6 @@ class DefaultConfidenceCalculator:
             contradicting_factors.append(f"{ev.evidence_id}: -{weight:.2f}")
 
         # Calculate final probability
-        # Bayesian-inspired: P(H|E) = P(H) * (1 + Ws - Wc)
         adjustment = supporting_weight - contradicting_weight
         final_prob = max(0.0, min(1.0, prob * (1 + adjustment)))
 
@@ -87,8 +110,8 @@ class DefaultConfidenceCalculator:
         if abs(adjustment) > 0.5:
             reasons.append(f"Strong adjustment: {adjustment:+.2f}")
 
-        # Determine level
-        level = self._prob_to_level(final_prob)
+        # Determine level using shared helper
+        level = probability_to_level(final_prob)
 
         return ConfidenceScore(
             value=final_prob,
@@ -98,24 +121,6 @@ class DefaultConfidenceCalculator:
             contradicting_factors=tuple(contradicting_factors),
             algorithm="default_weighted",
         )
-
-    @staticmethod
-    def _prob_to_level(prob: float) -> ConfidenceLevel:
-        """Convert probability to confidence level."""
-        if prob >= 0.95:
-            return ConfidenceLevel.CERTAIN
-        elif prob >= 0.8:
-            return ConfidenceLevel.VERY_HIGH
-        elif prob >= 0.6:
-            return ConfidenceLevel.HIGH
-        elif prob >= 0.4:
-            return ConfidenceLevel.MODERATE
-        elif prob >= 0.2:
-            return ConfidenceLevel.LOW
-        elif prob >= 0.1:
-            return ConfidenceLevel.VERY_LOW
-        else:
-            return ConfidenceLevel.NONE
 
 
 # =============================================================================
@@ -127,6 +132,7 @@ class BayesianConfidenceCalculator:
     """Bayesian-inspired confidence calculation.
 
     Uses Bayes' theorem: P(H|E) = P(E|H) * P(H) / P(E)
+    CRITICAL: Protected against division by zero.
     """
 
     def calculate(
@@ -135,7 +141,10 @@ class BayesianConfidenceCalculator:
         supporting_evidence: list[Evidence],
         contradicting_evidence: list[Evidence],
     ) -> ConfidenceScore:
-        """Calculate confidence using Bayesian inference."""
+        """Calculate confidence using Bayesian inference.
+        
+        Returns UNKNOWN confidence if denominator is zero or negative.
+        """
         reasons: list[str] = []
         supporting_factors: list[str] = []
         contradicting_factors: list[str] = []
@@ -145,18 +154,15 @@ class BayesianConfidenceCalculator:
 
         # Likelihood from supporting evidence
         for ev in supporting_evidence:
-            # P(E|H) = evidence confidence
             likelihood = ev.confidence * ev.weight
             supporting_factors.append(f"{ev.evidence_id}: P(E|H)={likelihood:.2f}")
 
         # Likelihood from contradicting evidence
         for ev in contradicting_evidence:
-            # P(E|not H) approximation
             likelihood = ev.confidence * ev.weight
             contradicting_factors.append(f"{ev.evidence_id}: P(E|not H)={likelihood:.2f}")
 
-        # Calculate posterior (simplified)
-        # P(H|E) = P(E|H) * P(H) / P(E)
+        # Calculate products for Bayesian formula
         supporting_prod = 1.0
         for ev in supporting_evidence:
             supporting_prod *= (1 - ev.confidence * ev.weight)
@@ -165,8 +171,22 @@ class BayesianConfidenceCalculator:
         for ev in contradicting_evidence:
             contradicting_prod *= (1 - ev.confidence * ev.weight)
 
-        # Posterior approximation
-        posterior = prior * supporting_prod / (prior * supporting_prod + (1 - prior) * contradicting_prod)
+        # CRITICAL FIX: Prevent division by zero
+        denominator = prior * supporting_prod + (1 - prior) * contradicting_prod
+        
+        if denominator <= 0.0:
+            # Return UNKNOWN confidence instead of raising error
+            return ConfidenceScore(
+                value=0.0,
+                level=ConfidenceLevel.NONE,
+                reasons=("Bayesian denominator is zero or negative",),
+                supporting_factors=tuple(supporting_factors),
+                contradicting_factors=tuple(contradicting_factors),
+                algorithm="bayesian",
+            )
+
+        # Posterior calculation
+        posterior = (prior * supporting_prod) / denominator
         posterior = max(0.0, min(1.0, posterior))
 
         # Reasons
@@ -174,7 +194,7 @@ class BayesianConfidenceCalculator:
         if supporting_evidence:
             reasons.append(f"Based on {len(supporting_evidence)} supporting, {len(contradicting_evidence)} contradicting")
 
-        level = self._prob_to_level(posterior)
+        level = probability_to_level(posterior)
 
         return ConfidenceScore(
             value=posterior,
@@ -184,24 +204,6 @@ class BayesianConfidenceCalculator:
             contradicting_factors=tuple(contradicting_factors),
             algorithm="bayesian",
         )
-
-    @staticmethod
-    def _prob_to_level(prob: float) -> ConfidenceLevel:
-        """Convert probability to confidence level."""
-        if prob >= 0.95:
-            return ConfidenceLevel.CERTAIN
-        elif prob >= 0.8:
-            return ConfidenceLevel.VERY_HIGH
-        elif prob >= 0.6:
-            return ConfidenceLevel.HIGH
-        elif prob >= 0.4:
-            return ConfidenceLevel.MODERATE
-        elif prob >= 0.2:
-            return ConfidenceLevel.LOW
-        elif prob >= 0.1:
-            return ConfidenceLevel.VERY_LOW
-        else:
-            return ConfidenceLevel.NONE
 
 
 # =============================================================================
@@ -224,31 +226,47 @@ class DempsterShaferCalculator:
         """Calculate confidence using Dempster-Shafer theory."""
         reasons: list[str] = []
         supporting_factors: list[str] = []
-        contradicting_factors: []
+        contradicting_factors: list[str] = []
 
         # Mass for hypothesis
         m_h = 0.0
         for ev in supporting_evidence:
             mass = ev.confidence * ev.weight
-            m_h += mass * (1 - m_h)  # Dempster's rule
+            # Dempster's rule with safety check
+            if m_h < 1.0:
+                m_h = m_h + mass * (1 - m_h)
             supporting_factors.append(f"{ev.evidence_id}: m(H)={mass:.2f}")
 
         # Mass against hypothesis
         m_not_h = 0.0
         for ev in contradicting_evidence:
             mass = ev.confidence * ev.weight
-            m_not_h += mass * (1 - m_not_h)
+            if m_not_h < 1.0:
+                m_not_h = m_not_h + mass * (1 - m_not_h)
             contradicting_factors.append(f"{ev.evidence_id}: m(~H)={mass:.2f}")
 
-        # Belief function: Bel(H) = sum of masses for subsets
+        # Belief function
         bel_h = m_h
-
-        # Plausibility: Pl(H) = 1 - m(~H)
+        # Plausibility
         pl_h = 1 - m_not_h
 
         # Belief interval
         lower = bel_h
         upper = pl_h
+
+        # CRITICAL: Check for conflict
+        denominator = 1 - m_h * m_not_h
+        
+        if denominator <= 0.0:
+            # High conflict - return uncertain confidence
+            return ConfidenceScore(
+                value=0.0,
+                level=ConfidenceLevel.NONE,
+                reasons=("High conflict in Dempster-Shafer combination",),
+                supporting_factors=tuple(supporting_factors),
+                contradicting_factors=tuple(contradicting_factors),
+                algorithm="dempster_shafer",
+            )
 
         # Use midpoint as confidence
         final_prob = (lower + upper) / 2
@@ -259,7 +277,7 @@ class DempsterShaferCalculator:
         if contradicting_evidence:
             reasons.append(f"Combined {len(contradicting_evidence)} contradicting evidence")
 
-        level = self._prob_to_level(final_prob)
+        level = probability_to_level(final_prob)
 
         return ConfidenceScore(
             value=final_prob,
@@ -269,24 +287,6 @@ class DempsterShaferCalculator:
             contradicting_factors=tuple(contradicting_factors),
             algorithm="dempster_shafer",
         )
-
-    @staticmethod
-    def _prob_to_level(prob: float) -> ConfidenceLevel:
-        """Convert probability to confidence level."""
-        if prob >= 0.95:
-            return ConfidenceLevel.CERTAIN
-        elif prob >= 0.8:
-            return ConfidenceLevel.VERY_HIGH
-        elif prob >= 0.6:
-            return ConfidenceLevel.HIGH
-        elif prob >= 0.4:
-            return ConfidenceLevel.MODERATE
-        elif prob >= 0.2:
-            return ConfidenceLevel.LOW
-        elif prob >= 0.1:
-            return ConfidenceLevel.VERY_LOW
-        else:
-            return ConfidenceLevel.NONE
 
 
 # =============================================================================
@@ -305,25 +305,13 @@ class ConfidenceCalculatorFactory:
 
     @classmethod
     def create(cls, algorithm: str = "default") -> ConfidenceCalculator:
-        """Create a confidence calculator.
-
-        Args:
-            algorithm: The algorithm name.
-
-        Returns:
-            A confidence calculator instance.
-        """
+        """Create a confidence calculator."""
         calculator_cls = cls._calculators.get(algorithm, DefaultConfidenceCalculator)
         return calculator_cls()
 
     @classmethod
     def register(cls, name: str, calculator_cls: type[ConfidenceCalculator]) -> None:
-        """Register a new confidence calculator.
-
-        Args:
-            name: The algorithm name.
-            calculator_cls: The calculator class.
-        """
+        """Register a new confidence calculator."""
         cls._calculators[name] = calculator_cls
 
     @classmethod

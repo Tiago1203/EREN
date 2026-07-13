@@ -6,17 +6,23 @@ and then into justified decisions.
 EREN NO uses AI. EREN NO generates text. EREN NO calls LLM.
 EREN only organizes reasoning.
 
-Architecture only — no AI, no implementations.
+Architecture only -- no AI, no implementations.
 """
 
 from __future__ import annotations
 
+from core.reasoning.adapters import (
+    ReasoningContextAdapter,
+    ReasoningMemoryAdapter,
+)
+from core.reasoning.capabilities import get_reasoning_capabilities
 from core.reasoning.confidence_model import (
     BayesianConfidenceCalculator,
     ConfidenceCalculator,
     ConfidenceCalculatorFactory,
     DefaultConfidenceCalculator,
     DempsterShaferCalculator,
+    probability_to_level,
 )
 from core.reasoning.evidence_manager import EvidenceManager
 from core.reasoning.exceptions import (
@@ -36,8 +42,13 @@ from core.reasoning.exceptions import (
 )
 from core.reasoning.hypothesis_manager import HypothesisManager
 from core.reasoning.reasoning_chain import ReasoningChain, ReasoningChainBuilder, ReasoningChainManager
-from core.reasoning.reasoning_engine import CognitiveReasoningEngine, ReasoningSession
-from core.reasoning.reasoning_events import ReasoningEvent, ReasoningEventPublisher, ReasoningEventType
+from core.reasoning.reasoning_engine import (
+    CognitiveReasoningEngine,
+    ReasoningCapabilityRegistrar,
+    ReasoningEventPublisher,
+    ReasoningSession,
+)
+from core.reasoning.reasoning_events import ReasoningEvent, ReasoningEventPublisher as LegacyEventPublisher
 from core.reasoning.reasoning_metrics import ReasoningHealthCheck, ReasoningMetrics, ReasoningMetricsCollector
 from core.reasoning.reasoning_strategy import (
     EvidenceFirstStrategyExecutor,
@@ -71,6 +82,15 @@ __all__ = [
     # Core Engine
     "CognitiveReasoningEngine",
     "ReasoningSession",
+    "ReasoningCapabilityRegistrar",
+    "ReasoningEventPublisher",
+    # Legacy (for backwards compatibility)
+    "LegacyEventPublisher",
+    # Adapters
+    "ReasoningContextAdapter",
+    "ReasoningMemoryAdapter",
+    # Capabilities
+    "get_reasoning_capabilities",
     # Hypothesis Management
     "HypothesisManager",
     "Hypothesis",
@@ -90,6 +110,7 @@ __all__ = [
     "DefaultConfidenceCalculator",
     "BayesianConfidenceCalculator",
     "DempsterShaferCalculator",
+    "probability_to_level",
     # Decision
     "Decision",
     "DecisionType",
@@ -104,8 +125,6 @@ __all__ = [
     "ReasoningTrace",
     "ReasoningTraceBuilder",
     "ReasoningEvent",
-    "ReasoningEventPublisher",
-    "ReasoningEventType",
     # Metrics
     "ReasoningMetrics",
     "ReasoningMetricsCollector",
