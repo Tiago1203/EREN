@@ -82,53 +82,73 @@ this package is the **canonical** model and aligning the orchestrator is future
 work. See [`core/context/README.md`](./core/context/README.md) and
 [ADR-0003](./docs/adr/ADR-0003-cognitive-context.md).
 
-## 4. The engines
+## 4. The internal event system (`core/events`)
+
+Engines also collaborate through **events** instead of direct calls. A producer
+emits an `Event`; the `EventBus` delivers it to any `EventSubscriber` registered
+for that `EventType`. Producers and consumers never reference each other — both
+depend only on the event contracts (`EventPublisher` / `EventSubscriber`), so
+transversal capabilities (audit, metrics, UI streaming) attach as new
+subscribers without touching producers.
+
+- `Event` (Pydantic v2, **immutable**): `event_id`, `type`, `timestamp`,
+  `correlation_id`, `session_id`, `source`, generic `payload`.
+- `EventType`: the ten lifecycle events — `VoiceReceived`, `IntentDetected`,
+  `PlanCreated`, `KnowledgeRetrieved`, `ReasoningStarted`, `ReasoningFinished`,
+  `ToolExecuted`, `DiagnosticCompleted`, `WorkflowCompleted`,
+  `ResponseGenerated`.
+- `EventBus` is a **skeleton** (`subscribe`/`unsubscribe`/`publish` raise
+  `NotImplementedError`); no dispatch, threads, queues, or brokers are
+  implemented. See [`core/events/README.md`](./core/events/README.md) and
+  [ADR-0004](./docs/adr/ADR-0004-event-system.md).
+
+## 5. The engines
 
 The canonical EREN CORE consists of these eight engines.
 
-### 4.1 Orchestrator
+### 5.1 Orchestrator
 Central coordinator. Owns the end-to-end lifecycle of a cognitive request:
 decides which engines to involve and in what order, moves data between them,
 manages intermediate state, and assembles the final explainable result. The only
 engine aware of the others; it delegates rather than implementing cognition.
 
-### 4.2 Planner
+### 5.2 Planner
 Decomposes a high-level goal into an ordered, executable plan and re-plans when a
 step fails or new information arrives. Decides *what and in what order*, not how a
 step reasons. Implements `Planner[Goal, Plan]`.
 
-### 4.3 Reasoning
+### 5.3 Reasoning
 Applies explainable reasoning strategies over evidence to reach conclusions
 **with an auditable justification**. Explainability is a first-class requirement.
 Implements `Reasoning[Question, Evidence, Conclusion]`.
 
-### 4.4 Memory
+### 5.4 Memory
 Manages short-term (conversation/context) and long-term (institutional) memory:
 store, recall, consolidate, forget. Remembers *what happened/was said*.
 Implements `Memory[Record, Query]`.
 
-### 4.5 Knowledge
+### 5.5 Knowledge
 Structures, indexes and serves curated institutional knowledge — Knowledge Base
 (manuals), Case Base (resolved cases), Document Base (protocols/norms). Owns
 *what the institution knows*. Implements `Knowledge[Item, Query]`.
 
-### 4.6 Diagnostic
+### 5.6 Diagnostic
 Clinical-engineering fault analysis: given equipment symptoms, produces ranked,
 justified troubleshooting hypotheses, drawing on knowledge and past cases. EREN's
 domain-specialized engine. Implements `Diagnostic[Symptoms, Diagnosis]`.
 
-### 4.7 Workflow
+### 5.7 Workflow
 Models and drives long-running, stateful, multi-step operational processes (e.g.
 preventive maintenance) — states, transitions, and instance progress. Governs
 durable processes, distinct from the planner's per-request sequencing. Implements
 `Workflow[Definition, Instance, State]`.
 
-### 4.8 Tools
+### 5.8 Tools
 Registry and adapter layer for controlled external capabilities the engines may
 invoke, behind a uniform, governable interface. Concrete integrations are
 adapters plugging into this registry. Implements the `Tool` contract per adapter.
 
-## 5. Dependency rules
+## 6. Dependency rules
 
 - `core/*` may depend on `core/contracts` and `packages/*`.
 - `core/*` must **not** depend on `apps/*`.
@@ -136,13 +156,13 @@ adapters plugging into this registry. Implements the `Tool` contract per adapter
 - Each engine's local `interfaces.py` port aligns with the shared contract of the
   same capability in `core/contracts`.
 
-## 6. Explainability & safety (design constraints)
+## 7. Explainability & safety (design constraints)
 
 - Reasoning and diagnostic outputs must carry a justification / evidence trail.
 - Tool invocation is mediated by the tools registry (controlled, governable).
 - No engine bypasses the contracts to reach into another engine's internals.
 
-## 7. Cross-cutting capabilities (planned)
+## 8. Cross-cutting capabilities (planned)
 
 Concerns previously modeled as separate engines — **learning**, **permission/
 authorization**, and **audit** — are tracked as future capabilities or
@@ -150,14 +170,16 @@ cross-cutting infrastructure rather than part of the current canonical eight.
 See [docs/core/eren-core-cognitive-engines.md](./docs/core/eren-core-cognitive-engines.md)
 for the extended catalog and [MASTER_ROADMAP.md](./MASTER_ROADMAP.md) for timing.
 
-## 8. Related decisions
+## 9. Related decisions
 
 - [ADR-0002](./docs/adr/ADR-0002-eren-core-architecture.md) — EREN CORE architecture.
 - [ADR-0003](./docs/adr/ADR-0003-cognitive-context.md) — Cognitive Context object (`core/context`).
+- [ADR-0004](./docs/adr/ADR-0004-event-system.md) — Internal event system (`core/events`).
 - [ADR-0030](./docs/adr/) — cognitive engines strategy (index).
 - Contracts SOLID rationale — [`core/contracts/README.md`](./core/contracts/README.md).
 
 ---
 
 **Last updated:** 2026-07-13 · Reflects the eight core engines, the contracts
-layer, and the cognitive context (`core/context`) currently in the repository.
+layer, the cognitive context (`core/context`), and the internal event system
+(`core/events`) currently in the repository.
