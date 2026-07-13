@@ -23,6 +23,18 @@ are interface-agnostic: they know nothing about web, API, or desktop delivery.
 | [`knowledge/`](./knowledge) | Structures and serves institutional knowledge. |
 | [`tools/`](./tools) | Registry/adapters for controlled capabilities and integrations. |
 
+## Shared cognitive context
+
+| Package | Responsibility |
+| --- | --- |
+| [`context/`](./context) | `CognitiveContext` — the Pydantic v2 object that travels through every engine during one interaction. |
+
+## Contracts
+
+| Package | Responsibility |
+| --- | --- |
+| [`contracts/`](./contracts) | SOLID `typing.Protocol` interfaces every engine implements. |
+
 ## Dependency rules
 
 - `core/*` may depend on `packages/*` (shared contracts/utilities).
