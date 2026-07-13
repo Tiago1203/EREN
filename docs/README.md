@@ -1,7 +1,15 @@
 # docs/
 
-Project **documentation** for EREN. This is the existing documentation set,
-preserved unchanged during the monorepo restructure.
+Project **documentation** for EREN. The existing documentation set is preserved;
+the canonical architecture documents below describe the repository as it actually
+exists today (scaffolding phase).
+
+## Canonical architecture documents (repo root)
+
+- [`../ARCHITECTURE_OVERVIEW.md`](../ARCHITECTURE_OVERVIEW.md) — high-level architecture map.
+- [`../SYSTEM_DESIGN.md`](../SYSTEM_DESIGN.md) — component & runtime design.
+- [`../CORE_SPECIFICATION.md`](../CORE_SPECIFICATION.md) — cognitive core (`core/`) spec.
+- [`../MASTER_ROADMAP.md`](../MASTER_ROADMAP.md) — roadmap reconciled with current state.
 
 ## Top-level references (repo root)
 
