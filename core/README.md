@@ -41,6 +41,12 @@ are interface-agnostic: they know nothing about web, API, or desktop delivery.
 | --- | --- |
 | [`registry/`](./registry) | `EngineRegistry` — dynamic, dependency-injected registration and lookup of engines by name (no conditional dispatch). |
 
+## Intent Engine (first cognitive engine)
+
+| Package | Responsibility |
+| --- | --- |
+| [`intent/`](./intent) | `IntentEngine` — classifies the user's intent into `IntentType` and enriches the context. Rule-based today, LLM-ready via an injected `IntentClassifier`. |
+
 ## Contracts
 
 | Package | Responsibility |

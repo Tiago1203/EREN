@@ -18,6 +18,7 @@ Estos son los únicos ADRs que existen como archivo en este directorio hoy:
 - [ADR-0003: Objeto de Contexto Cognitivo (`core/context`)](./ADR-0003-cognitive-context.md) — **Accepted**
 - [ADR-0004: Sistema de Eventos Interno (`core/events`)](./ADR-0004-event-system.md) — **Accepted**
 - [ADR-0005: Registro Dinámico de Motores (`core/registry`)](./ADR-0005-engine-registry.md) — **Accepted**
+- [ADR-0006: Intent Engine (`core/intent`) — primer motor cognitivo, sin IA](./ADR-0006-intent-engine.md) — **Accepted**
 
 > **Colisión de número resuelta:** el índice planificado por categorías (más
 > abajo) reservaba `ADR-0003` para "Arquitectura de Tres Capas", una entrada
@@ -246,6 +247,7 @@ Los siguientes ADRs están escritos y aceptados (Accepted):
 - [ADR-0003: Objeto de Contexto Cognitivo (`core/context`)](./ADR-0003-cognitive-context.md)
 - [ADR-0004: Sistema de Eventos Interno (`core/events`)](./ADR-0004-event-system.md)
 - [ADR-0005: Registro Dinámico de Motores (`core/registry`)](./ADR-0005-engine-registry.md)
+- [ADR-0006: Intent Engine (`core/intent`)](./ADR-0006-intent-engine.md)
 
 ## ADRs Propuestos
 
