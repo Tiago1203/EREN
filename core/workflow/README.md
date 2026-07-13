@@ -1,16 +1,27 @@
-# core/workflow — Workflow
+# core/workflow — Workflow engine
 
-Defines and executes long-running, multi-step operational processes and their state transitions.
+> **Status:** scaffolding only. Empty classes, no logic, AI, or agents yet.
 
-> **Status:** placeholder. This module is part of the EREN architecture
-> scaffolding. No business logic, AI, or agents are implemented here yet.
+## Responsibility
 
-## Purpose
+Models and drives **long-running, multi-step operational processes** — e.g. a
+preventive-maintenance procedure or an incident-resolution workflow. It defines
+the states of a process, the allowed transitions between them, and tracks the
+progress of a running instance until completion.
 
-Defines and executes long-running, multi-step operational processes and their state transitions.
+Where the **planner** decides the abstract sequence of steps for a single
+cognitive request, the **workflow** engine governs durable, stateful business
+processes that may span time, users and interactions.
+
+## Files
+
+| File | Purpose |
+| --- | --- |
+| `engine.py` | `WorkflowEngine` — define and advance stateful processes. |
+| `interfaces.py` | `WorkflowPort` — contract to start/advance/query a workflow. |
+| `exceptions.py` | `WorkflowError` — base error for workflow failures. |
+| `models.py` | Data structures for workflow definitions, states and instances. |
 
 ## Boundaries
-
-- Contains **domain-agnostic cognitive capability**, not app or UI code.
-- Consumed by `apps/*` (web, api, desktop) and other `core/*` engines.
-- Must not depend on any specific delivery interface.
+- Process orchestration capability — no UI; persistence is injected.
+- May depend on `packages/*`; never on `apps/*`.

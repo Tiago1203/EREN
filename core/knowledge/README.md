@@ -1,16 +1,27 @@
-# core/knowledge — Knowledge
+# core/knowledge — Knowledge engine
 
-Structures, indexes and serves institutional clinical-engineering knowledge to the other engines.
+> **Status:** scaffolding only. Empty classes, no logic, AI, or agents yet.
 
-> **Status:** placeholder. This module is part of the EREN architecture
-> scaffolding. No business logic, AI, or agents are implemented here yet.
+## Responsibility
 
-## Purpose
+Structures, indexes and **serves institutional knowledge** — the curated,
+authoritative content of the organization: technical manuals (Knowledge Base),
+resolved historical cases (Case Base), and regulatory protocols/norms (Document
+Base). Given a query, it returns the most relevant knowledge with provenance.
 
-Structures, indexes and serves institutional clinical-engineering knowledge to the other engines.
+Unlike `memory` (which recalls *what happened / was said*), the knowledge engine
+owns *what the institution knows* and makes it retrievable for reasoning and
+diagnostics.
+
+## Files
+
+| File | Purpose |
+| --- | --- |
+| `engine.py` | `KnowledgeEngine` — index and retrieve institutional knowledge. |
+| `interfaces.py` | `KnowledgePort` — contract to query/ingest knowledge. |
+| `exceptions.py` | `KnowledgeError` — base error for knowledge failures. |
+| `models.py` | Data structures for knowledge items, sources and query results. |
 
 ## Boundaries
-
-- Contains **domain-agnostic cognitive capability**, not app or UI code.
-- Consumed by `apps/*` (web, api, desktop) and other `core/*` engines.
-- Must not depend on any specific delivery interface.
+- Knowledge capability only — no UI; storage/index backends are injected.
+- May depend on `packages/*`; never on `apps/*`.

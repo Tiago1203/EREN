@@ -1,16 +1,28 @@
-# core/planner — Planner
+# core/planner — Planner engine
 
-Decomposes goals into ordered, executable steps and decides which engines and tools to invoke to accomplish a task.
+> **Status:** scaffolding only. Empty classes, no logic, AI, or agents yet.
 
-> **Status:** placeholder. This module is part of the EREN architecture
-> scaffolding. No business logic, AI, or agents are implemented here yet.
+## Responsibility
 
-## Purpose
+Turns a **high-level goal into an ordered, executable plan**. Given an
+objective and context, the planner decomposes it into discrete steps, expresses
+their dependencies/ordering, and produces a plan the orchestrator can execute.
+It is also responsible for **re-planning** when a step fails or new information
+arrives.
 
-Decomposes goals into ordered, executable steps and decides which engines and tools to invoke to accomplish a task.
+The planner decides *what should happen and in what order* — it does not execute
+the steps (that is the orchestrator/workflow) nor perform the reasoning within a
+step (that is the reasoning engine).
+
+## Files
+
+| File | Purpose |
+| --- | --- |
+| `engine.py` | `PlannerEngine` — builds and revises plans from goals. |
+| `interfaces.py` | `PlannerPort` — contract to request a plan / re-plan. |
+| `exceptions.py` | `PlannerError` — base error for planning failures. |
+| `models.py` | Data structures for goals, steps and plans. |
 
 ## Boundaries
-
-- Contains **domain-agnostic cognitive capability**, not app or UI code.
-- Consumed by `apps/*` (web, api, desktop) and other `core/*` engines.
-- Must not depend on any specific delivery interface.
+- Pure planning capability — no delivery/UI code.
+- May depend on `packages/*`; never on `apps/*`.
