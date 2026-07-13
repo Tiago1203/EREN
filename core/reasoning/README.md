@@ -1,16 +1,26 @@
-# core/reasoning — Reasoning
+# core/reasoning — Reasoning engine
 
-Hosts the reasoning strategies EREN uses to analyze situations, weigh evidence and produce explainable conclusions.
+> **Status:** scaffolding only. Empty classes, no logic, AI, or agents yet.
 
-> **Status:** placeholder. This module is part of the EREN architecture
-> scaffolding. No business logic, AI, or agents are implemented here yet.
+## Responsibility
 
-## Purpose
+Applies **explainable reasoning strategies over evidence** to reach conclusions.
+Given a question and a set of evidence (from memory, knowledge, diagnostic, etc.),
+the reasoning engine produces an answer/decision **together with an auditable
+justification** — the chain of evidence and inference that led to it.
 
-Hosts the reasoning strategies EREN uses to analyze situations, weigh evidence and produce explainable conclusions.
+Explainability is a first-class requirement in EREN: this engine must always be
+able to expose *why* a conclusion was reached, not just the conclusion.
+
+## Files
+
+| File | Purpose |
+| --- | --- |
+| `engine.py` | `ReasoningEngine` — evidence-based, explainable reasoning. |
+| `interfaces.py` | `ReasoningPort` — contract to submit a question + evidence and get a justified conclusion. |
+| `exceptions.py` | `ReasoningError` — base error for reasoning failures. |
+| `models.py` | Data structures for evidence, conclusions and justifications. |
 
 ## Boundaries
-
-- Contains **domain-agnostic cognitive capability**, not app or UI code.
-- Consumed by `apps/*` (web, api, desktop) and other `core/*` engines.
-- Must not depend on any specific delivery interface.
+- Reasoning capability only — no domain data ownership, no UI.
+- May depend on `packages/*`; never on `apps/*`.

@@ -1,16 +1,27 @@
-# core/diagnostic — Diagnostic
+# core/diagnostic — Diagnostic engine
 
-Clinical-engineering diagnostic engine: structures fault analysis and troubleshooting workflows over equipment and cases.
+> **Status:** scaffolding only. Empty classes, no logic, AI, or agents yet.
 
-> **Status:** placeholder. This module is part of the EREN architecture
-> scaffolding. No business logic, AI, or agents are implemented here yet.
+## Responsibility
 
-## Purpose
+The **clinical-engineering fault-analysis** capability. Given the symptoms of a
+malfunctioning biomedical device (error codes, observed behavior, equipment
+metadata, history), the diagnostic engine analyzes the situation and proposes
+**ranked troubleshooting hypotheses and next steps**, drawing on knowledge and
+past cases and justifying each hypothesis.
 
-Clinical-engineering diagnostic engine: structures fault analysis and troubleshooting workflows over equipment and cases.
+This is EREN's domain-specialized engine: it encodes *how a biomedical engineer
+diagnoses equipment failures* as an orchestrated capability.
+
+## Files
+
+| File | Purpose |
+| --- | --- |
+| `engine.py` | `DiagnosticEngine` — analyze faults, propose hypotheses. |
+| `interfaces.py` | `DiagnosticPort` — contract to submit symptoms and get a diagnosis. |
+| `exceptions.py` | `DiagnosticError` — base error for diagnostic failures. |
+| `models.py` | Data structures for symptoms, hypotheses and recommendations. |
 
 ## Boundaries
-
-- Contains **domain-agnostic cognitive capability**, not app or UI code.
-- Consumed by `apps/*` (web, api, desktop) and other `core/*` engines.
-- Must not depend on any specific delivery interface.
+- Diagnostic reasoning about equipment — no UI; relies on other engines for evidence.
+- May depend on `packages/*`; never on `apps/*`.
