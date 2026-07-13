@@ -14,6 +14,7 @@ It ONLY prepares infrastructure so that the Dependency Injection Container
 can create real instances later.
 """
 
+import threading
 from datetime import datetime, timezone
 
 from .boot_events import BootEventPublisher, BootEventType
@@ -72,28 +73,36 @@ class CognitiveBootManager:
         self._steps = []
         self._components = {}
 
+        # P0.1: Thread-safety for concurrent access
+        self._lock = threading.RLock()
+
     @property
     def state(self) -> str:
         """Get current boot state."""
-        return self._state
+        with self._lock:
+            return self._state
 
     @property
     def steps(self) -> list:
         """Get boot steps."""
-        return self._steps.copy()
+        with self._lock:
+            return self._steps.copy()
 
     @property
     def components(self) -> dict:
         """Get initialized components."""
-        return self._components.copy()
+        with self._lock:
+            return self._components.copy()
 
     def get_trace(self) -> list:
         """Get boot trace."""
-        return self._trace.get_all_entries()
+        with self._lock:
+            return self._trace.get_all_entries()
 
     def get_metrics(self) -> dict:
         """Get boot metrics."""
-        return self._metrics.to_dict()
+        with self._lock:
+            return self._metrics.to_dict()
 
     def boot(self) -> BootResult:
         """Execute the complete boot sequence.
@@ -102,102 +111,104 @@ class CognitiveBootManager:
             BootResult with success status and details.
         """
         start_time = datetime.now(timezone.utc)
-        self._metrics.record_boot_started()
 
-        self._event_publisher.publish(
-            BootEventType.BOOT_STARTED,
-            state=self._state,
-        )
-
-        self._trace.add_entry(
-            step_name="boot",
-            state=self._state,
-            status="started",
-        )
-
-        try:
-            # Execute boot sequence
-            for step_key, step_name, target_state in BOOT_SEQUENCE:
-                step = self._execute_step(step_key, step_name, target_state)
-                self._steps.append(step)
-
-                if step.status == BootStatus.FAILED:
-                    if self._policy.stop_on_error:
-                        break
-
-            # Check if boot was successful
-            failed_steps = [s for s in self._steps if s.status == BootStatus.FAILED]
-
-            if failed_steps:
-                self._state = BootState.FAILED
-                duration_ms = int(
-                    (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
-                )
-                self._metrics.record_boot_failure(duration_ms)
-
-                self._event_publisher.publish(
-                    BootEventType.BOOT_FAILED,
-                    state=self._state,
-                    failed_steps=len(failed_steps),
-                )
-
-                return BootResult(
-                    success=False,
-                    state=self._state,
-                    steps=self._steps,
-                    error=failed_steps[0].error,
-                    duration_ms=duration_ms,
-                    components=self._components,
-                )
-
-            # Boot successful
-            self._state = BootState.READY
-            duration_ms = int(
-                (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
-            )
-            self._metrics.record_boot_success(duration_ms)
+        with self._lock:
+            self._metrics.record_boot_started()
 
             self._event_publisher.publish(
-                BootEventType.BOOT_COMPLETED,
+                BootEventType.BOOT_STARTED,
                 state=self._state,
             )
 
             self._trace.add_entry(
                 step_name="boot",
                 state=self._state,
-                status="completed",
-                duration_ms=duration_ms,
+                status="started",
             )
 
-            return BootResult(
-                success=True,
-                state=self._state,
-                steps=self._steps,
-                duration_ms=duration_ms,
-                components=self._components,
-            )
+            try:
+                # Execute boot sequence
+                for step_key, step_name, target_state in BOOT_SEQUENCE:
+                    step = self._execute_step(step_key, step_name, target_state)
+                    self._steps.append(step)
 
-        except Exception as e:
-            duration_ms = int(
-                (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
-            )
-            self._state = BootState.FAILED
-            self._metrics.record_boot_failure(duration_ms)
+                    if step.status == BootStatus.FAILED:
+                        if self._policy.stop_on_error:
+                            break
 
-            self._event_publisher.publish(
-                BootEventType.BOOT_FAILED,
-                state=self._state,
-                error=str(e),
-            )
+                # Check if boot was successful
+                failed_steps = [s for s in self._steps if s.status == BootStatus.FAILED]
 
-            return BootResult(
-                success=False,
-                state=self._state,
-                steps=self._steps,
-                error=str(e),
-                duration_ms=duration_ms,
-                components=self._components,
-            )
+                if failed_steps:
+                    self._state = BootState.FAILED
+                    duration_ms = int(
+                        (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                    )
+                    self._metrics.record_boot_failure(duration_ms)
+
+                    self._event_publisher.publish(
+                        BootEventType.BOOT_FAILED,
+                        state=self._state,
+                        failed_steps=len(failed_steps),
+                    )
+
+                    return BootResult(
+                        success=False,
+                        state=self._state,
+                        steps=self._steps.copy(),
+                        error=failed_steps[0].error,
+                        duration_ms=duration_ms,
+                        components=self._components.copy(),
+                    )
+
+                # Boot successful
+                self._state = BootState.READY
+                duration_ms = int(
+                    (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                )
+                self._metrics.record_boot_success(duration_ms)
+
+                self._event_publisher.publish(
+                    BootEventType.BOOT_COMPLETED,
+                    state=self._state,
+                )
+
+                self._trace.add_entry(
+                    step_name="boot",
+                    state=self._state,
+                    status="completed",
+                    duration_ms=duration_ms,
+                )
+
+                return BootResult(
+                    success=True,
+                    state=self._state,
+                    steps=self._steps.copy(),
+                    duration_ms=duration_ms,
+                    components=self._components.copy(),
+                )
+
+            except Exception as e:
+                duration_ms = int(
+                    (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                )
+                self._state = BootState.FAILED
+                self._metrics.record_boot_failure(duration_ms)
+
+                self._event_publisher.publish(
+                    BootEventType.BOOT_FAILED,
+                    state=self._state,
+                    error=str(e),
+                )
+
+                return BootResult(
+                    success=False,
+                    state=self._state,
+                    steps=self._steps.copy(),
+                    error=str(e),
+                    duration_ms=duration_ms,
+                    components=self._components.copy(),
+                )
 
     def _execute_step(self, step_key: str, step_name: str, target_state: str) -> BootStep:
         """Execute a single boot step.
@@ -232,7 +243,8 @@ class CognitiveBootManager:
             component = self._execute_step_handler(step_key)
 
             if component is not None:
-                self._components[step_key] = component
+                with self._lock:
+                    self._components[step_key] = component
 
             step.status = BootStatus.COMPLETED
             step.duration_ms = int(
@@ -324,7 +336,6 @@ class CognitiveBootManager:
         Returns:
             Event Bus contract placeholder.
         """
-        # Return contract/interface, NOT implementation
         return {"type": "event_bus", "interface": "EventPublisher"}
 
     def _create_capability_registry(self):
