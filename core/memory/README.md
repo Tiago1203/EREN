@@ -1,30 +1,188 @@
-# core/memory — Memory engine
+# core/memory/ — Cognitive Memory System
 
-> **Status:** scaffolding only. Empty classes, no logic, AI, or agents yet.
+> **EREN NO es una base de datos. EREN tiene memoria cognitiva.**
 
-## Responsibility
+El **Cognitive Memory System (CMS)** implementa un sistema de memoria inspirado
+en la arquitectura de memoria humana, no en bases de datos tradicionales.
 
-Manages EREN's **institutional and conversational memory**. It stores, retrieves
-and consolidates context across two horizons:
+---
 
-- **Short-term memory** — the working context of an ongoing interaction
-  (the Memory Base / conversation history).
-- **Long-term memory** — durable institutional context that persists across
-  interactions and users.
+## Paradigma: Memoria Cognitiva vs Base de Datos
 
-The memory engine is responsible for *remembering and recalling* relevant
-context on demand; it does not interpret it (reasoning) or structure external
-documents (knowledge).
+```
+❌ BASE DE DATOS TRADICIONAL
+═══════════════════════════════
+- Almacena datos
+- CRUD operations
+- Sin contexto emocional
+- Sin olvido automático
+- Sin relaciones complejas
+- Sin temporalidad
+
+✅ SISTEMA DE MEMORIA COGNITIVA
+══════════════════════════════════
+- Almacena experiencias
+- Retrieve/Consolidate/Forget
+- Contexto emocional
+- Olvido natural
+- Relaciones complejas
+- Temporalidad rica
+```
+
+---
+
+## Tipos de Memoria
+
+Inspirados en la psicología cognitiva:
+
+| Tipo | Descripción | Duración |
+|------|-------------|----------|
+| **Working** | Procesamiento activo (~7 items) | ~segundos |
+| **Short-Term** | Almacenamiento temporal | ~minutos |
+| **Long-Term** | Almacenamiento persistente | días-años |
+| **Episodic** | Eventos y experiencias | permanente |
+| **Semantic** | Hechos y conceptos | permanente |
+| **Procedural** | Habilidades y procedimientos | permanente |
+| **Temporal** | Relaciones temporales | variable |
+| **Spatial** | Relaciones espaciales | variable |
+
+---
+
+## Arquitectura
+
+```mermaid
+flowchart TB
+    subgraph "Cognitive Memory System"
+        subgraph "Working Memory"
+            WM[Capacity: 7 items]
+        end
+        
+        subgraph "Short-Term Memory"
+            STM[Duration: seconds to minutes]
+        end
+        
+        subgraph "Long-Term Memory"
+            LTM[Capacity: unlimited]
+            EP[Episodic]
+            SEM[Semantic]
+            PROC[Procedural]
+        end
+        
+        WM -->|consolidate| STM
+        STM -->|consolidate| LTM
+        LTM --> EP
+        LTM --> SEM
+        LTM --> PROC
+    end
+```
+
+---
+
+## MemoryEntry
+
+```python
+@dataclass
+class MemoryEntry:
+    # Identity
+    memory_id: str
+    memory_type: MemoryType
+    
+    # Content
+    content: MemoryContent
+    summary: str
+    
+    # Strength
+    strength: float  # 0.0 - 1.0
+    status: MemoryStatus
+    
+    # Relationships
+    relationships: tuple[MemoryRelationship, ...]
+    
+    # Metadata
+    metadata: MemoryMetadata
+```
+
+---
+
+## API Rápida
+
+### Almacenar memoria
+
+```python
+from core.memory import CognitiveMemoryEngine, MemoryType
+
+memory = CognitiveMemoryEngine()
+
+# Almacenar experiencia clínica
+memory_id = memory.store(
+    content="Patient presented with arrhythmia",
+    memory_type=MemoryType.EPISODIC,
+    summary="Arrhythmia case",
+    tags=("cardiology", "patient"),
+    importance=8,
+)
+```
+
+### Recuperar memoria
+
+```python
+# Por ID
+memory_entry = memory.retrieve(memory_id)
+
+# Por query
+results = memory.search(
+    MemoryQuery(query_text="arrhythmia")
+)
+
+# Por contexto
+results = memory.retrieve_with_context(
+    query="patient cases",
+    context=RetrievalContext(device_id="monitor-001"),
+)
+```
+
+---
+
+## Políticas de Memoria
+
+### Retención
+
+```python
+@dataclass
+class RetentionPolicy:
+    min_duration_seconds: float = 60
+    max_duration_seconds: float = 300
+    decay_rate: float = 0.01
+    consolidation_threshold: float = 0.5
+    forget_threshold: float = 0.1
+```
+
+### Consolidación
+
+```python
+@dataclass
+class ConsolidationPolicy:
+    trigger_on_access_count: int = 3
+    trigger_on_importance: int = 5
+    trigger_on_emotional_valence: bool = True
+    min_consolidation_strength: float = 0.5
+```
+
+---
 
 ## Files
 
-| File | Purpose |
-| --- | --- |
-| `engine.py` | `MemoryEngine` — store/retrieve/consolidate context. |
-| `interfaces.py` | `MemoryPort` — contract to write and query memory. |
-| `exceptions.py` | `MemoryError` — base error for memory failures. |
-| `models.py` | Data structures for memory records and queries. |
+| Archivo | Descripción |
+|---------|-------------|
+| `memory_types.py` | Tipos de memoria, políticas, filtros |
+| `memory_models.py` | MemoryEntry, Query, Templates |
+| `memory_stores.py` | Working, ShortTerm, LongTerm stores |
+| `memory_engine.py` | CognitiveMemoryEngine principal |
+| `exceptions.py` | Jerarquía de excepciones (11 tipos) |
 
 ## Boundaries
-- Memory capability only — persistence details are injected, not hard-coded to a vendor.
+- Memory capability only — persistence details are injected, not hard-coded.
 - May depend on `packages/*`; never on `apps/*`.
+
+## Referencias
+- [Documentación arquitectónica](../docs/core/cognitive-memory-system.md)
