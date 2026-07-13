@@ -35,6 +35,12 @@ are interface-agnostic: they know nothing about web, API, or desktop delivery.
 | --- | --- |
 | [`events/`](./events) | `Event`/`EventType`, `EventPublisher`/`EventSubscriber` and the `EventBus` — decoupled pub/sub between engines. |
 
+## Engine registry
+
+| Package | Responsibility |
+| --- | --- |
+| [`registry/`](./registry) | `EngineRegistry` — dynamic, dependency-injected registration and lookup of engines by name (no conditional dispatch). |
+
 ## Contracts
 
 | Package | Responsibility |

@@ -148,7 +148,26 @@ Registry and adapter layer for controlled external capabilities the engines may
 invoke, behind a uniform, governable interface. Concrete integrations are
 adapters plugging into this registry. Implements the `Tool` contract per adapter.
 
-## 6. Dependency rules
+## 6. Engine registry (`core/registry`)
+
+Engines are discovered **by name at runtime** through `EngineRegistry` rather
+than imported/instantiated by consumers. It is thin infrastructure — a store +
+lookup — with **no cognition or domain logic**.
+
+- `EngineRegistry` (and its `EngineRegistryPort` abstraction): `register(engine,
+  *, replace=False)`, `unregister(name)`, `get(name)`, `list()`; plus `name in
+  registry` and `len(registry)`.
+- **Dependency Injection**: engines are injected via the constructor
+  (`EngineRegistry(engines=[...])`) or `register(...)`; the registry never
+  constructs engines and depends only on the `CognitiveEngine` contract.
+- **No conditional dispatch**: resolution is an O(1) dictionary lookup keyed by
+  `engine.name` — adding an engine never means editing an `if/elif` chain.
+- Exceptions: `RegistryError`, `EngineNotFoundError`,
+  `EngineAlreadyRegisteredError`. See
+  [`core/registry/README.md`](./core/registry/README.md) and
+  [ADR-0005](./docs/adr/ADR-0005-engine-registry.md).
+
+## 7. Dependency rules
 
 - `core/*` may depend on `core/contracts` and `packages/*`.
 - `core/*` must **not** depend on `apps/*`.
@@ -156,13 +175,13 @@ adapters plugging into this registry. Implements the `Tool` contract per adapter
 - Each engine's local `interfaces.py` port aligns with the shared contract of the
   same capability in `core/contracts`.
 
-## 7. Explainability & safety (design constraints)
+## 8. Explainability & safety (design constraints)
 
 - Reasoning and diagnostic outputs must carry a justification / evidence trail.
 - Tool invocation is mediated by the tools registry (controlled, governable).
 - No engine bypasses the contracts to reach into another engine's internals.
 
-## 8. Cross-cutting capabilities (planned)
+## 9. Cross-cutting capabilities (planned)
 
 Concerns previously modeled as separate engines — **learning**, **permission/
 authorization**, and **audit** — are tracked as future capabilities or
@@ -170,16 +189,18 @@ cross-cutting infrastructure rather than part of the current canonical eight.
 See [docs/core/eren-core-cognitive-engines.md](./docs/core/eren-core-cognitive-engines.md)
 for the extended catalog and [MASTER_ROADMAP.md](./MASTER_ROADMAP.md) for timing.
 
-## 9. Related decisions
+## 10. Related decisions
 
 - [ADR-0002](./docs/adr/ADR-0002-eren-core-architecture.md) — EREN CORE architecture.
 - [ADR-0003](./docs/adr/ADR-0003-cognitive-context.md) — Cognitive Context object (`core/context`).
 - [ADR-0004](./docs/adr/ADR-0004-event-system.md) — Internal event system (`core/events`).
+- [ADR-0005](./docs/adr/ADR-0005-engine-registry.md) — Engine registry (`core/registry`).
 - [ADR-0030](./docs/adr/) — cognitive engines strategy (index).
 - Contracts SOLID rationale — [`core/contracts/README.md`](./core/contracts/README.md).
 
 ---
 
 **Last updated:** 2026-07-13 · Reflects the eight core engines, the contracts
-layer, the cognitive context (`core/context`), and the internal event system
-(`core/events`) currently in the repository.
+layer, the cognitive context (`core/context`), the internal event system
+(`core/events`), and the engine registry (`core/registry`) currently in the
+repository.

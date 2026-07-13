@@ -17,6 +17,7 @@ Estos son los únicos ADRs que existen como archivo en este directorio hoy:
 - [ADR-0002: Arquitectura General de EREN CORE](./ADR-0002-eren-core-architecture.md) — **Accepted**
 - [ADR-0003: Objeto de Contexto Cognitivo (`core/context`)](./ADR-0003-cognitive-context.md) — **Accepted**
 - [ADR-0004: Sistema de Eventos Interno (`core/events`)](./ADR-0004-event-system.md) — **Accepted**
+- [ADR-0005: Registro Dinámico de Motores (`core/registry`)](./ADR-0005-engine-registry.md) — **Accepted**
 
 > **Colisión de número resuelta:** el índice planificado por categorías (más
 > abajo) reservaba `ADR-0003` para "Arquitectura de Tres Capas", una entrada
@@ -24,7 +25,10 @@ Estos son los únicos ADRs que existen como archivo en este directorio hoy:
 > Cognitive Context; la entrada planificada de tres capas se renumerará cuando
 > se redacte. Del mismo modo, `ADR-0004` queda asignado al ADR escrito del
 > sistema de eventos; la entrada planificada "Estrategia de Escalabilidad
-> Horizontal" (antes 0004) se renumerará cuando se redacte.
+> Horizontal" (antes 0004) se renumerará cuando se redacte. Igualmente,
+> `ADR-0005` queda asignado al ADR escrito del registro de motores; la entrada
+> planificada "Microservicios vs Monolito Modular" (antes 0005) se renumerará
+> cuando se redacte.
 
 > **⚠️ Numeración duplicada:** existen dos archivos con el prefijo `ADR-0001`
 > (`-cognitive-operating-system` y `-general-architecture`). Se conservan ambos
@@ -47,7 +51,8 @@ Estos son los únicos ADRs que existen como archivo en este directorio hoy:
 - **ADR-0004**: Sistema de Eventos Interno (`core/events`) — **escrito/Accepted**
 - **ADR-00xx**: Arquitectura de Tres Capas (CORE, Dominios, Interfaces) *(planificado; número por reasignar — antes 0003)*
 - **ADR-00xx**: Estrategia de Escalabilidad Horizontal *(planificado; número por reasignar — antes 0004)*
-- **ADR-0005**: Arquitectura de Microservicios vs Monolito Modular
+- **ADR-0005**: Registro Dinámico de Motores (`core/registry`) — **escrito/Accepted**
+- **ADR-00xx**: Arquitectura de Microservicios vs Monolito Modular *(planificado; número por reasignar — antes 0005)*
 
 ### Backend
 
@@ -240,6 +245,7 @@ Los siguientes ADRs están escritos y aceptados (Accepted):
 - [ADR-0002: Arquitectura General de EREN CORE](./ADR-0002-eren-core-architecture.md)
 - [ADR-0003: Objeto de Contexto Cognitivo (`core/context`)](./ADR-0003-cognitive-context.md)
 - [ADR-0004: Sistema de Eventos Interno (`core/events`)](./ADR-0004-event-system.md)
+- [ADR-0005: Registro Dinámico de Motores (`core/registry`)](./ADR-0005-engine-registry.md)
 
 ## ADRs Propuestos
 
