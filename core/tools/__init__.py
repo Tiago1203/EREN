@@ -1,10 +1,18 @@
-"""EREN core — Tools engine. Scaffolding only; no functionality yet.
+"""Cognitive Tool Engine (CTE).
 
-Exposes the Tools engine (registry) and re-exports the external-access tool
-contracts from :mod:`core.tools.catalog`.
+EREN's bridge to the external world. The CTE manages all external tools
+without EREN knowing implementation details.
+
+EREN never knows technologies. EREN only requests capabilities.
+The Tool Engine decides which tool to use.
+
+Architecture only — no AI, no implementations.
 """
 
-from .catalog import (
+from __future__ import annotations
+
+# Re-export existing types
+from core.tools.catalog import (
     DICOMTool,
     EmailTool,
     ExternalTool,
@@ -16,21 +24,57 @@ from .catalog import (
     ToolCategory,
     VoiceTool,
 )
-from .engine import ToolsEngine
-from .exceptions import (
+from core.tools.engine import ToolsEngine
+from core.tools.exceptions import (
+    CircuitBreakerOpenError,
+    PipelineExecutionError,
+    PipelineStepError,
+    RateLimitExceededError,
     ToolAlreadyRegisteredError,
+    ToolExecutionError,
+    ToolHealthError,
     ToolInvocationError,
     ToolNotFoundError,
+    ToolPermissionError,
+    ToolTimeoutError,
+    ToolUnavailableError,
+    ToolValidationError,
     ToolsError,
 )
-from .interfaces import ToolsPort
+from core.tools.interfaces import ToolsPort
+
+# New CTE components
+from core.tools.tool_descriptor import ToolDescriptor, ToolTemplates
+from core.tools.tool_executor import ToolExecutor
+from core.tools.tool_pipeline import ToolPipeline
+from core.tools.tool_registry import ToolRegistry, ToolSelector
+from core.tools.tool_types import (
+    CircuitBreakerConfig,
+    CircuitState,
+    ExecutionContext,
+    ExecutionMode,
+    ExecutionStatus,
+    HealthCheckResult,
+    HealthStatus,
+    RateLimitConfig,
+    RateLimitStatus,
+    RetryPolicy,
+    RetryStrategy,
+    SecurityLevel,
+    ToolCapability,
+    ToolContract,
+    ToolCost,
+    ToolParameter,
+    ToolPerformance,
+    ToolPriority,
+    ToolResult,
+    ToolSelectorCriteria,
+    ToolStatus,
+)
 
 __all__ = [
+    # Legacy exports
     "ToolsEngine",
-    "ToolsError",
-    "ToolNotFoundError",
-    "ToolAlreadyRegisteredError",
-    "ToolInvocationError",
     "ToolsPort",
     "ExternalTool",
     "ToolCategory",
@@ -42,4 +86,47 @@ __all__ = [
     "FHIRTool",
     "HL7Tool",
     "DICOMTool",
+    # Exceptions
+    "ToolsError",
+    "ToolNotFoundError",
+    "ToolAlreadyRegisteredError",
+    "ToolInvocationError",
+    "ToolExecutionError",
+    "ToolTimeoutError",
+    "ToolValidationError",
+    "ToolUnavailableError",
+    "ToolPermissionError",
+    "CircuitBreakerOpenError",
+    "RateLimitExceededError",
+    "PipelineExecutionError",
+    "PipelineStepError",
+    "ToolHealthError",
+    # Core
+    "ToolRegistry",
+    "ToolExecutor",
+    "ToolPipeline",
+    "ToolSelector",
+    "ToolDescriptor",
+    "ToolTemplates",
+    # Types
+    "ToolStatus",
+    "ToolPriority",
+    "SecurityLevel",
+    "CircuitBreakerConfig",
+    "RateLimitConfig",
+    "RetryPolicy",
+    "RetryStrategy",
+    "CircuitState",
+    "ExecutionStatus",
+    "ExecutionMode",
+    "ExecutionContext",
+    "ToolResult",
+    "HealthStatus",
+    "HealthCheckResult",
+    "RateLimitStatus",
+    "ToolCapability",
+    "ToolParameter",
+    "ToolContract",
+    "ToolCost",
+    "ToolPerformance",
 ]
