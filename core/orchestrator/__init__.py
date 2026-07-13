@@ -1,34 +1,95 @@
-"""EREN core — Orchestrator engine. Scaffolding only; no functionality yet."""
+"""Cognitive Orchestrator (CKO).
 
-from .engine import OrchestratorEngine
-from .exceptions import (
-    ContextError,
-    EngineInvocationError,
-    EngineNotRegisteredError,
-    OrchestratorError,
-    PlanExecutionError,
-    ResponseMergeError,
+The orchestration component of EREN. Coordinates all cognitive engines
+through the complete cognitive processing cycle.
+
+Architecture only -- no implementations, no business logic.
+"""
+
+from __future__ import annotations
+
+from core.orchestrator.exceptions import (
+    OrchestrationError,
+    SessionNotFoundError,
+    InvalidStateTransitionError,
+    SessionTimeoutError,
+    SessionCancelledError,
 )
-from .interfaces import EngineRegistry, OrchestratorPort
-from .models import (
-    CognitiveContext,
-    EngineResponse,
-    ExecutionState,
-    OrchestrationResult,
+from core.orchestrator.orchestration_events import (
+    OrchestrationEventPublisher,
+    OrchestrationEventType,
+)
+from core.orchestrator.orchestration_metrics import (
+    OrchestrationHealthCheck,
+    OrchestrationMetricsCollector,
+)
+from core.orchestrator.orchestration_policies import (
+    CancellationPolicy,
+    IterationPolicy,
+    OrchestrationPolicies,
+    PolicyPresets,
+    RecoveryPolicy,
+    RetryPolicy,
+    TimeoutPolicy,
+)
+from core.orchestrator.orchestration_trace import (
+    OrchestrationTraceCollector,
+    OrchestrationTraceEntry,
+    TraceAnalyzer,
+)
+from core.orchestrator.orchestration_types import (
+    CognitiveSession,
+    OrchestrationState,
+    
+    OrchestrationPolicy,
+    SessionMetrics,
+    SessionMetadata,
+    SessionType,
+    StateTransition,
+    TraceEntry,
+    VALID_TRANSITIONS,
+)
+from core.orchestrator.orchestrator import (
+    CognitiveOrchestrator,
+    OrchestratorFactory,
 )
 
 __all__ = [
-    "OrchestratorEngine",
-    "OrchestratorPort",
-    "EngineRegistry",
-    "OrchestratorError",
-    "ContextError",
-    "PlanExecutionError",
-    "EngineInvocationError",
-    "EngineNotRegisteredError",
-    "ResponseMergeError",
-    "CognitiveContext",
-    "EngineResponse",
-    "ExecutionState",
-    "OrchestrationResult",
+    # Core Engine
+    "CognitiveOrchestrator",
+    "OrchestratorFactory",
+    # Types
+    "CognitiveSession",
+    "SessionMetadata",
+    "SessionMetrics",
+    "StateTransition",
+    "TraceEntry",
+    "OrchestrationState",
+    "SessionType",
+    "OrchestrationPolicy",
+    "VALID_TRANSITIONS",
+    # Events
+    "OrchestrationEventPublisher",
+    "OrchestrationEventType",
+    # Metrics
+    "OrchestrationMetricsCollector",
+    "OrchestrationHealthCheck",
+    # Policies
+    "OrchestrationPolicies",
+    "TimeoutPolicy",
+    "RetryPolicy",
+    "CancellationPolicy",
+    "RecoveryPolicy",
+    "IterationPolicy",
+    "PolicyPresets",
+    # Trace
+    "OrchestrationTraceCollector",
+    "OrchestrationTraceEntry",
+    "TraceAnalyzer",
+    # Exceptions
+    "OrchestrationError",
+    "SessionNotFoundError",
+    "InvalidStateTransitionError",
+    "SessionTimeoutError",
+    "SessionCancelledError",
 ]
