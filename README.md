@@ -98,6 +98,59 @@ Capturar, preservar y amplificar el conocimiento técnico de ingeniería clínic
 - Programmatic Interface: API y SDK
 - Integration Interface: Conexión con sistemas externos
 
+## Estructura del Repositorio (Monorepo)
+
+EREN está organizado como un **monorepo** para escalar durante años sin
+reescrituras. Cada capa tiene un lugar explícito:
+
+```
+eren/
+├── apps/                # Aplicaciones desplegables (superficies de entrega)
+│   ├── web/             # Interfaz web (Next.js) — migrada desde la raíz
+│   ├── api/             # API HTTP (FastAPI) — scaffolding
+│   └── desktop/         # Cliente de escritorio — placeholder
+│
+├── core/                # Núcleo cognitivo (motores, agnóstico de interfaz)
+│   ├── orchestrator/    # Coordina los motores y el ciclo de vida cognitivo
+│   ├── planner/         # Descompone objetivos en pasos ejecutables
+│   ├── reasoning/       # Estrategias de razonamiento explicable
+│   ├── memory/          # Memoria institucional (corto/largo plazo)
+│   ├── diagnostic/      # Diagnóstico de ingeniería clínica
+│   ├── workflow/        # Procesos operativos multi-paso
+│   ├── knowledge/       # Conocimiento institucional estructurado
+│   └── tools/           # Registro/adaptadores de capacidades
+│
+├── packages/            # Librerías compartidas (@eren/*)
+│   ├── shared/          # Utilidades, tipos y constantes transversales
+│   ├── sdk/             # SDK cliente tipado
+│   ├── prompts/         # Librería de prompts versionada
+│   └── schemas/         # Contratos de datos y validación
+│
+├── infrastructure/      # IaC, CI/CD, base de datos y operación
+│   └── database/        # Scripts SQL y de diagnóstico (antes en scripts/)
+│
+├── docs/                # Documentación (preservada)
+│
+└── tests/               # Pruebas que cruzan varios workspaces (e2e, integración)
+```
+
+> **Nota:** `core/`, `packages/`, `apps/api` y `apps/desktop` son *scaffolding*
+> de arquitectura. No contienen lógica de negocio, IA ni agentes todavía.
+>
+> Cada carpeta incluye un `README.md` que describe su propósito y sus límites de
+> dependencia.
+
+### Desarrollo (npm workspaces)
+
+El repositorio usa **npm workspaces**. Desde la raíz:
+
+```bash
+npm install     # instala todos los workspaces
+npm run dev     # levanta la app web (@eren/web)
+npm run build   # construye la app web
+npm run lint    # lint de la app web
+```
+
 ## Público Objetivo
 
 ### Primario
