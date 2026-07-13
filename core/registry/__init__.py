@@ -1,24 +1,63 @@
 """EREN engine registry.
 
-Dynamic, dependency-injected registry of cognitive engines. Exposes the
-concrete :class:`EngineRegistry`, its :class:`EngineRegistryPort` abstraction,
-and registry exceptions.
+The Engine Registry is the central catalog of all cognitive engines.
+The Orchestrator never knows concrete implementations — it only queries the Registry.
+
+Architecture only — no business logic, no AI, no engine implementations.
 """
 
 from __future__ import annotations
 
 from core.registry.exceptions import (
+    CircularDependencyError,
+    CompatibilityError,
+    DependencyNotFoundError,
     EngineAlreadyRegisteredError,
     EngineNotFoundError,
+    EventContractError,
     RegistryError,
+    ValidationError,
 )
-from core.registry.interfaces import EngineRegistryPort
+from core.registry.interfaces import EngineRegistryPort, RegistryProvider
+from core.registry.models import EngineDescriptor, RegistrySnapshot
 from core.registry.registry import EngineRegistry
+from core.registry.types import (
+    Capability,
+    EngineFilter,
+    EngineMetadata,
+    EnginePriority,
+    EngineStatus,
+    EventContract,
+    EventContracts,
+    SearchOptions,
+    VersionRequirement,
+)
 
 __all__ = [
+    # Core
     "EngineRegistry",
     "EngineRegistryPort",
+    "RegistryProvider",
+    # Models
+    "EngineDescriptor",
+    "RegistrySnapshot",
+    # Types
+    "Capability",
+    "EngineFilter",
+    "EngineMetadata",
+    "EnginePriority",
+    "EngineStatus",
+    "EventContract",
+    "EventContracts",
+    "SearchOptions",
+    "VersionRequirement",
+    # Exceptions
     "RegistryError",
     "EngineNotFoundError",
     "EngineAlreadyRegisteredError",
+    "DependencyNotFoundError",
+    "CompatibilityError",
+    "ValidationError",
+    "EventContractError",
+    "CircularDependencyError",
 ]
