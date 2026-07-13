@@ -21,6 +21,7 @@ exists today (scaffolding phase).
 
 ## Documentation index
 
+- [`core/clinical-reasoning-framework.md`](./core/clinical-reasoning-framework.md) — **Clinical Reasoning Framework** (cómo piensa, analiza, decide y responde EREN).
 - [`adr/`](./adr) — Architecture Decision Records.
 - [`architecture/`](./architecture) — system architecture.
 - [`core/`](./core) — cognitive engines documentation.
