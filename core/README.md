@@ -29,6 +29,24 @@ are interface-agnostic: they know nothing about web, API, or desktop delivery.
 | --- | --- |
 | [`context/`](./context) | `CognitiveContext` — the Pydantic v2 object that travels through every engine during one interaction. |
 
+## Internal event system
+
+| Package | Responsibility |
+| --- | --- |
+| [`events/`](./events) | `Event`/`EventType`, `EventPublisher`/`EventSubscriber` and the `EventBus` — decoupled pub/sub between engines. |
+
+## Engine registry
+
+| Package | Responsibility |
+| --- | --- |
+| [`registry/`](./registry) | `EngineRegistry` — dynamic, dependency-injected registration and lookup of engines by name (no conditional dispatch). |
+
+## Intent Engine (first cognitive engine)
+
+| Package | Responsibility |
+| --- | --- |
+| [`intent/`](./intent) | `IntentEngine` — classifies the user's intent into `IntentType` and enriches the context. Rule-based today, LLM-ready via an injected `IntentClassifier`. |
+
 ## Contracts
 
 | Package | Responsibility |
