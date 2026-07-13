@@ -1,17 +1,17 @@
-"""EREN cognitive context package.
+"""Cognitive Context & Blackboard System (CCBS).
 
-Defines :class:`CognitiveContext`, the object shared across all cognitive
-engines during a single interaction, plus its composing sub-models.
+The shared cognitive context for all motors in EREN.
+No motor creates copies. All motors enrich the same context.
 
-Architecture only — declarative Pydantic v2 models, no business logic or AI.
+Architecture only — no AI, no implementations.
 """
 
 from __future__ import annotations
 
+# Import from models.py (existing Pydantic models)
 from core.context.models import (
     Citation,
     ClinicalContext,
-    CognitiveContext,
     CognitiveState,
     Conversation,
     ConversationTurn,
@@ -29,8 +29,117 @@ from core.context.models import (
     UserRole,
 )
 
+# Import new CCBS components
+from core.context.blackboard import CognitiveBlackboard
+from core.context.cognitive_context import CognitiveContext
+from core.context.context_history import ContextHistory, HistoryRecord
+from core.context.context_manager import ContextManager, ContextStats
+from core.context.context_snapshot import (
+    ContextSnapshot,
+    SnapshotDiff,
+    SnapshotRegistry,
+)
+from core.context.context_types import (
+    BlackboardEntry,
+    BlackboardEntryType,
+    BlackboardFilter,
+    Confidence,
+    ConfidenceLevel,
+    ContextFilter,
+    ContextMetadata,
+    ContextStatus,
+    DeviceContext,
+    DiagnosisResult,
+    Evidence,
+    EvidenceSource,
+    EvidenceType,
+    HospitalContext,
+    Hypothesis,
+    IncidentContext,
+    IntentResult,
+    Observation,
+    PlanResult,
+    ProcessingMetadata,
+    ProcessingStage,
+    ResponseResult,
+    ToolUsage,
+    UserContext,
+    WorkflowResult,
+)
+from core.context.exceptions import (
+    BlackboardEntryNotFoundError,
+    BlackboardError,
+    BlackboardWriteError,
+    ConfidenceError,
+    ContextAlreadyExistsError,
+    ContextCapacityError,
+    ContextError,
+    ContextExpiredError,
+    ContextMergeError,
+    ContextNotFoundError,
+    ContextSnapshotError,
+    ContextStatusError,
+    ContextImmutableError,
+    ContextValidationError,
+)
+
 __all__ = [
+    # Core Context (new implementation)
     "CognitiveContext",
+    # Blackboard
+    "CognitiveBlackboard",
+    "BlackboardEntry",
+    "BlackboardEntryType",
+    # Manager
+    "ContextManager",
+    "ContextStats",
+    # History
+    "ContextHistory",
+    "HistoryRecord",
+    # Snapshot
+    "ContextSnapshot",
+    "SnapshotDiff",
+    "SnapshotRegistry",
+    # Types
+    "ContextStatus",
+    "ProcessingStage",
+    "ConfidenceLevel",
+    "Confidence",
+    "Evidence",
+    "EvidenceType",
+    "EvidenceSource",
+    "Hypothesis",
+    "Observation",
+    "UserContext",
+    "HospitalContext",
+    "DeviceContext",
+    "IncidentContext",
+    "IntentResult",
+    "PlanResult",
+    "DiagnosisResult",
+    "WorkflowResult",
+    "ToolUsage",
+    "ResponseResult",
+    "ProcessingMetadata",
+    "ContextMetadata",
+    "ContextFilter",
+    "BlackboardFilter",
+    # Exceptions
+    "ContextError",
+    "ContextNotFoundError",
+    "ContextAlreadyExistsError",
+    "ContextImmutableError",
+    "ContextStatusError",
+    "ContextValidationError",
+    "ContextMergeError",
+    "ContextSnapshotError",
+    "ContextExpiredError",
+    "ContextCapacityError",
+    "ConfidenceError",
+    "BlackboardError",
+    "BlackboardEntryNotFoundError",
+    "BlackboardWriteError",
+    # Legacy models (Pydantic)
     "Identity",
     "UserInfo",
     "ClinicalContext",
