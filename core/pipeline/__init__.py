@@ -131,6 +131,42 @@ from core.pipeline.types import (
 # Validator
 from core.pipeline.validator import PipelineValidator, ValidationResult
 
+# Cognitive Pipeline (PR-048)
+from core.pipeline.cognitive_events import (
+    CognitiveEvent,
+    CognitiveEventPublisher,
+    CognitiveEventType,
+    IntentDetectedEvent,
+    ContextBuiltEvent,
+    MemoryRetrievedEvent,
+    KnowledgeRetrievedEvent,
+    ReasoningCompletedEvent,
+    PlanCreatedEvent,
+    DecisionMadeEvent,
+    ExecutionCompletedEvent,
+    LearningCompletedEvent,
+    ResponseGeneratedEvent,
+)
+from core.pipeline.cognitive_pipeline import (
+    CognitivePipeline,
+    CognitivePipelineResult,
+    create_cognitive_pipeline,
+)
+from core.pipeline.stages import (
+    CognitiveStage,
+    CognitiveTelemetry,
+    IntentDetectionStage,
+    ContextBuildingStage,
+    MemoryRetrievalStage,
+    KnowledgeRetrievalStage,
+    CognitiveReasoningStage,
+    CognitivePlanningStage,
+    CognitiveDecisionStage,
+    TaskExecutionStage,
+    CognitiveLearningStage,
+    ResponseGenerationStage,
+)
+
 # Aliases for backwards compatibility
 ERENPipeline = CognitivePipeline
 ERENPipelineBuilder = PipelineBuilder
@@ -144,7 +180,38 @@ __all__ = [
     "PipelineStage",
     "PipelineExecutor",
     "SyncPipelineExecutor",
-    # Stages
+    # Cognitive Pipeline (PR-048)
+    "CognitivePipeline",
+    "CognitivePipelineResult",
+    "create_cognitive_pipeline",
+    # Cognitive Events
+    "CognitiveEvent",
+    "CognitiveEventPublisher",
+    "CognitiveEventType",
+    "IntentDetectedEvent",
+    "ContextBuiltEvent",
+    "MemoryRetrievedEvent",
+    "KnowledgeRetrievedEvent",
+    "ReasoningCompletedEvent",
+    "PlanCreatedEvent",
+    "DecisionMadeEvent",
+    "ExecutionCompletedEvent",
+    "LearningCompletedEvent",
+    "ResponseGeneratedEvent",
+    # Cognitive Stages
+    "CognitiveStage",
+    "CognitiveTelemetry",
+    "IntentDetectionStage",
+    "ContextBuildingStage",
+    "MemoryRetrievalStage",
+    "KnowledgeRetrievalStage",
+    "CognitiveReasoningStage",
+    "CognitivePlanningStage",
+    "CognitiveDecisionStage",
+    "TaskExecutionStage",
+    "CognitiveLearningStage",
+    "ResponseGenerationStage",
+    # Stages (existing)
     "PlanningStage",
     "KnowledgeStage",
     "MemoryStage",

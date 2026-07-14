@@ -92,6 +92,10 @@ class PipelineContext:
         with self._lock:
             self.shared_data[key] = value
 
+    def __setitem__(self, key: str, value: Any) -> None:
+        """Set a value using dictionary syntax."""
+        self.set(key, value)
+
     def get(self, key: str, default: Any = None) -> Any:
         """Get a value from the shared context.
 
@@ -104,6 +108,10 @@ class PipelineContext:
         """
         with self._lock:
             return self.shared_data.get(key, default)
+
+    def __getitem__(self, key: str) -> Any:
+        """Get a value using dictionary syntax."""
+        return self.get(key)
 
     def has(self, key: str) -> bool:
         """Check if a key exists in shared context.
