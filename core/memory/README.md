@@ -186,19 +186,37 @@ class ConsolidationPolicy:
 
 ---
 
-## Memory Orchestrator (CMO)
+## Memory Coordinator (CMC)
 
-The **Cognitive Memory Orchestrator (CMO)** is the system that coordinates all memory operations.
+The **Cognitive Memory Coordinator (CMC)** is an INTERNAL component of MemoryEngine that coordinates all memory operations.
+
+### Architecture
+
+```
+ExecutionCoordinator
+        │
+        ▼
+MemoryEngine (PUBLIC API)
+        │
+        ▼
+MemoryCoordinator (INTERNAL)
+        │
+ ├── MemoryRegistry
+ ├── MemorySelector
+ ├── MemoryPolicies
+ └── Memory Providers
+```
 
 ### Philosophy
 
-> The Orchestrator does NOT store information. It only decides:
+> The Coordinator is an INTERNAL component. It does NOT store information. It only decides:
 > - WHERE to read?
 > - WHERE to write?
 > - IN WHAT ORDER?
 > - HOW TO COMBINE results?
+> - WHAT POLICY to apply?
 
-### The Orchestrator Never Knows
+### The Coordinator Never Knows
 
 ❌ PostgreSQL  
 ❌ Redis  
@@ -216,27 +234,27 @@ Only contracts (BaseMemoryInterface).
 
 ```python
 from core.memory import (
-    MemoryOrchestrator,
+    MemoryCoordinator,
     MemoryEntry,
     MemoryType,
     MemoryAccessPolicy,
 )
 
-orchestrator = MemoryOrchestrator()
+coordinator = MemoryCoordinator()
 
 # Write
 entry = MemoryEntry(
     content="User asked about monitor repair",
     memory_type=MemoryType.WORKING,
 )
-orchestrator.write(entry)
+coordinator.write(entry)
 
 # Read
-response = orchestrator.read(entry.key)
+response = coordinator.read(entry.key)
 
 # Search
 query = MemoryQuery(query="monitor", limit=10)
-results = orchestrator.search(query)
+results = coordinator.search(query)
 ```
 
 ### Access Policies
@@ -249,7 +267,18 @@ results = orchestrator.search(query)
 | `MERGE_ALL` | Merge all results |
 | `READ_ONLY` | No writes |
 | `WRITE_THROUGH` | Write to all |
+| `CACHE_FIRST` | Check cache first |
+
+### Backward Compatibility
+
+For legacy code, `MemoryOrchestrator` is still available as an alias:
+
+```python
+from core.memory import MemoryOrchestrator  # Works!
+
+orchestrator = MemoryOrchestrator()  # Same as MemoryCoordinator()
+```
 
 ## Referencias
 - [Documentación arquitectónica](../docs/core/cognitive-memory-system.md)
-- [Memory Orchestrator](../docs/architecture/memory-orchestrator.md)
+- [Memory Coordinator](../docs/architecture/memory-coordinator.md)

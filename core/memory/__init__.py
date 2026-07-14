@@ -71,7 +71,7 @@ from core.memory.memory_types import (
     SearchOptions,
 )
 
-# Orchestrator modules
+# Coordinator modules
 from core.memory.base import BaseMemoryInterface, MemoryInterface
 from core.memory.registry import (
     MemoryRegistry,
@@ -79,7 +79,11 @@ from core.memory.registry import (
     reset_memory_registry,
 )
 from core.memory.selector import MemorySelector
-from core.memory.orchestrator import (
+from core.memory.coordinator import (
+    MemoryCoordinator,
+    get_memory_coordinator,
+    reset_memory_coordinator,
+    # Backward compatibility
     MemoryOrchestrator,
     get_memory_orchestrator,
     reset_memory_orchestrator,
@@ -134,20 +138,24 @@ __all__ = [
     "RetrievalPolicy",
     "ConsolidationPolicy",
     "MemoryStatistics",
-    # Orchestrator Types
+    # Coordinator Types
     "MemoryState",
     "MemoryAccessPolicy",
     "MemoryOperation",
     "MemoryResult",
     "MemoryResponse",
     "MemoryMetrics",
-    # Orchestrator Components
+    # Coordinator Components
     "BaseMemoryInterface",
     "MemoryInterface",
     "MemoryRegistry",
     "get_memory_registry",
     "reset_memory_registry",
     "MemorySelector",
+    "MemoryCoordinator",
+    "get_memory_coordinator",
+    "reset_memory_coordinator",
+    # Backward Compatibility (deprecated aliases)
     "MemoryOrchestrator",
     "get_memory_orchestrator",
     "reset_memory_orchestrator",
@@ -162,7 +170,7 @@ __all__ = [
     "MemoryRelationshipError",
     "MemoryValidationError",
     "MemorySnapshotError",
-    # Orchestrator Exceptions
+    # Coordinator Exceptions
     "MemoryOrchestratorException",
     "MemoryNotRegisteredError",
     "MemoryUnavailableError",
