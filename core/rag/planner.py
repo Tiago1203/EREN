@@ -11,12 +11,11 @@ from typing import TYPE_CHECKING
 from core.rag.types import (
     RAGQuery,
     RetrievalStrategy,
-    RetrievedChunk,
 )
 
 if TYPE_CHECKING:
-    from core.retrieval import RetrievalEngine
     from core.memory import MemoryCoordinator
+    from core.retrieval import RetrievalEngine
 
 
 class RetrievalPlanner:
@@ -44,8 +43,8 @@ class RetrievalPlanner:
     async def plan_retrieval(
         self,
         query: RAGQuery,
-        retrieval_engine: "RetrievalEngine | None" = None,
-        memory_coordinator: "MemoryCoordinator | None" = None,
+        retrieval_engine: RetrievalEngine | None = None,
+        memory_coordinator: MemoryCoordinator | None = None,
     ) -> RetrievalPlan:
         """Plan retrieval strategy.
 
@@ -96,11 +95,11 @@ class RetrievalPlanner:
         # Simple questions need fewer chunks
         if words < 10:
             return 5
-        
+
         # Medium complexity
         if words < 30:
             return 10
-        
+
         # Complex questions need more context
         return 15
 
@@ -122,7 +121,7 @@ class RetrievalPlanner:
     async def _should_use_memory(
         self,
         query: RAGQuery,
-        memory_coordinator: "MemoryCoordinator | None",
+        memory_coordinator: MemoryCoordinator | None,
     ) -> bool:
         """Determine if memory should be used."""
         if not memory_coordinator:

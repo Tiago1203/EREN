@@ -34,68 +34,70 @@ warnings.warn(
 
 # Re-export everything from the canonical location
 from core.diagnostics import (
-    # Main engine
-    ERENDiagnostics,
-    DiagnosticEngine,
-    get_diagnostics,
-    reset_diagnostics,
     # Architecture
     ArchitectureValidator,
-    DependencyGraphValidator,
     CircularDependencyValidator,
-    LayerDependencyValidator,
-    # Health
-    SystemHealth,
-    HealthStatus,
-    ReadinessCheck,
-    LivenessCheck,
-    StartupHealth,
-    ShutdownHealth,
-    RecoveryHealth,
+    ContractCompliance,
     # Contracts
     ContractValidator,
-    ContractCompliance,
     ContractViolation,
-    # Integration
-    IntegrationValidator,
-    IntegrationCheck,
-    IntegrationResult,
-    # Dependencies
-    DependencyValidator,
-    DependencyHealth,
-    DependencyIssue,
-    # Runtime
-    RuntimeValidator,
-    RuntimeHealth,
-    RuntimeMetrics,
-    # Performance
-    PerformanceProfiler,
-    PerformanceMetrics,
-    PerformanceIssue,
-    # Report
-    DiagnosticReport,
-    DiagnosticScore,
-    ReportGenerator,
-    # Events
-    DiagnosticsStarted,
-    HealthCheckStarted,
-    HealthCheckCompleted,
-    ValidationStarted,
-    ValidationCompleted,
-    IntegrationCheckCompleted,
-    PerformanceMeasured,
-    ReportGenerated,
-    DiagnosticsCompleted,
-    DiagnosticsFailed,
-    # Metrics
-    DiagnosticMetrics,
-    DiagnosticTrace,
-    # Exceptions
-    DiagnosticError,
-    ValidationError as DiagnosticValidationError,
-    HealthCheckError,
     ContractViolationError,
     DependencyError,
+    DependencyGraphValidator,
+    DependencyHealth,
+    DependencyIssue,
+    # Dependencies
+    DependencyValidator,
+    DiagnosticEngine,
+    # Exceptions
+    DiagnosticError,
+    # Metrics
+    DiagnosticMetrics,
+    # Report
+    DiagnosticReport,
+    DiagnosticsCompleted,
+    DiagnosticScore,
+    DiagnosticsFailed,
+    # Events
+    DiagnosticsStarted,
+    DiagnosticTrace,
+    # Main engine
+    ERENDiagnostics,
+    HealthCheckCompleted,
+    HealthCheckError,
+    HealthCheckStarted,
+    HealthStatus,
+    IntegrationCheck,
+    IntegrationCheckCompleted,
+    IntegrationResult,
+    # Integration
+    IntegrationValidator,
+    LayerDependencyValidator,
+    LivenessCheck,
+    PerformanceIssue,
+    PerformanceMeasured,
+    PerformanceMetrics,
+    # Performance
+    PerformanceProfiler,
+    ReadinessCheck,
+    RecoveryHealth,
+    ReportGenerated,
+    ReportGenerator,
+    RuntimeHealth,
+    RuntimeMetrics,
+    # Runtime
+    RuntimeValidator,
+    ShutdownHealth,
+    StartupHealth,
+    # Health
+    SystemHealth,
+    ValidationCompleted,
+    ValidationStarted,
+    get_diagnostics,
+    reset_diagnostics,
+)
+from core.diagnostics import (
+    ValidationError as DiagnosticValidationError,
 )
 
 __all__ = [

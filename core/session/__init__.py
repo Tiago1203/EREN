@@ -1,11 +1,11 @@
 """Cognitive Session Manager (CSM)."""
 
-from core.session.session import SessionMetadata, SessionState, CognitiveSession
+from core.session.session import CognitiveSession, SessionMetadata, SessionState
 from core.session.session_manager import CognitiveSessionManager
 
 __all__ = [
-    "CognitiveSessionManager",
     "CognitiveSession",
+    "CognitiveSessionManager",
     "SessionMetadata",
     "SessionState",
 ]

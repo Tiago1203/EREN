@@ -6,7 +6,7 @@ Publishes execution events to the Event Bus.
 from __future__ import annotations
 
 import threading
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING
 
@@ -57,7 +57,7 @@ class ExecutionEventPublisher:
     def publish(
         self,
         event_type: ExecutionEventType | str,
-        result: "ExecutionResult | None" = None,
+        result: ExecutionResult | None = None,
         execution_id: str = "",
         session_id: str = "",
         correlation_id: str = "",
@@ -77,7 +77,7 @@ class ExecutionEventPublisher:
 
         event = {
             "event_type": event_type_str,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "execution_id": execution_id,
             "session_id": session_id,
             "correlation_id": correlation_id,
@@ -97,7 +97,7 @@ class ExecutionEventPublisher:
         # Publish to Event Bus if available
         if self._event_bus:
             try:
-                from core.events.models import Event, EventType
+                from core.events.models import Event
                 self._event_bus.publish(Event(
                     type=self._map_to_core_event_type(event_type),
                     source="execution",
@@ -115,7 +115,7 @@ class ExecutionEventPublisher:
             except Exception:
                 pass
 
-    def _map_to_core_event_type(self, event_type: ExecutionEventType) -> "EventType":
+    def _map_to_core_event_type(self, event_type: ExecutionEventType) -> EventType:
         """Map execution event to core event type.
 
         Args:

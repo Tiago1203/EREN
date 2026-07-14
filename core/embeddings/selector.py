@@ -8,14 +8,14 @@ from __future__ import annotations
 import random
 from typing import TYPE_CHECKING
 
-from core.embeddings.types import (
-    EmbeddingProvider,
-    EmbeddingPolicy,
-    ProviderHealth,
-)
+from core.embeddings.exceptions import SelectionError
 from core.embeddings.provider import BaseEmbeddingProvider
 from core.embeddings.registry import EmbeddingRegistry
-from core.embeddings.exceptions import SelectionError
+from core.embeddings.types import (
+    EmbeddingPolicy,
+    EmbeddingProvider,
+    ProviderHealth,
+)
 
 if TYPE_CHECKING:
     pass
@@ -120,7 +120,6 @@ class EmbeddingSelector:
         Raises:
             SelectionError: If no healthy provider found.
         """
-        import asyncio
 
         provider = self.select(model, policy)
 

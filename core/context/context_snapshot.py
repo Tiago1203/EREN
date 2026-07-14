@@ -12,7 +12,7 @@ Architecture only — no business logic, no AI.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from .cognitive_context import CognitiveContext
@@ -113,7 +113,7 @@ class ContextSnapshot:
             snapshot_id=snapshot_id,
             context_id=context.context_id,
             version=context.version,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             user=context.user,
             hospital=context.hospital,
             device=context.device,

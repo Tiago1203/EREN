@@ -6,9 +6,7 @@ Architecture only -- no implementations.
 """
 
 import threading
-import uuid
-from datetime import datetime, timezone
-from typing import Any, Callable, Optional
+from typing import Any
 
 from .dependency_validator import DependencyValidator
 from .exceptions import (
@@ -17,7 +15,6 @@ from .exceptions import (
     ServiceNotFoundException,
 )
 from .service_factory import ServiceFactory
-from .service_lifetime import ServiceLifetime
 from .service_scope import ScopeType, ServiceScope
 
 
@@ -68,7 +65,7 @@ class ServiceProvider:
             raise ServiceNotFoundException(contract)
         return result
 
-    def try_resolve(self, contract: str) -> Optional[Any]:
+    def try_resolve(self, contract: str) -> Any | None:
         """Try to resolve a service without throwing.
 
         Args:

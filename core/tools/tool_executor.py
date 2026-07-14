@@ -10,14 +10,11 @@ from __future__ import annotations
 import threading
 import time
 import uuid
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any, Callable
+from collections.abc import Callable
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING, Any
 
 from .exceptions import (
-    CircuitBreakerOpenError,
-    RateLimitExceededError,
-    ToolExecutionError,
     ToolNotFoundError,
     ToolTimeoutError,
     ToolValidationError,
@@ -27,7 +24,6 @@ from .tool_types import (
     CircuitBreakerConfig,
     CircuitState,
     ExecutionContext,
-    ExecutionMode,
     ExecutionStatus,
     HealthCheckResult,
     HealthStatus,
@@ -546,7 +542,7 @@ class ToolExecutor:
                 metrics.avg_execution_time_ms = (
                     metrics.total_execution_time_ms / metrics.total_executions
                 )
-                metrics.last_execution = datetime.now(timezone.utc).isoformat()
+                metrics.last_execution = datetime.now(UTC).isoformat()
                 metrics.last_success = metrics.last_execution
 
     def _record_failure(
@@ -563,7 +559,7 @@ class ToolExecutor:
                 metrics.failed_executions += 1
                 if error_type == "timeout":
                     metrics.timed_out_executions += 1
-                metrics.last_execution = datetime.now(timezone.utc).isoformat()
+                metrics.last_execution = datetime.now(UTC).isoformat()
                 metrics.last_failure = metrics.last_execution
 
     def get_metrics(self, tool_id: str) -> ToolMetrics | None:
@@ -609,7 +605,7 @@ class ToolExecutor:
                 status=status,
                 latency_ms=metrics.avg_execution_time_ms,
                 message=f"Success rate: {metrics.success_rate:.1%}",
-                last_check=datetime.now(timezone.utc).isoformat(),
+                last_check=datetime.now(UTC).isoformat(),
             )
 
         return HealthCheckResult(

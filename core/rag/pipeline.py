@@ -10,35 +10,25 @@ import time
 import uuid
 from typing import TYPE_CHECKING
 
-from core.rag.types import (
-    RAGQuery,
-    RAGResponse,
-    RAGResult,
-    RAGContext,
-    RetrievalResult,
-    RetrievedChunk,
-    PipelineStatistics,
-)
-from core.rag.exceptions import (
-    RAGError,
-    RetrievalError,
-    NoContextError,
-    GenerationError,
-)
-from core.rag.prompt_builder import PromptBuilder
-from core.rag.response_builder import ResponseBuilder
-from core.rag.citation_builder import CitationBuilder
-
 # Import CCE directly from engine module to avoid circular imports
 from core.context.engine.engine import (
     CognitiveContextEngine,
     get_context_engine,
 )
 from core.context.engine.types import ContextPackage
+from core.rag.citation_builder import CitationBuilder
+from core.rag.prompt_builder import PromptBuilder
+from core.rag.response_builder import ResponseBuilder
+from core.rag.types import (
+    PipelineStatistics,
+    RAGQuery,
+    RAGResponse,
+    RAGResult,
+)
 
 if TYPE_CHECKING:
-    from core.retrieval import RetrievalEngine
     from core.memory import MemoryCoordinator
+    from core.retrieval import RetrievalEngine
 
 
 class CognitiveRAGPipeline:
@@ -68,8 +58,8 @@ class CognitiveRAGPipeline:
     def __init__(
         self,
         context_engine: CognitiveContextEngine | None = None,
-        retrieval_engine: "RetrievalEngine | None" = None,
-        memory_coordinator: "MemoryCoordinator | None" = None,
+        retrieval_engine: RetrievalEngine | None = None,
+        memory_coordinator: MemoryCoordinator | None = None,
     ):
         """Initialize RAG pipeline.
 
@@ -172,7 +162,7 @@ class CognitiveRAGPipeline:
                 response=RAGResponse(
                     query_id=query.query_id,
                     response_id=str(uuid.uuid4()),
-                    answer=f"I encountered an error processing your question: {str(e)}",
+                    answer=f"I encountered an error processing your question: {e!s}",
                 ),
                 success=False,
                 error=str(e),

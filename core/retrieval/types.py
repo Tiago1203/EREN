@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING
 
@@ -98,7 +98,7 @@ class RetrievalResult:
     memory_id: str
     relevance_score: float = 0.0
     metadata: dict = field(default_factory=dict)
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
     cached: bool = False
 
     def to_dict(self) -> dict:
@@ -244,7 +244,7 @@ class RetrievalTrace:
 
     trace_id: str
     query: str
-    start_time: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    start_time: datetime = field(default_factory=lambda: datetime.now(UTC))
     end_time: datetime | None = None
     steps: list[dict] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
@@ -259,7 +259,7 @@ class RetrievalTrace:
 
     def finish(self) -> None:
         """Mark trace as finished."""
-        self.end_time = datetime.now(timezone.utc)
+        self.end_time = datetime.now(UTC)
 
     def to_dict(self) -> dict:
         """Convert to dictionary."""

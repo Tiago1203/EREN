@@ -8,14 +8,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from core.rag.types import (
-    RAGQuery,
-    RAGContext,
-    RAGPrompt,
-)
-
 # Import CCE types directly from engine types module
 from core.context.engine.types import ContextPackage
+from core.rag.types import (
+    RAGPrompt,
+    RAGQuery,
+)
 
 if TYPE_CHECKING:
     pass

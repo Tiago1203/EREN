@@ -30,41 +30,41 @@ Example:
 
 from __future__ import annotations
 
+from core.models.catalog import ModelCatalog
+
 # Core
 from core.models.descriptor import ModelDescriptor
+
+# Exceptions
+from core.models.exceptions import (
+    ModelAlreadyRegisteredError,
+    ModelCapabilityError,
+    ModelConfigurationError,
+    ModelDiscoveryError,
+    ModelNotFoundError,
+    ModelNotRegisteredError,
+    ModelRegistryException,
+    ModelSelectionError,
+    ModelUnavailableError,
+    ProviderNotFoundError,
+)
 from core.models.registry import (
     ModelRegistry,
     get_model_registry,
     reset_model_registry,
 )
 from core.models.selector import ModelSelector
-from core.models.catalog import ModelCatalog
 
 # Types
 from core.models.types import (
-    ModelCategory,
-    ModelState,
-    ModelSelectionPolicy,
-    ModelCapabilities,
-    ModelPricing,
     ModelAvailability,
+    ModelCapabilities,
+    ModelCategory,
     ModelMetrics,
+    ModelPricing,
+    ModelSelectionPolicy,
+    ModelState,
 )
-
-# Exceptions
-from core.models.exceptions import (
-    ModelRegistryException,
-    ModelNotFoundError,
-    ModelAlreadyRegisteredError,
-    ModelNotRegisteredError,
-    ModelUnavailableError,
-    ModelConfigurationError,
-    ModelCapabilityError,
-    ProviderNotFoundError,
-    ModelSelectionError,
-    ModelDiscoveryError,
-)
-
 
 __all__ = [
     # Core

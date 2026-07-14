@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import threading
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -58,7 +58,7 @@ class PipelineContext:
     current_stage_index: int = 0
 
     # Timestamps
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     started_at: datetime | None = None
     finished_at: datetime | None = None
 
@@ -145,7 +145,7 @@ class PipelineContext:
             result = self.stage_results.get(stage_name)
             return result.to_dict() if result else None
 
-    def add_stage_result(self, stage_name: str, result: "StageResult") -> None:
+    def add_stage_result(self, stage_name: str, result: StageResult) -> None:
         """Add a stage result to the context.
 
         Args:
@@ -183,12 +183,12 @@ class PipelineContext:
     def start(self) -> None:
         """Mark the pipeline context as started."""
         with self._lock:
-            self.started_at = datetime.now(timezone.utc)
+            self.started_at = datetime.now(UTC)
 
     def finish(self) -> None:
         """Mark the pipeline context as finished."""
         with self._lock:
-            self.finished_at = datetime.now(timezone.utc)
+            self.finished_at = datetime.now(UTC)
 
     def request_cancellation(self, reason: str = "") -> None:
         """Request pipeline cancellation.
@@ -268,7 +268,7 @@ class PipelineContext:
         with self._lock:
             if not self.started_at:
                 return 0
-            end = self.finished_at or datetime.now(timezone.utc)
+            end = self.finished_at or datetime.now(UTC)
             return int((end - self.started_at).total_seconds() * 1000)
 
     def get_stage_count(self) -> int:
@@ -327,7 +327,7 @@ class PipelineContext:
                 "success_rate": self.get_success_rate(),
             }
 
-    def copy(self) -> "PipelineContext":
+    def copy(self) -> PipelineContext:
         """Create a deep copy of the context.
 
         Returns:

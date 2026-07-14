@@ -8,7 +8,7 @@ from __future__ import annotations
 import threading
 from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from core.execution.result import ExecutionResult
 
@@ -19,7 +19,7 @@ class MetricSnapshot:
 
     name: str
     value: float
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
     tags: dict | None = None
 
 
@@ -47,7 +47,7 @@ class ExecutionMetrics:
     def start(self) -> None:
         """Start metrics collection."""
         with self._lock:
-            self._start_time = datetime.now(timezone.utc)
+            self._start_time = datetime.now(UTC)
 
     def record_execution(self, result: ExecutionResult) -> None:
         """Record execution metrics.
@@ -255,7 +255,7 @@ class ExecutionMetrics:
             }
 
             if self._start_time:
-                elapsed = (datetime.now(timezone.utc) - self._start_time).total_seconds()
+                elapsed = (datetime.now(UTC) - self._start_time).total_seconds()
                 summary["elapsed_seconds"] = elapsed
 
             return summary

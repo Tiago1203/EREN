@@ -8,11 +8,10 @@ Architecture only -- no implementations, no business logic.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Callable
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
-from .scheduling_types import CognitiveTask, TaskPriority
+from .scheduling_types import CognitiveTask
 
 if TYPE_CHECKING:
     pass
@@ -186,7 +185,7 @@ class CriticalFirstStrategy(SchedulingStrategy):
             if task.deadline:
                 try:
                     deadline = datetime.fromisoformat(task.deadline)
-                    now = datetime.now(timezone.utc)
+                    now = datetime.now(UTC)
                     time_remaining = (deadline - now).total_seconds()
                     if time_remaining < 0:
                         deadline_score = -1  # Overdue

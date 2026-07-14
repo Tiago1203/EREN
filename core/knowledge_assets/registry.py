@@ -8,26 +8,23 @@ from __future__ import annotations
 import hashlib
 import threading
 import uuid
-from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
-from core.knowledge_assets.types import (
-    AssetMetadata,
-    AssetType,
-    LifecycleState,
-    PermissionLevel,
-    AssetSearchQuery,
-    AssetStatistics,
-    AuditAction,
-)
-from core.knowledge_assets.exceptions import (
-    AssetNotFoundError,
-    DuplicateAssetError,
-)
 from core.knowledge_assets.catalog import AssetCatalog, get_asset_catalog
 from core.knowledge_assets.collections import AssetCollections, get_asset_collections
-from core.knowledge_assets.versions import VersionManager, get_version_manager
+from core.knowledge_assets.exceptions import (
+    AssetNotFoundError,
+)
 from core.knowledge_assets.permissions import AuditLogger, PermissionChecker, get_audit_logger
+from core.knowledge_assets.types import (
+    AssetMetadata,
+    AssetSearchQuery,
+    AssetStatistics,
+    AssetType,
+    AuditAction,
+    LifecycleState,
+)
+from core.knowledge_assets.versions import VersionManager, get_version_manager
 
 if TYPE_CHECKING:
     pass

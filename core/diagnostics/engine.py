@@ -27,38 +27,35 @@ from __future__ import annotations
 import threading
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     pass
 
-from core.diagnostics.exceptions import (
-    DiagnosticsException,
-    DiagnosticsInitializationError,
-)
-from core.diagnostics.health import SystemHealth, HealthStatus
-from core.diagnostics.readiness import ReadinessChecker, ReadinessReport
-from core.diagnostics.liveness import LivenessChecker, LivenessReport
-from core.diagnostics.architecture import ArchitectureValidator, ArchitectureReport
-from core.diagnostics.contracts import ContractValidator, ContractReport
-from core.diagnostics.dependencies import DependencyValidator, DependencyReport
-from core.diagnostics.integration import IntegrationValidator, IntegrationReport
-from core.diagnostics.runtime import RuntimeValidator, RuntimeReport
-from core.diagnostics.performance import PerformanceProfiler, PerformanceReport
-from core.diagnostics.score import DiagnosticScore, ScoreCategory
-from core.diagnostics.report import DiagnosticReport, ReportGenerator
+from core.diagnostics.architecture import ArchitectureValidator
+from core.diagnostics.contracts import ContractValidator
+from core.diagnostics.dependencies import DependencyValidator
 from core.diagnostics.events import (
     DiagnosticsEventPublisher,
     DiagnosticsEventType,
-    publish_diagnostics_started,
     publish_diagnostics_completed,
     publish_diagnostics_failed,
-    publish_validation_started,
-    publish_validation_completed,
+    publish_diagnostics_started,
 )
-from core.diagnostics.metrics import DiagnosticsMetrics, get_metrics
-from core.diagnostics.trace import DiagnosticsTrace, get_trace
+from core.diagnostics.exceptions import (
+    DiagnosticsInitializationError,
+)
+from core.diagnostics.health import SystemHealth
+from core.diagnostics.integration import IntegrationValidator
+from core.diagnostics.liveness import LivenessChecker
+from core.diagnostics.metrics import get_metrics
+from core.diagnostics.performance import PerformanceProfiler
+from core.diagnostics.readiness import ReadinessChecker
+from core.diagnostics.report import DiagnosticReport, ReportGenerator
+from core.diagnostics.runtime import RuntimeValidator
+from core.diagnostics.score import DiagnosticScore, ScoreCategory
+from core.diagnostics.trace import get_trace
 
 
 class ERENDiagnostics:
@@ -116,7 +113,7 @@ class ERENDiagnostics:
         # Thread safety
         self._lock = threading.RLock()
 
-    def with_architecture_validation(self, enabled: bool = True) -> "ERENDiagnostics":
+    def with_architecture_validation(self, enabled: bool = True) -> ERENDiagnostics:
         """Enable or disable architecture validation.
 
         Args:
@@ -129,7 +126,7 @@ class ERENDiagnostics:
             self._validation_options["architecture"] = enabled
             return self
 
-    def with_contract_validation(self, enabled: bool = True) -> "ERENDiagnostics":
+    def with_contract_validation(self, enabled: bool = True) -> ERENDiagnostics:
         """Enable or disable contract validation.
 
         Args:
@@ -142,7 +139,7 @@ class ERENDiagnostics:
             self._validation_options["contracts"] = enabled
             return self
 
-    def with_dependency_validation(self, enabled: bool = True) -> "ERENDiagnostics":
+    def with_dependency_validation(self, enabled: bool = True) -> ERENDiagnostics:
         """Enable or disable dependency validation.
 
         Args:
@@ -155,7 +152,7 @@ class ERENDiagnostics:
             self._validation_options["dependencies"] = enabled
             return self
 
-    def with_integration_validation(self, enabled: bool = True) -> "ERENDiagnostics":
+    def with_integration_validation(self, enabled: bool = True) -> ERENDiagnostics:
         """Enable or disable integration validation.
 
         Args:
@@ -168,7 +165,7 @@ class ERENDiagnostics:
             self._validation_options["integration"] = enabled
             return self
 
-    def with_runtime_validation(self, enabled: bool = True) -> "ERENDiagnostics":
+    def with_runtime_validation(self, enabled: bool = True) -> ERENDiagnostics:
         """Enable or disable runtime validation.
 
         Args:
@@ -181,7 +178,7 @@ class ERENDiagnostics:
             self._validation_options["runtime"] = enabled
             return self
 
-    def with_health_check(self, enabled: bool = True) -> "ERENDiagnostics":
+    def with_health_check(self, enabled: bool = True) -> ERENDiagnostics:
         """Enable or disable health checks.
 
         Args:
@@ -194,7 +191,7 @@ class ERENDiagnostics:
             self._validation_options["health"] = enabled
             return self
 
-    def with_readiness_check(self, enabled: bool = True) -> "ERENDiagnostics":
+    def with_readiness_check(self, enabled: bool = True) -> ERENDiagnostics:
         """Enable or disable readiness checks.
 
         Args:
@@ -207,7 +204,7 @@ class ERENDiagnostics:
             self._validation_options["readiness"] = enabled
             return self
 
-    def with_liveness_check(self, enabled: bool = True) -> "ERENDiagnostics":
+    def with_liveness_check(self, enabled: bool = True) -> ERENDiagnostics:
         """Enable or disable liveness checks.
 
         Args:
@@ -220,7 +217,7 @@ class ERENDiagnostics:
             self._validation_options["liveness"] = enabled
             return self
 
-    def with_performance_profiling(self, enabled: bool = True) -> "ERENDiagnostics":
+    def with_performance_profiling(self, enabled: bool = True) -> ERENDiagnostics:
         """Enable or disable performance profiling.
 
         Args:
@@ -239,7 +236,7 @@ class ERENDiagnostics:
         Returns:
             DiagnosticReport with complete validation results.
         """
-        self._started_at = datetime.now(timezone.utc)
+        self._started_at = datetime.now(UTC)
         start_time = time.time()
 
         # Publish start event
@@ -322,7 +319,7 @@ class ERENDiagnostics:
                 correlation_id=self._correlation_id,
                 payload={"error": str(e)},
             )
-            raise DiagnosticsInitializationError(f"Diagnostics failed: {str(e)}") from e
+            raise DiagnosticsInitializationError(f"Diagnostics failed: {e!s}") from e
 
     def _run_architecture_validation(self) -> None:
         """Run architecture validation."""

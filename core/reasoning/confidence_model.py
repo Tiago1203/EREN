@@ -173,7 +173,7 @@ class BayesianConfidenceCalculator:
 
         # CRITICAL FIX: Prevent division by zero
         denominator = prior * supporting_prod + (1 - prior) * contradicting_prod
-        
+
         if denominator <= 0.0:
             # Return UNKNOWN confidence instead of raising error
             return ConfidenceScore(
@@ -256,7 +256,7 @@ class DempsterShaferCalculator:
 
         # CRITICAL: Check for conflict
         denominator = 1 - m_h * m_not_h
-        
+
         if denominator <= 0.0:
             # High conflict - return uncertain confidence
             return ConfidenceScore(

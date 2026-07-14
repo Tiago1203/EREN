@@ -5,8 +5,9 @@ Describes how a service should be created and managed.
 Architecture only -- no implementations.
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Optional
+from typing import Any
 
 from .service_lifetime import ServiceLifetime
 
@@ -28,7 +29,7 @@ class ServiceDescriptor:
     lifetime: str = ServiceLifetime.TRANSIENT
 
     # Factory function (if using FACTORY lifetime)
-    factory: Optional[Callable] = None
+    factory: Callable | None = None
 
     # Constructor arguments (if any)
     arguments: tuple = field(default_factory=tuple)
@@ -136,7 +137,7 @@ class ServiceInstance:
     resolution_count: int = 0
 
     # Scope this instance belongs to (if scoped)
-    scope_id: Optional[str] = None
+    scope_id: str | None = None
 
     # Whether this is the actual implementation
     is_implementation: bool = True

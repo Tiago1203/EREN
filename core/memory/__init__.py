@@ -8,29 +8,62 @@ Architecture only — no AI, no storage backend.
 
 from __future__ import annotations
 
-# =============================================================================
-# Canonical Sources
-# =============================================================================
-# MemoryEntry, MemoryQuery -> core/memory/memory_models.py (models)
-# MemoryType (detailed) -> core/memory/memory_types.py (types for engine)
-# MemoryType (simple), MemoryState, etc. -> core/memory/types.py (types for coordinator)
-# =============================================================================
+# Coordinator modules
+from core.memory.base import BaseMemoryInterface, MemoryInterface
+from core.memory.coordinator import (
+    MemoryCoordinator,
+    # Backward compatibility
+    MemoryOrchestrator,
+    get_memory_coordinator,
+    get_memory_orchestrator,
+    reset_memory_coordinator,
+    reset_memory_orchestrator,
+)
 
-# =============================================================================
-# Canonical Imports (Single source per type)
-# =============================================================================
+# Exceptions
+from core.memory.exceptions import (
+    MemoryAlreadyExistsError,
+    MemoryCapacityError,
+    MemoryConsolidationError,
+    MemoryDecayError,
+    MemoryError,
+    MemoryNoResultsError,
+    MemoryNotFoundError,
+    MemoryNotRegisteredError,
+    MemoryOperationError,
+    # Orchestrator exceptions
+    MemoryOrchestratorException,
+    MemoryPolicyError,
+    MemoryReadError,
+    MemoryRelationshipError,
+    MemoryRetrievalError,
+    MemorySearchError,
+    MemorySelectionError,
+    MemorySnapshotError,
+    MemoryUnavailableError,
+    MemoryValidationError,
+    MemoryWriteError,
+)
 
-# Types from types.py (Coordinator) - canonical source for coordinator types
-from core.memory.types import (
-    MemoryType,
-    MemoryState,
-    MemoryAccessPolicy,
-    MemoryOperation,
-    MemoryQuery,
-    MemoryResult,
-    MemoryResponse,
-    MemoryEntry,
-    MemoryMetrics,
+# Engine
+from core.memory.memory_engine import CognitiveMemoryEngine
+
+# Models from memory_models.py
+from core.memory.memory_models import (
+    MemoryGraph,
+    MemoryNode,
+    MemoryQueryResult,
+    MemorySnapshot,
+    MemoryTemplates,
+)
+
+# Stores
+from core.memory.memory_stores import (
+    LongTermMemoryStore,
+    MemoryStore,
+    ShortTermMemoryStore,
+    WorkingMemoryStore,
+    create_memory_store,
 )
 
 # Types from memory_types.py (Engine) - canonical source for engine types
@@ -49,75 +82,40 @@ from core.memory.memory_types import (
     MemoryStatus,
     MemoryStrength,
     RelationshipType,
+    RetentionPolicy,
     RetrievalContext,
     RetrievalMode,
     RetrievalPolicy,
-    RetentionPolicy,
     SearchOptions,
 )
-
-# Models from memory_models.py
-from core.memory.memory_models import (
-    MemoryGraph,
-    MemoryNode,
-    MemoryQueryResult,
-    MemorySnapshot,
-    MemoryTemplates,
-)
-
-# Exceptions
-from core.memory.exceptions import (
-    MemoryAlreadyExistsError,
-    MemoryCapacityError,
-    MemoryConsolidationError,
-    MemoryDecayError,
-    MemoryError,
-    MemoryNotFoundError,
-    MemoryRelationshipError,
-    MemoryRetrievalError,
-    MemorySnapshotError,
-    MemoryValidationError,
-    # Orchestrator exceptions
-    MemoryOrchestratorException,
-    MemoryNotRegisteredError,
-    MemoryUnavailableError,
-    MemoryOperationError,
-    MemoryReadError,
-    MemoryWriteError,
-    MemorySearchError,
-    MemorySelectionError,
-    MemoryNoResultsError,
-    MemoryPolicyError,
-)
-
-# Engine
-from core.memory.memory_engine import CognitiveMemoryEngine
-
-# Stores
-from core.memory.memory_stores import (
-    LongTermMemoryStore,
-    MemoryStore,
-    ShortTermMemoryStore,
-    WorkingMemoryStore,
-    create_memory_store,
-)
-
-# Coordinator modules
-from core.memory.base import BaseMemoryInterface, MemoryInterface
 from core.memory.registry import (
     MemoryRegistry,
     get_memory_registry,
     reset_memory_registry,
 )
 from core.memory.selector import MemorySelector
-from core.memory.coordinator import (
-    MemoryCoordinator,
-    get_memory_coordinator,
-    reset_memory_coordinator,
-    # Backward compatibility
-    MemoryOrchestrator,
-    get_memory_orchestrator,
-    reset_memory_orchestrator,
+
+# =============================================================================
+# Canonical Sources
+# =============================================================================
+# MemoryEntry, MemoryQuery -> core/memory/memory_models.py (models)
+# MemoryType (detailed) -> core/memory/memory_types.py (types for engine)
+# MemoryType (simple), MemoryState, etc. -> core/memory/types.py (types for coordinator)
+# =============================================================================
+# =============================================================================
+# Canonical Imports (Single source per type)
+# =============================================================================
+# Types from types.py (Coordinator) - canonical source for coordinator types
+from core.memory.types import (
+    MemoryAccessPolicy,
+    MemoryEntry,
+    MemoryMetrics,
+    MemoryOperation,
+    MemoryQuery,
+    MemoryResponse,
+    MemoryResult,
+    MemoryState,
+    MemoryType,
 )
 
 __all__ = [
@@ -125,7 +123,7 @@ __all__ = [
     # Core Engine
     # =================================================================
     "CognitiveMemoryEngine",
-    
+
     # =================================================================
     # Stores
     # =================================================================
@@ -134,7 +132,7 @@ __all__ = [
     "ShortTermMemoryStore",
     "LongTermMemoryStore",
     "create_memory_store",
-    
+
     # =================================================================
     # Models (Canonical: memory_models.py)
     # =================================================================
@@ -145,7 +143,7 @@ __all__ = [
     "MemoryGraph",
     "MemoryNode",
     "MemoryTemplates",
-    
+
     # =================================================================
     # Types - Coordinator (Canonical: types.py)
     # =================================================================
@@ -156,7 +154,7 @@ __all__ = [
     "MemoryResult",
     "MemoryResponse",
     "MemoryMetrics",
-    
+
     # =================================================================
     # Types - Engine (Canonical: memory_types.py)
     # =================================================================
@@ -179,7 +177,7 @@ __all__ = [
     "RetrievalPolicy",
     "ConsolidationPolicy",
     "MemoryStatistics",
-    
+
     # =================================================================
     # Coordinator Components
     # =================================================================
@@ -192,14 +190,14 @@ __all__ = [
     "MemoryCoordinator",
     "get_memory_coordinator",
     "reset_memory_coordinator",
-    
+
     # =================================================================
     # Backward Compatibility (deprecated aliases)
     # =================================================================
     "MemoryOrchestrator",
     "get_memory_orchestrator",
     "reset_memory_orchestrator",
-    
+
     # =================================================================
     # Exceptions - Core
     # =================================================================
@@ -213,7 +211,7 @@ __all__ = [
     "MemoryRelationshipError",
     "MemoryValidationError",
     "MemorySnapshotError",
-    
+
     # =================================================================
     # Exceptions - Coordinator
     # =================================================================

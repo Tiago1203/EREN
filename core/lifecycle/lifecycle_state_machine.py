@@ -1,7 +1,6 @@
 """State machine for the Cognitive Lifecycle Manager."""
 
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import UTC, datetime
 
 
 class LifecycleStateMachine:
@@ -49,7 +48,7 @@ class LifecycleStateMachine:
         valid_transitions: dict,
         reason: str = "",
         metadata: dict = None,
-    ) -> tuple[bool, Optional[str], Optional[dict]]:
+    ) -> tuple[bool, str | None, dict | None]:
         """Execute a state transition.
 
         Args:
@@ -78,7 +77,7 @@ class LifecycleStateMachine:
         new_state = state_transitions[event]
 
         transition_data = {
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "from_state": old_state,
             "to_state": new_state,
             "event": event,

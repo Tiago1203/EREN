@@ -7,7 +7,7 @@ Architecture only -- no implementations.
 
 import threading
 from dataclasses import dataclass, field
-from typing import Any, Callable, Optional
+from typing import Any
 
 from .module_registry import ModuleRegistry
 
@@ -185,7 +185,7 @@ class CompositionValidator:
         except Exception as e:
             result.add_error(ValidationError(
                 error_type="invalid_container",
-                message=f"Container validation failed: {str(e)}",
+                message=f"Container validation failed: {e!s}",
             ))
 
     def validate_module(self, module_name: str) -> ValidationResult:

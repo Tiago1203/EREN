@@ -40,6 +40,7 @@ from core.knowledge.knowledge_router import (
     RoutingStrategy,
 )
 from core.knowledge.knowledge_types import (
+    SOURCE_QUERY_MAPPING,
     KnowledgeEvidence,
     KnowledgeFilters,
     KnowledgeQuery,
@@ -55,7 +56,6 @@ from core.knowledge.knowledge_types import (
     ResultConfidence,
     ResultRelevance,
     RetrievalStrategy,
-    SOURCE_QUERY_MAPPING,
     SourceCapability,
     SourceMetadata,
 )

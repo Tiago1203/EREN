@@ -8,14 +8,12 @@ from __future__ import annotations
 import uuid
 from typing import TYPE_CHECKING
 
+# Import CCE types directly from engine types module
+from core.context.engine.types import ContextItem, ContextPackage
 from core.rag.types import (
     Citation,
-    RetrievedChunk,
     RAGResponse,
 )
-
-# Import CCE types directly from engine types module
-from core.context.engine.types import ContextPackage, ContextItem
 
 if TYPE_CHECKING:
     pass

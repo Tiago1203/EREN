@@ -9,8 +9,8 @@ from typing import TYPE_CHECKING
 
 from core.context.engine.types import (
     ContextItem,
-    ContextSource,
     ContextRetrievalResult,
+    ContextSource,
 )
 
 if TYPE_CHECKING:

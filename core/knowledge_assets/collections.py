@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import threading
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from core.knowledge_assets.types import AssetCollection
@@ -105,7 +105,7 @@ class AssetCollections:
             if collection.collection_id not in self._collections:
                 return False
 
-            collection.updated_at = datetime.now(timezone.utc)
+            collection.updated_at = datetime.now(UTC)
             self._collections[collection.collection_id] = collection
             return True
 
@@ -146,7 +146,7 @@ class AssetCollections:
 
             if asset_id not in collection.asset_ids:
                 collection.asset_ids.append(asset_id)
-                collection.updated_at = datetime.now(timezone.utc)
+                collection.updated_at = datetime.now(UTC)
 
             return True
 
@@ -171,7 +171,7 @@ class AssetCollections:
 
             if asset_id in collection.asset_ids:
                 collection.asset_ids.remove(asset_id)
-                collection.updated_at = datetime.now(timezone.utc)
+                collection.updated_at = datetime.now(UTC)
 
             return True
 

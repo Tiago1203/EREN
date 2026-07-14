@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any
 
@@ -102,7 +102,7 @@ class CollaborationMessage:
     correlation_id: str = ""
     metadata: dict = field(default_factory=dict)
 
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     delivered_at: datetime | None = None
 
     @classmethod
@@ -156,7 +156,7 @@ class CollaborationSession:
     decisions: list[dict] = field(default_factory=list)
 
     # Timestamps
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     started_at: datetime | None = None
     completed_at: datetime | None = None
 
@@ -222,7 +222,7 @@ class TaskAssignment:
     depends_on: list[str] = field(default_factory=list)
 
     # Timestamps
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     accepted_at: datetime | None = None
     completed_at: datetime | None = None
 
@@ -275,7 +275,7 @@ class Proposal:
     # Metadata
     metadata: dict = field(default_factory=dict)
 
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     @classmethod
     def create(
@@ -297,7 +297,7 @@ class Proposal:
             description=description,
             content=content,
             required_votes=required_votes,
-            deadline=datetime.now(timezone.utc).timestamp() + deadline_seconds,
+            deadline=datetime.now(UTC).timestamp() + deadline_seconds,
         )
 
     def vote(self, agent_id: str, value: VoteValue) -> None:

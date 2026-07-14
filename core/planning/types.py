@@ -5,9 +5,8 @@ Types for the Cognitive Planning Engine.
 
 from __future__ import annotations
 
-import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any
 
@@ -123,8 +122,8 @@ class Task:
     # Metadata
     metadata: dict = field(default_factory=dict)
 
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     @property
     def duration_seconds(self) -> float:
@@ -183,7 +182,7 @@ class Goal:
     estimated_tasks: int = 0
     estimated_time_seconds: float = 0.0
 
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 @dataclass
@@ -250,8 +249,8 @@ class ExecutionPlan:
     # Metadata
     metadata: dict = field(default_factory=dict)
 
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     @property
     def progress(self) -> float:
@@ -276,7 +275,7 @@ class ExecutionPlan:
         if self.started_at and self.completed_at:
             return (self.completed_at - self.started_at).total_seconds()
         elif self.started_at:
-            return (datetime.now(timezone.utc) - self.started_at).total_seconds()
+            return (datetime.now(UTC) - self.started_at).total_seconds()
         return 0.0
 
     def get_task(self, task_id: str) -> Task | None:
@@ -295,7 +294,7 @@ class ExecutionPlan:
 
             # Check if all dependencies are complete
             deps_complete = all(
-                self.get_task(dep_id) and 
+                self.get_task(dep_id) and
                 self.get_task(dep_id).status == TaskStatus.COMPLETED
                 for dep_id in task.depends_on
             )

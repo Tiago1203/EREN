@@ -6,9 +6,9 @@ Defines all types, enums, and value objects used by the model registry.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     pass
@@ -121,7 +121,7 @@ class ModelPricing:
     cost_per_input_token: float = 0.0
     cost_per_output_token: float = 0.0
     currency: str = "USD"
-    last_updated: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    last_updated: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def calculate_cost(self, input_tokens: int, output_tokens: int) -> float:
         """Calculate cost for given tokens."""
@@ -222,7 +222,7 @@ class ModelAvailability:
     rate_limit_per_minute: int = 0
     rate_limit_per_day: int = 0
     current_usage_percent: float = 0.0
-    last_check: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    last_check: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def to_dict(self) -> dict:
         """Convert to dictionary."""

@@ -10,8 +10,8 @@ from __future__ import annotations
 
 import threading
 import uuid
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from .adapters import ReasoningContextAdapter, ReasoningMemoryAdapter
@@ -19,7 +19,7 @@ from .capabilities import get_reasoning_capabilities
 from .confidence_model import ConfidenceCalculatorFactory
 from .evidence_manager import EvidenceManager
 from .hypothesis_manager import HypothesisManager
-from .reasoning_chain import ReasoningChainBuilder, ReasoningChainManager
+from .reasoning_chain import ReasoningChainManager
 from .reasoning_metrics import ReasoningMetricsCollector
 from .reasoning_strategy import ReasoningStrategyExecutor
 from .reasoning_trace import ReasoningTraceBuilder
@@ -33,7 +33,6 @@ from .reasoning_types import (
     EvidenceSource,
     EvidenceType,
     Hypothesis,
-    HypothesisStatus,
     InferenceType,
     ReasoningChain,
     ReasoningMetrics,
@@ -46,7 +45,7 @@ from .reasoning_types import (
 
 # EventBus integration (optional)
 try:
-    from core.events import get_global_bus, Event
+    from core.events import Event, get_global_bus
     _HAS_EVENT_BUS = True
 except ImportError:
     _HAS_EVENT_BUS = False
@@ -82,7 +81,7 @@ class ReasoningSession:
     def __post_init__(self) -> None:
         """Set timestamps if not provided."""
         if not self.created_at:
-            object.__setattr__(self, 'created_at', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'created_at', datetime.now(UTC).isoformat())
 
 
 # =============================================================================
@@ -245,7 +244,7 @@ class CognitiveReasoningEngine:
 
         session = ReasoningSession(
             session_id=session_id,
-            started_at=datetime.now(timezone.utc).isoformat(),
+            started_at=datetime.now(UTC).isoformat(),
             stage=ReasoningStage.INITIAL,
         )
 
@@ -291,7 +290,7 @@ class CognitiveReasoningEngine:
                 session_id=session.session_id,
                 created_at=session.created_at,
                 started_at=session.started_at,
-                completed_at=datetime.now(timezone.utc).isoformat(),
+                completed_at=datetime.now(UTC).isoformat(),
                 stage=ReasoningStage.COMPLETED,
                 state=session.state,
                 trace=self._trace_builder.build(),
@@ -600,7 +599,7 @@ class CognitiveReasoningEngine:
                 decisions_count=self._session.state.decisions_count,
                 reasoning_steps=self._session.state.reasoning_steps,
                 started_at=self._session.state.started_at,
-                updated_at=datetime.now(timezone.utc).isoformat(),
+                updated_at=datetime.now(UTC).isoformat(),
             )
 
             self._trace_builder.add_event(
@@ -637,7 +636,7 @@ class CognitiveReasoningEngine:
             decisions_count=len(self._decisions),
             reasoning_steps=self._chain_manager.get_step_count(),
             started_at=state.started_at,
-            updated_at=datetime.now(timezone.utc).isoformat(),
+            updated_at=datetime.now(UTC).isoformat(),
         )
 
         self._session = ReasoningSession(

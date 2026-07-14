@@ -15,20 +15,19 @@ from __future__ import annotations
 
 import threading
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from core.diagnostics.score import DiagnosticScore, ScoreCategory
     from core.diagnostics.architecture import ArchitectureReport
     from core.diagnostics.contracts import ContractReport
     from core.diagnostics.dependencies import DependencyReport
-    from core.diagnostics.integration import IntegrationReport
-    from core.diagnostics.runtime import RuntimeReport
     from core.diagnostics.health import HealthCheckResult
-    from core.diagnostics.readiness import ReadinessReport
+    from core.diagnostics.integration import IntegrationReport
     from core.diagnostics.liveness import LivenessReport
     from core.diagnostics.performance import PerformanceReport
+    from core.diagnostics.readiness import ReadinessReport
+    from core.diagnostics.runtime import RuntimeReport
 
 
 @dataclass
@@ -39,7 +38,7 @@ class DiagnosticReport:
     """
 
     # Core information
-    generated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    generated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     correlation_id: str = ""
     duration_ms: int = 0
 
@@ -49,15 +48,15 @@ class DiagnosticReport:
     status: str = "UNKNOWN"
 
     # Component reports
-    health_report: "HealthCheckResult | None" = None
-    readiness_report: "ReadinessReport | None" = None
-    liveness_report: "LivenessReport | None" = None
-    architecture_report: "ArchitectureReport | None" = None
-    contract_report: "ContractReport | None" = None
-    dependency_report: "DependencyReport | None" = None
-    integration_report: "IntegrationReport | None" = None
-    runtime_report: "RuntimeReport | None" = None
-    performance_report: "PerformanceReport | None" = None
+    health_report: HealthCheckResult | None = None
+    readiness_report: ReadinessReport | None = None
+    liveness_report: LivenessReport | None = None
+    architecture_report: ArchitectureReport | None = None
+    contract_report: ContractReport | None = None
+    dependency_report: DependencyReport | None = None
+    integration_report: IntegrationReport | None = None
+    runtime_report: RuntimeReport | None = None
+    performance_report: PerformanceReport | None = None
 
     # Score categories
     scores: dict = field(default_factory=dict)
@@ -221,7 +220,7 @@ class ReportGenerator:
             self._report = DiagnosticReport(correlation_id=correlation_id)
             return self._report
 
-    def add_health_report(self, report: "HealthCheckResult") -> None:
+    def add_health_report(self, report: HealthCheckResult) -> None:
         """Add health check report.
 
         Args:
@@ -235,7 +234,7 @@ class ReportGenerator:
                     len([c for c in report.component_checks if c.status.value != "healthy"]),
                 )
 
-    def add_readiness_report(self, report: "ReadinessReport") -> None:
+    def add_readiness_report(self, report: ReadinessReport) -> None:
         """Add readiness check report.
 
         Args:
@@ -249,7 +248,7 @@ class ReportGenerator:
                     len(report.critical_failures),
                 )
 
-    def add_liveness_report(self, report: "LivenessReport") -> None:
+    def add_liveness_report(self, report: LivenessReport) -> None:
         """Add liveness check report.
 
         Args:
@@ -261,7 +260,7 @@ class ReportGenerator:
                 failed = len([c for c in report.checks if not c.passed])
                 self._update_totals(report.checks, failed)
 
-    def add_architecture_report(self, report: "ArchitectureReport") -> None:
+    def add_architecture_report(self, report: ArchitectureReport) -> None:
         """Add architecture validation report.
 
         Args:
@@ -275,7 +274,7 @@ class ReportGenerator:
                     len([v for v in report.violations if v.severity == "critical"]),
                 )
 
-    def add_contract_report(self, report: "ContractReport") -> None:
+    def add_contract_report(self, report: ContractReport) -> None:
         """Add contract validation report.
 
         Args:
@@ -289,7 +288,7 @@ class ReportGenerator:
                     len([v for v in report.violations if v.severity == "critical"]),
                 )
 
-    def add_dependency_report(self, report: "DependencyReport") -> None:
+    def add_dependency_report(self, report: DependencyReport) -> None:
         """Add dependency validation report.
 
         Args:
@@ -303,7 +302,7 @@ class ReportGenerator:
                     len([i for i in report.issues if i.severity == "critical"]),
                 )
 
-    def add_integration_report(self, report: "IntegrationReport") -> None:
+    def add_integration_report(self, report: IntegrationReport) -> None:
         """Add integration validation report.
 
         Args:
@@ -317,7 +316,7 @@ class ReportGenerator:
                     len([i for i in report.issues if i.severity == "critical"]),
                 )
 
-    def add_runtime_report(self, report: "RuntimeReport") -> None:
+    def add_runtime_report(self, report: RuntimeReport) -> None:
         """Add runtime validation report.
 
         Args:
@@ -331,7 +330,7 @@ class ReportGenerator:
                     len([i for i in report.issues if i.severity == "critical"]),
                 )
 
-    def add_performance_report(self, report: "PerformanceReport") -> None:
+    def add_performance_report(self, report: PerformanceReport) -> None:
         """Add performance profiling report.
 
         Args:

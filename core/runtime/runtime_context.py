@@ -7,7 +7,7 @@ access to all components and the current cognitive session state.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 from uuid import uuid4
 
@@ -130,13 +130,13 @@ class SessionContext:
         if not self.context_id:
             self.context_id = f"ctx_{uuid4().hex[:16]}"
         if not self.created_at:
-            self.created_at = datetime.now(timezone.utc).isoformat()
+            self.created_at = datetime.now(UTC).isoformat()
 
     def start_cycle(self) -> None:
         """Start a new cognitive cycle."""
         self.cycle_id = f"cycle_{uuid4().hex[:16]}"
         self.current_stage = "initial"
-        self.started_at = datetime.now(timezone.utc).isoformat()
+        self.started_at = datetime.now(UTC).isoformat()
         self.stages_completed.clear()
         self.engines_executed.clear()
         self.events_published.clear()
@@ -252,11 +252,11 @@ class CycleContext:
         if not self.cycle_id:
             self.cycle_id = f"cycle_{uuid4().hex[:16]}"
         if not self.created_at:
-            self.created_at = datetime.now(timezone.utc).isoformat()
+            self.created_at = datetime.now(UTC).isoformat()
 
     def start(self) -> None:
         """Start the cycle."""
-        self.started_at = datetime.now(timezone.utc).isoformat()
+        self.started_at = datetime.now(UTC).isoformat()
 
     def complete(self, success: bool = True, error: str | None = None) -> None:
         """Complete the cycle.
@@ -265,7 +265,7 @@ class CycleContext:
             success: Whether the cycle completed successfully.
             error: Error message if failed.
         """
-        self.completed_at = datetime.now(timezone.utc).isoformat()
+        self.completed_at = datetime.now(UTC).isoformat()
         if self.started_at:
             started = datetime.fromisoformat(self.started_at)
             completed = datetime.fromisoformat(self.completed_at)
@@ -296,7 +296,7 @@ class CycleContext:
             "duration_ms": duration_ms,
             "success": success,
             "error": error,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         })
         self.current_stage = stage_name
 
@@ -359,7 +359,7 @@ class RuntimeContext:
         if not self.runtime_id:
             self.runtime_id = f"runtime_{uuid4().hex[:16]}"
         if not self.created_at:
-            self.created_at = datetime.now(timezone.utc).isoformat()
+            self.created_at = datetime.now(UTC).isoformat()
 
     def create_session(
         self,
@@ -408,14 +408,14 @@ class RuntimeContext:
     def complete_session(self) -> None:
         """Complete the current session."""
         if self.current_session:
-            self.current_session.completed_at = datetime.now(timezone.utc).isoformat()
+            self.current_session.completed_at = datetime.now(UTC).isoformat()
             self.completed_sessions.append(self.current_session)
             self.current_session = None
 
     def complete_cycle(self) -> None:
         """Complete the current cycle."""
         if self.current_cycle:
-            self.current_cycle.completed_at = datetime.now(timezone.utc).isoformat()
+            self.current_cycle.completed_at = datetime.now(UTC).isoformat()
             self.completed_cycles.append(self.current_cycle)
             self.current_cycle = None
 

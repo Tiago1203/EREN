@@ -6,13 +6,13 @@ Publishes pipeline events to the Event Bus.
 from __future__ import annotations
 
 import threading
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from core.pipeline.pipeline import CognitivePipeline
     from core.pipeline.context import PipelineContext
+    from core.pipeline.pipeline import CognitivePipeline
     from core.pipeline.types import PipelineResult
 
 
@@ -65,9 +65,9 @@ class PipelineEventPublisher:
     def publish(
         self,
         event_type: PipelineEventType | str,
-        pipeline: "CognitivePipeline | None" = None,
-        context: "PipelineContext | None" = None,
-        result: "PipelineResult | None" = None,
+        pipeline: CognitivePipeline | None = None,
+        context: PipelineContext | None = None,
+        result: PipelineResult | None = None,
         **kwargs,
     ) -> None:
         """Publish a pipeline event.
@@ -83,7 +83,7 @@ class PipelineEventPublisher:
 
         event = {
             "event_type": event_type_str,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "pipeline_id": pipeline.pipeline_id if pipeline else "",
             "pipeline_name": pipeline.name if pipeline else "",
             "correlation_id": context.correlation_id if context else "",
@@ -104,7 +104,7 @@ class PipelineEventPublisher:
         # Publish to Event Bus if available
         if self._event_bus:
             try:
-                from core.events.models import Event, EventType
+                from core.events.models import Event
                 self._event_bus.publish(Event(
                     type=self._map_to_core_event_type(event_type),
                     source="pipeline",
@@ -122,7 +122,7 @@ class PipelineEventPublisher:
             except Exception:
                 pass
 
-    def _map_to_core_event_type(self, event_type: PipelineEventType) -> "EventType":
+    def _map_to_core_event_type(self, event_type: PipelineEventType) -> EventType:
         """Map pipeline event to core event type.
 
         Args:
@@ -196,9 +196,9 @@ def get_pipeline_event_publisher() -> PipelineEventPublisher:
 
 def publish_pipeline_event(
     event_type: PipelineEventType,
-    pipeline: "CognitivePipeline | None" = None,
-    context: "PipelineContext | None" = None,
-    result: "PipelineResult | None" = None,
+    pipeline: CognitivePipeline | None = None,
+    context: PipelineContext | None = None,
+    result: PipelineResult | None = None,
 ) -> None:
     """Publish a pipeline event.
 

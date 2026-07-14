@@ -7,7 +7,7 @@ The runtime progresses through well-defined states during its lifecycle.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 
@@ -173,7 +173,7 @@ class RuntimeStateInfo:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.started_at:
-            self.started_at = datetime.now(timezone.utc).isoformat()
+            self.started_at = datetime.now(UTC).isoformat()
 
 
 @dataclass
@@ -192,7 +192,7 @@ class SessionStateInfo:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.started_at:
-            self.started_at = datetime.now(timezone.utc).isoformat()
+            self.started_at = datetime.now(UTC).isoformat()
 
 
 @dataclass
@@ -210,7 +210,7 @@ class CycleStateInfo:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.stage_started_at:
-            self.stage_started_at = datetime.now(timezone.utc).isoformat()
+            self.stage_started_at = datetime.now(UTC).isoformat()
 
 
 class RuntimeStateMachine:
@@ -281,7 +281,7 @@ class RuntimeStateMachine:
                 f"to {target_state.value}"
             )
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         duration_ms = 0
         if self._state_info.started_at:
             started = datetime.fromisoformat(self._state_info.started_at)
@@ -399,7 +399,7 @@ class SessionStateMachine:
                 f"to {target_state.value}"
             )
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         duration_ms = 0
         if self._state_info.started_at:
             started = datetime.fromisoformat(self._state_info.started_at)

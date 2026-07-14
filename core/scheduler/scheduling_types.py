@@ -8,7 +8,7 @@ Architecture only -- no implementations, no business logic.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any
 
@@ -87,7 +87,7 @@ class TaskMetadata:
     def __post_init__(self) -> None:
         """Set timestamps if not provided."""
         if not self.created_at:
-            object.__setattr__(self, 'created_at', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'created_at', datetime.now(UTC).isoformat())
 
 
 @dataclass(frozen=True)
@@ -140,7 +140,7 @@ class CognitiveTask:
     def __post_init__(self) -> None:
         """Set timestamps if not provided."""
         if not self.created_at:
-            self.created_at = datetime.now(timezone.utc).isoformat()
+            self.created_at = datetime.now(UTC).isoformat()
         if not self.metadata.created_at:
             self.metadata.created_at = self.created_at
 
@@ -158,13 +158,13 @@ class CognitiveTask:
         """Mark task as running."""
         self.state = TaskState.RUNNING
         self.assigned_to = assigned_to
-        self.metadata.started_at = datetime.now(timezone.utc).isoformat()
+        self.metadata.started_at = datetime.now(UTC).isoformat()
 
     def mark_completed(self, result: Any = None) -> None:
         """Mark task as completed."""
         self.state = TaskState.COMPLETED
         self.result = result
-        self.metadata.completed_at = datetime.now(timezone.utc).isoformat()
+        self.metadata.completed_at = datetime.now(UTC).isoformat()
         duration = datetime.fromisoformat(self.metadata.completed_at) - datetime.fromisoformat(self.metadata.started_at)
         self.execution_time_ms = int(duration.total_seconds() * 1000)
 
@@ -173,12 +173,12 @@ class CognitiveTask:
         self.state = TaskState.FAILED
         self.error = error
         self.retries += 1
-        self.metadata.completed_at = datetime.now(timezone.utc).isoformat()
+        self.metadata.completed_at = datetime.now(UTC).isoformat()
 
     def mark_cancelled(self) -> None:
         """Mark task as cancelled."""
         self.state = TaskState.CANCELLED
-        self.metadata.completed_at = datetime.now(timezone.utc).isoformat()
+        self.metadata.completed_at = datetime.now(UTC).isoformat()
 
     def mark_ready(self) -> None:
         """Mark task as ready."""
@@ -213,7 +213,7 @@ class SchedulingDecision:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            object.__setattr__(self, 'timestamp', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'timestamp', datetime.now(UTC).isoformat())
 
 
 # =============================================================================

@@ -6,14 +6,15 @@ Manages capability registration and discovery.
 from __future__ import annotations
 
 import threading
-from typing import TYPE_CHECKING, Any, Callable, Type
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 from core.sdk.capability import BaseCapability
-from core.sdk.types import CapabilityState, CapabilityMetadata, ValidationResult
 from core.sdk.exceptions import (
-    CapabilityNotFoundError,
     CapabilityAlreadyRegisteredError,
+    CapabilityNotFoundError,
 )
+from core.sdk.types import CapabilityMetadata, CapabilityState, ValidationResult
 
 if TYPE_CHECKING:
     pass

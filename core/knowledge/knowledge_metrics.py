@@ -8,7 +8,7 @@ Architecture only -- no AI, no implementations.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from .knowledge_types import KnowledgeMetrics, QueryType
@@ -107,4 +107,4 @@ class KnowledgeHealthCheck:
 
     def __post_init__(self) -> None:
         """Set timestamp."""
-        object.__setattr__(self, 'checked_at', datetime.now(timezone.utc).isoformat())
+        object.__setattr__(self, 'checked_at', datetime.now(UTC).isoformat())

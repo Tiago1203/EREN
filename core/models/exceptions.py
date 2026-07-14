@@ -43,7 +43,7 @@ class ModelUnavailableError(ModelRegistryException):
     """Raised when model is unavailable."""
 
     def __init__(self, model_id: str, reason: str = ""):
-        super().__init__(f"Model unavailable: {model_id}. {reason}", 
+        super().__init__(f"Model unavailable: {model_id}. {reason}",
                         {"model_id": model_id, "reason": reason})
         self.model_id = model_id
         self.reason = reason

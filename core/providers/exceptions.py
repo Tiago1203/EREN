@@ -43,7 +43,7 @@ class ProviderConfigurationError(ProviderException):
     """Raised when provider configuration is invalid."""
 
     def __init__(self, provider_id: str, message: str):
-        super().__init__(f"Configuration error for {provider_id}: {message}", 
+        super().__init__(f"Configuration error for {provider_id}: {message}",
                         {"provider_id": provider_id, "message": message})
         self.provider_id = provider_id
 

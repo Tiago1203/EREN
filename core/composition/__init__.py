@@ -5,23 +5,23 @@ The official composition root for EREN OS.
 Architecture only -- no implementations, no business logic.
 """
 
-from core.composition.composition_root import (
-    CognitiveCompositionRoot,
-    CompositionRootFactory,
-)
 from core.composition.composition_builder import CompositionBuilder
-from core.composition.composition_module import (
-    CompositionModule,
-    CoreModule,
-    InfrastructureModule,
-    CognitiveModule,
-    CapabilityModule,
-)
 from core.composition.composition_events import (
     CompositionEventPublisher,
     CompositionEventType,
 )
 from core.composition.composition_metrics import CompositionMetricsCollector
+from core.composition.composition_module import (
+    CapabilityModule,
+    CognitiveModule,
+    CompositionModule,
+    CoreModule,
+    InfrastructureModule,
+)
+from core.composition.composition_root import (
+    CognitiveCompositionRoot,
+    CompositionRootFactory,
+)
 from core.composition.composition_trace import (
     CompositionTraceCollector,
     CompositionTraceEntry,
@@ -31,26 +31,26 @@ from core.composition.composition_validator import (
     ValidationError,
     ValidationResult,
 )
-from core.composition.module_descriptor import (
-    ModuleDescriptor,
-    ModuleDependency,
-    ModuleContract,
-    ModuleInstance,
-)
-from core.composition.module_registry import ModuleRegistry
-from core.composition.module_loader import ModuleLoader, LoadStrategy
 from core.composition.exceptions import (
+    CompositionBuildException,
     CompositionException,
+    CompositionValidationException,
+    ContractRegistrationException,
+    ModuleAlreadyRegisteredException,
+    ModuleDependencyException,
+    ModuleNotFoundException,
     ModuleRegistrationException,
     ModuleValidationException,
-    CompositionValidationException,
-    CompositionBuildException,
-    ModuleDependencyException,
     RuntimeInitializationException,
-    ModuleNotFoundException,
-    ModuleAlreadyRegisteredException,
-    ContractRegistrationException,
 )
+from core.composition.module_descriptor import (
+    ModuleContract,
+    ModuleDependency,
+    ModuleDescriptor,
+    ModuleInstance,
+)
+from core.composition.module_loader import LoadStrategy, ModuleLoader
+from core.composition.module_registry import ModuleRegistry
 
 __all__ = [
     # Main Composition Root

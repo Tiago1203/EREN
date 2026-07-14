@@ -7,15 +7,12 @@ from __future__ import annotations
 
 import threading
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from core.knowledge.registry_types import (
     KnowledgeEntry,
-    KnowledgeStatus,
     RegistrySearchQuery,
-    AuditLog,
-    AuditAction,
 )
 
 if TYPE_CHECKING:
@@ -100,7 +97,7 @@ class KnowledgeCatalog:
             if entry.knowledge_id not in self._entries:
                 return False
 
-            entry.updated_at = datetime.now(timezone.utc)
+            entry.updated_at = datetime.now(UTC)
             self._entries[entry.knowledge_id] = entry
             return True
 

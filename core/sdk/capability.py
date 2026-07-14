@@ -8,19 +8,19 @@ from __future__ import annotations
 import threading
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
-from core.sdk.types import (
-    CapabilityState,
-    CapabilityMetadata,
-    CapabilityContext,
-    CapabilityResult,
-    CapabilityHealth,
-    ValidationResult,
-    CapabilityCategory,
-)
 from core.sdk.exceptions import CapabilityStateError
+from core.sdk.types import (
+    CapabilityCategory,
+    CapabilityContext,
+    CapabilityHealth,
+    CapabilityMetadata,
+    CapabilityResult,
+    CapabilityState,
+    ValidationResult,
+)
 
 if TYPE_CHECKING:
     pass
@@ -49,7 +49,7 @@ class BaseCapability(ABC):
     _state_lock: threading.RLock = field(default_factory=threading.RLock)
 
     # Lifecycle timestamps
-    _created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    _created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     _initialized_at: datetime | None = None
     _ready_at: datetime | None = None
     _disposed_at: datetime | None = None
@@ -126,7 +126,7 @@ class BaseCapability(ABC):
             self._state = new_state
 
             # Update timestamps
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
             if new_state == CapabilityState.INITIALIZED:
                 self._initialized_at = now
             elif new_state == CapabilityState.READY:
@@ -188,7 +188,7 @@ class BaseCapability(ABC):
         Returns:
             Capability health status.
         """
-        self._last_health_check = datetime.now(timezone.utc)
+        self._last_health_check = datetime.now(UTC)
         return CapabilityHealth(
             healthy=self._state in (CapabilityState.READY, CapabilityState.INITIALIZED),
             message="Capability is healthy" if self.is_ready else "Capability not ready",

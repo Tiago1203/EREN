@@ -10,28 +10,27 @@ import time
 import uuid
 from typing import TYPE_CHECKING
 
-from core.ingestion.types import (
-    DocumentType,
-    RawDocument,
-    ExtractedDocument,
-    CleanedDocument,
-    ChunkedDocument,
-    IngestedDocument,
-    IngestionStatus,
-    IngestionStatistics,
+from core.ingestion.chunking import BaseChunkBuilder, SentenceChunkBuilder
+from core.ingestion.exceptions import (
+    ChunkingError,
+    ExtractionError,
+    UnsupportedFormatError,
 )
 from core.ingestion.extractor import ExtractorFactory
 from core.ingestion.processors import TextProcessor
-from core.ingestion.chunking import BaseChunkBuilder, SentenceChunkBuilder
-from core.ingestion.exceptions import (
-    ExtractionError,
-    UnsupportedFormatError,
-    ChunkingError,
+from core.ingestion.types import (
+    ChunkedDocument,
+    CleanedDocument,
+    DocumentType,
+    ExtractedDocument,
+    IngestedDocument,
+    IngestionStatistics,
+    IngestionStatus,
+    RawDocument,
 )
 
 if TYPE_CHECKING:
     from plugins.vector_memory import VectorMemoryPlugin
-    from core.memory import MemoryCoordinator
 
 
 class KnowledgeIngestionPipeline:
@@ -50,7 +49,7 @@ class KnowledgeIngestionPipeline:
         self,
         text_processor: TextProcessor | None = None,
         chunk_builder: BaseChunkBuilder | None = None,
-        vector_plugin: "VectorMemoryPlugin | None" = None,
+        vector_plugin: VectorMemoryPlugin | None = None,
     ):
         """Initialize pipeline.
 
@@ -90,7 +89,7 @@ class KnowledgeIngestionPipeline:
         """
         self._chunk_builder = builder
 
-    def set_vector_plugin(self, plugin: "VectorMemoryPlugin | None") -> None:
+    def set_vector_plugin(self, plugin: VectorMemoryPlugin | None) -> None:
         """Set vector memory plugin.
 
         Args:
@@ -168,7 +167,7 @@ class KnowledgeIngestionPipeline:
                         embeddings_generated += 1
                     stages[-1]["end"] = time.time()
                 except Exception as e:
-                    errors.append(f"Storage failed: {str(e)}")
+                    errors.append(f"Storage failed: {e!s}")
                     stages[-1]["error"] = str(e)
                     stages[-1]["end"] = time.time()
                 stages[-1]["duration_ms"] = int((stages[-1]["end"] - stages[-1]["start"]) * 1000)

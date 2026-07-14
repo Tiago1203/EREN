@@ -6,7 +6,7 @@ Architecture only -- no implementations.
 """
 
 import threading
-from typing import Callable, Optional
+from collections.abc import Callable
 
 from .module_descriptor import ModuleDescriptor
 from .module_registry import ModuleRegistry

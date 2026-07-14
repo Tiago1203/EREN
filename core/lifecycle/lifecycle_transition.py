@@ -1,6 +1,6 @@
 """Lifecycle transition for the Cognitive Lifecycle Manager."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 class LifecycleTransition:
@@ -27,7 +27,7 @@ class LifecycleTransition:
         self.event = event
         self.reason = reason
         self.actor = actor
-        self.timestamp = timestamp or datetime.now(timezone.utc).isoformat()
+        self.timestamp = timestamp or datetime.now(UTC).isoformat()
         self.metadata = metadata or {}
 
     def to_dict(self):

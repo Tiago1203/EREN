@@ -219,7 +219,7 @@ class PluginContext:
                 "metadata": dict(self.metadata),
             }
 
-    def copy(self) -> "PluginContext":
+    def copy(self) -> PluginContext:
         """Create a copy of the context.
 
         Returns:

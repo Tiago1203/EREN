@@ -17,20 +17,20 @@ from __future__ import annotations
 
 import threading
 import time
-from typing import TYPE_CHECKING, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
-from core.memory.base import BaseMemoryInterface
 from core.memory.registry import MemoryRegistry, get_memory_registry
 from core.memory.selector import MemorySelector
 from core.memory.types import (
-    MemoryType,
-    MemoryState,
     MemoryAccessPolicy,
+    MemoryEntry,
     MemoryOperation,
     MemoryQuery,
-    MemoryResult,
     MemoryResponse,
-    MemoryEntry,
+    MemoryResult,
+    MemoryState,
+    MemoryType,
 )
 
 if TYPE_CHECKING:

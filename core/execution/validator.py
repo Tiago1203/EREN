@@ -5,9 +5,10 @@ Validates that all required components are available before execution.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
-from core.execution.types import ValidationResult, ComponentStatus
+from core.execution.types import ComponentStatus, ValidationResult
 
 if TYPE_CHECKING:
     pass
@@ -114,7 +115,7 @@ class ExecutionValidator:
 
     def check_router_available(self) -> ComponentStatus:
         """Check if router is available."""
-        from core.router import CapabilityRouter, get_routing_registry
+        from core.router import get_routing_registry
 
         try:
             registry = get_routing_registry()
@@ -136,7 +137,6 @@ class ExecutionValidator:
 
     def check_pipeline_available(self) -> ComponentStatus:
         """Check if pipeline is available."""
-        from core.pipeline import CognitivePipeline
 
         try:
             # Check if at least one pipeline type exists

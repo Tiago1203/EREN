@@ -9,7 +9,7 @@ Architecture only — no business logic, no AI.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum, IntEnum
 from typing import TYPE_CHECKING
 
@@ -230,7 +230,7 @@ class CapabilityMetadata:
     @classmethod
     def now(cls, **kwargs) -> CapabilityMetadata:
         """Create metadata with current timestamp."""
-        timestamp = datetime.now(timezone.utc).isoformat()
+        timestamp = datetime.now(UTC).isoformat()
         return cls(
             created_at=timestamp,
             updated_at=timestamp,
@@ -261,7 +261,7 @@ class CapabilityFilter:
     active_only: bool = False
     compatible_with_version: str | None = None
 
-    def matches(self, capability: "Capability") -> bool:
+    def matches(self, capability: Capability) -> bool:
         """Check if a capability matches this filter."""
         if self.category and capability.category != self.category:
             return False

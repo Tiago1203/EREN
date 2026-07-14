@@ -6,9 +6,9 @@ Defines all types, enums, and value objects used by the execution system.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     pass
@@ -34,17 +34,17 @@ class ExecutionState(str, Enum):
     CANCELLED = "cancelled"
 
     @classmethod
-    def is_terminal(cls, state: "ExecutionState") -> bool:
+    def is_terminal(cls, state: ExecutionState) -> bool:
         """Check if state is terminal."""
         return state in (cls.COMPLETED, cls.FAILED, cls.CANCELLED)
 
     @classmethod
-    def can_start(cls, state: "ExecutionState") -> bool:
+    def can_start(cls, state: ExecutionState) -> bool:
         """Check if execution can start from this state."""
         return state in (cls.CREATED,)
 
     @classmethod
-    def can_cancel(cls, state: "ExecutionState") -> bool:
+    def can_cancel(cls, state: ExecutionState) -> bool:
         """Check if execution can cancel from this state."""
         return state not in (cls.COMPLETED, cls.FAILED, cls.CANCELLED)
 
@@ -79,7 +79,7 @@ class ExecutionMetadata:
     tenant_id: str = ""
     hospital_id: str = ""
     priority: int = 0
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     metadata: dict = field(default_factory=dict)
 
     def to_dict(self) -> dict:
@@ -104,7 +104,7 @@ class ExecutionResult:
     execution_id: str
     session_id: str
     status: ExecutionState
-    started_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    started_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     finished_at: datetime | None = None
     duration_ms: int = 0
 
@@ -174,7 +174,7 @@ class ComponentStatus:
     name: str
     available: bool = False
     healthy: bool = False
-    last_check: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    last_check: datetime = field(default_factory=lambda: datetime.now(UTC))
     error: str = ""
 
     def to_dict(self) -> dict:

@@ -8,7 +8,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from core.rag.types import RetrievedChunk
-from core.rag.exceptions import TokenBudgetExceededError
 
 if TYPE_CHECKING:
     pass

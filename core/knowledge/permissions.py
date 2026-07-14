@@ -7,12 +7,12 @@ from __future__ import annotations
 
 import threading
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from core.knowledge.registry_types import (
-    AuditLog,
     AuditAction,
+    AuditLog,
     PermissionLevel,
 )
 
@@ -65,7 +65,7 @@ class AuditLogger:
                 knowledge_id=knowledge_id,
                 user_id=user_id,
                 details=details or {},
-                timestamp=datetime.now(timezone.utc),
+                timestamp=datetime.now(UTC),
                 ip_address=ip_address,
             )
 

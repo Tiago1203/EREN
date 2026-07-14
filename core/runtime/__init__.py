@@ -64,6 +64,22 @@ Example:
 
 from __future__ import annotations
 
+# Exceptions
+from .exceptions import (
+    CognitiveCycleError,
+    ComponentNotAvailableError,
+    EngineExecutionError,
+    HealthCheckError,
+    RuntimeBootError,
+    RuntimeException,
+    RuntimeExecutionError,
+    RuntimeInitializationError,
+    RuntimeShutdownError,
+    RuntimeStartError,
+    RuntimeValidationError,
+    SessionCreationError,
+)
+
 # Main Runtime
 from .runtime import CognitiveRuntime
 
@@ -92,18 +108,6 @@ from .runtime_context import (
     SessionContext,
 )
 
-# State
-from .runtime_state import (
-    CognitiveCycleState,
-    CycleStateInfo,
-    RuntimeState,
-    RuntimeStateInfo,
-    RuntimeStateMachine,
-    SessionState,
-    SessionStateInfo,
-    SessionStateMachine,
-)
-
 # Events
 from .runtime_events import (
     EVENT_TYPE_TO_CLASS,
@@ -116,11 +120,11 @@ from .runtime_events import (
     DecisionCreated,
     DecisionFailed,
     KnowledgeFailed,
-    KnowledgeRetrieved,
     KnowledgeRequested,
+    KnowledgeRetrieved,
     MemoryFailed,
-    MemoryRetrieved,
     MemoryRequested,
+    MemoryRetrieved,
     PlanningCompleted,
     PlanningFailed,
     PlanningStarted,
@@ -166,6 +170,18 @@ from .runtime_metrics import (
     StageMetrics,
 )
 
+# State
+from .runtime_state import (
+    CognitiveCycleState,
+    CycleStateInfo,
+    RuntimeState,
+    RuntimeStateInfo,
+    RuntimeStateMachine,
+    SessionState,
+    SessionStateInfo,
+    SessionStateMachine,
+)
+
 # Trace
 from .runtime_trace import (
     EngineExecutionTrace,
@@ -177,22 +193,6 @@ from .runtime_trace import (
 
 # Validator
 from .runtime_validator import RuntimeValidator, ValidationReport, ValidationResult
-
-# Exceptions
-from .exceptions import (
-    CognitiveCycleError,
-    ComponentNotAvailableError,
-    EngineExecutionError,
-    HealthCheckError,
-    RuntimeBootError,
-    RuntimeException,
-    RuntimeExecutionError,
-    RuntimeInitializationError,
-    RuntimeShutdownError,
-    RuntimeStartError,
-    RuntimeValidationError,
-    SessionCreationError,
-)
 
 __all__ = [
     # Main Runtime

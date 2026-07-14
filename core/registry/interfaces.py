@@ -12,7 +12,6 @@ from typing import Protocol, runtime_checkable
 
 from core.contracts import CognitiveEngine
 from core.registry.models import EngineDescriptor
-from core.registry.types import EngineStatus, SearchOptions
 
 
 @runtime_checkable

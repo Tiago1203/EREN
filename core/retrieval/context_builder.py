@@ -10,7 +10,6 @@ from typing import TYPE_CHECKING
 from core.retrieval.types import (
     RetrievalQuery,
     RetrievalResult,
-    RetrievalResponse,
 )
 
 if TYPE_CHECKING:

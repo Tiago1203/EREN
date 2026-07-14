@@ -6,9 +6,9 @@ Defines all types, enums, and value objects used by the router system.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     pass
@@ -31,12 +31,12 @@ class RouterState(str, Enum):
     CANCELLED = "cancelled"
 
     @classmethod
-    def is_terminal(cls, state: "RouterState") -> bool:
+    def is_terminal(cls, state: RouterState) -> bool:
         """Check if state is terminal."""
         return state in (cls.READY, cls.FAILED, cls.CANCELLED)
 
     @classmethod
-    def can_route(cls, state: "RouterState") -> bool:
+    def can_route(cls, state: RouterState) -> bool:
         """Check if router can route from this state."""
         return state in (cls.READY, cls.CREATED)
 
@@ -142,7 +142,7 @@ class RoutingResult:
     reason: str = ""
     policy_used: RoutingPolicy = RoutingPolicy.FIRST_MATCH
     duration_ms: int = 0
-    started_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    started_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     finished_at: datetime | None = None
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)

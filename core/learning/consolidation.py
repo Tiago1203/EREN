@@ -6,10 +6,10 @@ Consolidates learned knowledge.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
-from core.learning.types import Knowledge, KnowledgeType, Pattern, Experience
+from core.learning.types import Experience, Knowledge, KnowledgeType, Pattern
 
 if TYPE_CHECKING:
     pass
@@ -131,7 +131,7 @@ class KnowledgeConsolidator:
         if "description" in updates:
             knowledge.description = updates["description"]
 
-        knowledge.updated_at = datetime.now(timezone.utc)
+        knowledge.updated_at = datetime.now(UTC)
         knowledge.usage_count += 1
 
         return True

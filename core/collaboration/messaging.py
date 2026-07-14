@@ -5,13 +5,10 @@ Handles message routing between agents.
 
 from __future__ import annotations
 
-import uuid
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from core.collaboration.types import (
     CollaborationMessage,
-    MessageType,
     MessageStatus,
 )
 

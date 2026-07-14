@@ -6,7 +6,7 @@ Publishes plugin events to the Event Bus.
 from __future__ import annotations
 
 import threading
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING
 
@@ -74,7 +74,7 @@ class PluginEventPublisher:
 
         event = {
             "event_type": event_type_str,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "plugin_id": plugin_id,
             "data": data or {},
         }

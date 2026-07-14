@@ -16,7 +16,7 @@ from __future__ import annotations
 import threading
 from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -29,7 +29,7 @@ class MetricSnapshot:
 
     name: str
     value: float
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
     tags: dict | None = None
 
     def to_dict(self) -> dict:
@@ -63,7 +63,7 @@ class DiagnosticsMetrics:
     def start(self) -> None:
         """Start metrics collection."""
         with self._lock:
-            self._start_time = datetime.now(timezone.utc)
+            self._start_time = datetime.now(UTC)
 
     def increment(self, name: str, value: int = 1) -> None:
         """Increment a counter metric.
@@ -208,7 +208,7 @@ class DiagnosticsMetrics:
                 summary["timers"][name] = self.get_timing_stats(name)
 
             if self._start_time:
-                elapsed = (datetime.now(timezone.utc) - self._start_time).total_seconds()
+                elapsed = (datetime.now(UTC) - self._start_time).total_seconds()
                 summary["elapsed_seconds"] = elapsed
 
             return summary

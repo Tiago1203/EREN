@@ -5,21 +5,17 @@ Builds context packages from various sources.
 
 from __future__ import annotations
 
-import uuid
 from typing import TYPE_CHECKING
 
 from core.context.engine.types import (
     ContextItem,
-    ContextPackage,
     ContextQuery,
     ContextRetrievalResult,
-    ContextSource,
-    ContextPriority,
 )
 
 if TYPE_CHECKING:
-    from core.retrieval import RetrievalEngine
     from core.memory import MemoryCoordinator
+    from core.retrieval import RetrievalEngine
 
 
 class ContextBuilder:
@@ -35,8 +31,8 @@ class ContextBuilder:
     async def build_from_query(
         self,
         query: ContextQuery,
-        retrieval_engine: "RetrievalEngine | None" = None,
-        memory_coordinator: "MemoryCoordinator | None" = None,
+        retrieval_engine: RetrievalEngine | None = None,
+        memory_coordinator: MemoryCoordinator | None = None,
     ) -> ContextRetrievalResult:
         """Build context from query.
 
@@ -91,7 +87,7 @@ class ContextBuilder:
     async def _retrieve_knowledge(
         self,
         query: ContextQuery,
-        retrieval_engine: "RetrievalEngine",
+        retrieval_engine: RetrievalEngine,
     ) -> list[ContextItem]:
         """Retrieve from knowledge base."""
         # Placeholder - would call retrieval engine
@@ -100,7 +96,7 @@ class ContextBuilder:
     async def _retrieve_memory(
         self,
         query: ContextQuery,
-        memory_coordinator: "MemoryCoordinator",
+        memory_coordinator: MemoryCoordinator,
     ) -> list[ContextItem]:
         """Retrieve from memory."""
         # Placeholder - would call memory coordinator
@@ -109,7 +105,7 @@ class ContextBuilder:
     async def _retrieve_clinical(
         self,
         query: ContextQuery,
-        memory_coordinator: "MemoryCoordinator",
+        memory_coordinator: MemoryCoordinator,
     ) -> list[ContextItem]:
         """Retrieve clinical context."""
         # Placeholder
@@ -118,7 +114,7 @@ class ContextBuilder:
     async def _retrieve_device(
         self,
         query: ContextQuery,
-        memory_coordinator: "MemoryCoordinator",
+        memory_coordinator: MemoryCoordinator,
     ) -> list[ContextItem]:
         """Retrieve device context."""
         # Placeholder

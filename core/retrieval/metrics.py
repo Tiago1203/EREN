@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 import threading
-from dataclasses import dataclass, field
 
-from core.retrieval.types import RetrievalMetrics, MemorySource, RetrievalPolicy
+from core.retrieval.types import MemorySource, RetrievalMetrics, RetrievalPolicy
 
 
 class RetrievalMetricsCollector:

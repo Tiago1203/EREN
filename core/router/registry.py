@@ -6,17 +6,17 @@ Manages pipeline metadata and routing rules.
 from __future__ import annotations
 
 import threading
-import uuid
-from typing import TYPE_CHECKING, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
+from core.router.exceptions import (
+    MetadataError,
+    RuleAlreadyRegisteredError,
+    RuleNotFoundError,
+)
 from core.router.types import (
     PipelineMetadata,
     RoutingRule,
-)
-from core.router.exceptions import (
-    RuleNotFoundError,
-    RuleAlreadyRegisteredError,
-    MetadataError,
 )
 
 if TYPE_CHECKING:

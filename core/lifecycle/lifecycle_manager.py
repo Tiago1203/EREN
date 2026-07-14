@@ -7,7 +7,6 @@ from core.lifecycle.lifecycle_metrics import LifecycleMetricsCollector
 from core.lifecycle.lifecycle_policy import LifecyclePolicy, LifecyclePolicyPresets
 from core.lifecycle.lifecycle_state_machine import LifecycleStateMachine
 from core.lifecycle.lifecycle_trace import LifecycleTraceCollector
-from core.lifecycle.lifecycle_transition import LifecycleTransition
 from core.lifecycle.lifecycle_types import VALID_TRANSITIONS
 
 

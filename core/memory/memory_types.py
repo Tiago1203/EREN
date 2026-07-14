@@ -9,7 +9,7 @@ Architecture only — no business logic, no AI.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum, IntEnum
 from typing import TYPE_CHECKING
 
@@ -208,7 +208,7 @@ class MemoryMetadata:
     @classmethod
     def now(cls, **kwargs) -> MemoryMetadata:
         """Create metadata with current timestamp."""
-        timestamp = datetime.now(timezone.utc).isoformat()
+        timestamp = datetime.now(UTC).isoformat()
         return cls(created_at=timestamp, updated_at=timestamp, **kwargs)
 
     def record_access(self, access: MemoryAccess) -> MemoryMetadata:

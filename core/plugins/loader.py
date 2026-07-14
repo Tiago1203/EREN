@@ -7,17 +7,17 @@ from __future__ import annotations
 
 import importlib.util
 import sys
+from collections.abc import Callable
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, Type
+from typing import TYPE_CHECKING, Any
 
 from core.plugins.descriptor import PluginDescriptor
-from core.plugins.manifest import PluginManifestParser
-from core.plugins.types import PluginState, PluginContext
 from core.plugins.exceptions import (
     PluginLoadError,
-    PluginLoaderError,
     PluginManifestError,
 )
+from core.plugins.manifest import PluginManifestParser
+from core.plugins.types import PluginContext, PluginState
 
 if TYPE_CHECKING:
     pass
@@ -37,7 +37,7 @@ class PluginLoader:
         """Initialize the loader."""
         self._loaders: dict[str, Callable] = {}
         self._loaded_modules: dict[str, Any] = {}
-        self._plugin_factories: dict[str, Type] = {}
+        self._plugin_factories: dict[str, type] = {}
 
     # =========================================================================
     # Registration
@@ -52,7 +52,7 @@ class PluginLoader:
         """
         self._loaders[source_type] = loader
 
-    def register_factory(self, plugin_id: str, factory: Type) -> None:
+    def register_factory(self, plugin_id: str, factory: type) -> None:
         """Register a plugin factory.
 
         Args:

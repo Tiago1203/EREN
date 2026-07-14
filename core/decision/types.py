@@ -6,9 +6,8 @@ Refactored from Planning Engine to be a complete decision-making system.
 
 from __future__ import annotations
 
-import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any
 
@@ -167,8 +166,8 @@ class DecisionTask:
     # Metadata
     metadata: dict = field(default_factory=dict)
 
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     @property
     def duration_seconds(self) -> float:
@@ -205,7 +204,7 @@ class Goal:
     estimated_tasks: int = 0
     estimated_time_seconds: float = 0.0
 
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 @dataclass
@@ -286,8 +285,8 @@ class DecisionPlan:
     # Metadata
     metadata: dict = field(default_factory=dict)
 
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     @property
     def progress(self) -> float:
@@ -312,7 +311,7 @@ class DecisionPlan:
         if self.started_at and self.completed_at:
             return (self.completed_at - self.started_at).total_seconds()
         elif self.started_at:
-            return (datetime.now(timezone.utc) - self.started_at).total_seconds()
+            return (datetime.now(UTC) - self.started_at).total_seconds()
         return 0.0
 
     def get_task(self, task_id: str) -> DecisionTask | None:
@@ -389,7 +388,7 @@ class ReplanningReason:
     reason: str
     affected_tasks: list[str]
     original_plan_id: str
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 # =============================================================================

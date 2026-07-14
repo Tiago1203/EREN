@@ -2,15 +2,13 @@
 
 from __future__ import annotations
 
-from typing import Protocol, runtime_checkable, Any
 from enum import Enum
-
-from core.contracts.base import CognitiveEngine
+from typing import Protocol, runtime_checkable
 
 
 class ProviderType(str, Enum):
     """Types of LLM providers."""
-    
+
     OPENAI = "openai"
     ANTHROPIC = "anthropic"
     OLLAMA = "ollama"
@@ -21,27 +19,25 @@ class ProviderType(str, Enum):
 
 class ProviderHealth(str, Enum):
     """Health status of a provider."""
-    
+
     HEALTHY = "healthy"
     DEGRADED = "degraded"
     UNHEALTHY = "unhealthy"
     UNAVAILABLE = "unavailable"
 
 
-@runtime_checkable
 class GenerationRequest:
     """Request for text generation."""
-    
+
     prompt: str
     model: str | None = None
     temperature: float = 0.7
     max_tokens: int = 1000
 
 
-@runtime_checkable
 class GenerationResponse:
     """Response from text generation."""
-    
+
     content: str
     model: str
     provider: ProviderType
@@ -49,18 +45,16 @@ class GenerationResponse:
     finish_reason: str | None = None
 
 
-@runtime_checkable
 class EmbeddingRequest:
     """Request for embeddings."""
-    
+
     texts: list[str]
     model: str | None = None
 
 
-@runtime_checkable
 class EmbeddingResponse:
     """Response from embeddings."""
-    
+
     embeddings: list[list[float]]
     model: str
     provider: ProviderType

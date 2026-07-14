@@ -10,8 +10,9 @@ Architecture only — these are concrete implementations that work with the
 from __future__ import annotations
 
 import logging
+from collections.abc import Iterator
 from contextlib import contextmanager
-from typing import TYPE_CHECKING, Any, Iterator
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from core.events.bus import EventBus
@@ -48,7 +49,7 @@ class EventPublisherMixin:
 
     def __init__(
         self,
-        event_bus: "EventBus | None" = None,
+        event_bus: EventBus | None = None,
         source: str = "",
         correlation_id: str = "",
         session_id: str = "",
@@ -67,7 +68,7 @@ class EventPublisherMixin:
         self._session_id = session_id
 
     @property
-    def event_bus(self) -> "EventBus":
+    def event_bus(self) -> EventBus:
         """Get the event bus.
 
         Returns:
@@ -85,7 +86,7 @@ class EventPublisherMixin:
 
     def publish(
         self,
-        event_type: "EventType",
+        event_type: EventType,
         correlation_id: str | None = None,
         session_id: str | None = None,
         **payload: object,
@@ -179,7 +180,7 @@ class EventContext:
         correlation_id: str,
         source: str = "",
         session_id: str = "",
-        event_bus: "EventBus | None" = None,
+        event_bus: EventBus | None = None,
     ) -> None:
         """Initialize the event context.
 
@@ -193,10 +194,10 @@ class EventContext:
         self.source = source
         self.session_id = session_id
         self._event_bus = event_bus
-        self._published_events: list["Event"] = []
+        self._published_events: list[Event] = []
 
     @property
-    def event_bus(self) -> "EventBus":
+    def event_bus(self) -> EventBus:
         """Get the event bus."""
         if self._event_bus is None:
             from core.events.bus import get_global_bus
@@ -205,7 +206,7 @@ class EventContext:
 
     def publish(
         self,
-        event_type: "EventType",
+        event_type: EventType,
         session_id: str | None = None,
         **payload: object,
     ) -> None:
@@ -229,7 +230,7 @@ class EventContext:
         self.event_bus.publish(event)
         self._published_events.append(event)
 
-    def __enter__(self) -> "EventContext":
+    def __enter__(self) -> EventContext:
         """Enter the context."""
         return self
 
@@ -248,7 +249,7 @@ class EventContext:
             ) if hasattr(__import__("core.events.models", fromlist=["EventType"]), "EventType") else None
 
     @property
-    def published_events(self) -> list["Event"]:
+    def published_events(self) -> list[Event]:
         """Get all events published in this context.
 
         Returns:
@@ -281,7 +282,7 @@ class EventAggregator:
         source: str = "",
         correlation_id: str = "",
         session_id: str = "",
-        event_bus: "EventBus | None" = None,
+        event_bus: EventBus | None = None,
     ) -> None:
         """Initialize the aggregator.
 
@@ -295,10 +296,10 @@ class EventAggregator:
         self.correlation_id = correlation_id
         self.session_id = session_id
         self._event_bus = event_bus
-        self._events: list["Event"] = []
+        self._events: list[Event] = []
 
     @property
-    def event_bus(self) -> "EventBus":
+    def event_bus(self) -> EventBus:
         """Get the event bus."""
         if self._event_bus is None:
             from core.events.bus import get_global_bus
@@ -307,7 +308,7 @@ class EventAggregator:
 
     def add(
         self,
-        event_type: "EventType",
+        event_type: EventType,
         **payload: object,
     ) -> None:
         """Add an event to the batch.
@@ -367,7 +368,7 @@ class CircuitBreakerPublisher:
 
     def __init__(
         self,
-        wrapped: "EventBus",
+        wrapped: EventBus,
         failure_threshold: int = 5,
         reset_timeout: float = 60.0,
     ) -> None:
@@ -385,7 +386,7 @@ class CircuitBreakerPublisher:
         self._last_failure_time: float | None = None
         self._is_open = False
 
-    def publish(self, event: "Event") -> None:
+    def publish(self, event: Event) -> None:
         """Publish an event with circuit breaker protection.
 
         Args:

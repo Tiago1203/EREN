@@ -6,11 +6,12 @@ Manages memory registration and discovery.
 from __future__ import annotations
 
 import threading
-from typing import TYPE_CHECKING, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 from core.memory.base import BaseMemoryInterface
-from core.memory.types import MemoryType, MemoryState
 from core.memory.exceptions import MemoryAlreadyExistsError, MemoryNotRegisteredError
+from core.memory.types import MemoryState, MemoryType
 
 if TYPE_CHECKING:
     pass

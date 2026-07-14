@@ -7,19 +7,13 @@ from __future__ import annotations
 
 import threading
 import time
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Callable
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from core.pipeline.context import PipelineContext
-from core.pipeline.exceptions import (
-    CancellationRequestedError,
-    PolicyStopOnFailureError,
-    PipelineExecutionError,
-    PipelineNotRunningError,
-)
-from core.pipeline.stage import PipelineStage
-from core.pipeline.types import PipelineState, PipelineResult, StageState
 from core.pipeline.policy import PipelinePolicy, StopOnFailurePolicy
+from core.pipeline.stage import PipelineStage
+from core.pipeline.types import PipelineResult, PipelineState, StageState
 
 if TYPE_CHECKING:
     from core.pipeline.pipeline import CognitivePipeline
@@ -39,7 +33,7 @@ class PipelineExecutor:
 
     def __init__(
         self,
-        pipeline: "CognitivePipeline",
+        pipeline: CognitivePipeline,
         policy: PipelinePolicy | None = None,
     ):
         """Initialize the executor.
@@ -223,7 +217,7 @@ class PipelineExecutor:
         self,
         stage: PipelineStage,
         context: PipelineContext,
-    ) -> "StageResult":
+    ) -> StageResult:
         """Execute a single stage.
 
         Args:
@@ -280,8 +274,8 @@ class PipelineExecutor:
             pipeline_id=context.pipeline_id,
             pipeline_name=context.pipeline_name,
             status=status,
-            started_at=datetime.fromtimestamp(start_time, tz=timezone.utc),
-            finished_at=datetime.now(timezone.utc),
+            started_at=datetime.fromtimestamp(start_time, tz=UTC),
+            finished_at=datetime.now(UTC),
             duration_ms=duration_ms,
             completed_stages=completed_stages,
             failed_stage=failed_stage,

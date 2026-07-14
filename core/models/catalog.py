@@ -9,9 +9,9 @@ from typing import TYPE_CHECKING
 
 from core.models.descriptor import ModelDescriptor
 from core.models.types import (
+    ModelAvailability,
     ModelCategory,
     ModelPricing,
-    ModelAvailability,
 )
 
 if TYPE_CHECKING:

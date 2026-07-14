@@ -8,13 +8,13 @@ Architecture only -- no implementations, no business logic.
 from __future__ import annotations
 
 import threading
-from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Callable
+from dataclasses import dataclass
+from datetime import UTC
+from typing import TYPE_CHECKING
 
 from .scheduling_types import (
     CognitiveTask,
     QueueStatistics,
-    TaskPriority,
     TaskState,
 )
 
@@ -37,9 +37,9 @@ class QueueEntry:
 
     def __post_init__(self) -> None:
         """Set enqueue time."""
-        from datetime import datetime, timezone
+        from datetime import datetime
         if not self.enqueued_at:
-            self.enqueued_at = datetime.now(timezone.utc).isoformat()
+            self.enqueued_at = datetime.now(UTC).isoformat()
 
     @property
     def effective_priority(self) -> int:

@@ -28,7 +28,6 @@ from .models import CognitiveEngineId, EngineSelection, Intention, Plan, PlanSte
 from .types import (
     EngineSelector,
     ExecutionContext,
-    GoalType,
     PlannerCallback,
     PlannerResult,
     PlanningStrategy,
@@ -39,7 +38,7 @@ from .types import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    pass
 
 
 class Planner(CognitiveEngine):
@@ -471,7 +470,7 @@ class _DefaultStepOrderer:
 
         # Build adjacency list and in-degree map
         n = len(steps)
-        in_degree = {i: 0 for i in range(n)}
+        in_degree = dict.fromkeys(range(n), 0)
         dependents: dict[int, list[int]] = {i: [] for i in range(n)}
 
         for i, step in enumerate(steps):
@@ -500,10 +499,10 @@ class _DefaultStepOrderer:
 
 
 __all__ = [
-    "Planner",
-    "PlannerError",
+    "EngineSelectionError",
     "InvalidIntentionError",
     "PlanCreationError",
-    "EngineSelectionError",
+    "Planner",
+    "PlannerError",
     "StepOrderingError",
 ]

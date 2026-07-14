@@ -32,6 +32,11 @@ from core.reasoning.adapters import (
     ReasoningMemoryAdapter,
 )
 from core.reasoning.capabilities import get_reasoning_capabilities
+from core.reasoning.confidence_engine import (
+    ConfidenceEngine,
+    get_confidence_engine,
+    reset_confidence_engine,
+)
 from core.reasoning.confidence_model import (
     BayesianConfidenceCalculator,
     ConfidenceCalculator,
@@ -39,6 +44,16 @@ from core.reasoning.confidence_model import (
     DefaultConfidenceCalculator,
     DempsterShaferCalculator,
     probability_to_level,
+)
+from core.reasoning.decision_composer import (
+    DecisionComposer,
+    get_decision_composer,
+    reset_decision_composer,
+)
+from core.reasoning.evidence_engine import (
+    EvidenceEngine,
+    get_evidence_engine,
+    reset_evidence_engine,
 )
 from core.reasoning.evidence_manager import EvidenceManager
 from core.reasoning.exceptions import (
@@ -56,16 +71,37 @@ from core.reasoning.exceptions import (
     SessionNotFoundError,
     StrategyNotSupportedError,
 )
+from core.reasoning.explanation_engine import (
+    ExplanationEngine,
+    get_explanation_engine,
+    reset_explanation_engine,
+)
 from core.reasoning.hypothesis_manager import HypothesisManager
-from core.reasoning.reasoning_chain import ReasoningChain, ReasoningChainBuilder, ReasoningChainManager
+
+# Reasoning Platform Components
+from core.reasoning.inference import (
+    InferenceEngine,
+    get_inference_engine,
+    reset_inference_engine,
+)
+from core.reasoning.reasoning_chain import (
+    ReasoningChain,
+    ReasoningChainBuilder,
+    ReasoningChainManager,
+)
 from core.reasoning.reasoning_engine import (
     CognitiveReasoningEngine,
     ReasoningCapabilityRegistrar,
     ReasoningEventPublisher,
     ReasoningSession,
 )
-from core.reasoning.reasoning_events import ReasoningEvent, ReasoningEventPublisher as LegacyEventPublisher
-from core.reasoning.reasoning_metrics import ReasoningHealthCheck, ReasoningMetrics, ReasoningMetricsCollector
+from core.reasoning.reasoning_events import ReasoningEvent
+from core.reasoning.reasoning_events import ReasoningEventPublisher as LegacyEventPublisher
+from core.reasoning.reasoning_metrics import (
+    ReasoningHealthCheck,
+    ReasoningMetrics,
+    ReasoningMetricsCollector,
+)
 from core.reasoning.reasoning_strategy import (
     EvidenceFirstStrategyExecutor,
     ExhaustiveStrategyExecutor,
@@ -93,42 +129,15 @@ from core.reasoning.reasoning_types import (
     ReasoningStrategy,
     StrategyConfig,
 )
-
-# Reasoning Platform Components
-from core.reasoning.inference import (
-    InferenceEngine,
-    get_inference_engine,
-    reset_inference_engine,
-)
-from core.reasoning.evidence_engine import (
-    EvidenceEngine,
-    get_evidence_engine,
-    reset_evidence_engine,
-)
 from core.reasoning.reflection_engine import (
     ReflectionEngine,
     get_reflection_engine,
     reset_reflection_engine,
 )
-from core.reasoning.confidence_engine import (
-    ConfidenceEngine,
-    get_confidence_engine,
-    reset_confidence_engine,
-)
-from core.reasoning.explanation_engine import (
-    ExplanationEngine,
-    get_explanation_engine,
-    reset_explanation_engine,
-)
 from core.reasoning.validation_engine import (
     ValidationEngine,
     get_validation_engine,
     reset_validation_engine,
-)
-from core.reasoning.decision_composer import (
-    DecisionComposer,
-    get_decision_composer,
-    reset_decision_composer,
 )
 
 # Aliases for backwards compatibility

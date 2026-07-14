@@ -8,7 +8,7 @@ from __future__ import annotations
 import re
 from typing import TYPE_CHECKING
 
-from core.ingestion.types import ExtractedDocument, CleanedDocument
+from core.ingestion.types import CleanedDocument, ExtractedDocument
 
 if TYPE_CHECKING:
     pass
@@ -81,7 +81,7 @@ class TextNormalizer:
                 new_text = re.sub(pattern, "", text)
                 if new_text != text:
                     text = new_text
-                    actions.append(f"Removed page numbers")
+                    actions.append("Removed page numbers")
 
         # Normalize whitespace
         if self.normalize_whitespace:

@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import threading
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from core.knowledge.registry_types import KnowledgeCollection
@@ -105,7 +105,7 @@ class KnowledgeCollections:
             if collection.collection_id not in self._collections:
                 return False
 
-            collection.updated_at = datetime.now(timezone.utc)
+            collection.updated_at = datetime.now(UTC)
             self._collections[collection.collection_id] = collection
             return True
 
@@ -146,7 +146,7 @@ class KnowledgeCollections:
 
             if knowledge_id not in collection.knowledge_ids:
                 collection.knowledge_ids.append(knowledge_id)
-                collection.updated_at = datetime.now(timezone.utc)
+                collection.updated_at = datetime.now(UTC)
 
             return True
 
@@ -171,7 +171,7 @@ class KnowledgeCollections:
 
             if knowledge_id in collection.knowledge_ids:
                 collection.knowledge_ids.remove(knowledge_id)
-                collection.updated_at = datetime.now(timezone.utc)
+                collection.updated_at = datetime.now(UTC)
 
             return True
 

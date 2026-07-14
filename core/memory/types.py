@@ -6,9 +6,9 @@ Defines all types, enums, and value objects used by the memory system.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     pass
@@ -33,12 +33,12 @@ class MemoryType(str, Enum):
     LONG_TERM = "long_term"      # Persistent storage
 
     @classmethod
-    def is_short_term(cls, memory_type: "MemoryType") -> bool:
+    def is_short_term(cls, memory_type: MemoryType) -> bool:
         """Check if memory type is short-term."""
         return memory_type in (cls.WORKING, cls.CONVERSATION, cls.SHORT_TERM)
 
     @classmethod
-    def is_long_term(cls, memory_type: "MemoryType") -> bool:
+    def is_long_term(cls, memory_type: MemoryType) -> bool:
         """Check if memory type is long-term."""
         return memory_type in (
             cls.EPISODIC, cls.SEMANTIC, cls.LONG_TERM, cls.CLINICAL
@@ -136,7 +136,7 @@ class MemoryResult:
     memory_id: str
     score: float = 0.0
     metadata: dict = field(default_factory=dict)
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def to_dict(self) -> dict:
         """Convert to dictionary."""
@@ -200,7 +200,7 @@ class MemoryEntry:
     key: str = ""
     metadata: dict = field(default_factory=dict)
     tags: list[str] = field(default_factory=list)
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
     expires_at: datetime | None = None
 
     def __post_init__(self):

@@ -8,10 +8,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from core.rag.types import (
-    RAGQuery,
     RAGContext,
-    RetrievedChunk,
+    RAGQuery,
     RetrievalResult,
+    RetrievedChunk,
 )
 
 if TYPE_CHECKING:

@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import threading
 import uuid
-from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
 from core.retrieval.types import RetrievalTrace

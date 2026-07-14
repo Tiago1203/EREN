@@ -6,20 +6,20 @@ Manages capability lifecycle transitions.
 from __future__ import annotations
 
 import threading
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any, Callable
+from collections.abc import Callable
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from core.sdk.capability import BaseCapability
+from core.sdk.exceptions import (
+    CapabilityExecutionError,
+    CapabilityInitializationError,
+)
 from core.sdk.types import (
-    CapabilityState,
     CapabilityContext,
     CapabilityResult,
+    CapabilityState,
     ValidationResult,
-)
-from core.sdk.exceptions import (
-    CapabilityStateError,
-    CapabilityInitializationError,
-    CapabilityExecutionError,
 )
 
 if TYPE_CHECKING:
@@ -134,7 +134,7 @@ class LifecycleManager:
         Raises:
             CapabilityExecutionError: If execution fails.
         """
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
 
         try:
             capability._transition_to(CapabilityState.EXECUTING)
@@ -146,7 +146,7 @@ class LifecycleManager:
             capability._transition_to(CapabilityState.COMPLETED)
 
             # Update duration
-            end_time = datetime.now(timezone.utc)
+            end_time = datetime.now(UTC)
             result.duration_ms = int((end_time - start_time).total_seconds() * 1000)
 
             self._emit_event("CapabilityCompleted", {
@@ -160,7 +160,7 @@ class LifecycleManager:
         except Exception as e:
             capability._transition_to(CapabilityState.FAILED)
 
-            end_time = datetime.now(timezone.utc)
+            end_time = datetime.now(UTC)
             duration_ms = int((end_time - start_time).total_seconds() * 1000)
 
             self._emit_event("CapabilityFailed", {

@@ -14,7 +14,7 @@ RuntimeFailed
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 from uuid import uuid4
@@ -24,7 +24,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 def _utcnow() -> str:
     """Return the current UTC timestamp as ISO string."""
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 def _new_id() -> str:
@@ -121,7 +121,7 @@ class RuntimeEvent(BaseModel):
         correlation_id: str | None = None,
         session_id: str | None = None,
         runtime_id: str | None = None,
-    ) -> "RuntimeEvent":
+    ) -> RuntimeEvent:
         """Return a copy with updated context fields."""
         updates: dict[str, Any] = {}
         if correlation_id is not None:

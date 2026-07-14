@@ -5,12 +5,12 @@ Applies reasoning strategies, inferences, rules, and logic.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 from core.reasoning.reasoning_types import (
-    InferenceType,
-    ReasoningStep,
     ConfidenceScore,
+    InferenceType,
 )
 
 if TYPE_CHECKING:

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING
 
@@ -204,7 +204,7 @@ class ProviderHealth:
     is_healthy: bool = True
     latency_ms: int = 0
     error_count: int = 0
-    last_check: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    last_check: datetime = field(default_factory=lambda: datetime.now(UTC))
     status_message: str = ""
 
     def to_dict(self) -> dict:
@@ -262,7 +262,7 @@ class EmbeddingTrace:
 
     trace_id: str
     request: EmbeddingRequest
-    start_time: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    start_time: datetime = field(default_factory=lambda: datetime.now(UTC))
     end_time: datetime | None = None
     provider_used: EmbeddingProvider | None = None
     model_used: str | None = None
@@ -283,7 +283,7 @@ class EmbeddingTrace:
         model: str | None = None,
     ) -> None:
         """Mark trace as finished."""
-        self.end_time = datetime.now(timezone.utc)
+        self.end_time = datetime.now(UTC)
         if provider:
             self.provider_used = provider
         if model:

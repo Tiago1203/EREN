@@ -5,15 +5,8 @@ Builder pattern for creating compositions.
 Architecture only -- no implementations.
 """
 
-import threading
-import uuid
-from datetime import datetime, timezone
-from typing import Any, Callable, Optional
 
-from .composition_events import CompositionEventPublisher, CompositionEventType
-from .composition_metrics import CompositionMetricsCollector
-from .composition_trace import CompositionTraceCollector
-from .composition_validator import CompositionValidator, ValidationResult
+from .composition_validator import CompositionValidator
 from .exceptions import (
     CompositionBuildException,
     CompositionValidationException,

@@ -7,7 +7,7 @@ allowing the runtime to start. Ensures all prerequisites are met.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 
@@ -25,7 +25,7 @@ class ValidationResult:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            self.timestamp = datetime.now(timezone.utc).isoformat()
+            self.timestamp = datetime.now(UTC).isoformat()
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
@@ -54,7 +54,7 @@ class ValidationReport:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            self.timestamp = datetime.now(timezone.utc).isoformat()
+            self.timestamp = datetime.now(UTC).isoformat()
 
     def add_result(self, result: ValidationResult) -> None:
         """Add a validation result.
@@ -365,7 +365,7 @@ class RuntimeValidator:
             report.add_result(ValidationResult(
                 check_name="container",
                 passed=False,
-                message=f"Container validation failed: {str(e)}",
+                message=f"Container validation failed: {e!s}",
                 is_critical=True,
             ))
 

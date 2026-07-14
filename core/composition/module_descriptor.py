@@ -5,8 +5,10 @@ Describes a module and its registration requirements.
 Architecture only -- no implementations.
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Callable, Optional
+from datetime import UTC
+from typing import Any
 
 
 @dataclass
@@ -61,13 +63,13 @@ class ModuleDescriptor:
     metadata: dict = field(default_factory=dict)
 
     # Module registration function
-    register_fn: Optional[Callable] = None
+    register_fn: Callable | None = None
 
     # Validation function
-    validate_fn: Optional[Callable] = None
+    validate_fn: Callable | None = None
 
     # Initialization function
-    init_fn: Optional[Callable] = None
+    init_fn: Callable | None = None
 
     # Order (for explicit ordering)
     order: int = 0
@@ -168,9 +170,9 @@ class ModuleInstance:
 
     def mark_initialized(self):
         """Mark module as initialized."""
-        from datetime import datetime, timezone
+        from datetime import datetime
         self.is_initialized = True
-        self.initialized_at = datetime.now(timezone.utc).isoformat()
+        self.initialized_at = datetime.now(UTC).isoformat()
 
     def mark_validated(self):
         """Mark module as validated."""

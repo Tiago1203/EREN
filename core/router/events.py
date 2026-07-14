@@ -6,14 +6,14 @@ Publishes router events to the Event Bus.
 from __future__ import annotations
 
 import threading
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from core.router.router import CapabilityRouter
     from core.router.context import RouterContext
     from core.router.result import RoutingResult
+    from core.router.router import CapabilityRouter
 
 
 class RouterEventType(str, Enum):
@@ -58,9 +58,9 @@ class RouterEventPublisher:
     def publish(
         self,
         event_type: RouterEventType | str,
-        router: "CapabilityRouter | None" = None,
-        context: "RouterContext | None" = None,
-        result: "RoutingResult | None" = None,
+        router: CapabilityRouter | None = None,
+        context: RouterContext | None = None,
+        result: RoutingResult | None = None,
         **kwargs,
     ) -> None:
         """Publish a router event.
@@ -76,7 +76,7 @@ class RouterEventPublisher:
 
         event = {
             "event_type": event_type_str,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "router_state": router.state.value if router else "",
             "correlation_id": context.correlation_id if context else "",
             "session_id": context.session_id if context else "",
@@ -103,7 +103,7 @@ class RouterEventPublisher:
         # Publish to Event Bus if available
         if self._event_bus:
             try:
-                from core.events.models import Event, EventType
+                from core.events.models import Event
                 self._event_bus.publish(Event(
                     type=self._map_to_core_event_type(event_type),
                     source="router",
@@ -121,7 +121,7 @@ class RouterEventPublisher:
             except Exception:
                 pass
 
-    def _map_to_core_event_type(self, event_type: RouterEventType) -> "EventType":
+    def _map_to_core_event_type(self, event_type: RouterEventType) -> EventType:
         """Map router event to core event type.
 
         Args:
@@ -195,9 +195,9 @@ def get_router_event_publisher() -> RouterEventPublisher:
 
 def publish_router_event(
     event_type: RouterEventType,
-    router: "CapabilityRouter | None" = None,
-    context: "RouterContext | None" = None,
-    result: "RoutingResult | None" = None,
+    router: CapabilityRouter | None = None,
+    context: RouterContext | None = None,
+    result: RoutingResult | None = None,
 ) -> None:
     """Publish a router event.
 

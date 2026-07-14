@@ -8,9 +8,9 @@ from __future__ import annotations
 import threading
 from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-from core.pipeline.types import PipelineResult, PipelineState
+from core.pipeline.types import PipelineResult
 
 
 @dataclass
@@ -19,7 +19,7 @@ class MetricSnapshot:
 
     name: str
     value: float
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
     tags: dict | None = None
 
 
@@ -47,7 +47,7 @@ class PipelineMetrics:
     def start(self) -> None:
         """Start metrics collection."""
         with self._lock:
-            self._start_time = datetime.now(timezone.utc)
+            self._start_time = datetime.now(UTC)
 
     def record_pipeline_execution(self, result: PipelineResult) -> None:
         """Record pipeline execution metrics.
@@ -235,7 +235,7 @@ class PipelineMetrics:
             }
 
             if self._start_time:
-                elapsed = (datetime.now(timezone.utc) - self._start_time).total_seconds()
+                elapsed = (datetime.now(UTC) - self._start_time).total_seconds()
                 summary["elapsed_seconds"] = elapsed
 
             return summary

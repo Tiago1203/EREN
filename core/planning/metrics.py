@@ -5,8 +5,7 @@ Tracks planning performance and statistics.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from core.planning.types import PlanningMetrics
@@ -65,7 +64,7 @@ class PlanningMetricsCollector:
             "goal_type": goal_type,
             "task_count": task_count,
             "planning_time_ms": planning_time_ms,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         })
 
         self._metrics.by_goal_type[goal_type] = (
@@ -100,7 +99,7 @@ class PlanningMetricsCollector:
             "plan_id": plan_id,
             "success": success,
             "duration_seconds": duration_seconds,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         })
 
     def record_task_completion(
@@ -121,7 +120,7 @@ class PlanningMetricsCollector:
             "plan_id": plan_id,
             "task_id": task_id,
             "duration_seconds": duration_seconds,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         })
 
     def get_metrics(self) -> PlanningMetrics:

@@ -5,7 +5,8 @@ Builder pattern for creating containers.
 Architecture only -- no implementations.
 """
 
-from typing import Any, Callable, Optional
+from collections.abc import Callable
+from typing import Any
 
 from .dependency_graph import DependencyGraph
 from .dependency_validator import DependencyValidator
@@ -33,7 +34,7 @@ class ContainerBuilder:
         implementation: Any,
         lifetime: str = ServiceLifetime.TRANSIENT,
         *,
-        factory: Optional[Callable] = None,
+        factory: Callable | None = None,
         arguments: tuple = None,
         keyword_arguments: dict = None,
         tags: set = None,

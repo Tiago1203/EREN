@@ -6,26 +6,24 @@ Main engine for building context packages.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
+from core.context.engine.builder import ContextBuilder
+from core.context.engine.compressor import ContextCompressor
+from core.context.engine.deduplicator import ContextDeduplicator
+from core.context.engine.merger import ContextMerger
+from core.context.engine.ranking import ContextRanker
 from core.context.engine.types import (
     ContextItem,
     ContextPackage,
     ContextQuery,
     ContextRetrievalResult,
     ContextSource,
-    ContextPriority,
 )
-from core.context.engine.builder import ContextBuilder
-from core.context.engine.merger import ContextMerger
-from core.context.engine.deduplicator import ContextDeduplicator
-from core.context.engine.compressor import ContextCompressor
-from core.context.engine.ranking import ContextRanker
 
 if TYPE_CHECKING:
-    from core.retrieval import RetrievalEngine
     from core.memory import MemoryCoordinator
+    from core.retrieval import RetrievalEngine
 
 
 class CognitiveContextEngine:
@@ -52,8 +50,8 @@ class CognitiveContextEngine:
 
     def __init__(
         self,
-        retrieval_engine: "RetrievalEngine | None" = None,
-        memory_coordinator: "MemoryCoordinator | None" = None,
+        retrieval_engine: RetrievalEngine | None = None,
+        memory_coordinator: MemoryCoordinator | None = None,
     ):
         """Initialize CCE.
 

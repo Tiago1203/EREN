@@ -18,7 +18,6 @@ from .exceptions import (
     ValidationError,
     VersionIncompatibleError,
 )
-from .types import CapabilityStatus
 
 if TYPE_CHECKING:
     from .capability_registry import CapabilityRegistry

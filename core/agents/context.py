@@ -6,7 +6,7 @@ Manages shared context between agents.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from core.agents.types import AgentContext, AgentMessage
@@ -163,7 +163,7 @@ class ContextManager:
         context = self._contexts.get(session_id)
         if context:
             context.agent_states[agent_id] = state
-            context.updated_at = datetime.now(timezone.utc)
+            context.updated_at = datetime.now(UTC)
 
     def get_agent_state(
         self,

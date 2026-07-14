@@ -15,9 +15,8 @@ from __future__ import annotations
 
 import threading
 import time
-from collections import deque
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -52,7 +51,7 @@ class DependencyReport:
     is_valid: bool
     score: float
     issues: list[DependencyIssue]
-    validated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    validated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     duration_ms: int = 0
 
     # Graph metrics

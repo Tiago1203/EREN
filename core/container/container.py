@@ -15,8 +15,9 @@ It ONLY provides dependency injection infrastructure.
 
 import threading
 import uuid
-from datetime import datetime, timezone
-from typing import Any, Callable, Optional
+from collections.abc import Callable
+from datetime import UTC, datetime
+from typing import Any
 
 from .container_builder import ContainerBuilder
 from .container_events import ContainerEventPublisher, ContainerEventType
@@ -25,9 +26,7 @@ from .container_trace import ContainerTraceCollector
 from .dependency_graph import DependencyGraph
 from .dependency_validator import DependencyValidator
 from .exceptions import (
-    CircularDependencyException,
     ContainerDisposedException,
-    DependencyResolutionException,
     ValidationException,
 )
 from .service_lifetime import ServiceLifetime
@@ -57,9 +56,9 @@ class CognitiveContainer:
 
     def __init__(
         self,
-        registry: Optional[ServiceRegistry] = None,
-        validator: Optional[DependencyValidator] = None,
-        graph: Optional[DependencyGraph] = None,
+        registry: ServiceRegistry | None = None,
+        validator: DependencyValidator | None = None,
+        graph: DependencyGraph | None = None,
     ):
         """Initialize the container.
 
@@ -94,7 +93,7 @@ class CognitiveContainer:
         # State
         self._is_disposed = False
         self._lock = threading.RLock()
-        self._created_at = datetime.now(timezone.utc).isoformat()
+        self._created_at = datetime.now(UTC).isoformat()
 
         # Publish creation event
         self._event_publisher.publish(
@@ -123,7 +122,7 @@ class CognitiveContainer:
         implementation: Any,
         lifetime: str = ServiceLifetime.TRANSIENT,
         *,
-        factory: Optional[Callable] = None,
+        factory: Callable | None = None,
         arguments: tuple = None,
         keyword_arguments: dict = None,
         tags: set = None,
@@ -194,13 +193,13 @@ class CognitiveContainer:
         """
         self._check_disposed()
 
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
 
         try:
             instance = self._provider.resolve(contract)
 
             duration_ms = int(
-                (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                (datetime.now(UTC) - start_time).total_seconds() * 1000
             )
             self._metrics.record_service_resolved(duration_ms)
 
@@ -221,7 +220,7 @@ class CognitiveContainer:
 
         except Exception as e:
             duration_ms = int(
-                (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                (datetime.now(UTC) - start_time).total_seconds() * 1000
             )
             self._metrics.record_resolution_error()
 
@@ -241,7 +240,7 @@ class CognitiveContainer:
 
             raise
 
-    def try_resolve(self, contract: str) -> Optional[Any]:
+    def try_resolve(self, contract: str) -> Any | None:
         """Try to resolve without throwing.
 
         Args:
@@ -339,12 +338,12 @@ class CognitiveContainer:
         """
         self._check_disposed()
 
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
 
         result = self._validator.validate()
 
         duration_ms = int(
-            (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+            (datetime.now(UTC) - start_time).total_seconds() * 1000
         )
         self._metrics.record_validation_time(duration_ms)
 

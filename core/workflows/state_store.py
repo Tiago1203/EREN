@@ -6,12 +6,11 @@ Persistent state management for workflows.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from core.workflows.types import (
     WorkflowExecution,
-    NodeExecution,
     WorkflowStatus,
 )
 
@@ -126,7 +125,7 @@ class StateStore:
             "current_node_ids": execution.current_node_ids.copy(),
             "completed_node_ids": execution.completed_node_ids.copy(),
             "failed_node_ids": execution.failed_node_ids.copy(),
-            "created_at": datetime.now(timezone.utc).isoformat(),
+            "created_at": datetime.now(UTC).isoformat(),
         }
 
         if execution.execution_id not in self._versions:

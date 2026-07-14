@@ -8,12 +8,10 @@ Architecture only -- no implementations, no business logic.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from .cognitive_cycle import CycleConfiguration, CyclePhase
-    from .orchestration_contracts import CognitiveEngine
+    pass
 
 
 # =============================================================================
@@ -58,7 +56,7 @@ class PipelineDefinition:
     def add_stage(
         self,
         stage: PipelineStage,
-    ) -> "PipelineDefinition":
+    ) -> PipelineDefinition:
         """Add a stage to the pipeline.
 
         Args:
@@ -327,7 +325,7 @@ class PipelineBuilder:
         dependencies: list[str] | None = None,
         optional: bool = False,
         timeout_ms: int = 30000,
-    ) -> "PipelineBuilder":
+    ) -> PipelineBuilder:
         """Add a stage to the pipeline.
 
         Args:

@@ -6,8 +6,8 @@ Schedules and executes agent tasks.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Callable
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from core.agents.types import AgentTask, TaskStatus
 
@@ -71,7 +71,7 @@ class AgentScheduler:
             priority=priority,
             depends_on=depends_on or [],
             max_retries=max_retries,
-            created_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
         )
 
         self._tasks[task_id] = task
@@ -165,8 +165,8 @@ class AgentScheduler:
 
         task.status = TaskStatus.RUNNING
         task.agent_id = agent_id
-        task.started_at = datetime.now(timezone.utc)
-        task.assigned_at = datetime.now(timezone.utc)
+        task.started_at = datetime.now(UTC)
+        task.assigned_at = datetime.now(UTC)
 
         self._running[task_id] = agent_id
 
@@ -191,7 +191,7 @@ class AgentScheduler:
             return None
 
         task.status = TaskStatus.COMPLETED
-        task.completed_at = datetime.now(timezone.utc)
+        task.completed_at = datetime.now(UTC)
         task.output_data = output_data
 
         self._running.pop(task_id, None)
@@ -221,7 +221,7 @@ class AgentScheduler:
 
         if task.retries >= task.max_retries:
             task.status = TaskStatus.FAILED
-            task.completed_at = datetime.now(timezone.utc)
+            task.completed_at = datetime.now(UTC)
         else:
             # Reset for retry
             task.status = TaskStatus.PENDING
@@ -245,7 +245,7 @@ class AgentScheduler:
             return False
 
         task.status = TaskStatus.CANCELLED
-        task.completed_at = datetime.now(timezone.utc)
+        task.completed_at = datetime.now(UTC)
 
         self._running.pop(task_id, None)
         if task_id in self._queue:
@@ -297,7 +297,7 @@ class AgentScheduler:
         Returns:
             Number of tasks cleared.
         """
-        cutoff = datetime.now(timezone.utc).timestamp() - (before_hours * 3600)
+        cutoff = datetime.now(UTC).timestamp() - (before_hours * 3600)
         cleared = 0
 
         to_remove = []

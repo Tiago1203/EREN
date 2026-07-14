@@ -6,28 +6,23 @@ Main pipeline engine that orchestrates stage execution.
 from __future__ import annotations
 
 import threading
-import time
 import uuid
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 from core.pipeline.context import PipelineContext
-from core.pipeline.stage import PipelineStage
+from core.pipeline.exceptions import (
+    DuplicateStageError,
+    EmptyPipelineError,
+    PipelineStateError,
+)
 from core.pipeline.executor import PipelineExecutor
 from core.pipeline.policy import PipelinePolicy, StopOnFailurePolicy
+from core.pipeline.stage import PipelineStage
 from core.pipeline.types import (
-    PipelineState,
-    PipelineResult,
     PipelineConfig,
+    PipelineResult,
+    PipelineState,
     StageMetadata,
-)
-from core.pipeline.exceptions import (
-    PipelineValidationError,
-    EmptyPipelineError,
-    DuplicateStageError,
-    InvalidStageOrderError,
-    PipelineStateError,
-    PipelineAlreadyRunningError,
 )
 from core.pipeline.validator import PipelineValidator
 
@@ -86,9 +81,9 @@ class CognitivePipeline:
         self._lock = threading.RLock()
 
         # Observability
-        self._event_publisher: "PipelineEventPublisher | None" = None
-        self._metrics: "PipelineMetrics | None" = None
-        self._trace: "PipelineTrace | None" = None
+        self._event_publisher: PipelineEventPublisher | None = None
+        self._metrics: PipelineMetrics | None = None
+        self._trace: PipelineTrace | None = None
 
         # Statistics
         self._execution_count = 0
@@ -177,7 +172,7 @@ class CognitivePipeline:
     # Observability
     # =========================================================================
 
-    def set_event_publisher(self, publisher: "PipelineEventPublisher") -> None:
+    def set_event_publisher(self, publisher: PipelineEventPublisher) -> None:
         """Set the event publisher.
 
         Args:
@@ -185,7 +180,7 @@ class CognitivePipeline:
         """
         self._event_publisher = publisher
 
-    def set_metrics(self, metrics: "PipelineMetrics") -> None:
+    def set_metrics(self, metrics: PipelineMetrics) -> None:
         """Set the metrics collector.
 
         Args:
@@ -193,7 +188,7 @@ class CognitivePipeline:
         """
         self._metrics = metrics
 
-    def set_trace(self, trace: "PipelineTrace") -> None:
+    def set_trace(self, trace: PipelineTrace) -> None:
         """Set the trace collector.
 
         Args:
@@ -205,7 +200,7 @@ class CognitivePipeline:
     # Stage Management
     # =========================================================================
 
-    def add_stage(self, stage: PipelineStage) -> "CognitivePipeline":
+    def add_stage(self, stage: PipelineStage) -> CognitivePipeline:
         """Add a stage to the pipeline.
 
         Args:
@@ -245,7 +240,7 @@ class CognitivePipeline:
         self,
         index: int,
         stage: PipelineStage,
-    ) -> "CognitivePipeline":
+    ) -> CognitivePipeline:
         """Insert a stage at a specific position.
 
         Args:
@@ -276,7 +271,7 @@ class CognitivePipeline:
                     return stage
             return None
 
-    def clear_stages(self) -> "CognitivePipeline":
+    def clear_stages(self) -> CognitivePipeline:
         """Remove all stages.
 
         Returns:
@@ -306,7 +301,7 @@ class CognitivePipeline:
         # Run validator
         return self._validator.validate(self)
 
-    def prepare(self) -> "CognitivePipeline":
+    def prepare(self) -> CognitivePipeline:
         """Prepare pipeline for execution.
 
         Returns:

@@ -6,11 +6,10 @@ Calculates execution order and manages dependencies.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from core.workflows.types import (
-    WorkflowExecution,
     WorkflowNode,
 )
 
@@ -173,7 +172,7 @@ class WorkflowScheduler:
         """
         task_id = str(uuid.uuid4())
 
-        scheduled_at = datetime.now(timezone.utc)
+        scheduled_at = datetime.now(UTC)
         if delay_seconds > 0:
             from datetime import timedelta
             scheduled_at = scheduled_at + timedelta(seconds=delay_seconds)
@@ -196,7 +195,7 @@ class WorkflowScheduler:
 
     def get_ready_tasks(self) -> list[ScheduledTask]:
         """Get tasks ready to execute."""
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         return [
             task for task in self._scheduled_tasks.values()
             if task.status == "pending" and task.scheduled_at <= now

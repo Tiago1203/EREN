@@ -8,9 +8,9 @@ Architecture only -- no AI, no business logic, no implementations.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Protocol
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
     pass
@@ -118,7 +118,7 @@ class KnowledgeSource(Protocol):
     source_type: KnowledgeSourceType
     name: str
 
-    async def query(self, query: "KnowledgeQuery") -> list["KnowledgeResult"]:
+    async def query(self, query: KnowledgeQuery) -> list[KnowledgeResult]:
         """Query this source for knowledge."""
         ...
 
@@ -136,13 +136,13 @@ class RetrievalStrategy(Protocol):
 
     async def retrieve(
         self,
-        query: "KnowledgeQuery",
+        query: KnowledgeQuery,
         sources: list[KnowledgeSource],
-    ) -> list["KnowledgeResult"]:
+    ) -> list[KnowledgeResult]:
         """Retrieve knowledge using specified strategy."""
         ...
 
-    def rank_results(self, results: list["KnowledgeResult"]) -> list["KnowledgeResult"]:
+    def rank_results(self, results: list[KnowledgeResult]) -> list[KnowledgeResult]:
         """Rank results by relevance."""
         ...
 
@@ -181,7 +181,7 @@ class KnowledgeQuery:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.created_at:
-            object.__setattr__(self, 'created_at', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'created_at', datetime.now(UTC).isoformat())
 
 
 @dataclass(frozen=True)
@@ -204,7 +204,7 @@ class KnowledgeResult:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.created_at:
-            object.__setattr__(self, 'created_at', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'created_at', datetime.now(UTC).isoformat())
 
 
 @dataclass(frozen=True)
@@ -224,7 +224,7 @@ class KnowledgeEvidence:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.created_at:
-            object.__setattr__(self, 'created_at', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'created_at', datetime.now(UTC).isoformat())
 
 
 @dataclass(frozen=True)
@@ -268,7 +268,7 @@ class KnowledgeRoute:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.created_at:
-            object.__setattr__(self, 'created_at', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'created_at', datetime.now(UTC).isoformat())
 
 
 @dataclass
@@ -301,7 +301,7 @@ class KnowledgeSession:
     def __post_init__(self) -> None:
         """Set timestamps if not provided."""
         if not self.created_at:
-            object.__setattr__(self, 'created_at', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'created_at', datetime.now(UTC).isoformat())
 
 
 # =============================================================================

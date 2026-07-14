@@ -7,23 +7,22 @@ from __future__ import annotations
 
 import threading
 import time
-from typing import TYPE_CHECKING, Any, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
+from core.providers.exceptions import (
+    ProviderFallbackError,
+)
 from core.providers.provider import BaseProvider
 from core.providers.registry import ProviderRegistry, get_provider_registry
 from core.providers.selector import ProviderSelector
 from core.providers.types import (
-    ProviderType,
-    ProviderState,
-    ProviderConfig,
-    ProviderHealth,
     GenerationRequest,
     GenerationResponse,
+    ProviderConfig,
+    ProviderHealth,
+    ProviderState,
     SelectionPolicy,
-)
-from core.providers.exceptions import (
-    ProviderUnavailableError,
-    ProviderFallbackError,
 )
 
 if TYPE_CHECKING:

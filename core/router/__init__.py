@@ -25,41 +25,7 @@ Example:
 
 from __future__ import annotations
 
-# Core Router
-from core.router.router import CapabilityRouter
 from core.router.context import RouterContext
-from core.router.result import RoutingResult
-from core.router.matcher import PipelineMatcher
-from core.router.selector import PipelineSelector
-
-# Registry
-from core.router.registry import (
-    RoutingRegistry,
-    get_routing_registry,
-)
-
-# Policy
-from core.router.policy import (
-    RoutingPolicy,
-    RoutingPolicyHandler,
-    FirstMatchPolicy,
-    HighestScorePolicy,
-    PriorityPolicy,
-    StrictPolicy,
-    WeightedPolicy,
-    FallbackPolicy,
-    PolicyFactory,
-)
-
-# Types
-from core.router.types import (
-    RouterState,
-    RoutingPolicy as RoutingPolicyType,
-    MatchResult,
-    PipelineMetadata,
-    CandidatePipeline,
-    RoutingRule,
-)
 
 # Observability
 from core.router.events import (
@@ -68,40 +34,76 @@ from core.router.events import (
     get_router_event_publisher,
     publish_router_event,
 )
+
+# Exceptions
+from core.router.exceptions import (
+    ContextError,
+    FallbackError,
+    InvalidTransitionError,
+    MatcherError,
+    MetadataError,
+    MultipleMatchingPipelinesError,
+    NoMatchingPipelineError,
+    PipelineNotEligibleError,
+    PolicyViolationError,
+    RegistryError,
+    RouterException,
+    RouterInitializationError,
+    RouterStateError,
+    RoutingError,
+    RuleAlreadyRegisteredError,
+    RuleNotFoundError,
+    RuleValidationError,
+    SelectorError,
+    StrictPolicyError,
+)
+from core.router.matcher import PipelineMatcher
 from core.router.metrics import (
     RouterMetrics,
     get_router_metrics,
     reset_router_metrics,
 )
+
+# Policy
+from core.router.policy import (
+    FallbackPolicy,
+    FirstMatchPolicy,
+    HighestScorePolicy,
+    PolicyFactory,
+    PriorityPolicy,
+    RoutingPolicy,
+    RoutingPolicyHandler,
+    StrictPolicy,
+    WeightedPolicy,
+)
+
+# Registry
+from core.router.registry import (
+    RoutingRegistry,
+    get_routing_registry,
+)
+from core.router.result import RoutingResult
+
+# Core Router
+from core.router.router import CapabilityRouter
+from core.router.selector import PipelineSelector
 from core.router.trace import (
     RouterTrace,
     get_router_trace,
     reset_router_trace,
 )
 
-# Exceptions
-from core.router.exceptions import (
-    RouterException,
-    RouterInitializationError,
-    RoutingError,
-    NoMatchingPipelineError,
-    MultipleMatchingPipelinesError,
-    PipelineNotEligibleError,
-    PolicyViolationError,
-    StrictPolicyError,
-    FallbackError,
-    RouterStateError,
-    InvalidTransitionError,
-    RuleValidationError,
-    RegistryError,
-    RuleNotFoundError,
-    RuleAlreadyRegisteredError,
-    SelectorError,
-    MatcherError,
-    ContextError,
-    MetadataError,
+# Types
+from core.router.types import (
+    CandidatePipeline,
+    MatchResult,
+    PipelineMetadata,
+    RouterState,
+    RoutingRule,
 )
-
+from core.router.types import (
+    RoutingPolicy as RoutingPolicyType,
+)
 
 # Aliases
 ERENRouter = CapabilityRouter

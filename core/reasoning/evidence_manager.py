@@ -10,9 +10,9 @@ from __future__ import annotations
 import threading
 import uuid
 from collections import defaultdict
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
 from .reasoning_types import Evidence, EvidenceRelation, EvidenceSource, EvidenceType
 

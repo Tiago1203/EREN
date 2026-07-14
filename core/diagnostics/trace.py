@@ -16,7 +16,7 @@ import threading
 import uuid
 from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -32,7 +32,7 @@ class TraceEntry:
     category: str  # validation, health, runtime, etc.
     component: str
     status: str  # started, completed, failed, etc.
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
     duration_ms: int = 0
     correlation_id: str = ""
     session_id: str = ""
@@ -103,7 +103,7 @@ class DiagnosticsTrace:
 
         with self._lock:
             self._current_trace_id = trace_id
-            self._active_operations[trace_id] = datetime.now(timezone.utc)
+            self._active_operations[trace_id] = datetime.now(UTC)
 
             entry = TraceEntry(
                 trace_id=trace_id,
@@ -145,7 +145,7 @@ class DiagnosticsTrace:
 
             start_time = self._active_operations[trace_id]
             duration_ms = int(
-                (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                (datetime.now(UTC) - start_time).total_seconds() * 1000
             )
 
             # Find and update the entry

@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import threading
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from core.execution.types import ExecutionState
@@ -37,7 +37,7 @@ class ExecutionResult:
 
     # Status
     status: ExecutionState = ExecutionState.CREATED
-    started_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    started_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     finished_at: datetime | None = None
     duration_ms: int = 0
 
@@ -139,7 +139,7 @@ class ExecutionResult:
     def complete(self) -> None:
         """Mark execution as completed."""
         with self._lock:
-            self.finished_at = datetime.now(timezone.utc)
+            self.finished_at = datetime.now(UTC)
             if self.started_at:
                 self.duration_ms = int(
                     (self.finished_at - self.started_at).total_seconds() * 1000
@@ -153,7 +153,7 @@ class ExecutionResult:
             error: Optional error message.
         """
         with self._lock:
-            self.finished_at = datetime.now(timezone.utc)
+            self.finished_at = datetime.now(UTC)
             if self.started_at:
                 self.duration_ms = int(
                     (self.finished_at - self.started_at).total_seconds() * 1000
@@ -165,7 +165,7 @@ class ExecutionResult:
     def cancel(self) -> None:
         """Mark execution as cancelled."""
         with self._lock:
-            self.finished_at = datetime.now(timezone.utc)
+            self.finished_at = datetime.now(UTC)
             if self.started_at:
                 self.duration_ms = int(
                     (self.finished_at - self.started_at).total_seconds() * 1000
@@ -256,7 +256,7 @@ class ExecutionResult:
         """
         with self._lock:
             self.events.append({
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "event_type": event_type,
                 "data": data or {},
             })
@@ -270,7 +270,7 @@ class ExecutionResult:
         """
         with self._lock:
             self.trace.append({
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "operation": operation,
                 "details": details or {},
             })

@@ -37,34 +37,6 @@ Philosophy:
 
 from __future__ import annotations
 
-# Types
-from core.knowledge_assets.types import (
-    AssetType,
-    LifecycleState,
-    PermissionLevel,
-    AuditAction,
-    AssetMetadata,
-    AssetVersion,
-    AssetCollection,
-    AuditLog,
-    AssetStatistics,
-    AssetSearchQuery,
-)
-
-# Exceptions
-from core.knowledge_assets.exceptions import (
-    AssetRegistryError,
-    AssetNotFoundError,
-    CollectionNotFoundError,
-    VersionNotFoundError,
-    DuplicateAssetError,
-    DuplicateCollectionError,
-    PermissionDeniedError,
-    ValidationError,
-    AuditLogError,
-    ConfigurationError,
-)
-
 # Components
 from core.knowledge_assets.catalog import (
     AssetCatalog,
@@ -76,10 +48,19 @@ from core.knowledge_assets.collections import (
     get_asset_collections,
     reset_asset_collections,
 )
-from core.knowledge_assets.versions import (
-    VersionManager,
-    get_version_manager,
-    reset_version_manager,
+
+# Exceptions
+from core.knowledge_assets.exceptions import (
+    AssetNotFoundError,
+    AssetRegistryError,
+    AuditLogError,
+    CollectionNotFoundError,
+    ConfigurationError,
+    DuplicateAssetError,
+    DuplicateCollectionError,
+    PermissionDeniedError,
+    ValidationError,
+    VersionNotFoundError,
 )
 from core.knowledge_assets.permissions import (
     AuditLogger,
@@ -92,6 +73,25 @@ from core.knowledge_assets.registry import (
     KnowledgeAssetRegistry,
     get_asset_registry,
     reset_asset_registry,
+)
+
+# Types
+from core.knowledge_assets.types import (
+    AssetCollection,
+    AssetMetadata,
+    AssetSearchQuery,
+    AssetStatistics,
+    AssetType,
+    AssetVersion,
+    AuditAction,
+    AuditLog,
+    LifecycleState,
+    PermissionLevel,
+)
+from core.knowledge_assets.versions import (
+    VersionManager,
+    get_version_manager,
+    reset_version_manager,
 )
 
 __all__ = [

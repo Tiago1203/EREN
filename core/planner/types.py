@@ -9,12 +9,13 @@ This module provides domain-specific types that complement the models in
 
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from enum import IntEnum
-from typing import TYPE_CHECKING, Any, Awaitable, Callable, Protocol, TypeVar
+from typing import TYPE_CHECKING, Any, Protocol
 
 if TYPE_CHECKING:
-    from .models import CognitiveEngineId, EngineSelection, Intention, Plan, PlanStep
+    from .models import Intention, Plan, PlanStep
 
 
 # --------------------------------------------------------------------------
@@ -95,7 +96,7 @@ class ExecutionContext:
     device_type: str = ""
     user_id: str = ""
     user_role: str = ""
-    urgency: "TaskPriority" = TaskPriority.NORMAL
+    urgency: TaskPriority = TaskPriority.NORMAL
     metadata: dict[str, Any] = field(default_factory=dict)
 
     def get(self, key: str, default: Any = None) -> Any:
@@ -116,8 +117,8 @@ class PlannerResult:
     components (Orchestrator, Workflow) need to execute it.
     """
 
-    plan: "Plan"
-    priority: "TaskPriority" = TaskPriority.NORMAL
+    plan: Plan
+    priority: TaskPriority = TaskPriority.NORMAL
     estimated_steps: int = 0
     requires_confirmation: bool = False
     warnings: tuple[str, ...] = ()
@@ -141,7 +142,7 @@ class PlanningStrategy(Protocol):
     LLM-assisted, …) as long as they satisfy this interface.
     """
 
-    def decompose(self, intention: "Intention", context: "ExecutionContext") -> "list[PlanStep]":
+    def decompose(self, intention: Intention, context: ExecutionContext) -> list[PlanStep]:
         """Break *intention* into candidate steps.
 
         Steps are returned in discovery order; the planner may reorder them.
@@ -156,7 +157,7 @@ class EngineSelector(Protocol):
     ``selection`` field populated.
     """
 
-    def select(self, steps: "list[PlanStep]", context: "ExecutionContext") -> "list[PlanStep]":
+    def select(self, steps: list[PlanStep], context: ExecutionContext) -> list[PlanStep]:
         """Assign an engine to each step."""
         ...
 
@@ -168,7 +169,7 @@ class StepOrderer(Protocol):
     them in topologically-sorted execution order.
     """
 
-    def order(self, steps: "list[PlanStep]") -> "list[PlanStep]":
+    def order(self, steps: list[PlanStep]) -> list[PlanStep]:
         """Return steps in execution order."""
         ...
 

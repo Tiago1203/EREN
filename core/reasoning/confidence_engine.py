@@ -5,11 +5,11 @@ Calculates confidence and uncertainty.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from core.reasoning.reasoning_types import (
-    ConfidenceScore,
     ConfidenceLevel,
+    ConfidenceScore,
     Evidence,
     Hypothesis,
 )

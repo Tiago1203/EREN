@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 
 from core.planning.types import (
     Task,
-    DependencyType,
 )
 
 if TYPE_CHECKING:

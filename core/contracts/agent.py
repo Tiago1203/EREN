@@ -2,15 +2,15 @@
 
 from __future__ import annotations
 
-from typing import Protocol, runtime_checkable
 from enum import Enum
+from typing import Protocol, runtime_checkable
 
 from core.contracts.base import CognitiveEngine
 
 
 class AgentStatus(str, Enum):
     """Status of an agent."""
-    
+
     IDLE = "idle"
     RUNNING = "running"
     WAITING = "waiting"
@@ -20,7 +20,7 @@ class AgentStatus(str, Enum):
 
 class TaskStatus(str, Enum):
     """Status of a task assigned to an agent."""
-    
+
     PENDING = "pending"
     RUNNING = "running"
     COMPLETED = "completed"
@@ -28,20 +28,18 @@ class TaskStatus(str, Enum):
     CANCELLED = "cancelled"
 
 
-@runtime_checkable
 class AgentTask:
     """Task to be executed by an agent."""
-    
+
     task_id: str
     description: str
     input_data: dict
     priority: int = 0
 
 
-@runtime_checkable
 class AgentResult:
     """Result from agent task execution."""
-    
+
     task_id: str
     success: bool
     output_data: dict

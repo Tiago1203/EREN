@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING
 
 from core.decision.types import (
     DecisionTask,
-    DependencyType,
 )
 
 if TYPE_CHECKING:

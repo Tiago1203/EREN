@@ -6,13 +6,12 @@ Manages collaboration sessions between agents.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from core.collaboration.types import (
     CollaborationSession,
     CollaborationStatus,
-    TaskAssignment,
 )
 
 if TYPE_CHECKING:
@@ -142,7 +141,7 @@ class SessionManager:
             return False
 
         session.status = CollaborationStatus.ACTIVE
-        session.started_at = datetime.now(timezone.utc)
+        session.started_at = datetime.now(UTC)
         return True
 
     def complete_session(
@@ -164,7 +163,7 @@ class SessionManager:
             return False
 
         session.status = CollaborationStatus.COMPLETED
-        session.completed_at = datetime.now(timezone.utc)
+        session.completed_at = datetime.now(UTC)
         session.final_result = final_result
         return True
 
@@ -187,7 +186,7 @@ class SessionManager:
             return False
 
         session.status = CollaborationStatus.CANCELLED
-        session.completed_at = datetime.now(timezone.utc)
+        session.completed_at = datetime.now(UTC)
         session.metadata["cancellation_reason"] = reason
         return True
 
@@ -210,7 +209,7 @@ class SessionManager:
             return False
 
         session.status = CollaborationStatus.FAILED
-        session.completed_at = datetime.now(timezone.utc)
+        session.completed_at = datetime.now(UTC)
         session.metadata["failure_reason"] = reason
         return True
 
@@ -351,7 +350,7 @@ class SessionManager:
         Returns:
             Number of sessions cleared.
         """
-        cutoff = datetime.now(timezone.utc).timestamp() - (before_hours * 3600)
+        cutoff = datetime.now(UTC).timestamp() - (before_hours * 3600)
         cleared = 0
 
         to_remove = []

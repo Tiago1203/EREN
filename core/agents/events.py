@@ -6,9 +6,9 @@ Event definitions for agent operations.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     pass
@@ -54,7 +54,7 @@ class AgentEvent:
 
     event_type: AgentEventType
     agent_id: str
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     # Event-specific data
     task_id: str | None = None

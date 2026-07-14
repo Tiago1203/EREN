@@ -7,7 +7,6 @@ Architecture only -- no implementations.
 
 import threading
 from dataclasses import dataclass, field
-from typing import Optional
 
 from .service_descriptor import ServiceDescriptor
 
@@ -95,7 +94,7 @@ class DependencyGraph:
             is_root=is_root,
         )
 
-    def get_node(self, contract: str) -> Optional[DependencyNode]:
+    def get_node(self, contract: str) -> DependencyNode | None:
         """Get a node by contract.
 
         Args:

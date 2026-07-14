@@ -6,15 +6,15 @@ Composes the final decision with evidence, explanations, and confidence.
 from __future__ import annotations
 
 import uuid
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from core.reasoning.reasoning_types import (
-    Decision,
-    DecisionType,
-    DecisionStatus,
-    Hypothesis,
-    Evidence,
     ConfidenceScore,
+    Decision,
+    DecisionStatus,
+    DecisionType,
+    Evidence,
+    Hypothesis,
 )
 
 if TYPE_CHECKING:

@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import threading
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from core.knowledge_assets.types import AssetVersion
@@ -56,7 +56,7 @@ class VersionManager:
                 asset_id=asset_id,
                 version=version,
                 changelog=changelog,
-                created_at=datetime.now(timezone.utc),
+                created_at=datetime.now(UTC),
                 created_by=created_by,
                 content_hash=content_hash,
             )

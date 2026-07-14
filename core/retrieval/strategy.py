@@ -6,16 +6,16 @@ Base strategy and implementations for different retrieval approaches.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 from core.retrieval.types import (
-    RetrievalQuery,
-    RetrievalPlan,
-    RetrievalResult,
-    RetrievalResponse,
     MemorySource,
+    RetrievalPlan,
+    RetrievalQuery,
+    RetrievalResponse,
+    RetrievalResult,
 )
-from core.retrieval.exceptions import RetrievalExecutionError
 
 if TYPE_CHECKING:
     pass
@@ -87,7 +87,7 @@ class SequentialStrategy(RetrievalStrategy):
                 all_results.extend(results)
                 sources_queried.append(source)
             except Exception as e:
-                errors.append(f"{source.value}: {str(e)}")
+                errors.append(f"{source.value}: {e!s}")
 
         return RetrievalResponse(
             results=all_results,
@@ -268,7 +268,7 @@ class MergeAllStrategy(RetrievalStrategy):
                 all_results.extend(results)
                 sources_queried.append(source)
             except Exception as e:
-                errors.append(f"{source.value}: {str(e)}")
+                errors.append(f"{source.value}: {e!s}")
 
         # Deduplicate by content
         seen = set()

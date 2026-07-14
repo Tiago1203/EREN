@@ -10,40 +10,41 @@ Architecture only — no business logic, no AI, no dispatching behavior.
 from __future__ import annotations
 
 from core.events.bus import (
+    AsyncEventHandler,
     EventBus,
     EventHandler,
-    AsyncEventHandler,
     EventPublisher,
     EventSubscriber,
     get_global_bus,
-    set_global_bus,
     reset_global_bus,
+    set_global_bus,
 )
 from core.events.exceptions import (
-    EventError,
-    PublishError,
-    SubscriptionError,
-    EventValidationError,
-    EventBusClosedError,
     CircuitBreakerOpenError,
+    EventBusClosedError,
+    EventError,
+    EventValidationError,
+    PublishError,
     SubscriberError,
+    SubscriptionError,
 )
 from core.events.models import (
+    EVENT_TYPE_TO_CLASS,
+    DiagnosticCompleted,
+    DiagnosticFinished,
+    # Diagnostic events
+    DiagnosticStarted,
+    # System events
+    EngineError,
+    EngineInitialized,
+    EngineShutdown,
     Event,
     EventType,
-    create_event,
-    EVENT_TYPE_TO_CLASS,
-    # Voice events
-    VoiceInputReceived,
-    VoiceOutputGenerated,
+    HypothesisEvaluated,
+    HypothesisGenerated,
+    IntentDetected,
     # Intent events
     IntentReceived,
-    IntentDetected,
-    # Plan events
-    PlanCreated,
-    PlanUpdated,
-    PlanCompleted,
-    PlanFailed,
     # Knowledge events
     KnowledgeRequested,
     KnowledgeRetrieved,
@@ -52,45 +53,44 @@ from core.events.models import (
     MemoryRequested,
     MemoryRetrieved,
     MemoryStored,
+    PlanCompleted,
+    # Plan events
+    PlanCreated,
+    PlanFailed,
+    PlanUpdated,
+    ReasoningFinished,
     # Reasoning events
     ReasoningStarted,
-    ReasoningFinished,
-    HypothesisGenerated,
-    HypothesisEvaluated,
-    # Diagnostic events
-    DiagnosticStarted,
-    DiagnosticFinished,
-    DiagnosticCompleted,
-    # Workflow events
-    WorkflowStarted,
-    WorkflowFinished,
-    WorkflowCompleted,
-    StepExecuted,
-    # Tool events
-    ToolRequested,
-    ToolExecuted,
-    ToolFailed,
+    ResponseGenerated,
     # Response events
     ResponseReady,
-    ResponseGenerated,
-    # System events
-    EngineError,
-    EngineInitialized,
-    EngineShutdown,
+    StepExecuted,
+    ToolExecuted,
+    ToolFailed,
+    # Tool events
+    ToolRequested,
+    # Voice events
+    VoiceInputReceived,
+    VoiceOutputGenerated,
+    WorkflowCompleted,
+    WorkflowFinished,
+    # Workflow events
+    WorkflowStarted,
+    create_event,
 )
 from core.events.publisher import (
-    EventPublisherMixin,
-    EventContext,
-    EventAggregator,
     CircuitBreakerPublisher,
+    EventAggregator,
+    EventContext,
+    EventPublisherMixin,
 )
 from core.events.subscriber import (
+    AuditSubscriber,
     BaseSubscriber,
     FunctionSubscriber,
-    MultiHandlerSubscriber,
     LoggingSubscriber,
-    AuditSubscriber,
     MetricSubscriber,
+    MultiHandlerSubscriber,
 )
 
 __all__ = [

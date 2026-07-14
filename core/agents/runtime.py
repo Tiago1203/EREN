@@ -5,27 +5,24 @@ Main runtime for coordinating multi-agent execution.
 
 from __future__ import annotations
 
-import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
+from core.agents.capabilities import get_capability_registry
+from core.agents.communicator import get_communicator
+from core.agents.context import get_context_manager
+from core.agents.events import AgentEvent, AgentEventType, get_event_bus
+from core.agents.health import get_health_manager
+from core.agents.lifecycle import get_lifecycle_manager
+from core.agents.metrics import get_metrics_collector
+from core.agents.registry import get_registry
+from core.agents.scheduler import get_scheduler
 from core.agents.types import (
     AgentManifest,
-    AgentType,
     AgentStatus,
-    AgentHealthStatus,
     AgentTask,
     RuntimeState,
 )
-from core.agents.registry import AgentRegistry, get_registry
-from core.agents.scheduler import AgentScheduler, get_scheduler
-from core.agents.communicator import AgentCommunicator, get_communicator
-from core.agents.lifecycle import LifecycleManager, get_lifecycle_manager
-from core.agents.health import AgentHealthManager, get_health_manager
-from core.agents.context import ContextManager, get_context_manager
-from core.agents.capabilities import CapabilityRegistry, get_capability_registry
-from core.agents.events import AgentEventBus, AgentEvent, AgentEventType, get_event_bus
-from core.agents.metrics import AgentMetricsCollector, get_metrics_collector
 
 if TYPE_CHECKING:
     pass
@@ -76,7 +73,7 @@ class CognitiveAgentRuntime:
         """Start the agent runtime."""
         self._is_running = True
         self._state.is_running = True
-        self._state.started_at = datetime.now(timezone.utc)
+        self._state.started_at = datetime.now(UTC)
 
         # Publish event
         self._events.publish(AgentEvent(
@@ -382,7 +379,7 @@ class CognitiveAgentRuntime:
             Current runtime state.
         """
         self._state.active_agents = len(self._registry.get_all())
-        self._state.last_updated = datetime.now(timezone.utc)
+        self._state.last_updated = datetime.now(UTC)
         return self._state
 
     def get_agent(self, agent_id: str) -> AgentManifest | None:

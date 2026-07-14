@@ -6,16 +6,15 @@ Implements various selection strategies for choosing providers.
 from __future__ import annotations
 
 import random
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
+from core.providers.exceptions import ProviderUnavailableError
 from core.providers.provider import BaseProvider
 from core.providers.registry import ProviderRegistry
 from core.providers.types import (
-    SelectionPolicy,
     ProviderState,
-    ProviderHealth,
+    SelectionPolicy,
 )
-from core.providers.exceptions import ProviderUnavailableError
 
 if TYPE_CHECKING:
     pass

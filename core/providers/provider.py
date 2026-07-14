@@ -6,16 +6,17 @@ Defines the contract that all LLM providers must implement.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, AsyncIterator
+from collections.abc import AsyncIterator
+from typing import TYPE_CHECKING
 
 from core.providers.types import (
-    ProviderType,
-    ProviderState,
-    ProviderHealth,
-    ProviderMetrics,
-    ProviderConfig,
     GenerationRequest,
     GenerationResponse,
+    ProviderConfig,
+    ProviderHealth,
+    ProviderMetrics,
+    ProviderState,
+    ProviderType,
 )
 
 if TYPE_CHECKING:

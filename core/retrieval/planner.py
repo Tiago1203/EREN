@@ -8,15 +8,15 @@ from __future__ import annotations
 import uuid
 from typing import TYPE_CHECKING
 
-from core.retrieval.types import (
-    RetrievalQuery,
-    RetrievalPlan,
-    RetrievalStep,
-    RetrievalPolicy,
-    MemorySource,
-)
-from core.retrieval.policies import RetrievalPolicyHandler
 from core.retrieval.exceptions import RetrievalPlanError
+from core.retrieval.policies import RetrievalPolicyHandler
+from core.retrieval.types import (
+    MemorySource,
+    RetrievalPlan,
+    RetrievalPolicy,
+    RetrievalQuery,
+    RetrievalStep,
+)
 
 if TYPE_CHECKING:
     pass

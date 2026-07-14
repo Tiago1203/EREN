@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any
 
@@ -183,8 +183,8 @@ class WorkflowDefinition:
     # Metadata
     metadata: dict = field(default_factory=dict)
 
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def get_node(self, node_id: str) -> WorkflowNode | None:
         """Get a node by ID."""
@@ -269,7 +269,7 @@ class WorkflowExecution:
     checkpoint_ids: list[str] = field(default_factory=list)
 
     # Timing
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     started_at: datetime | None = None
     completed_at: datetime | None = None
 
@@ -287,7 +287,7 @@ class WorkflowExecution:
     def duration_seconds(self) -> float:
         """Get execution duration in seconds."""
         if self.started_at:
-            end = self.completed_at or datetime.now(timezone.utc)
+            end = self.completed_at or datetime.now(UTC)
             return (end - self.started_at).total_seconds()
         return 0.0
 
@@ -323,7 +323,7 @@ class Checkpoint:
     # Metadata
     metadata: dict = field(default_factory=dict)
 
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 # =============================================================================

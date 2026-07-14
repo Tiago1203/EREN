@@ -6,7 +6,7 @@ Provides comprehensive type definitions for learning operations.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any
 
@@ -64,7 +64,7 @@ class Experience:
     # Metadata
     confidence: float = 0.5
     tags: list[str] = field(default_factory=list)
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 # =============================================================================
@@ -97,7 +97,7 @@ class Feedback:
     source: str = "user"  # "user", "system", "clinical"
 
     # Metadata
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 # =============================================================================
@@ -121,8 +121,8 @@ class Pattern:
     confidence: float = 0.5
 
     # Metadata
-    discovered_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    last_verified: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    discovered_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    last_verified: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 # =============================================================================
@@ -156,8 +156,8 @@ class Knowledge:
     confidence: float = 0.5
 
     # Metadata
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     usage_count: int = 0
 
 

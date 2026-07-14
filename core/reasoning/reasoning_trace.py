@@ -8,8 +8,6 @@ Architecture only — no AI, no business logic.
 from __future__ import annotations
 
 import uuid
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
 
 from .reasoning_types import Decision, Evidence, Hypothesis, ReasoningEvent, ReasoningTrace

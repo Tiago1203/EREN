@@ -10,11 +10,10 @@ from typing import TYPE_CHECKING
 
 from core.router.context import RouterContext
 from core.router.types import (
-    PipelineMetadata,
     CandidatePipeline,
     MatchResult,
+    PipelineMetadata,
 )
-from core.router.exceptions import MatcherError
 
 if TYPE_CHECKING:
     pass
@@ -154,10 +153,10 @@ class PipelineMatcher:
             candidate.match_reasons.append(f"Exact intent type match: {intent_type}")
         elif self._is_partial_match(intent_type, metadata.intent_types):
             score = self._match_weights[MatchResult.PARTIAL]
-            candidate.match_reasons.append(f"Partial intent type match")
+            candidate.match_reasons.append("Partial intent type match")
         elif self._has_wildcard_match(intent_type, metadata.intent_types):
             score = self._match_weights[MatchResult.POTENTIAL]
-            candidate.match_reasons.append(f"Wildcard intent type match")
+            candidate.match_reasons.append("Wildcard intent type match")
 
         return score
 

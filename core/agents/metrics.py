@@ -5,8 +5,7 @@ Tracks agent performance and statistics.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from core.agents.types import AgentMetrics
@@ -53,7 +52,7 @@ class AgentMetricsCollector:
             "task_id": task_id,
             "agent_id": agent_id,
             "capability": capability,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         })
 
         # Update per-agent metrics
@@ -91,7 +90,7 @@ class AgentMetricsCollector:
             "task_id": task_id,
             "agent_id": agent_id,
             "duration_ms": duration_ms,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         })
 
         # Update averages
@@ -143,7 +142,7 @@ class AgentMetricsCollector:
             "agent_id": agent_id,
             "duration_ms": duration_ms,
             "error": error,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         })
 
         # Update rates
@@ -173,7 +172,7 @@ class AgentMetricsCollector:
             "event": "message_sent",
             "sender_id": sender_id,
             "receiver_id": receiver_id,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         })
 
     def get_metrics(self) -> AgentMetrics:

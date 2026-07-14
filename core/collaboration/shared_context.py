@@ -5,7 +5,7 @@ Manages shared context between collaborating agents.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -85,7 +85,7 @@ class SharedContext:
                 self._contributions[session_id][agent_id] = {}
             self._contributions[session_id][agent_id][key] = {
                 "value": value,
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
             }
 
         # Log access
@@ -94,7 +94,7 @@ class SharedContext:
             "key": key,
             "action": "put",
             "agent_id": agent_id,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         })
 
     def get(
@@ -121,7 +121,7 @@ class SharedContext:
             "key": key,
             "action": "get",
             "agent_id": agent_id,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         })
 
         return value

@@ -7,21 +7,19 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
+from core.learning.consolidation import get_knowledge_consolidator
+from core.learning.experience import get_experience_collector
+from core.learning.feedback import get_feedback_analyzer
+from core.learning.optimizer import get_strategy_optimizer
+from core.learning.patterns import get_pattern_discovery
 from core.learning.types import (
     Experience,
     Feedback,
-    Pattern,
-    Knowledge,
-    LearningType,
-    LearningStatus,
-    LearningMetrics,
     FeedbackType,
+    Knowledge,
+    LearningMetrics,
+    Pattern,
 )
-from core.learning.experience import ExperienceCollector, get_experience_collector
-from core.learning.feedback import FeedbackAnalyzer, get_feedback_analyzer
-from core.learning.patterns import PatternDiscovery, get_pattern_discovery
-from core.learning.consolidation import KnowledgeConsolidator, get_knowledge_consolidator
-from core.learning.optimizer import StrategyOptimizer, get_strategy_optimizer
 
 if TYPE_CHECKING:
     pass

@@ -9,7 +9,7 @@ import threading
 import uuid
 from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -26,7 +26,7 @@ class TraceEntry:
     pipeline_id: str
     stage_name: str = ""
     status: str = "info"
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
     duration_ms: int = 0
     correlation_id: str = ""
     session_id: str = ""
@@ -96,7 +96,7 @@ class PipelineTrace:
         trace_id = f"trace_{uuid.uuid4().hex[:16]}"
 
         with self._lock:
-            self._active_traces[trace_id] = datetime.now(timezone.utc)
+            self._active_traces[trace_id] = datetime.now(UTC)
 
             entry = TraceEntry(
                 trace_id=trace_id,
@@ -137,7 +137,7 @@ class PipelineTrace:
 
             start_time = self._active_traces[trace_id]
             duration_ms = int(
-                (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                (datetime.now(UTC) - start_time).total_seconds() * 1000
             )
 
             # Find and update entry

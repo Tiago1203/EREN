@@ -6,20 +6,17 @@ Builds final decision plans from components.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from core.decision.types import (
-    Goal,
-    GoalAnalysis,
-    DecisionTask,
     DecisionPlan,
     DecisionStatus,
-    DecisionStrategy,
-    ExecutionPolicy,
-    RiskLevel,
-    RiskAssessment,
+    DecisionTask,
     ExecutionDecision,
+    Goal,
+    GoalAnalysis,
+    RiskAssessment,
     StrategySelection,
 )
 
@@ -204,11 +201,11 @@ class DecisionBuilder:
         Returns:
             Updated plan.
         """
-        plan.updated_at = datetime.now(timezone.utc)
+        plan.updated_at = datetime.now(UTC)
 
         for task in plan.tasks:
             if task.task_id == completed_task_id:
-                task.completed_at = datetime.now(timezone.utc)
+                task.completed_at = datetime.now(UTC)
                 task.result = result
 
                 if error:
@@ -226,10 +223,10 @@ class DecisionBuilder:
         if total == len(plan.tasks):
             if plan.failed_tasks == 0:
                 plan.status = DecisionStatus.COMPLETED
-                plan.completed_at = datetime.now(timezone.utc)
+                plan.completed_at = datetime.now(UTC)
             else:
                 plan.status = DecisionStatus.FAILED
-                plan.completed_at = datetime.now(timezone.utc)
+                plan.completed_at = datetime.now(UTC)
 
         return plan
 

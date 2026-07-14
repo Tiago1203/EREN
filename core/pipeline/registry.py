@@ -6,11 +6,12 @@ Central registry for managing available pipelines.
 from __future__ import annotations
 
 import threading
-from typing import Callable, TYPE_CHECKING
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 from core.pipeline.exceptions import (
-    PipelineNotFoundError,
     PipelineAlreadyRegisteredError,
+    PipelineNotFoundError,
 )
 
 if TYPE_CHECKING:
@@ -29,14 +30,14 @@ class PipelineRegistry:
 
     def __init__(self):
         """Initialize the registry."""
-        self._pipelines: dict[str, "CognitivePipeline"] = {}
-        self._factories: dict[str, Callable[[], "CognitivePipeline"]] = {}
+        self._pipelines: dict[str, CognitivePipeline] = {}
+        self._factories: dict[str, Callable[[], CognitivePipeline]] = {}
         self._lock = threading.RLock()
 
     def register(
         self,
         name: str,
-        pipeline: "CognitivePipeline",
+        pipeline: CognitivePipeline,
         replace: bool = False,
     ) -> None:
         """Register a pipeline.
@@ -58,7 +59,7 @@ class PipelineRegistry:
     def register_factory(
         self,
         name: str,
-        factory: Callable[[], "CognitivePipeline"],
+        factory: Callable[[], CognitivePipeline],
         replace: bool = False,
     ) -> None:
         """Register a pipeline factory.
@@ -74,7 +75,7 @@ class PipelineRegistry:
 
             self._factories[name] = factory
 
-    def get(self, name: str) -> "CognitivePipeline":
+    def get(self, name: str) -> CognitivePipeline:
         """Get a pipeline by name.
 
         Args:
@@ -96,7 +97,7 @@ class PipelineRegistry:
 
             raise PipelineNotFoundError(name)
 
-    def get_or_create(self, name: str) -> "CognitivePipeline":
+    def get_or_create(self, name: str) -> CognitivePipeline:
         """Get a pipeline or create if not exists.
 
         If a factory is registered, creates a new instance.
@@ -217,7 +218,7 @@ def _register_default_pipelines(registry: PipelineRegistry) -> None:
     registry.register_factory("research", DefaultPipelineBuilder.create_research)
 
 
-def register_pipeline(name: str, pipeline: "CognitivePipeline", replace: bool = False) -> None:
+def register_pipeline(name: str, pipeline: CognitivePipeline, replace: bool = False) -> None:
     """Register a pipeline in the global registry.
 
     Args:
@@ -228,7 +229,7 @@ def register_pipeline(name: str, pipeline: "CognitivePipeline", replace: bool = 
     get_pipeline_registry().register(name, pipeline, replace)
 
 
-def get_pipeline(name: str) -> "CognitivePipeline":
+def get_pipeline(name: str) -> CognitivePipeline:
     """Get a pipeline from the global registry.
 
     Args:

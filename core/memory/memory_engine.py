@@ -10,17 +10,13 @@ from __future__ import annotations
 
 import threading
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from .exceptions import (
-    MemoryAlreadyExistsError,
-    MemoryCapacityError,
-    MemoryDecayError,
     MemoryNotFoundError,
-    MemoryRetrievalError,
 )
-from .memory_models import MemoryEntry, MemoryQuery, MemoryQueryResult, MemoryTemplates
+from .memory_models import MemoryEntry, MemoryQuery, MemoryQueryResult
 from .memory_stores import (
     LongTermMemoryStore,
     MemoryStore,
@@ -30,13 +26,10 @@ from .memory_stores import (
 )
 from .memory_types import (
     AccessPattern,
-    ConsolidationContext,
     ContentType,
     MemoryAccess,
     MemoryContent,
-    MemoryFilter,
     MemoryRelationship,
-    MemoryStatus,
     MemoryType,
     RelationshipType,
     RetrievalContext,
@@ -586,7 +579,7 @@ class CognitiveMemoryEngine:
         """
         with self._lock:
             return {
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "statistics": self.get_statistics(),
                 "decay_enabled": self._decay_enabled,
                 "consolidation_enabled": self._consolidation_enabled,
@@ -635,7 +628,7 @@ class CognitiveMemoryEngine:
     ) -> None:
         """Record a memory access."""
         access = MemoryAccess(
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             pattern=pattern,
             retrieval_mode="recall",
         )

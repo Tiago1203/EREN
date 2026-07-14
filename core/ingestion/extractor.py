@@ -12,9 +12,8 @@ from typing import TYPE_CHECKING
 
 from core.ingestion.types import (
     DocumentType,
-    RawDocument,
     ExtractedDocument,
-    IngestionMetadata,
+    RawDocument,
 )
 
 if TYPE_CHECKING:
@@ -72,7 +71,7 @@ class PDFExtractor(BaseExtractor):
                 text = self._extract_simple(raw.content)
             except Exception as e:
                 text = ""
-                warnings.append(f"Extraction warning: {str(e)}")
+                warnings.append(f"Extraction warning: {e!s}")
 
         extraction_time = int((time.time() - start_time) * 1000)
 
@@ -88,8 +87,9 @@ class PDFExtractor(BaseExtractor):
     def _extract_pdf_text(self, content: bytes) -> str:
         """Extract text from PDF using PyPDF2."""
         try:
-            import PyPDF2
             from io import BytesIO
+
+            import PyPDF2
 
             pdf_file = BytesIO(content)
             reader = PyPDF2.PdfReader(pdf_file)
@@ -135,8 +135,9 @@ class DocxExtractor(BaseExtractor):
         warnings = []
 
         try:
-            import docx
             from io import BytesIO
+
+            import docx
 
             doc_file = BytesIO(raw.content)
             doc = docx.Document(doc_file)
@@ -378,7 +379,7 @@ class HL7Extractor(BaseExtractor):
             text = "\n\n".join(text_parts)
 
         except Exception as e:
-            warnings.append(f"HL7 parsing warning: {str(e)}")
+            warnings.append(f"HL7 parsing warning: {e!s}")
             text = raw.content.decode("utf-8", errors="ignore")
 
         extraction_time = int((time.time() - start_time) * 1000)

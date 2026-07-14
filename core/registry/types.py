@@ -13,7 +13,7 @@ from enum import IntEnum
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from core.events.models import EventType
+    pass
 
 
 # =============================================================================
@@ -214,7 +214,7 @@ class EngineFilter:
     author: str | None = None
     active_only: bool = False
 
-    def matches(self, descriptor: "EngineDescriptor") -> bool:
+    def matches(self, descriptor: EngineDescriptor) -> bool:
         """Check if an engine descriptor matches this filter."""
         if self.name_contains and self.name_contains not in descriptor.engine_id:
             return False

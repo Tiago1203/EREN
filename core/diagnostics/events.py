@@ -19,7 +19,7 @@ Philosophy:
 from __future__ import annotations
 
 import threading
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING
 
@@ -108,7 +108,7 @@ class DiagnosticsEventPublisher:
             "source": source,
             "correlation_id": correlation_id or f"diag_{uuid.uuid4().hex[:16]}",
             "session_id": session_id,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "payload": payload or {},
         }
 
@@ -118,7 +118,7 @@ class DiagnosticsEventPublisher:
         # Publish to Event Bus if available
         if self._event_bus:
             try:
-                from core.events.models import Event, EventType
+                from core.events.models import Event
                 self._event_bus.publish(Event(
                     type=self._map_to_core_event_type(event_type),
                     source=source,
@@ -135,7 +135,7 @@ class DiagnosticsEventPublisher:
         # Notify local subscribers
         self._notify_subscribers(event)
 
-    def _map_to_core_event_type(self, diag_type: DiagnosticsEventType) -> "EventType":
+    def _map_to_core_event_type(self, diag_type: DiagnosticsEventType) -> EventType:
         """Map diagnostics event type to core event type.
 
         Args:
