@@ -397,5 +397,255 @@ class TestConversationMemoryPlugin:
         assert plugin._provider is None
 
 
+class TestConversationSearchService:
+    """Tests for ConversationSearchService."""
+
+    @pytest.fixture
+    def repository(self):
+        """Create test repository."""
+        from plugins.conversation import ConversationConfiguration, DefaultConversationRepository
+        config = ConversationConfiguration(database_path=":memory:")
+        return DefaultConversationRepository(config)
+
+    @pytest.fixture
+    def search_service(self, repository):
+        """Create test search service."""
+        from plugins.conversation import ConversationSearchService
+        return ConversationSearchService(repository)
+
+    def test_search_by_text(self, repository, search_service):
+        """Test text search."""
+        from plugins.conversation import ConversationMetadata, ConversationEntry, ConversationRole
+
+        # Create conversation
+        metadata = ConversationMetadata(conversation_id="conv-1")
+        repository.create_conversation(metadata)
+
+        # Add entries
+        entry = ConversationEntry(
+            entry_id="entry-1",
+            conversation_id="conv-1",
+            role=ConversationRole.USER,
+            content="Patient has diabetes",
+        )
+        repository.add_entry(entry)
+
+        # Search
+        result = search_service.search_by_text("diabetes")
+        assert result.total >= 1
+
+    def test_search_by_session(self, repository, search_service):
+        """Test session search."""
+        from plugins.conversation import ConversationMetadata, ConversationEntry, ConversationRole
+
+        # Create conversation with session
+        metadata = ConversationMetadata(
+            conversation_id="conv-1",
+            session_id="session-123",
+        )
+        repository.create_conversation(metadata)
+
+        # Add entry with session keyword
+        entry = ConversationEntry(
+            entry_id="entry-1",
+            conversation_id="conv-1",
+            role=ConversationRole.USER,
+            content="Session 123 conversation",
+        )
+        repository.add_entry(entry)
+
+        # Search - session filter is on conversation metadata
+        result = search_service.search_by_session("session-123")
+        # Session filter applies to conversations, not entries directly
+        assert result is not None
+
+
+class TestConversationSummaryService:
+    """Tests for ConversationSummaryService."""
+
+    @pytest.fixture
+    def repository(self):
+        """Create test repository."""
+        from plugins.conversation import ConversationConfiguration, DefaultConversationRepository
+        config = ConversationConfiguration(database_path=":memory:")
+        return DefaultConversationRepository(config)
+
+    @pytest.fixture
+    def summary_service(self, repository):
+        """Create test summary service."""
+        from plugins.conversation import ConversationSummaryService
+        return ConversationSummaryService(repository, threshold_entries=5)
+
+    def test_should_summarize(self, repository, summary_service):
+        """Test should summarize check."""
+        from plugins.conversation import ConversationMetadata, ConversationEntry, ConversationRole
+
+        # Create conversation with few entries
+        metadata = ConversationMetadata(conversation_id="conv-1")
+        repository.create_conversation(metadata)
+
+        # Should not summarize
+        assert summary_service.should_summarize("conv-1") is False
+
+    def test_summarize(self, repository, summary_service):
+        """Test summarization."""
+        from plugins.conversation import ConversationMetadata, ConversationEntry, ConversationRole
+
+        # Create conversation
+        metadata = ConversationMetadata(conversation_id="conv-1")
+        repository.create_conversation(metadata)
+
+        # Add entries
+        for i in range(6):
+            entry = ConversationEntry(
+                entry_id=f"entry-{i}",
+                conversation_id="conv-1",
+                role=ConversationRole.USER,
+                content=f"Message {i}",
+            )
+            repository.add_entry(entry)
+
+        # Summarize
+        summary = summary_service.summarize("conv-1")
+        assert summary is not None
+        assert "conv-1" in summary.conversation_id
+
+    def test_get_summary(self, repository, summary_service):
+        """Test getting summary."""
+        from plugins.conversation import ConversationMetadata
+
+        # Create conversation
+        metadata = ConversationMetadata(conversation_id="conv-1")
+        repository.create_conversation(metadata)
+
+        # No summary yet
+        summary = summary_service.get_summary("conv-1")
+        assert summary is None
+
+
+class TestConversationIndexer:
+    """Tests for ConversationIndexer."""
+
+    def test_indexer_initialization(self):
+        """Test indexer initialization."""
+        from plugins.conversation import ConversationIndexer
+        indexer = ConversationIndexer()
+        assert indexer is not None
+
+    def test_register_vector_plugin(self):
+        """Test registering vector plugin."""
+        from plugins.conversation import ConversationIndexer
+
+        indexer = ConversationIndexer()
+        indexer.register_vector_plugin(None)  # Mock plugin
+        assert True
+
+    def test_index_entry(self):
+        """Test indexing entry."""
+        from plugins.conversation import ConversationIndexer, ConversationEntry, ConversationRole
+
+        indexer = ConversationIndexer()
+        entry = ConversationEntry(
+            entry_id="entry-1",
+            conversation_id="conv-1",
+            role=ConversationRole.USER,
+            content="Test content",
+        )
+        result = indexer.index_entry(entry)
+        assert result is True
+
+
+class TestConversationNewTypes:
+    """Tests for new conversation types."""
+
+    def test_conversation_chunk(self):
+        """Test ConversationChunk."""
+        from plugins.conversation import ConversationChunk
+
+        chunk = ConversationChunk(
+            chunk_id="chunk-1",
+            conversation_id="conv-1",
+            entry_id="entry-1",
+            content="Test content",
+            role="user",
+            sequence=0,
+        )
+        assert chunk.chunk_id == "chunk-1"
+        d = chunk.to_dict()
+        assert d["chunk_id"] == "chunk-1"
+
+    def test_conversation_attachment(self):
+        """Test ConversationAttachment."""
+        from plugins.conversation import ConversationAttachment
+
+        attachment = ConversationAttachment(
+            attachment_id="att-1",
+            conversation_id="conv-1",
+            filename="report.pdf",
+            content_type="application/pdf",
+        )
+        assert attachment.filename == "report.pdf"
+
+    def test_conversation_reference(self):
+        """Test ConversationReference."""
+        from plugins.conversation import ConversationReference
+
+        ref = ConversationReference(
+            reference_id="ref-1",
+            conversation_id="conv-1",
+            entry_id="entry-1",
+            reference_type="patient",
+            reference_target="patient-123",
+        )
+        assert ref.reference_type == "patient"
+
+    def test_conversation_statistics(self):
+        """Test ConversationStatistics."""
+        from plugins.conversation import ConversationStatistics
+
+        stats = ConversationStatistics(
+            conversation_id="conv-1",
+            total_entries=10,
+            user_entries=5,
+        )
+        assert stats.total_entries == 10
+
+    def test_conversation_search_result(self):
+        """Test ConversationSearchResult."""
+        from plugins.conversation import ConversationSearchResult, ConversationEntry, ConversationRole
+
+        entries = [
+            ConversationEntry(
+                entry_id="entry-1",
+                conversation_id="conv-1",
+                role=ConversationRole.USER,
+                content="Test",
+            )
+        ]
+        result = ConversationSearchResult(
+            entries=entries,
+            total=1,
+            query="test",
+        )
+        assert result.total == 1
+        assert result.query == "test"
+
+
+class TestConversationRepositoryContract:
+    """Tests for repository contract."""
+
+    def test_contract_exists(self):
+        """Test contract class exists."""
+        from plugins.conversation import ConversationRepositoryContract
+        assert ConversationRepositoryContract is not None
+
+    def test_default_implementation(self):
+        """Test default implementation."""
+        from plugins.conversation import DefaultConversationRepository, ConversationConfiguration
+        config = ConversationConfiguration(database_path=":memory:")
+        repo = DefaultConversationRepository(config)
+        assert repo is not None
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

@@ -10,6 +10,13 @@ from __future__ import annotations
 from plugins.conversation.plugin import ConversationMemoryPlugin, create_plugin
 from plugins.conversation.provider import ConversationMemoryProvider
 from plugins.conversation.repository import ConversationRepository
+from plugins.conversation.contracts import (
+    ConversationRepositoryContract,
+    DefaultConversationRepository,
+)
+from plugins.conversation.search_service import ConversationSearchService
+from plugins.conversation.summary_service import ConversationSummaryService
+from plugins.conversation.indexer import ConversationIndexer
 from plugins.conversation.types import (
     ConversationEntry,
     ConversationMetadata,
@@ -20,6 +27,11 @@ from plugins.conversation.types import (
     ConversationRole,
     ConversationType,
     ConversationState,
+    ConversationChunk,
+    ConversationAttachment,
+    ConversationReference,
+    ConversationStatistics,
+    ConversationSearchResult,
 )
 from plugins.conversation.exceptions import (
     ConversationMemoryError,
@@ -42,6 +54,13 @@ __all__ = [
     "ConversationMemoryProvider",
     # Repository
     "ConversationRepository",
+    # Contracts
+    "ConversationRepositoryContract",
+    "DefaultConversationRepository",
+    # Services
+    "ConversationSearchService",
+    "ConversationSummaryService",
+    "ConversationIndexer",
     # Types
     "ConversationEntry",
     "ConversationMetadata",
@@ -52,6 +71,11 @@ __all__ = [
     "ConversationRole",
     "ConversationType",
     "ConversationState",
+    "ConversationChunk",
+    "ConversationAttachment",
+    "ConversationReference",
+    "ConversationStatistics",
+    "ConversationSearchResult",
     # Exceptions
     "ConversationMemoryError",
     "ConversationNotFoundError",
