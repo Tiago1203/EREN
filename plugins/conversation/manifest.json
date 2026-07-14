@@ -1,0 +1,124 @@
+{
+  "manifest_version": "1.0.0",
+  "plugin_id": "conversation-memory",
+  "name": "Conversation Memory",
+  "version": "1.0.0",
+  "description": "Conversation memory for EREN OS - stores and retrieves conversation history",
+  "author": "EREN Team",
+  "license": "EREN OS License",
+  "homepage": "https://github.com/Tiago1203/EREN",
+  "repository": "https://github.com/Tiago1203/EREN",
+  "tags": [
+    "memory",
+    "conversation",
+    "context",
+    "history"
+  ],
+  "platform": {
+    "min_version": "1.0.0"
+  },
+  "capabilities": [
+    {
+      "id": "conversation-memory",
+      "name": "Conversation Memory",
+      "type": "memory",
+      "memory_type": "conversation",
+      "description": "Stores and retrieves conversation history",
+      "features": [
+        "store_conversations",
+        "retrieve_conversations",
+        "search_conversations",
+        "summarize_conversations",
+        "multi_user_support",
+        "multi_session_support"
+      ]
+    }
+  ],
+  "dependencies": {
+    "core": [
+      "BaseMemoryInterface",
+      "MemoryType",
+      "MemoryState",
+      "BasePlugin"
+    ]
+  },
+  "configuration": {
+    "max_context_entries": {
+      "type": "integer",
+      "default": 20,
+      "description": "Maximum entries in conversation context"
+    },
+    "max_tokens_per_entry": {
+      "type": "integer",
+      "default": 4000,
+      "description": "Maximum tokens per entry"
+    },
+    "summary_threshold_entries": {
+      "type": "integer",
+      "default": 50,
+      "description": "Entries before summarization"
+    },
+    "summary_max_length": {
+      "type": "integer",
+      "default": 500,
+      "description": "Maximum summary length"
+    },
+    "ttl_days": {
+      "type": "integer",
+      "default": 30,
+      "description": "Time to live for conversations"
+    },
+    "auto_archive_days": {
+      "type": "integer",
+      "default": 7,
+      "description": "Days before auto-archive"
+    },
+    "enable_summarization": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable conversation summarization"
+    },
+    "enable_full_text_search": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable full-text search"
+    },
+    "database_path": {
+      "type": "string",
+      "default": ":memory:",
+      "description": "SQLite database path"
+    },
+    "enable_multi_user": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable multi-user support"
+    },
+    "enable_multi_session": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable multi-session support"
+    }
+  },
+  "events": [
+    "conversation_created",
+    "conversation_updated",
+    "conversation_deleted",
+    "entry_added",
+    "entry_deleted"
+  ],
+  "storage": {
+    "type": "sqlite",
+    "note": "Replaceable with PostgreSQL in production",
+    "tables": [
+      "conversations",
+      "entries",
+      "summaries"
+    ]
+  },
+  "api": {
+    "version": "1.0.0",
+    "endpoints": {
+      "memory_provider": "ConversationMemoryProvider"
+    }
+  }
+}
