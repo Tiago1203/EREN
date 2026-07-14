@@ -342,6 +342,7 @@ class ReasoningTrace:
     evidence_graph: dict = field(default_factory=dict)  # Graph structure
     created_at: str = ""
     updated_at: str = ""
+    metadata: dict = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         """Set timestamps if not provided."""

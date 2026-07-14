@@ -7,6 +7,7 @@ import pytest
 from core.reasoning import (
     CognitiveReasoningEngine,
     ConfidenceScore,
+    DecisionType,
     EvidenceManager,
     EvidenceRelation,
     EvidenceSource,
@@ -192,7 +193,7 @@ class TestCognitiveReasoningEngine:
 
         # Make decision
         decision = engine.make_decision(
-            decision_type="diagnostic",
+            decision_type=DecisionType.DIAGNOSTIC,
             based_on_hypothesis_id=hyp.hypothesis_id,
             justification=["Based on sensor malfunction hypothesis"],
         )
