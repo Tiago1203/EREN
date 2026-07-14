@@ -257,3 +257,156 @@ class ConversationConfiguration:
     database_path: str = ":memory:"
     enable_multi_user: bool = True
     enable_multi_session: bool = True
+
+
+# =============================================================================
+# Conversation Chunk (for RAG integration)
+# =============================================================================
+
+
+@dataclass
+class ConversationChunk:
+    """A chunk of conversation for RAG integration.
+
+    Allows future vector search capabilities.
+    """
+
+    chunk_id: str
+    conversation_id: str
+    entry_id: str
+    content: str
+    role: str
+    sequence: int
+    metadata: dict = field(default_factory=dict)
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary."""
+        return {
+            "chunk_id": self.chunk_id,
+            "conversation_id": self.conversation_id,
+            "entry_id": self.entry_id,
+            "content": self.content,
+            "role": self.role,
+            "sequence": self.sequence,
+            "metadata": self.metadata,
+        }
+
+
+# =============================================================================
+# Conversation Attachment
+# =============================================================================
+
+
+@dataclass
+class ConversationAttachment:
+    """An attachment in a conversation (image, PDF, audio, DICOM, etc.)."""
+
+    attachment_id: str
+    conversation_id: str
+    entry_id: str | None = None
+    filename: str = ""
+    content_type: str = ""
+    url: str = ""
+    size_bytes: int = 0
+    metadata: dict = field(default_factory=dict)
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary."""
+        return {
+            "attachment_id": self.attachment_id,
+            "conversation_id": self.conversation_id,
+            "entry_id": self.entry_id,
+            "filename": self.filename,
+            "content_type": self.content_type,
+            "url": self.url,
+            "size_bytes": self.size_bytes,
+            "metadata": self.metadata,
+        }
+
+
+# =============================================================================
+# Conversation Reference
+# =============================================================================
+
+
+@dataclass
+class ConversationReference:
+    """A reference to another conversation or entity."""
+
+    reference_id: str
+    conversation_id: str
+    entry_id: str
+    reference_type: str  # conversation, document, patient, etc.
+    reference_target: str  # ID of referenced entity
+    description: str = ""
+    metadata: dict = field(default_factory=dict)
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary."""
+        return {
+            "reference_id": self.reference_id,
+            "conversation_id": self.conversation_id,
+            "entry_id": self.entry_id,
+            "reference_type": self.reference_type,
+            "reference_target": self.reference_target,
+            "description": self.description,
+            "metadata": self.metadata,
+        }
+
+
+# =============================================================================
+# Conversation Statistics
+# =============================================================================
+
+
+@dataclass
+class ConversationStatistics:
+    """Statistics for a conversation."""
+
+    conversation_id: str
+    total_entries: int = 0
+    user_entries: int = 0
+    assistant_entries: int = 0
+    system_entries: int = 0
+    total_tokens: int = 0
+    average_response_time_ms: float = 0.0
+    first_entry_at: datetime | None = None
+    last_entry_at: datetime | None = None
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary."""
+        return {
+            "conversation_id": self.conversation_id,
+            "total_entries": self.total_entries,
+            "user_entries": self.user_entries,
+            "assistant_entries": self.assistant_entries,
+            "system_entries": self.system_entries,
+            "total_tokens": self.total_tokens,
+            "average_response_time_ms": self.average_response_time_ms,
+            "first_entry_at": self.first_entry_at.isoformat() if self.first_entry_at else None,
+            "last_entry_at": self.last_entry_at.isoformat() if self.last_entry_at else None,
+        }
+
+
+# =============================================================================
+# Conversation Search Result
+# =============================================================================
+
+
+@dataclass
+class ConversationSearchResult:
+    """Result from a conversation search."""
+
+    entries: list[ConversationEntry]
+    total: int
+    query: str
+    filters_applied: dict = field(default_factory=dict)
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary."""
+        return {
+            "entries": [e.to_dict() for e in self.entries],
+            "total": self.total,
+            "query": self.query,
+            "filters_applied": self.filters_applied,
+        }

@@ -2,7 +2,7 @@
   "manifest_version": "1.0.0",
   "plugin_id": "conversation-memory",
   "name": "Conversation Memory",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Conversation memory for EREN OS - stores and retrieves conversation history",
   "author": "EREN Team",
   "license": "EREN OS License",
@@ -30,8 +30,33 @@
         "search_conversations",
         "summarize_conversations",
         "multi_user_support",
-        "multi_session_support"
+        "multi_session_support",
+        "rag_ready",
+        "attachments",
+        "references"
       ]
+    }
+  ],
+  "components": [
+    {
+      "name": "ConversationRepository",
+      "type": "contract",
+      "description": "Storage contract (implement for SQLite, PostgreSQL, etc.)"
+    },
+    {
+      "name": "ConversationSearchService",
+      "type": "service",
+      "description": "All search logic"
+    },
+    {
+      "name": "ConversationSummaryService",
+      "type": "service",
+      "description": "Summarization logic"
+    },
+    {
+      "name": "ConversationIndexer",
+      "type": "service",
+      "description": "Indexing for vector search"
     }
   ],
   "dependencies": {
@@ -108,17 +133,27 @@
   ],
   "storage": {
     "type": "sqlite",
-    "note": "Replaceable with PostgreSQL in production",
+    "note": "Replaceable with PostgreSQL via ConversationRepositoryContract",
     "tables": [
       "conversations",
       "entries",
       "summaries"
     ]
   },
+  "future": {
+    "vector_search": "Via ConversationIndexer",
+    "rag": "Via ConversationChunk",
+    "document_intelligence": "Via ConversationAttachment",
+    "cross_conversation": "Via ConversationReference"
+  },
   "api": {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "endpoints": {
-      "memory_provider": "ConversationMemoryProvider"
+      "memory_provider": "ConversationMemoryProvider",
+      "repository": "ConversationRepository",
+      "search_service": "ConversationSearchService",
+      "summary_service": "ConversationSummaryService",
+      "indexer": "ConversationIndexer"
     }
   }
 }

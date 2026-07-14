@@ -4,6 +4,34 @@
 
 This plugin implements `BaseMemoryInterface` and registers with the Plugin Framework to provide conversation memory functionality.
 
+## Clean Architecture
+
+This plugin follows Clean Architecture principles:
+
+```
+Conversation Plugin
+        │
+        ▼
+ConversationRepository (Contract)
+        │
+        ├── SQLiteRepository
+        ├── PostgreSQLRepository
+        ├── MongoRepository
+        └── CustomRepository
+        │
+        ▼
+ConversationSearchService
+        │
+        ▼
+ConversationSummaryService
+        │
+        ▼
+ConversationIndexer
+        │
+        ▼
+Vector Memory (future)
+```
+
 ## Features
 
 - ✅ Store conversation history
@@ -16,24 +44,21 @@ This plugin implements `BaseMemoryInterface` and registers with the Plugin Frame
 - ✅ Automatic deletion
 - ✅ Multi-user support
 - ✅ Multi-session support
+- ✅ RAG-ready (ConversationChunk)
+- ✅ Attachment support (images, PDF, DICOM)
+- ✅ Reference support (cross-conversation links)
 
-## Architecture
+## Components
 
-```
-ExecutionCoordinator
-        │
-        ▼
-MemoryEngine
-        │
-        ▼
-MemoryCoordinator
-        │
-        ▼
-Conversation Memory Plugin
-        │
-        ▼
-SQLite (dev) → PostgreSQL (production)
-```
+| Component | Description |
+|-----------|-------------|
+| `ConversationRepository` | Storage contract (SQLite, PostgreSQL, etc.) |
+| `ConversationSearchService` | All search logic |
+| `ConversationSummaryService` | Summarization logic |
+| `ConversationIndexer` | Indexing for vector search |
+| `ConversationChunk` | RAG-ready chunking |
+| `ConversationAttachment` | File attachments |
+| `ConversationReference` | Cross-references |
 
 ## Usage
 
@@ -54,33 +79,23 @@ plugin.initialize({"database_path": "conversations.db"})
 provider = plugin.memory_provider
 
 # Or use repository directly
-from plugins.conversation import ConversationRepository, ConversationConfiguration
+from plugins.conversation import (
+    ConversationRepository,
+    ConversationConfiguration,
+    ConversationSearchService,
+    ConversationSummaryService,
+)
 
 config = ConversationConfiguration()
 repo = ConversationRepository(config)
 
-# Create conversation
-metadata = ConversationMetadata(
-    conversation_id="conv-123",
-    user_id="user-1",
-    session_id="session-1",
-)
-repo.create_conversation(metadata)
+# Search service
+search = ConversationSearchService(repo)
+results = search.search_by_text("patient")
 
-# Add entry
-entry = ConversationEntry(
-    entry_id="entry-1",
-    conversation_id="conv-123",
-    role=ConversationRole.USER,
-    content="Hello, what can you tell me about patients?",
-)
-repo.add_entry(entry)
-
-# Get entries
-entries = repo.get_entries("conv-123")
-
-# Search
-results = repo.search(ConversationSearch(query="patient"))
+# Summary service
+summary = ConversationSummaryService(repo)
+summary.summarize("conv-123")
 ```
 
 ### With Memory Coordinator
@@ -125,6 +140,19 @@ This plugin enables EREN to answer questions like:
 - **Development**: SQLite (`:memory:` or file)
 - **Production**: Replace with PostgreSQL, MySQL, etc. without modifying the Kernel
 
+### Repository Contract
+
+```python
+from plugins.conversation import ConversationRepositoryContract
+
+class PostgreSQLRepository(ConversationRepositoryContract):
+    """Implement this contract for PostgreSQL."""
+    
+    def create_conversation(self, metadata: ConversationMetadata) -> ConversationMetadata:
+        # Implement...
+        pass
+```
+
 ## Configuration
 
 ```python
@@ -163,6 +191,15 @@ from core.memory import CognitiveMemoryEngine
 engine = CognitiveMemoryEngine()
 engine.register_plugin(ConversationMemoryPlugin())
 ```
+
+## Future Integration
+
+The plugin is ready for future capabilities:
+
+- **Vector Search**: Via ConversationIndexer
+- **RAG**: Via ConversationChunk
+- **Document Intelligence**: Via ConversationAttachment
+- **Cross-Conversation Search**: Via ConversationReference
 
 ## License
 
