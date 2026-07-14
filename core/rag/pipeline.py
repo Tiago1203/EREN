@@ -1,6 +1,7 @@
 """Cognitive RAG Pipeline for EREN OS.
 
 Main RAG pipeline that orchestrates retrieval and generation.
+The Pipeline ONLY coordinates - it does NOT know how context is built.
 """
 
 from __future__ import annotations
@@ -24,12 +25,16 @@ from core.rag.exceptions import (
     NoContextError,
     GenerationError,
 )
-from core.rag.planner import RetrievalPlanner, RetrievalPlan
-from core.rag.context_builder import ContextBuilder, Deduplicator
 from core.rag.prompt_builder import PromptBuilder
 from core.rag.response_builder import ResponseBuilder
 from core.rag.citation_builder import CitationBuilder
-from core.rag.token_budget import TokenBudget, get_default_budget
+
+# Import CCE directly from engine module to avoid circular imports
+from core.context.engine.engine import (
+    CognitiveContextEngine,
+    get_context_engine,
+)
+from core.context.engine.types import ContextPackage
 
 if TYPE_CHECKING:
     from core.retrieval import RetrievalEngine
@@ -39,45 +44,44 @@ if TYPE_CHECKING:
 class CognitiveRAGPipeline:
     """Cognitive RAG Pipeline.
 
-    Orchestrates the full RAG process:
-    1. Query Analysis & Planning
-    2. Memory Retrieval (optional)
-    3. Knowledge Retrieval
-    4. Context Building
-    5. Prompt Construction
-    6. LLM Generation
-    7. Response Building
+    The Pipeline ONLY coordinates. It does NOT know how context is built.
+
+    Responsibilities:
+        1. Coordinate with Cognitive Context Engine
+        2. Receive Context Package
+        3. Build prompt from Context Package
+        4. Generate response
+        5. Build final response
 
     Philosophy:
         The Pipeline NEVER knows about:
-        - Vector databases (Chroma, Qdrant)
-        - Providers (OpenAI, Anthropic)
-        - Embeddings
+        - How context is built
+        - Which sources are queried
+        - How deduplication works
+        - How compression works
+        - Vector databases
+        - Providers
 
-        All interactions go through contracts.
+        All context building goes through the Cognitive Context Engine.
     """
 
     def __init__(
         self,
+        context_engine: CognitiveContextEngine | None = None,
         retrieval_engine: "RetrievalEngine | None" = None,
         memory_coordinator: "MemoryCoordinator | None" = None,
-        token_budget: TokenBudget | None = None,
     ):
         """Initialize RAG pipeline.
 
         Args:
-            retrieval_engine: Retrieval engine for knowledge.
-            memory_coordinator: Memory coordinator for conversation.
-            token_budget: Token budget manager.
+            context_engine: Cognitive Context Engine for building context.
+            retrieval_engine: Optional retrieval engine (passed to CCE).
+            memory_coordinator: Optional memory coordinator (passed to CCE).
         """
-        self._retrieval_engine = retrieval_engine
-        self._memory_coordinator = memory_coordinator
-        self._token_budget = token_budget or get_default_budget()
+        # Use provided CCE or get global
+        self._context_engine = context_engine or get_context_engine()
 
-        # Components
-        self._planner = RetrievalPlanner()
-        self._context_builder = ContextBuilder()
-        self._deduplicator = Deduplicator()
+        # Components for downstream processing
         self._prompt_builder = PromptBuilder()
         self._response_builder = ResponseBuilder()
         self._citation_builder = CitationBuilder()
@@ -95,6 +99,8 @@ class CognitiveRAGPipeline:
         **kwargs,
     ) -> RAGResult:
         """Process a RAG query.
+
+        The Pipeline coordinates with CCE for context building.
 
         Args:
             question: User question.
@@ -121,57 +127,42 @@ class CognitiveRAGPipeline:
         )
 
         try:
-            # Step 1: Plan retrieval
-            plan = await self._planner.plan_retrieval(
-                query,
-                self._retrieval_engine,
-                self._memory_coordinator,
+            # Step 1: Build context using CCE (Pipeline does NOT know how)
+            context_package = await self._context_engine.build_context(
+                query=question,
+                query_id=query.query_id,
+                max_tokens=query.max_tokens,
+                include_conversation=bool(conversation_id),
+                include_knowledge=True,
+                include_clinical=kwargs.get("include_clinical", True),
+                include_device=kwargs.get("include_device", True),
+                **kwargs,
             )
 
-            # Step 2: Retrieve memory (if needed)
-            conversation_history = []
-            if plan.use_memory and self._memory_coordinator:
-                conversation_history = await self._retrieve_memory(
-                    query,
-                    plan,
-                )
-
-            # Step 3: Retrieve knowledge
-            retrieval_result = await self._retrieve_knowledge(
-                query,
-                plan,
+            # Step 2: Build prompt from Context Package
+            # The Pipeline receives ContextPackage and builds prompt
+            prompt = self._prompt_builder.build_prompt_from_package(
+                query=query,
+                package=context_package,
             )
 
-            # Step 4: Build context
-            context_obj = await self._context_builder.build_context(
-                query,
-                retrieval_result,
-                conversation_history,
-            )
-
-            # Step 5: Build prompt
-            prompt = self._prompt_builder.build_prompt(query, context_obj)
-
-            # Step 6: Generate response (placeholder - needs LLM integration)
+            # Step 3: Generate response (placeholder)
             response = await self._generate_response(
                 query,
                 prompt,
-                retrieval_result,
+                context_package,
             )
 
-            retrieval_time = int((time.time() - start_time) * 1000)
+            total_time = int((time.time() - start_time) * 1000)
 
             # Update statistics
-            self._update_statistics(query, response, retrieval_time)
+            self._update_statistics(query, response, total_time)
 
             return RAGResult(
                 query=query,
                 response=response,
-                retrieval_result=retrieval_result,
-                context=context_obj,
-                prompt=prompt,
                 success=True,
-                total_time_ms=response.total_time_ms,
+                total_time_ms=total_time,
             )
 
         except Exception as e:
@@ -188,73 +179,11 @@ class CognitiveRAGPipeline:
                 total_time_ms=total_time,
             )
 
-    async def _retrieve_memory(
-        self,
-        query: RAGQuery,
-        plan: RetrievalPlan,
-    ) -> list[dict]:
-        """Retrieve conversation memory."""
-        if not self._memory_coordinator:
-            return []
-
-        try:
-            # Get recent conversation
-            # This would use the memory coordinator
-            return []
-        except Exception:
-            return []
-
-    async def _retrieve_knowledge(
-        self,
-        query: RAGQuery,
-        plan: RetrievalPlan,
-    ) -> RetrievalResult:
-        """Retrieve knowledge from retrieval engine."""
-        start_time = time.time()
-
-        # If no retrieval engine, return empty result
-        if not self._retrieval_engine:
-            return RetrievalResult(
-                query_id=query.query_id,
-                chunks=[],
-                total_chunks=0,
-                retrieval_time_ms=0,
-            )
-
-        try:
-            # This would call the retrieval engine
-            # For now, return empty result
-            chunks = []
-
-            # Deduplicate if needed
-            if plan.deduplicate:
-                chunks = self._deduplicator.deduplicate(chunks)
-
-            # Filter low relevance
-            if plan.filter_low_relevance:
-                chunks = [
-                    c for c in chunks
-                    if c.relevance_score >= plan.min_relevance_score
-                ]
-
-            retrieval_time = int((time.time() - start_time) * 1000)
-
-            return RetrievalResult(
-                query_id=query.query_id,
-                chunks=chunks,
-                total_chunks=len(chunks),
-                retrieval_time_ms=retrieval_time,
-                unique_chunks=len(chunks),
-            )
-
-        except Exception as e:
-            raise RetrievalError(str(e))
-
     async def _generate_response(
         self,
         query: RAGQuery,
         prompt,
-        retrieval_result: RetrievalResult,
+        context_package: ContextPackage,
     ) -> RAGResponse:
         """Generate response from LLM.
 
@@ -263,21 +192,21 @@ class CognitiveRAGPipeline:
         start_time = time.time()
 
         # Placeholder response
-        # In real implementation, this would call LLM through provider contract
-        answer = self._generate_placeholder_response(query, retrieval_result)
+        answer = self._generate_placeholder_response(query, context_package)
 
         generation_time = int((time.time() - start_time) * 1000)
+
+        # Build citations from context items
+        citations = self._citation_builder.build_citations_from_package(context_package)
 
         # Build response
         response = self._response_builder.build_response(
             query=query,
             prompt=prompt,
             llm_output=answer,
-            citations=self._citation_builder.build_citations(
-                retrieval_result.chunks
-            ) if retrieval_result else [],
+            citations=citations,
             generation_time_ms=generation_time,
-            retrieval_time_ms=retrieval_result.retrieval_time_ms if retrieval_result else 0,
+            retrieval_time_ms=0,
         )
 
         return response
@@ -285,20 +214,20 @@ class CognitiveRAGPipeline:
     def _generate_placeholder_response(
         self,
         query: RAGQuery,
-        retrieval_result: RetrievalResult | None,
+        context_package: ContextPackage,
     ) -> str:
         """Generate placeholder response for testing."""
-        if not retrieval_result or not retrieval_result.chunks:
+        if not context_package.items:
             return f"Based on your question about '{query.question}', I couldn't find specific information in the knowledge base. Please provide more details or rephrase your question."
 
-        chunks = retrieval_result.chunks
-        return f"Based on the available information, here's what I found regarding '{query.question}':\n\n{chr(10).join(f'- {c.content[:100]}...' for i, c in enumerate(chunks[:3], 1))}\n\nThis information comes from {len(chunks)} relevant sources."
+        items = context_package.items
+        return f"Based on the available information, here's what I found regarding '{query.question}':\n\n" + "\n".join(f'- {item.content[:100]}...' for item in items[:3]) + f"\n\nThis information comes from {len(items)} relevant sources."
 
     def _update_statistics(
         self,
         query: RAGQuery,
         response: RAGResponse,
-        retrieval_time: int,
+        total_time: int,
     ) -> None:
         """Update pipeline statistics."""
         self._statistics.queries_processed += 1
