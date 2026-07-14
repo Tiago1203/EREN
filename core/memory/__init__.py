@@ -19,6 +19,17 @@ from core.memory.exceptions import (
     MemoryRetrievalError,
     MemorySnapshotError,
     MemoryValidationError,
+    # Orchestrator exceptions
+    MemoryOrchestratorException,
+    MemoryNotRegisteredError,
+    MemoryUnavailableError,
+    MemoryOperationError,
+    MemoryReadError,
+    MemoryWriteError,
+    MemorySearchError,
+    MemorySelectionError,
+    MemoryNoResultsError,
+    MemoryPolicyError,
 )
 from core.memory.memory_engine import CognitiveMemoryEngine
 from core.memory.memory_models import (
@@ -60,6 +71,31 @@ from core.memory.memory_types import (
     SearchOptions,
 )
 
+# Orchestrator modules
+from core.memory.base import BaseMemoryInterface, MemoryInterface
+from core.memory.registry import (
+    MemoryRegistry,
+    get_memory_registry,
+    reset_memory_registry,
+)
+from core.memory.selector import MemorySelector
+from core.memory.orchestrator import (
+    MemoryOrchestrator,
+    get_memory_orchestrator,
+    reset_memory_orchestrator,
+)
+from core.memory.types import (
+    MemoryType,
+    MemoryState,
+    MemoryAccessPolicy,
+    MemoryOperation,
+    MemoryQuery,
+    MemoryResult,
+    MemoryResponse,
+    MemoryEntry,
+    MemoryMetrics,
+)
+
 __all__ = [
     # Core Engine
     "CognitiveMemoryEngine",
@@ -98,6 +134,23 @@ __all__ = [
     "RetrievalPolicy",
     "ConsolidationPolicy",
     "MemoryStatistics",
+    # Orchestrator Types
+    "MemoryState",
+    "MemoryAccessPolicy",
+    "MemoryOperation",
+    "MemoryResult",
+    "MemoryResponse",
+    "MemoryMetrics",
+    # Orchestrator Components
+    "BaseMemoryInterface",
+    "MemoryInterface",
+    "MemoryRegistry",
+    "get_memory_registry",
+    "reset_memory_registry",
+    "MemorySelector",
+    "MemoryOrchestrator",
+    "get_memory_orchestrator",
+    "reset_memory_orchestrator",
     # Exceptions
     "MemoryError",
     "MemoryNotFoundError",
@@ -109,4 +162,15 @@ __all__ = [
     "MemoryRelationshipError",
     "MemoryValidationError",
     "MemorySnapshotError",
+    # Orchestrator Exceptions
+    "MemoryOrchestratorException",
+    "MemoryNotRegisteredError",
+    "MemoryUnavailableError",
+    "MemoryOperationError",
+    "MemoryReadError",
+    "MemoryWriteError",
+    "MemorySearchError",
+    "MemorySelectionError",
+    "MemoryNoResultsError",
+    "MemoryPolicyError",
 ]

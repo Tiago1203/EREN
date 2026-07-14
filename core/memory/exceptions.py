@@ -112,3 +112,91 @@ class MemorySnapshotError(MemoryError):
 
     def __init__(self, reason: str = "") -> None:
         super().__init__(f"Failed to create memory snapshot: {reason}")
+
+
+# =============================================================================
+# Memory Orchestrator Exceptions
+# =============================================================================
+
+
+class MemoryOrchestratorException(MemoryError):
+    """Base exception for memory orchestrator errors."""
+
+    def __init__(self, message: str = "", **kwargs: object) -> None:
+        super().__init__(message)
+        self.message = message
+        self.context = kwargs
+
+
+class MemoryNotRegisteredError(MemoryOrchestratorException):
+    """Raised when memory is not registered."""
+
+    def __init__(self, memory_id: str) -> None:
+        super().__init__(f"Memory not registered: {memory_id}")
+        self.memory_id = memory_id
+
+
+class MemoryUnavailableError(MemoryOrchestratorException):
+    """Raised when memory is unavailable."""
+
+    def __init__(self, memory_id: str, reason: str = "") -> None:
+        super().__init__(f"Memory unavailable: {memory_id}. {reason}")
+        self.memory_id = memory_id
+        self.reason = reason
+
+
+class MemoryOperationError(MemoryOrchestratorException):
+    """Raised when memory operation fails."""
+
+    def __init__(self, operation: str, memory_id: str, message: str) -> None:
+        super().__init__(f"Operation '{operation}' failed on {memory_id}: {message}")
+        self.operation = operation
+        self.memory_id = memory_id
+
+
+class MemoryReadError(MemoryOrchestratorException):
+    """Raised when memory read fails."""
+
+    def __init__(self, memory_id: str, message: str) -> None:
+        super().__init__(f"Read failed on {memory_id}: {message}")
+        self.memory_id = memory_id
+
+
+class MemoryWriteError(MemoryOrchestratorException):
+    """Raised when memory write fails."""
+
+    def __init__(self, memory_id: str, message: str) -> None:
+        super().__init__(f"Write failed on {memory_id}: {message}")
+        self.memory_id = memory_id
+
+
+class MemorySearchError(MemoryOrchestratorException):
+    """Raised when memory search fails."""
+
+    def __init__(self, memory_id: str, message: str) -> None:
+        super().__init__(f"Search failed on {memory_id}: {message}")
+        self.memory_id = memory_id
+
+
+class MemorySelectionError(MemoryOrchestratorException):
+    """Raised when memory selection fails."""
+
+    def __init__(self, policy: str, message: str) -> None:
+        super().__init__(f"Selection error ({policy}): {message}")
+        self.policy = policy
+
+
+class MemoryNoResultsError(MemoryOrchestratorException):
+    """Raised when no results found in memory."""
+
+    def __init__(self, query: str) -> None:
+        super().__init__(f"No results found for query: {query}")
+        self.query = query
+
+
+class MemoryPolicyError(MemoryOrchestratorException):
+    """Raised when memory policy cannot be satisfied."""
+
+    def __init__(self, policy: str, message: str) -> None:
+        super().__init__(f"Policy error ({policy}): {message}")
+        self.policy = policy

@@ -184,5 +184,72 @@ class ConsolidationPolicy:
 - Memory capability only — persistence details are injected, not hard-coded.
 - May depend on `packages/*`; never on `apps/*`.
 
+---
+
+## Memory Orchestrator (CMO)
+
+The **Cognitive Memory Orchestrator (CMO)** is the system that coordinates all memory operations.
+
+### Philosophy
+
+> The Orchestrator does NOT store information. It only decides:
+> - WHERE to read?
+> - WHERE to write?
+> - IN WHAT ORDER?
+> - HOW TO COMBINE results?
+
+### The Orchestrator Never Knows
+
+❌ PostgreSQL  
+❌ Redis  
+❌ Chroma  
+❌ Qdrant  
+❌ Pinecone  
+❌ Milvus  
+❌ FAISS  
+❌ SQLite  
+❌ **Anything**
+
+Only contracts (BaseMemoryInterface).
+
+### Usage
+
+```python
+from core.memory import (
+    MemoryOrchestrator,
+    MemoryEntry,
+    MemoryType,
+    MemoryAccessPolicy,
+)
+
+orchestrator = MemoryOrchestrator()
+
+# Write
+entry = MemoryEntry(
+    content="User asked about monitor repair",
+    memory_type=MemoryType.WORKING,
+)
+orchestrator.write(entry)
+
+# Read
+response = orchestrator.read(entry.key)
+
+# Search
+query = MemoryQuery(query="monitor", limit=10)
+results = orchestrator.search(query)
+```
+
+### Access Policies
+
+| Policy | Description |
+|--------|-------------|
+| `FIRST_AVAILABLE` | Use first available |
+| `LONG_TERM_ONLY` | Only long-term memories |
+| `SHORT_TERM_ONLY` | Only short-term memories |
+| `MERGE_ALL` | Merge all results |
+| `READ_ONLY` | No writes |
+| `WRITE_THROUGH` | Write to all |
+
 ## Referencias
 - [Documentación arquitectónica](../docs/core/cognitive-memory-system.md)
+- [Memory Orchestrator](../docs/architecture/memory-orchestrator.md)
