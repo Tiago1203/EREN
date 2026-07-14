@@ -1,46 +1,86 @@
-# Cognitive Workflow Engine (CWE)
+# Cognitive Workflow Platform (CWP)
 
 ## Overview
 
-The official system for cognitive workflow execution in EREN. Allows executing long-running, persistent, and resumable processes composed of multiple decisions, agents, and capabilities.
+The official platform for cognitive workflow execution in EREN. Allows executing long-running, persistent, and resumable processes composed of multiple decisions, agents, and capabilities.
 
 ## Philosophy
 
-> **An agent executes tasks.**
-> **A Workflow executes complete processes.**
+> **A Workflow is a distributed system.**
+> **Each component has a single responsibility.**
+> **The Workflow Engine is no longer a monolithic component.**
 
-**The Engine NEVER:**
+**The Platform NEVER:**
 - Knows about AI/LLM/RAG
 - Knows about specific implementations
 - Knows about databases
 
 **It ONLY:**
 - Creates workflows
-- Persists state
-- Resumes execution
+- Manages state
+- Orchestrates execution
 - Handles checkpoints
-- Manages rollback
+- Manages recovery
 - Provides observability
 - Handles fault recovery
 
 ## Architecture
 
 ```
-Execution Coordinator
+Workflow Platform
         │
-        ▼
-Decision Engine
-        │
-        ▼
-Workflow Engine
-        │
-        ├── Workflow Planner
-        ├── Workflow Runtime
-        ├── State Manager
+        ├── Runtime
+        ├── Planner
+        ├── Scheduler
+        ├── Executor
+        ├── State Store
         ├── Checkpoint Manager
-        ├── Execution Graph
-        └── Agent Platform
+        ├── Recovery Manager
+        ├── Compensation Manager
+        ├── Metrics
+        └── Events
 ```
+
+## Component Responsibilities
+
+### Runtime
+- Creates instances
+- Starts workflows
+- Pauses workflows
+- Resumes workflows
+- Cancels workflows
+- Finishes workflows
+
+### Scheduler
+- Calculates order
+- Resolves dependencies
+- Controls parallelism
+- Manages priorities
+- Handles retries
+
+### Executor
+- Executes tasks
+- Invokes agents
+- Invokes capabilities
+- Waits for results
+- Reports status
+
+### State Store
+- Saves state
+- Reads state
+- Updates state
+- Versions state
+
+### Checkpoint Manager
+- Creates checkpoints
+- Restores checkpoints
+- Deletes checkpoints
+
+### Recovery Manager
+- Handles recovery
+- Manages rollback
+- Handles compensation
+- Coordinates saga
 
 ## Supported Workflow Types
 

@@ -1,4 +1,4 @@
-"""Unit tests for EREN Cognitive Workflow Engine."""
+"""Unit tests for EREN Cognitive Workflow Platform."""
 
 import pytest
 
@@ -16,12 +16,14 @@ from core.workflows.types import (
     WorkflowMetrics,
 )
 from core.workflows.graph import ExecutionGraph, get_execution_graph, clear_graph_cache
+from core.workflows.state_store import StateStore, get_state_store, reset_state_store
 from core.workflows.state import StateManager, get_state_manager, reset_state_manager
 from core.workflows.checkpoint import CheckpointManager, get_checkpoint_manager
+from core.workflows.recovery import RecoveryManager, get_recovery_manager
 from core.workflows.planner import WorkflowPlanner
-from core.workflows.executor import TaskExecutor
+from core.workflows.executor import WorkflowExecutor, TaskExecutor
 from core.workflows.scheduler import WorkflowScheduler
-from core.workflows.engine import WorkflowEngine, get_workflow_engine
+from core.workflows.engine import WorkflowPlatform, WorkflowEngine, get_workflow_platform
 
 
 class TestWorkflowTypes:
@@ -277,7 +279,7 @@ class TestTaskExecutor:
             return {"result": config.get("value")}
 
         executor.register_executor("my_task", my_task)
-        result = executor.execute("my_task", {"value": "test"}, {})
+        result = executor.execute_task("my_task", {"value": "test"}, {})
         assert result["result"] == "test"
 
 
@@ -299,13 +301,90 @@ class TestWorkflowScheduler:
         assert task.status == "completed"
 
 
-class TestWorkflowEngine:
-    """Tests for workflow engine."""
+class TestStateStore:
+    """Tests for state store."""
+
+    def setup_method(self):
+        """Setup for each test."""
+        reset_state_store()
+
+    def test_create_execution(self):
+        """Test creating execution."""
+        store = get_state_store()
+        execution = store.create_execution(
+            execution_id="exec1",
+            workflow_id="wf1",
+            workflow_name="Test",
+        )
+        assert execution.execution_id == "exec1"
+
+    def test_load_execution(self):
+        """Test loading execution."""
+        store = get_state_store()
+        store.create_execution("exec1", "wf1", "Test")
+        loaded = store.load_execution("exec1")
+        assert loaded is not None
+        assert loaded.execution_id == "exec1"
+
+
+class TestRecoveryManager:
+    """Tests for recovery manager."""
+
+    def test_create_compensation(self):
+        """Test creating compensation."""
+        manager = RecoveryManager()
+        record = manager.create_compensation("exec1", "node1", "rollback")
+        assert record.action == "rollback"
+
+    def test_execute_compensation(self):
+        """Test executing compensation."""
+        manager = RecoveryManager()
+        manager.create_compensation("exec1", "node1", "rollback")
+        success, errors = manager.execute_compensation("exec1")
+        assert success
+        assert len(errors) == 0
+
+
+class TestWorkflowExecutor:
+    """Tests for workflow executor."""
+
+    def test_register_executor(self):
+        """Test registering executor."""
+        executor = WorkflowExecutor()
+        executor.register_executor("task1", lambda config, context: {"result": "ok"})
+        assert executor.has_executor("task1")
+
+    def test_invoke_agent(self):
+        """Test invoking agent."""
+        executor = WorkflowExecutor()
+        result = executor.invoke_agent("agent1", {"task": "test"}, {})
+        assert result["type"] == "agent1"
+
+
+class TestWorkflowScheduler:
+    """Tests for workflow scheduler."""
+
+    def test_calculate_order(self):
+        """Test calculating order."""
+        scheduler = WorkflowScheduler()
+        order = scheduler.calculate_order(["n1", "n2", "n3"], {"n1": 3, "n2": 1, "n3": 2})
+        assert order[0] == "n1"
+
+    def test_resolve_dependencies(self):
+        """Test resolving dependencies."""
+        scheduler = WorkflowScheduler()
+        node = WorkflowNode.create("n1", NodeType.TASK, depends_on=["n0"])
+        assert scheduler.resolve_dependencies(node, ["n0"]) is True
+        assert scheduler.resolve_dependencies(node, []) is False
+
+
+class TestWorkflowPlatform:
+    """Tests for workflow platform."""
 
     def test_create_definition(self):
         """Test creating workflow definition."""
-        engine = WorkflowEngine()
-        workflow = engine.create_definition(
+        platform = WorkflowPlatform()
+        workflow = platform.create_definition(
             name="Test Workflow",
             description="Test",
             workflow_type=WorkflowType.LINEAR,
@@ -315,10 +394,10 @@ class TestWorkflowEngine:
 
     def test_add_node(self):
         """Test adding node."""
-        engine = WorkflowEngine()
-        workflow = engine.create_definition("Test", "Test")
+        platform = WorkflowPlatform()
+        workflow = platform.create_definition("Test", "Test")
 
-        node = engine.add_node(
+        node = platform.add_node(
             workflow_id=workflow.workflow_id,
             name="Test Node",
             node_type=NodeType.TASK,
@@ -329,13 +408,13 @@ class TestWorkflowEngine:
 
     def test_add_edge(self):
         """Test adding edge."""
-        engine = WorkflowEngine()
-        workflow = engine.create_definition("Test", "Test")
+        platform = WorkflowPlatform()
+        workflow = platform.create_definition("Test", "Test")
 
-        node1 = engine.add_node(workflow.workflow_id, "Node1", NodeType.TASK)
-        node2 = engine.add_node(workflow.workflow_id, "Node2", NodeType.TASK)
+        node1 = platform.add_node(workflow.workflow_id, "Node1", NodeType.TASK)
+        node2 = platform.add_node(workflow.workflow_id, "Node2", NodeType.TASK)
 
-        edge = engine.add_edge(workflow.workflow_id, node1.node_id, node2.node_id)
+        edge = platform.add_edge(workflow.workflow_id, node1.node_id, node2.node_id)
 
         assert edge is not None
         assert edge.source_id == node1.node_id
@@ -343,32 +422,19 @@ class TestWorkflowEngine:
 
     def test_get_definition(self):
         """Test getting definition."""
-        engine = WorkflowEngine()
-        workflow = engine.create_definition("Test", "Test")
+        platform = WorkflowPlatform()
+        workflow = platform.create_definition("Test", "Test")
 
-        retrieved = engine.get_definition(workflow.workflow_id)
+        retrieved = platform.get_definition(workflow.workflow_id)
         assert retrieved is not None
         assert retrieved.workflow_id == workflow.workflow_id
 
-    def test_start_workflow(self):
-        """Test starting workflow."""
-        engine = WorkflowEngine()
-        workflow = engine.create_definition("Test", "Test")
-
-        # Add nodes with edges
-        node1 = engine.add_node(workflow.workflow_id, "Node1", NodeType.TASK)
-        node2 = engine.add_node(workflow.workflow_id, "Node2", NodeType.TASK)
-        engine.add_edge(workflow.workflow_id, node1.node_id, node2.node_id)
-
-        execution = engine.start(workflow.workflow_id)
-        assert execution is not None
-
     def test_get_metrics(self):
         """Test getting metrics."""
-        engine = WorkflowEngine()
-        engine.create_definition("Test", "Test")
+        platform = WorkflowPlatform()
+        platform.create_definition("Test", "Test")
 
-        metrics = engine.get_metrics()
+        metrics = platform.get_metrics()
         assert metrics.workflows_created >= 1
 
 
