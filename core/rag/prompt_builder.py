@@ -1,6 +1,7 @@
 """RAG Prompt Builder for EREN OS.
 
-Builds prompts for LLM from context.
+Builds prompts for LLM from Context Package.
+The Prompt Builder ONLY receives ContextPackage and builds the prompt.
 """
 
 from __future__ import annotations
@@ -13,6 +14,9 @@ from core.rag.types import (
     RAGPrompt,
 )
 
+# Import CCE types directly from engine types module
+from core.context.engine.types import ContextPackage
+
 if TYPE_CHECKING:
     pass
 
@@ -20,43 +24,47 @@ if TYPE_CHECKING:
 class PromptBuilder:
     """Builds prompts for RAG queries.
 
-    Constructs system and user prompts with context.
+    The Prompt Builder ONLY receives ContextPackage and builds the prompt.
+    It does NOT know how context is built.
     """
 
     def __init__(self):
         """Initialize prompt builder."""
         self._default_system_prompt = self._get_default_system_prompt()
 
-    def build_prompt(
+    def build_prompt_from_package(
         self,
         query: RAGQuery,
-        context: RAGContext,
+        package: ContextPackage,
     ) -> RAGPrompt:
-        """Build RAG prompt.
+        """Build RAG prompt from Context Package.
+
+        This is the main entry point.
+        The Prompt Builder receives ContextPackage only.
 
         Args:
             query: RAG query.
-            context: Built context.
+            package: Context Package from CCE.
 
         Returns:
             Built prompt.
         """
         # Build system prompt
-        system_prompt = self._build_system_prompt(query, context)
+        system_prompt = self._build_system_prompt(query, package)
 
         # Build user prompt
-        user_prompt = self._build_user_prompt(query, context)
+        user_prompt = self._build_user_prompt(query, package)
 
         # Calculate tokens
         system_tokens = self._estimate_tokens(system_prompt)
         user_tokens = self._estimate_tokens(user_prompt)
-        context_tokens = context.context_tokens
+        context_tokens = package.context_tokens
         total_tokens = system_tokens + user_tokens + context_tokens
 
         return RAGPrompt(
             system_prompt=system_prompt,
             user_prompt=user_prompt,
-            context=context.context_text,
+            context=package.context_text,
             system_tokens=system_tokens,
             user_tokens=user_tokens,
             context_tokens=context_tokens,
@@ -67,7 +75,7 @@ class PromptBuilder:
     def _build_system_prompt(
         self,
         query: RAGQuery,
-        context: RAGContext,
+        package: ContextPackage,
     ) -> str:
         """Build system prompt."""
         prompt = self._default_system_prompt
@@ -82,25 +90,23 @@ class PromptBuilder:
         if query.include_citations:
             prompt += "\n\nAlways cite your sources using the provided context."
 
+        # Add context quality info
+        if package.has_clinical_context:
+            prompt += "\n\n[Clinical context available]"
+
         return prompt
 
     def _build_user_prompt(
         self,
         query: RAGQuery,
-        context: RAGContext,
+        package: ContextPackage,
     ) -> str:
         """Build user prompt."""
         parts = []
 
         # Add context
-        if context.context_text:
-            parts.append(f"## Context\n\n{context.context_text}\n")
-
-        # Add conversation history
-        if context.conversation_history:
-            history_text = self._format_history(context.conversation_history)
-            if history_text:
-                parts.append(f"## Conversation\n\n{history_text}\n")
+        if package.context_text:
+            parts.append(f"## Context\n\n{package.context_text}\n")
 
         # Add question
         parts.append(f"## Question\n\n{query.question}\n")
@@ -109,20 +115,6 @@ class PromptBuilder:
         parts.append("## Answer\n\n")
 
         return "".join(parts)
-
-    def _format_history(self, history: list[dict]) -> str:
-        """Format conversation history."""
-        if not history:
-            return ""
-
-        lines = []
-        for entry in history[-5:]:
-            role = entry.get("role", "unknown")
-            content = entry.get("content", "")
-            if content:
-                lines.append(f"{role.upper()}: {content}")
-
-        return "\n".join(lines)
 
     def _get_default_system_prompt(self) -> str:
         """Get default system prompt."""

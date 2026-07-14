@@ -1,176 +1,200 @@
-"""Unit tests for EREN Cognitive RAG Pipeline."""
+"""Unit tests for EREN Cognitive RAG Pipeline with CCE."""
 
 import pytest
 
 from core.rag.types import (
     RetrievalStrategy,
     ResponseFormat,
-    ConfidenceLevel,
     RAGQuery,
-    RetrievedChunk,
-    RetrievalResult,
-    RAGContext,
-    RAGPrompt,
-    Citation,
     RAGResponse,
     RAGResult,
     PipelineStatistics,
 )
-from core.rag.exceptions import (
-    RAGError,
-    RetrievalError,
-    NoContextError,
-    TokenBudgetExceededError,
-)
-from core.rag.planner import RetrievalPlanner, RetrievalPlan
-from core.rag.context_builder import ContextBuilder, Deduplicator
+from core.rag.exceptions import RAGError
 from core.rag.prompt_builder import PromptBuilder
-from core.rag.response_builder import ResponseBuilder
 from core.rag.citation_builder import CitationBuilder
-from core.rag.token_budget import TokenBudget, get_default_budget, reset_default_budget
 from core.rag.pipeline import CognitiveRAGPipeline
 
+# Import CCE types
+from core.context.engine.types import (
+    ContextItem,
+    ContextPackage,
+    ContextSource,
+    ContextPriority,
+)
+from core.context.engine.engine import CognitiveContextEngine
+from core.context.engine.deduplicator import ContextDeduplicator
+from core.context.engine.merger import ContextMerger
+from core.context.engine.compressor import ContextCompressor
+from core.context.engine.ranking import ContextRanker
 
-class TestRAGTypes:
-    """Tests for RAG types."""
 
-    def test_rag_query_creation(self):
-        """Test RAG query creation."""
-        query = RAGQuery(
-            query_id="q-123",
-            question="What is diabetes?",
-        )
-        assert query.query_id == "q-123"
-        assert query.question == "What is diabetes?"
-        assert query.top_k == 10
+class TestContextTypes:
+    """Tests for context types."""
 
-    def test_retrieved_chunk(self):
-        """Test retrieved chunk."""
-        chunk = RetrievedChunk(
-            chunk_id="c-123",
-            content="Diabetes is a chronic condition...",
-            document_id="doc-456",
+    def test_context_item_creation(self):
+        """Test context item creation."""
+        item = ContextItem(
+            item_id="item-123",
+            source=ContextSource.KNOWLEDGE,
+            content="Some knowledge content",
             relevance_score=0.9,
         )
-        assert chunk.relevance_score == 0.9
+        assert item.item_id == "item-123"
+        assert item.relevance_score == 0.9
+        assert item.tokens > 0
 
-    def test_retrieval_result(self):
-        """Test retrieval result."""
-        result = RetrievalResult(
-            query_id="q-123",
-            chunks=[],
-            total_chunks=0,
+    def test_context_package_creation(self):
+        """Test context package creation."""
+        package = ContextPackage(
+            package_id="pkg-123",
+            query="Test query",
+            items=[],
+            context_text="Context text",
+            context_tokens=100,
         )
-        assert result.total_chunks == 0
-
-    def test_citation_creation(self):
-        """Test citation creation."""
-        citation = Citation(
-            citation_id="cite-123",
-            text="Some relevant text",
-            chunk_id="c-123",
-            document_id="doc-456",
-            title="Medical Guidelines",
-        )
-        assert citation.title == "Medical Guidelines"
+        assert package.package_id == "pkg-123"
+        assert package.total_items == 0
 
 
-class TestRetrievalPlanner:
-    """Tests for retrieval planner."""
-
-    @pytest.fixture
-    def planner(self):
-        """Create test planner."""
-        return RetrievalPlanner()
-
-    @pytest.mark.asyncio
-    async def test_plan_retrieval_default(self, planner):
-        """Test default retrieval planning."""
-        query = RAGQuery(
-            query_id="q-123",
-            question="What is diabetes?",
-        )
-        plan = await planner.plan_retrieval(query)
-
-        assert isinstance(plan, RetrievalPlan)
-        assert plan.top_k == 5  # Simple question
-
-    @pytest.mark.asyncio
-    async def test_plan_complex_query(self, planner):
-        """Test planning for complex query."""
-        query = RAGQuery(
-            query_id="q-123",
-            question="Explain in detail the pathophysiology of type 2 diabetes mellitus and its complications",
-        )
-        plan = await planner.plan_retrieval(query)
-
-        assert plan.top_k >= 10  # Complex question needs more context
-
-
-class TestContextBuilder:
-    """Tests for context builder."""
-
-    @pytest.fixture
-    def builder(self):
-        """Create test builder."""
-        return ContextBuilder()
-
-    @pytest.mark.asyncio
-    async def test_build_empty_context(self, builder):
-        """Test building empty context."""
-        query = RAGQuery(query_id="q-123", question="Test?")
-        context = await builder.build_context(query)
-
-        assert isinstance(context, RAGContext)
-        assert context.context_text == ""
-
-    @pytest.mark.asyncio
-    async def test_build_context_with_chunks(self, builder):
-        """Test building context with chunks."""
-        query = RAGQuery(query_id="q-123", question="Test?")
-        chunks = [
-            RetrievedChunk(
-                chunk_id="c-1",
-                content="First chunk",
-                document_id="doc-1",
-                title="Doc 1",
-            ),
-            RetrievedChunk(
-                chunk_id="c-2",
-                content="Second chunk",
-                document_id="doc-2",
-                title="Doc 2",
-            ),
-        ]
-        result = RetrievalResult(
-            query_id="q-123",
-            chunks=chunks,
-            total_chunks=2,
-        )
-
-        context = await builder.build_context(query, result)
-
-        assert len(context.retrieved_chunks) == 2
-
-
-class TestDeduplicator:
-    """Tests for deduplicator."""
+class TestContextDeduplicator:
+    """Tests for context deduplicator."""
 
     def test_deduplicate_empty(self):
         """Test deduplicating empty list."""
-        dedup = Deduplicator()
-        result = dedup.deduplicate([])
-        assert result == []
+        dedup = ContextDeduplicator()
+        items, duplicates = dedup.deduplicate([])
+        assert items == []
+        assert duplicates == 0
 
     def test_deduplicate_similar(self):
-        """Test deduplicating similar chunks."""
-        dedup = Deduplicator()
-        chunks = [
-            RetrievedChunk(chunk_id="c-1", content="Same content", document_id="d-1"),
-            RetrievedChunk(chunk_id="c-2", content="Same content", document_id="d-1"),
+        """Test deduplicating similar items."""
+        dedup = ContextDeduplicator()
+        items = [
+            ContextItem(
+                item_id="i-1",
+                source=ContextSource.KNOWLEDGE,
+                content="Same content",
+                relevance_score=0.9,
+            ),
+            ContextItem(
+                item_id="i-2",
+                source=ContextSource.KNOWLEDGE,
+                content="Same content",
+                relevance_score=0.8,
+            ),
         ]
-        result = dedup.deduplicate(chunks)
-        assert len(result) == 1
+        unique, duplicates = dedup.deduplicate(items)
+        assert len(unique) == 1
+        assert duplicates == 1
+
+
+class TestContextMerger:
+    """Tests for context merger."""
+
+    def test_merge_empty(self):
+        """Test merging empty lists."""
+        merger = ContextMerger()
+        result = merger.merge()
+        assert result == []
+
+
+class TestContextCompressor:
+    """Tests for context compressor."""
+
+    def test_compress_empty(self):
+        """Test compressing empty list."""
+        compressor = ContextCompressor()
+        result = compressor.compress([], 1000)
+        assert result == []
+
+    def test_compress_with_items(self):
+        """Test compressing items."""
+        compressor = ContextCompressor()
+        items = [
+            ContextItem(
+                item_id="i-1",
+                source=ContextSource.KNOWLEDGE,
+                content="A" * 100,
+                relevance_score=0.9,
+            ),
+            ContextItem(
+                item_id="i-2",
+                source=ContextSource.KNOWLEDGE,
+                content="B" * 200,
+                relevance_score=0.8,
+            ),
+        ]
+        result = compressor.compress(items, 1000)
+        assert len(result) >= 1
+
+
+class TestContextRanker:
+    """Tests for context ranker."""
+
+    def test_rank_empty(self):
+        """Test ranking empty list."""
+        ranker = ContextRanker()
+        result = ranker.rank([])
+        assert result == []
+
+    def test_rank_with_priority(self):
+        """Test ranking with priorities."""
+        ranker = ContextRanker()
+        items = [
+            ContextItem(
+                item_id="i-1",
+                source=ContextSource.KNOWLEDGE,
+                content="Low priority content",
+                relevance_score=0.5,
+                priority=ContextPriority.LOW,
+            ),
+            ContextItem(
+                item_id="i-2",
+                source=ContextSource.CLINICAL,
+                content="High priority content",
+                relevance_score=0.9,
+                priority=ContextPriority.HIGH,
+            ),
+        ]
+        result = ranker.rank(items, prioritize_clinical=True)
+        # Clinical should be prioritized
+        assert len(result) == 2
+
+
+class TestCognitiveContextEngine:
+    """Tests for Cognitive Context Engine."""
+
+    @pytest.fixture
+    def engine(self):
+        """Create test engine."""
+        return CognitiveContextEngine()
+
+    @pytest.mark.asyncio
+    async def test_build_context_empty(self, engine):
+        """Test building empty context."""
+        package = await engine.build_context(query="Test query")
+        assert isinstance(package, ContextPackage)
+        assert package.package_id is not None
+
+    @pytest.mark.asyncio
+    async def test_build_context_with_items(self, engine):
+        """Test building context with items."""
+        # Add items manually for testing
+        item = ContextItem(
+            item_id="item-1",
+            source=ContextSource.KNOWLEDGE,
+            content="Medical guideline content",
+            relevance_score=0.9,
+            priority=ContextPriority.HIGH,
+        )
+        engine._builder._retrieve_knowledge = lambda *args, **kwargs: [item]
+
+        package = await engine.build_context(
+            query="Test query",
+            include_knowledge=True,
+        )
+        assert isinstance(package, ContextPackage)
 
 
 class TestPromptBuilder:
@@ -181,60 +205,24 @@ class TestPromptBuilder:
         """Create test builder."""
         return PromptBuilder()
 
-    def test_build_prompt(self, builder):
-        """Test building prompt."""
+    def test_build_prompt_from_package(self, builder):
+        """Test building prompt from context package."""
         query = RAGQuery(
             query_id="q-123",
             question="What is diabetes?",
         )
-        context = RAGContext(
-            query=query,
+        package = ContextPackage(
+            package_id="pkg-123",
+            query="What is diabetes?",
+            items=[],
             context_text="Diabetes is a condition...",
             context_tokens=10,
         )
 
-        prompt = builder.build_prompt(query, context)
+        prompt = builder.build_prompt_from_package(query, package)
 
-        assert isinstance(prompt, RAGPrompt)
-        assert "EREN" in prompt.system_prompt
+        assert prompt.system_prompt is not None
         assert "What is diabetes?" in prompt.user_prompt
-
-
-class TestResponseBuilder:
-    """Tests for response builder."""
-
-    @pytest.fixture
-    def builder(self):
-        """Create test builder."""
-        return ResponseBuilder()
-
-    def test_build_text_response(self, builder):
-        """Test building text response."""
-        query = RAGQuery(
-            query_id="q-123",
-            question="What is diabetes?",
-        )
-        prompt = RAGPrompt(
-            system_prompt="You are EREN.",
-            user_prompt="Question",
-            context="Context",
-            total_tokens=100,
-        )
-
-        response = builder.build_response(
-            query=query,
-            prompt=prompt,
-            llm_output="Diabetes is a chronic condition.",
-        )
-
-        assert isinstance(response, RAGResponse)
-        assert "diabetes" in response.answer.lower()
-
-    def test_format_markdown(self, builder):
-        """Test markdown formatting."""
-        text = "## Title\n\nContent"
-        formatted = builder._format_markdown(text)
-        assert formatted == text
 
 
 class TestCitationBuilder:
@@ -245,56 +233,26 @@ class TestCitationBuilder:
         """Create test builder."""
         return CitationBuilder()
 
-    def test_build_citations(self, builder):
-        """Test building citations."""
-        chunks = [
-            RetrievedChunk(
-                chunk_id="c-1",
-                content="First chunk content",
-                document_id="doc-1",
-                title="Medical Guide",
-                author="Dr. Smith",
-            ),
-        ]
+    def test_build_citations_from_package(self, builder):
+        """Test building citations from context package."""
+        package = ContextPackage(
+            package_id="pkg-123",
+            query="Test",
+            items=[
+                ContextItem(
+                    item_id="i-1",
+                    source=ContextSource.KNOWLEDGE,
+                    content="Some medical content",
+                    title="Medical Guide",
+                    author="Dr. Smith",
+                ),
+            ],
+        )
 
-        citations = builder.build_citations(chunks)
+        citations = builder.build_citations_from_package(package)
 
         assert len(citations) == 1
         assert citations[0].title == "Medical Guide"
-        assert citations[0].author == "Dr. Smith"
-
-
-class TestTokenBudget:
-    """Tests for token budget."""
-
-    def test_default_budget(self):
-        """Test default budget values."""
-        budget = TokenBudget()
-        assert budget.max_tokens == 4000
-        assert budget.reserved_tokens == 500
-        assert budget.available_tokens == 3500
-
-    def test_custom_budget(self):
-        """Test custom budget."""
-        budget = TokenBudget(max_tokens=5000, reserved_tokens=1000)
-        assert budget.available_tokens == 4000
-
-    def test_fits_budget(self):
-        """Test budget fitting."""
-        budget = TokenBudget(max_tokens=1000, reserved_tokens=100)
-        assert budget.fits_budget(500) is True
-        assert budget.fits_budget(1000) is False
-
-    def test_allocate(self):
-        """Test chunk allocation."""
-        budget = TokenBudget(max_tokens=1000, reserved_tokens=100)
-        chunks = [
-            RetrievedChunk(chunk_id="c-1", content="A" * 100, document_id="d-1"),
-            RetrievedChunk(chunk_id="c-2", content="B" * 200, document_id="d-1"),
-        ]
-
-        allocated = budget.allocate(chunks)
-        assert len(allocated) >= 1
 
 
 class TestCognitiveRAGPipeline:

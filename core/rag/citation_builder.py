@@ -1,6 +1,6 @@
 """RAG Citation Builder for EREN OS.
 
-Builds citations from retrieved chunks.
+Builds citations from Context Package.
 """
 
 from __future__ import annotations
@@ -14,82 +14,97 @@ from core.rag.types import (
     RAGResponse,
 )
 
+# Import CCE types directly from engine types module
+from core.context.engine.types import ContextPackage, ContextItem
+
 if TYPE_CHECKING:
     pass
 
 
 class CitationBuilder:
-    """Builds citations for RAG responses.
+    """Builds citations from Context Package.
 
-    Links response content to source chunks.
+    Links response content to source items.
     """
 
     def __init__(self):
         """Initialize citation builder."""
         pass
 
-    def build_citations(
+    def build_citations_from_package(
         self,
-        chunks: list[RetrievedChunk],
+        package: ContextPackage,
     ) -> list[Citation]:
-        """Build citations from chunks.
+        """Build citations from Context Package.
 
         Args:
-            chunks: Retrieved chunks.
+            package: Context Package from CCE.
 
         Returns:
             Built citations.
         """
         citations = []
 
-        for chunk in chunks:
-            citation = self._build_citation(chunk)
+        for item in package.items:
+            citation = self._build_citation_from_item(item)
             citations.append(citation)
 
         return citations
 
-    def _build_citation(self, chunk: RetrievedChunk) -> Citation:
-        """Build single citation from chunk."""
+    def _build_citation_from_item(self, item: ContextItem) -> Citation:
+        """Build single citation from context item."""
         return Citation(
             citation_id=str(uuid.uuid4()),
-            text=self._extract_relevant_text(chunk),
-            chunk_id=chunk.chunk_id,
-            document_id=chunk.document_id,
-            title=chunk.title,
+            text=self._extract_relevant_text(item.content),
+            chunk_id=item.chunk_id,
+            document_id=item.document_id,
+            title=item.title,
             start_char=0,
-            end_char=len(chunk.content),
-            source_type=chunk.source_type,
-            source_uri=chunk.source_uri,
-            author=chunk.author,
-            institution=chunk.institution,
+            end_char=len(item.content),
+            source_type=item.source.value,
+            source_uri="",
+            author=item.author,
+            institution="",
             published_date="",
-            relevance_score=chunk.relevance_score,
+            relevance_score=item.relevance_score,
             page_number="",
-            url=chunk.source_uri,
+            url="",
         )
 
-    def _extract_relevant_text(self, chunk: RetrievedChunk) -> str:
-        """Extract relevant text from chunk."""
-        # Return first 200 chars as citation text
-        if len(chunk.content) <= 200:
-            return chunk.content
-        return chunk.content[:200] + "..."
+    def _extract_relevant_text(self, content: str) -> str:
+        """Extract relevant text for citation."""
+        if len(content) <= 200:
+            return content
+        return content[:200] + "..."
 
     def attach_citations_to_response(
         self,
         response: RAGResponse,
-        chunks: list[RetrievedChunk],
+        citations: list[Citation],
     ) -> RAGResponse:
         """Attach citations to existing response.
 
         Args:
             response: Response to annotate.
-            chunks: Source chunks.
+            citations: Source citations.
 
         Returns:
             Annotated response.
         """
-        citations = self.build_citations(chunks)
         response.citations = citations
         response.sources_used = self._extract_sources(citations)
         return response
+
+    def _extract_sources(self, citations: list[Citation]) -> list[str]:
+        """Extract unique source identifiers."""
+        sources = set()
+
+        for citation in citations:
+            if citation.source_uri:
+                sources.add(citation.source_uri)
+            elif citation.title:
+                sources.add(citation.title)
+            else:
+                sources.add(citation.document_id)
+
+        return list(sources)
