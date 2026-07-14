@@ -1,4 +1,4 @@
-"""EREN OS Multi-Provider Layer (CMPL).
+"""EREN OS Multi-Provider Layer (CMPL) - PR-056.
 
 This module implements the Cognitive Multi-Provider Layer, the official
 abstraction layer for LLM providers in EREN.
@@ -12,21 +12,24 @@ Key Concepts:
     - Registry: Manages provider registration
     - Selector: Implements selection strategies
     - Manager: Orchestrates all provider operations
+    - Enhanced Manager: Adds resilience patterns
 
 Example:
-    >>> from core.providers import ProviderManager, ProviderConfig, ProviderType
+    >>> from core.providers import EnhancedProviderManager, ProviderType
     >>> 
-    >>> manager = ProviderManager()
+    >>> manager = EnhancedProviderManager()
     >>> 
     >>> # Add providers
-    >>> manager.add_provider(OpenAIProvider(), config)
-    >>> manager.add_provider(OllamaProvider(), config)
+    >>> manager.add_provider(MockProvider("openai", "gpt-4"), weight=1.0)
+    >>> manager.add_provider(MockProvider("claude", "claude-3"), weight=2.0)
     >>> 
-    >>> # Generate with automatic selection
-    >>> response = manager.generate(request)
+    >>> # Generate with automatic selection and resilience
+    >>> response = await manager.generate(request)
     >>> 
-    >>> # Generate with specific provider
-    >>> response = manager.generate(request, policy=SelectionPolicy.PRIORITY)
+    >>> # Generate streaming
+    >>> handler = await manager.generate_stream(request)
+    >>> for chunk in handler.stream():
+    ...     print(chunk.content, end="")
 """
 
 from __future__ import annotations
@@ -47,13 +50,19 @@ from core.providers.exceptions import (
     ProviderTimeoutError,
     ProviderUnavailableError,
 )
+
+# Core
+from core.providers.enhanced_manager import (
+    EnhancedManagerConfig,
+    EnhancedProviderManager,
+    get_enhanced_provider_manager,
+    reset_enhanced_provider_manager,
+)
 from core.providers.manager import (
     ProviderManager,
     get_provider_manager,
     reset_provider_manager,
 )
-
-# Core
 from core.providers.provider import BaseProvider
 from core.providers.registry import (
     ProviderRegistry,
@@ -61,6 +70,51 @@ from core.providers.registry import (
     reset_provider_registry,
 )
 from core.providers.selector import ProviderSelector
+
+# Mock providers
+from core.providers.mock_provider import (
+    MockProvider,
+    MockProviderFactory,
+    MockProviderConfig,
+    OpenAIMockProvider,
+    ClaudeMockProvider,
+    GeminiMockProvider,
+    OllamaMockProvider,
+    DeepSeekMockProvider,
+    MistralMockProvider,
+    OpenRouterMockProvider,
+    AzureOpenAIMockProvider,
+    StreamingMockProvider,
+)
+
+# Resilience patterns
+from core.providers.resilience import (
+    CircuitBreaker,
+    CircuitBreakerConfig,
+    CircuitState,
+    LoadBalancer,
+    LoadBalancingStrategy,
+    RateLimitConfig,
+    RetryPolicy,
+    RetryStrategy,
+    SimpleCache,
+    CacheConfig,
+    TokenBucketRateLimiter,
+)
+
+# Streaming
+from core.providers.streaming import (
+    StreamChunk,
+    StreamHandler,
+    StreamMetrics,
+    CallbackStreamHandler,
+    CollectingStreamHandler,
+    GeneratorStreamHandler,
+    StreamAdapter,
+    OpenAIStreamAdapter,
+    AnthropicStreamAdapter,
+    MockStreamAdapter,
+)
 
 # Types
 from core.providers.types import (
@@ -84,6 +138,46 @@ __all__ = [
     "ProviderManager",
     "get_provider_manager",
     "reset_provider_manager",
+    "EnhancedProviderManager",
+    "EnhancedManagerConfig",
+    "get_enhanced_provider_manager",
+    "reset_enhanced_provider_manager",
+    # Mock providers
+    "MockProvider",
+    "MockProviderConfig",
+    "MockProviderFactory",
+    "OpenAIMockProvider",
+    "ClaudeMockProvider",
+    "GeminiMockProvider",
+    "OllamaMockProvider",
+    "DeepSeekMockProvider",
+    "MistralMockProvider",
+    "OpenRouterMockProvider",
+    "AzureOpenAIMockProvider",
+    "StreamingMockProvider",
+    # Resilience patterns
+    "CircuitBreaker",
+    "CircuitBreakerConfig",
+    "CircuitState",
+    "LoadBalancer",
+    "LoadBalancingStrategy",
+    "RateLimitConfig",
+    "RetryPolicy",
+    "RetryStrategy",
+    "SimpleCache",
+    "CacheConfig",
+    "TokenBucketRateLimiter",
+    # Streaming
+    "StreamChunk",
+    "StreamHandler",
+    "StreamMetrics",
+    "CallbackStreamHandler",
+    "CollectingStreamHandler",
+    "GeneratorStreamHandler",
+    "StreamAdapter",
+    "OpenAIStreamAdapter",
+    "AnthropicStreamAdapter",
+    "MockStreamAdapter",
     # Types
     "ProviderType",
     "ProviderState",

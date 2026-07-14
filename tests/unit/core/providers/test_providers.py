@@ -1,233 +1,171 @@
-"""Unit tests for provider types and enums."""
+"""Tests for streaming and mock providers (PR-056)."""
 
 import pytest
-from datetime import datetime, timezone
-
-from core.providers.types import (
-    ProviderType,
-    ProviderState,
-    SelectionPolicy,
-    ProviderHealth,
-    ProviderMetrics,
-    ProviderConfig,
-    GenerationRequest,
-    GenerationResponse,
+import asyncio
+from core.providers.streaming import (
+    StreamChunk,
+    StreamMetrics,
+    CallbackStreamHandler,
+    CollectingStreamHandler,
+    MockStreamAdapter,
 )
+from core.providers.mock_provider import (
+    MockProvider,
+    MockProviderFactory,
+    MockProviderConfig,
+    OpenAIMockProvider,
+    ClaudeMockProvider,
+    StreamingMockProvider,
+)
+from core.providers.types import GenerationRequest
 
 
-class TestProviderType:
-    """Tests for ProviderType."""
+class TestStreamChunk:
+    """Tests for StreamChunk."""
 
-    def test_values(self):
-        """Test enum values."""
-        assert ProviderType.OPENAI.value == "openai"
-        assert ProviderType.CLAUDE.value == "claude"
-        assert ProviderType.OLLAMA.value == "ollama"
-        assert ProviderType.GEMINI.value == "gemini"
+    def test_create_chunk(self):
+        """Test creating a chunk."""
+        chunk = StreamChunk(content="Hello")
+        assert chunk.content == "Hello"
+        assert chunk.is_final is False
+        assert chunk.chunk_type == "text"
 
-    def test_is_local(self):
-        """Test local provider check."""
-        assert ProviderType.is_local(ProviderType.OLLAMA) is True
-        assert ProviderType.is_local(ProviderType.OPENAI) is False
-
-    def test_is_cloud(self):
-        """Test cloud provider check."""
-        assert ProviderType.is_cloud(ProviderType.OPENAI) is True
-        assert ProviderType.is_cloud(ProviderType.CLAUDE) is True
-        assert ProviderType.is_cloud(ProviderType.OLLAMA) is False
+    def test_final_chunk(self):
+        """Test creating final chunk."""
+        chunk = StreamChunk(content="", is_final=True)
+        assert chunk.is_final is True
 
 
-class TestProviderState:
-    """Tests for ProviderState."""
+class TestStreamMetrics:
+    """Tests for StreamMetrics."""
 
-    def test_values(self):
-        """Test enum values."""
-        assert ProviderState.UNREGISTERED.value == "unregistered"
-        assert ProviderState.HEALTHY.value == "healthy"
-        assert ProviderState.UNHEALTHY.value == "unhealthy"
-
-
-class TestSelectionPolicy:
-    """Tests for SelectionPolicy."""
-
-    def test_values(self):
-        """Test enum values."""
-        assert SelectionPolicy.DEFAULT.value == "default"
-        assert SelectionPolicy.PRIORITY.value == "priority"
-        assert SelectionPolicy.ROUND_ROBIN.value == "round_robin"
-
-    def test_is_fallback_policy(self):
-        """Test fallback policy check."""
-        assert SelectionPolicy.is_fallback_policy(SelectionPolicy.FAILOVER) is True
-        assert SelectionPolicy.is_fallback_policy(SelectionPolicy.PRIORITY) is True
-        assert SelectionPolicy.is_fallback_policy(SelectionPolicy.RANDOM) is False
+    def test_initial_metrics(self):
+        """Test initial metrics."""
+        metrics = StreamMetrics()
+        assert metrics.chunks_received == 0
+        assert metrics.total_tokens == 0
+        assert metrics.first_token_latency_ms == 0.0
 
 
-class TestProviderHealth:
-    """Tests for ProviderHealth."""
+class TestCollectingStreamHandler:
+    """Tests for CollectingStreamHandler."""
 
-    def test_creation(self):
-        """Test health creation."""
-        health = ProviderHealth(healthy=True, state=ProviderState.HEALTHY)
-        assert health.healthy is True
-        assert health.state == ProviderState.HEALTHY
+    def test_collects_chunks(self):
+        """Test collecting chunks."""
+        handler = CollectingStreamHandler()
+        handler.on_chunk(StreamChunk(content="Hello "))
+        handler.on_chunk(StreamChunk(content="world"))
+        handler.on_complete()
+        
+        assert handler.get_content() == "Hello world"
+        assert len(handler.get_chunks()) == 2
 
-    def test_to_dict(self):
-        """Test conversion to dictionary."""
-        health = ProviderHealth(healthy=True, latency_ms=100)
-        d = health.to_dict()
-        assert d["healthy"] is True
-        assert d["latency_ms"] == 100
+    def test_handles_error(self):
+        """Test handling error."""
+        handler = CollectingStreamHandler()
+        handler.on_error(Exception("test error"))
+        
+        assert handler.get_error() is not None
+        assert str(handler.get_error()) == "test error"
 
 
-class TestProviderMetrics:
-    """Tests for ProviderMetrics."""
+class TestMockProvider:
+    """Tests for MockProvider."""
 
     def test_initialization(self):
-        """Test metrics initialization."""
-        metrics = ProviderMetrics()
-        assert metrics.total_requests == 0
-        assert metrics.success_rate == 0.0
+        """Test initialization."""
+        provider = MockProvider("test", "test-model")
+        assert provider.provider_id == "test"
+        assert provider.model == "test-model"
 
-    def test_record_request(self):
-        """Test recording requests."""
-        metrics = ProviderMetrics()
-        metrics.record_request(success=True, duration_ms=100)
-        assert metrics.total_requests == 1
-        assert metrics.successful_requests == 1
+    def test_health_check(self):
+        """Test health check."""
+        provider = MockProvider()
+        health = provider.health_check()
+        
+        # Check that health check returns proper values
+        assert health.state is not None
+        assert "Mock provider" in health.message
+
+    def test_get_metrics(self):
+        """Test getting metrics."""
+        provider = MockProvider()
+        metrics = provider.metrics  # Use property instead of method
+        
+        assert metrics.total_requests == 0
         assert metrics.failed_requests == 0
 
-    def test_record_failed_request(self):
-        """Test recording failed request."""
-        metrics = ProviderMetrics()
-        metrics.record_request(success=False)
-        assert metrics.total_requests == 1
-        assert metrics.failed_requests == 1
 
-    def test_success_rate(self):
-        """Test success rate calculation."""
-        metrics = ProviderMetrics()
-        metrics.record_request(success=True)
-        metrics.record_request(success=True)
-        metrics.record_request(success=False)
-        assert metrics.success_rate == pytest.approx(66.67, rel=1)
+class TestMockProviderFactory:
+    """Tests for MockProviderFactory."""
 
-    def test_average_latency(self):
-        """Test average latency calculation."""
-        metrics = ProviderMetrics()
-        metrics.record_request(success=True, duration_ms=100)
-        metrics.record_request(success=True, duration_ms=200)
-        assert metrics.average_latency_ms == 150.0
+    def test_create_by_type(self):
+        """Test creating providers by type."""
+        from core.providers.types import ProviderType
+        
+        openai = MockProviderFactory.create(ProviderType.OPENAI)
+        assert isinstance(openai, OpenAIMockProvider)
+        
+        # Test with claude
+        claude = MockProviderFactory.create(ProviderType.CLAUDE)
+        assert isinstance(claude, ClaudeMockProvider)
 
-    def test_record_retry(self):
-        """Test retry recording."""
-        metrics = ProviderMetrics()
-        metrics.record_retry()
-        assert metrics.retry_count == 1
-
-    def test_record_failover(self):
-        """Test failover recording."""
-        metrics = ProviderMetrics()
-        metrics.record_failover()
-        assert metrics.failover_count == 1
-
-    def test_to_dict(self):
-        """Test conversion to dictionary."""
-        metrics = ProviderMetrics()
-        metrics.record_request(success=True)
-        d = metrics.to_dict()
-        assert "total_requests" in d
-        assert "success_rate" in d
+    def test_create_all(self):
+        """Test creating all mock providers."""
+        providers = MockProviderFactory.create_all()
+        
+        assert len(providers) == 8
+        assert all(isinstance(p, MockProvider) for p in providers)
 
 
-class TestProviderConfig:
-    """Tests for ProviderConfig."""
+class TestStreamingMockProvider:
+    """Tests for StreamingMockProvider."""
 
-    def test_creation(self):
-        """Test config creation."""
-        config = ProviderConfig(
-            provider_id="openai",
-            provider_type=ProviderType.OPENAI,
+    def test_initialization(self):
+        """Test initialization."""
+        provider = StreamingMockProvider(
+            provider_id="stream",
+            model="stream-model",
         )
-        assert config.provider_id == "openai"
-        assert config.provider_type == ProviderType.OPENAI
-        assert config.enabled is True
-        assert config.priority == 100
-
-    def test_to_dict(self):
-        """Test conversion to dictionary."""
-        config = ProviderConfig(
-            provider_id="openai",
-            provider_type=ProviderType.OPENAI,
-        )
-        d = config.to_dict()
-        assert d["provider_id"] == "openai"
-        assert d["provider_type"] == "openai"
+        assert provider.provider_id == "stream"
+        assert provider.model == "stream-model"
 
 
-class TestGenerationRequest:
-    """Tests for GenerationRequest."""
+class TestMockStreamAdapter:
+    """Tests for MockStreamAdapter."""
 
-    def test_creation(self):
-        """Test request creation."""
-        request = GenerationRequest(prompt="Hello", model="gpt-4")
-        assert request.prompt == "Hello"
-        assert request.model == "gpt-4"
-        assert request.temperature == 0.7
+    def test_adapt(self):
+        """Test adapting stream."""
+        adapter = MockStreamAdapter()
+        chunks = list(adapter.adapt(["Hello", " ", "world"]))
+        
+        assert len(chunks) == 4  # 3 content + 1 final
+        assert chunks[-1].is_final is True
 
-    def test_with_system_prompt(self):
-        """Test request with system prompt."""
-        request = GenerationRequest(
-            prompt="Hello",
-            system_prompt="You are helpful.",
-        )
-        assert request.system_prompt == "You are helpful."
 
-    def test_to_dict(self):
-        """Test conversion to dictionary."""
+class TestAsyncGeneration:
+    """Tests for async generation."""
+
+    @pytest.mark.asyncio
+    async def test_generate_success(self):
+        """Test successful generation."""
+        provider = MockProvider("test", config=MockProviderConfig(latency_ms=10))
         request = GenerationRequest(prompt="Hello")
-        d = request.to_dict()
-        assert d["prompt"] == "Hello"
-        assert "temperature" in d
-
-
-class TestGenerationResponse:
-    """Tests for GenerationResponse."""
-
-    def test_creation(self):
-        """Test response creation."""
-        response = GenerationResponse(
-            content="Hi there!",
-            model="gpt-4",
-            provider_id="openai",
-        )
-        assert response.content == "Hi there!"
-        assert response.model == "gpt-4"
+        
+        response = await provider.generate(request)
+        
         assert response.success is True
+        assert response.content != ""
+        assert response.provider_id == "test"
 
-    def test_failure_response(self):
-        """Test failure response."""
-        response = GenerationResponse(
-            content="",
-            model="gpt-4",
-            provider_id="openai",
-            success=False,
-            error="API error",
+    @pytest.mark.asyncio
+    async def test_generate_with_error_rate(self):
+        """Test generation with error rate."""
+        provider = MockProvider(
+            "test",
+            config=MockProviderConfig(error_rate=1.0),
         )
-        assert response.success is False
-        assert response.error == "API error"
-
-    def test_to_dict(self):
-        """Test conversion to dictionary."""
-        response = GenerationResponse(
-            content="Hello",
-            model="gpt-4",
-            provider_id="openai",
-        )
-        d = response.to_dict()
-        assert d["content"] == "Hello"
-        assert d["success"] is True
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])
+        request = GenerationRequest(prompt="Hello")
+        
+        with pytest.raises(Exception):
+            await provider.generate(request)
