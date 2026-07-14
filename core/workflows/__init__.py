@@ -1,27 +1,26 @@
-"""EREN Cognitive Workflow Engine (CWE).
+"""EREN Cognitive Workflow Platform (CWP).
 
-The official system for cognitive workflow execution in EREN.
+The official platform for cognitive workflow execution in EREN.
 Allows executing long-running, persistent, and resumable processes.
 
 Philosophy:
-    An agent executes tasks.
-    A Workflow executes complete processes.
+    A Workflow is a distributed system.
+    Each component has a single responsibility.
+    The Workflow Engine is no longer a monolithic component.
 
 Architecture:
-    Execution Coordinator
+    Workflow Platform
             │
-            ▼
-    Decision Engine
-            │
-            ▼
-    Workflow Engine
-            │
-            ├── Workflow Planner
-            ├── Workflow Runtime
-            ├── State Manager
+            ├── Runtime
+            ├── Planner
+            ├── Scheduler
+            ├── Executor
+            ├── State Store
             ├── Checkpoint Manager
-            ├── Execution Graph
-            └── Agent Platform
+            ├── Recovery Manager
+            ├── Compensation Manager
+            ├── Metrics
+            └── Events
 
 Responsibilities:
 - Create workflows
@@ -63,6 +62,11 @@ from core.workflows.graph import (
     get_execution_graph,
     clear_graph_cache,
 )
+from core.workflows.state_store import (
+    StateStore,
+    get_state_store,
+    reset_state_store,
+)
 from core.workflows.state import (
     StateManager,
     get_state_manager,
@@ -72,6 +76,11 @@ from core.workflows.checkpoint import (
     CheckpointManager,
     get_checkpoint_manager,
     reset_checkpoint_manager,
+)
+from core.workflows.recovery import (
+    RecoveryManager,
+    get_recovery_manager,
+    reset_recovery_manager,
 )
 from core.workflows.planner import (
     WorkflowPlanner,
@@ -84,7 +93,8 @@ from core.workflows.runtime import (
     reset_workflow_runtime,
 )
 from core.workflows.executor import (
-    TaskExecutor,
+    WorkflowExecutor,
+    TaskExecutor,  # Alias
     get_task_executor,
     reset_task_executor,
 )
@@ -106,11 +116,14 @@ from core.workflows.metrics import (
     reset_metrics_collector,
 )
 
-# Main engine
+# Main platform
 from core.workflows.engine import (
-    WorkflowEngine,
-    get_workflow_engine,
-    reset_workflow_engine,
+    WorkflowPlatform,
+    WorkflowEngine,  # Alias for backwards compatibility
+    get_workflow_platform,
+    get_workflow_engine,  # Alias
+    reset_workflow_platform,
+    reset_workflow_engine,  # Alias
 )
 
 __all__ = [
@@ -132,18 +145,25 @@ __all__ = [
     "ExecutionGraph",
     "get_execution_graph",
     "clear_graph_cache",
+    "StateStore",
+    "get_state_store",
+    "reset_state_store",
     "StateManager",
     "get_state_manager",
     "reset_state_manager",
     "CheckpointManager",
     "get_checkpoint_manager",
     "reset_checkpoint_manager",
+    "RecoveryManager",
+    "get_recovery_manager",
+    "reset_recovery_manager",
     "WorkflowPlanner",
     "get_workflow_planner",
     "reset_workflow_planner",
     "WorkflowRuntime",
     "get_workflow_runtime",
     "reset_workflow_runtime",
+    "WorkflowExecutor",
     "TaskExecutor",
     "get_task_executor",
     "reset_task_executor",
@@ -158,8 +178,11 @@ __all__ = [
     "MetricsCollector",
     "get_metrics_collector",
     "reset_metrics_collector",
-    # Main engine
+    # Main platform
+    "WorkflowPlatform",
     "WorkflowEngine",
+    "get_workflow_platform",
     "get_workflow_engine",
+    "reset_workflow_platform",
     "reset_workflow_engine",
 ]

@@ -1,6 +1,6 @@
-"""Workflow runtime for EREN Cognitive Workflow Engine.
+"""Workflow runtime for EREN Cognitive Workflow Platform.
 
-Runtime for executing workflows.
+Runtime for orchestrating workflow execution.
 """
 
 from __future__ import annotations
@@ -16,50 +16,41 @@ from core.workflows.types import (
     NodeExecution,
     NodeStatus,
 )
-from core.workflows.state import get_state_manager, StateManager
-from core.workflows.graph import get_execution_graph, ExecutionGraph
-from core.workflows.checkpoint import get_checkpoint_manager
+from core.workflows.state_store import get_state_store, StateStore
+from core.workflows.checkpoint import get_checkpoint_manager, CheckpointManager
+from core.workflows.scheduler import get_workflow_scheduler, WorkflowScheduler
+from core.workflows.executor import get_task_executor, TaskExecutor
 
 if TYPE_CHECKING:
     pass
 
 
 class WorkflowRuntime:
-    """Runtime for executing workflows.
+    """Runtime for orchestrating workflow execution.
 
     The Workflow Runtime does NOT:
     - Know about implementations
     - Know about AI/LLM/RAG
+    - Execute tasks directly
 
     It ONLY:
-    - Orchestrates execution
-    - Manages state transitions
-    - Handles checkpoints
+    - Creates instances
+    - Starts workflows
+    - Pauses workflows
+    - Resumes workflows
+    - Cancels workflows
+    - Finishes workflows
     """
 
     def __init__(self):
         """Initialize workflow runtime."""
-        self._state_manager = get_state_manager()
+        self._state_store = get_state_store()
         self._checkpoint_manager = get_checkpoint_manager()
-
-        # Task handlers: node_type -> handler_function
-        self._handlers: dict[str, Callable] = {}
+        self._scheduler = get_workflow_scheduler()
+        self._executor = get_task_executor()
 
         # Event handlers
         self._event_handlers: dict[str, list[Callable]] = {}
-
-    def register_handler(
-        self,
-        node_type: str,
-        handler: Callable,
-    ) -> None:
-        """Register a task handler.
-
-        Args:
-            node_type: Node type.
-            handler: Handler function.
-        """
-        self._handlers[node_type] = handler
 
     def register_event_handler(
         self,
@@ -77,13 +68,7 @@ class WorkflowRuntime:
         self._event_handlers[event].append(handler)
 
     def _emit_event(self, event: str, *args, **kwargs) -> None:
-        """Emit an event.
-
-        Args:
-            event: Event name.
-            args: Event args.
-            kwargs: Event kwargs.
-        """
+        """Emit an event."""
         handlers = self._event_handlers.get(event, [])
         for handler in handlers:
             try:
@@ -91,114 +76,23 @@ class WorkflowRuntime:
             except Exception:
                 pass
 
-    def execute_node(
-        self,
-        execution: WorkflowExecution,
-        node_id: str,
-        input_data: dict | None = None,
-    ) -> Any:
-        """Execute a single node.
-
-        Args:
-            execution: Current execution.
-            node_id: Node ID.
-            input_data: Input data for the node.
-
-        Returns:
-            Node result.
-        """
-        graph = get_execution_graph(execution.workflow_id)
-        node = graph.get_node(node_id)
-
-        if not node:
-            raise ValueError(f"Node {node_id} not found")
-
-        # Create node execution
-        node_exec = NodeExecution(
-            node_id=node_id,
-            execution_id=execution.execution_id,
-            status=NodeStatus.RUNNING,
-            started_at=datetime.now(timezone.utc),
-        )
-
-        # Start node
-        self._state_manager.start_node(
-            execution.execution_id,
-            node_id,
-            node_exec,
-        )
-
-        self._emit_event("node_started", execution, node_id)
-
-        try:
-            # Get handler
-            handler = self._handlers.get(node.node_type.value)
-
-            if handler:
-                result = handler(
-                    node_config=node.config,
-                    input_data=input_data or {},
-                    execution_state=execution.state,
-                )
-            else:
-                # No handler - simulate execution
-                result = {"status": "simulated", "node_id": node_id}
-
-            # Complete node
-            self._state_manager.complete_node(
-                execution.execution_id,
-                node_id,
-                result,
-            )
-
-            # Update state
-            execution.state[f"node_{node_id}_result"] = result
-
-            self._emit_event("node_completed", execution, node_id, result)
-
-            return result
-
-        except Exception as e:
-            # Fail node
-            self._state_manager.fail_node(
-                execution.execution_id,
-                node_id,
-                str(e),
-            )
-
-            self._emit_event("node_failed", execution, node_id, str(e))
-
-            raise
-
-    def execute_workflow(
+    def create_instance(
         self,
         definition: WorkflowDefinition,
         input_data: dict | None = None,
-        auto_complete: bool = True,
-        max_iterations: int = 1000,
     ) -> WorkflowExecution:
-        """Execute a workflow.
+        """Create a workflow instance.
 
         Args:
             definition: Workflow definition.
             input_data: Initial input data.
-            auto_complete: Whether to auto-complete when done.
-            max_iterations: Maximum iterations to prevent infinite loops.
 
         Returns:
-            Final execution.
+            Created execution.
         """
         execution_id = str(uuid.uuid4())
 
-        graph = get_execution_graph(definition)
-
-        # Validate
-        is_valid, errors = graph.validate()
-        if not is_valid:
-            raise ValueError(f"Invalid workflow: {errors}")
-
-        # Create execution
-        execution = self._state_manager.create_execution(
+        execution = self._state_store.create_execution(
             execution_id=execution_id,
             workflow_id=definition.workflow_id,
             workflow_name=definition.name,
@@ -213,82 +107,46 @@ class WorkflowRuntime:
             )
             execution.node_executions[node.node_id] = node_exec
 
-        # Start execution
-        self._state_manager.update_status(
-            execution_id,
-            WorkflowStatus.RUNNING,
-        )
+        self._state_store.save_execution(execution)
+
+        return execution
+
+    def start(
+        self,
+        execution: WorkflowExecution,
+        definition: WorkflowDefinition,
+    ) -> WorkflowExecution:
+        """Start a workflow.
+
+        Args:
+            execution: Execution to start.
+            definition: Workflow definition.
+
+        Returns:
+            Started execution.
+        """
+        from core.workflows.graph import get_execution_graph
+
+        graph = get_execution_graph(definition)
+
+        # Validate
+        is_valid, errors = graph.validate()
+        if not is_valid:
+            raise ValueError(f"Invalid workflow: {errors}")
+
+        execution.status = WorkflowStatus.RUNNING
+        execution.started_at = datetime.now(timezone.utc)
+        self._state_store.save_execution(execution)
 
         self._emit_event("workflow_started", execution)
 
         # Create initial checkpoint
         self._checkpoint_manager.create_checkpoint(execution, {"phase": "start"})
 
-        iteration = 0
-        try:
-            # Execute loop
-            while execution.status == WorkflowStatus.RUNNING:
-                iteration += 1
-                if iteration > max_iterations:
-                    self._state_manager.update_status(
-                        execution_id,
-                        WorkflowStatus.FAILED,
-                    )
-                    execution.error_message = "Max iterations exceeded"
-                    self._emit_event("workflow_failed", execution, "Max iterations exceeded")
-                    break
-
-                # Get next nodes
-                ready_nodes = graph.get_ready_nodes(execution)
-
-                if not ready_nodes:
-                    # Check if complete
-                    if graph.is_complete(execution):
-                        self._state_manager.update_status(
-                            execution_id,
-                            WorkflowStatus.COMPLETED,
-                        )
-                        self._emit_event("workflow_completed", execution)
-                        break
-                    else:
-                        # Dead end
-                        self._state_manager.update_status(
-                            execution_id,
-                            WorkflowStatus.FAILED,
-                        )
-                        execution.error_message = "Workflow has no ready nodes"
-                        self._emit_event("workflow_failed", execution, "No ready nodes")
-                        break
-
-                # Execute ready nodes
-                for node_id in ready_nodes:
-                    if execution.status != WorkflowStatus.RUNNING:
-                        break
-
-                    try:
-                        self.execute_node(execution, node_id, input_data)
-                    except Exception as e:
-                        if not auto_complete:
-                            raise
-
-        except Exception as e:
-            self._state_manager.update_status(
-                execution_id,
-                WorkflowStatus.FAILED,
-            )
-            execution.error_message = str(e)
-            self._emit_event("workflow_failed", execution, str(e))
-
-        # Final checkpoint
-        self._checkpoint_manager.create_checkpoint(execution, {"phase": "end"})
-
         return execution
 
-    def pause_workflow(
-        self,
-        execution_id: str,
-    ) -> bool:
-        """Pause a workflow execution.
+    def pause(self, execution_id: str) -> bool:
+        """Pause a workflow.
 
         Args:
             execution_id: Execution ID.
@@ -296,58 +154,42 @@ class WorkflowRuntime:
         Returns:
             True if paused.
         """
-        execution = self._state_manager.get_execution(execution_id)
-        if not execution:
-            return False
-
-        if execution.status != WorkflowStatus.RUNNING:
+        execution = self._state_store.load_execution(execution_id)
+        if not execution or execution.status != WorkflowStatus.RUNNING:
             return False
 
         # Create checkpoint before pausing
         self._checkpoint_manager.create_checkpoint(execution, {"phase": "pause"})
 
-        self._state_manager.update_status(
-            execution_id,
-            WorkflowStatus.PAUSED,
-        )
+        execution.status = WorkflowStatus.PAUSED
+        self._state_store.save_execution(execution)
 
         self._emit_event("workflow_paused", execution)
 
         return True
 
-    def resume_workflow(
-        self,
-        execution_id: str,
-    ) -> WorkflowExecution | None:
+    def resume(self, execution_id: str) -> WorkflowExecution | None:
         """Resume a paused workflow.
 
         Args:
             execution_id: Execution ID.
 
         Returns:
-            Updated execution or None.
+            Resumed execution or None.
         """
-        execution = self._state_manager.get_execution(execution_id)
-        if not execution:
+        execution = self._state_store.load_execution(execution_id)
+        if not execution or execution.status != WorkflowStatus.PAUSED:
             return None
 
-        if execution.status != WorkflowStatus.PAUSED:
-            return None
-
-        self._state_manager.update_status(
-            execution_id,
-            WorkflowStatus.RUNNING,
-        )
+        execution.status = WorkflowStatus.RUNNING
+        self._state_store.save_execution(execution)
 
         self._emit_event("workflow_resumed", execution)
 
         return execution
 
-    def cancel_workflow(
-        self,
-        execution_id: str,
-    ) -> bool:
-        """Cancel a workflow execution.
+    def cancel(self, execution_id: str) -> bool:
+        """Cancel a workflow.
 
         Args:
             execution_id: Execution ID.
@@ -355,21 +197,52 @@ class WorkflowRuntime:
         Returns:
             True if cancelled.
         """
-        execution = self._state_manager.get_execution(execution_id)
+        execution = self._state_store.load_execution(execution_id)
         if not execution:
             return False
 
         if execution.status in [WorkflowStatus.COMPLETED, WorkflowStatus.FAILED, WorkflowStatus.CANCELLED]:
             return False
 
-        self._state_manager.update_status(
-            execution_id,
-            WorkflowStatus.CANCELLED,
-        )
+        execution.status = WorkflowStatus.CANCELLED
+        execution.completed_at = datetime.now(timezone.utc)
+        self._state_store.save_execution(execution)
 
         self._emit_event("workflow_cancelled", execution)
 
         return True
+
+    def finish(
+        self,
+        execution: WorkflowExecution,
+        status: WorkflowStatus,
+        error_message: str = "",
+    ) -> WorkflowExecution:
+        """Finish a workflow.
+
+        Args:
+            execution: Execution to finish.
+            status: Final status.
+            error_message: Error message if failed.
+
+        Returns:
+            Finished execution.
+        """
+        execution.status = status
+        execution.completed_at = datetime.now(timezone.utc)
+        execution.error_message = error_message
+
+        self._state_store.save_execution(execution)
+
+        # Create final checkpoint
+        self._checkpoint_manager.create_checkpoint(execution, {"phase": "end"})
+
+        if status == WorkflowStatus.COMPLETED:
+            self._emit_event("workflow_completed", execution)
+        else:
+            self._emit_event("workflow_failed", execution, error_message)
+
+        return execution
 
 
 # Global workflow runtime
@@ -378,11 +251,7 @@ _runtime_lock = __import__("threading").Lock()
 
 
 def get_workflow_runtime() -> WorkflowRuntime:
-    """Get the global workflow runtime.
-
-    Returns:
-        Global WorkflowRuntime instance.
-    """
+    """Get the global workflow runtime."""
     global _runtime
     with _runtime_lock:
         if _runtime is None:

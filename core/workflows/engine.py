@@ -1,6 +1,6 @@
-"""Cognitive Workflow Engine (CWE) for EREN OS.
+"""Cognitive Workflow Platform for EREN OS.
 
-Main engine for cognitive workflow execution.
+Main platform for cognitive workflow execution.
 """
 
 from __future__ import annotations
@@ -20,8 +20,9 @@ from core.workflows.types import (
     WorkflowMetrics,
 )
 from core.workflows.graph import get_execution_graph
-from core.workflows.state import get_state_manager, StateManager
+from core.workflows.state_store import get_state_store, StateStore
 from core.workflows.checkpoint import get_checkpoint_manager, CheckpointManager
+from core.workflows.recovery import get_recovery_manager, RecoveryManager
 from core.workflows.planner import get_workflow_planner, WorkflowPlanner
 from core.workflows.runtime import get_workflow_runtime, WorkflowRuntime
 
@@ -29,29 +30,30 @@ if TYPE_CHECKING:
     pass
 
 
-class WorkflowEngine:
-    """Cognitive Workflow Engine.
+class WorkflowPlatform:
+    """Cognitive Workflow Platform.
 
     An agent executes tasks.
     A Workflow executes complete processes.
 
-    The Workflow Engine does NOT:
+    The Workflow Platform does NOT:
     - Know about AI/LLM/RAG
     - Know about specific implementations
 
     It ONLY:
     - Creates workflows
-    - Persists state
-    - Resumes execution
+    - Manages state
+    - Orchestrates execution
     - Handles checkpoints
-    - Manages rollback
+    - Manages recovery
     - Provides observability
     """
 
     def __init__(self):
-        """Initialize workflow engine."""
-        self._state_manager = get_state_manager()
+        """Initialize workflow platform."""
+        self._state_store = get_state_store()
         self._checkpoint_manager = get_checkpoint_manager()
+        self._recovery_manager = get_recovery_manager()
         self._planner = get_workflow_planner()
         self._runtime = get_workflow_runtime()
 
@@ -225,11 +227,11 @@ class WorkflowEngine:
         # Set planner definition
         self._planner.set_definition(definition)
 
-        # Execute workflow
-        execution = self._runtime.execute_workflow(
-            definition=definition,
-            input_data=input_data,
-        )
+        # Create instance
+        execution = self._runtime.create_instance(definition, input_data)
+
+        # Start execution
+        self._runtime.start(execution, definition)
 
         self._metrics.total_executions += 1
 
@@ -251,7 +253,7 @@ class WorkflowEngine:
         Returns:
             Execution or None.
         """
-        return self._state_manager.get_execution(execution_id)
+        return self._state_store.load_execution(execution_id)
 
     def get_running_executions(self) -> list[WorkflowExecution]:
         """Get all running executions.
@@ -259,7 +261,7 @@ class WorkflowEngine:
         Returns:
             List of running executions.
         """
-        return self._state_manager.get_running_executions()
+        return self._state_store.get_executions_by_status(WorkflowStatus.RUNNING)
 
     def pause(self, execution_id: str) -> bool:
         """Pause an execution.
@@ -270,7 +272,7 @@ class WorkflowEngine:
         Returns:
             True if paused.
         """
-        return self._runtime.pause_workflow(execution_id)
+        return self._runtime.pause(execution_id)
 
     def resume(self, execution_id: str) -> WorkflowExecution | None:
         """Resume a paused execution.
@@ -281,7 +283,7 @@ class WorkflowEngine:
         Returns:
             Updated execution or None.
         """
-        return self._runtime.resume_workflow(execution_id)
+        return self._runtime.resume(execution_id)
 
     def cancel(self, execution_id: str) -> bool:
         """Cancel an execution.
@@ -292,7 +294,7 @@ class WorkflowEngine:
         Returns:
             True if cancelled.
         """
-        return self._runtime.cancel_workflow(execution_id)
+        return self._runtime.cancel(execution_id)
 
     # ========================================================================
     # Checkpoint & Recovery
@@ -312,7 +314,7 @@ class WorkflowEngine:
         Returns:
             True if created.
         """
-        execution = self._state_manager.get_execution(execution_id)
+        execution = self._state_store.load_execution(execution_id)
         if not execution:
             return False
 
@@ -346,26 +348,40 @@ class WorkflowEngine:
         return self._metrics
 
 
-# Global workflow engine
-_engine: WorkflowEngine | None = None
-_engine_lock = __import__("threading").Lock()
+# Global workflow platform
+_platform: WorkflowPlatform | None = None
+_platform_lock = __import__("threading").Lock()
 
 
-def get_workflow_engine() -> WorkflowEngine:
-    """Get the global workflow engine.
+def get_workflow_engine() -> WorkflowPlatform:
+    """Get the global workflow engine (alias for backwards compatibility)."""
+    return get_workflow_platform()
+
+
+def get_workflow_platform() -> WorkflowPlatform:
+    """Get the global workflow platform.
 
     Returns:
-        Global WorkflowEngine instance.
+        Global WorkflowPlatform instance.
     """
-    global _engine
-    with _engine_lock:
-        if _engine is None:
-            _engine = WorkflowEngine()
-        return _engine
+    global _platform
+    with _platform_lock:
+        if _platform is None:
+            _platform = WorkflowPlatform()
+        return _platform
 
 
 def reset_workflow_engine() -> None:
     """Reset the global workflow engine."""
-    global _engine
-    with _engine_lock:
-        _engine = None
+    reset_workflow_platform()
+
+
+def reset_workflow_platform() -> None:
+    """Reset the global workflow platform."""
+    global _platform
+    with _platform_lock:
+        _platform = None
+
+
+# Alias for backwards compatibility (must be at end)
+WorkflowEngine = WorkflowPlatform
