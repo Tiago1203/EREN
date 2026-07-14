@@ -1,7 +1,23 @@
-"""Cognitive Reasoning Engine (CRE).
+"""Cognitive Reasoning Platform (CRP).
 
 The logical brain of EREN. Transforms evidence into hypotheses
 and then into justified decisions.
+
+Philosophy:
+    Reasoning is not a single algorithm.
+    It is a collection of independent cognitive processes.
+    Each process can evolve without affecting others.
+
+Architecture:
+    Reasoning Platform
+        ├── Inference Engine
+        ├── Evidence Engine
+        ├── Hypothesis Manager
+        ├── Reflection Engine
+        ├── Confidence Engine
+        ├── Explanation Engine
+        ├── Validation Engine
+        └── Decision Composer
 
 EREN NO uses AI. EREN NO generates text. EREN NO calls LLM.
 EREN only organizes reasoning.
@@ -78,9 +94,51 @@ from core.reasoning.reasoning_types import (
     StrategyConfig,
 )
 
+# Reasoning Platform Components
+from core.reasoning.inference import (
+    InferenceEngine,
+    get_inference_engine,
+    reset_inference_engine,
+)
+from core.reasoning.evidence_engine import (
+    EvidenceEngine,
+    get_evidence_engine,
+    reset_evidence_engine,
+)
+from core.reasoning.reflection_engine import (
+    ReflectionEngine,
+    get_reflection_engine,
+    reset_reflection_engine,
+)
+from core.reasoning.confidence_engine import (
+    ConfidenceEngine,
+    get_confidence_engine,
+    reset_confidence_engine,
+)
+from core.reasoning.explanation_engine import (
+    ExplanationEngine,
+    get_explanation_engine,
+    reset_explanation_engine,
+)
+from core.reasoning.validation_engine import (
+    ValidationEngine,
+    get_validation_engine,
+    reset_validation_engine,
+)
+from core.reasoning.decision_composer import (
+    DecisionComposer,
+    get_decision_composer,
+    reset_decision_composer,
+)
+
+# Aliases for backwards compatibility
+ReasoningEngine = CognitiveReasoningEngine
+
+
 __all__ = [
     # Core Engine
     "CognitiveReasoningEngine",
+    "ReasoningEngine",  # Alias for backwards compatibility
     "ReasoningSession",
     "ReasoningCapabilityRegistrar",
     "ReasoningEventPublisher",
@@ -140,6 +198,28 @@ __all__ = [
     # State
     "ReasoningState",
     "ReasoningStage",
+    # Reasoning Platform Components
+    "InferenceEngine",
+    "get_inference_engine",
+    "reset_inference_engine",
+    "EvidenceEngine",
+    "get_evidence_engine",
+    "reset_evidence_engine",
+    "ReflectionEngine",
+    "get_reflection_engine",
+    "reset_reflection_engine",
+    "ConfidenceEngine",
+    "get_confidence_engine",
+    "reset_confidence_engine",
+    "ExplanationEngine",
+    "get_explanation_engine",
+    "reset_explanation_engine",
+    "ValidationEngine",
+    "get_validation_engine",
+    "reset_validation_engine",
+    "DecisionComposer",
+    "get_decision_composer",
+    "reset_decision_composer",
     # Exceptions
     "ReasoningError",
     "SessionNotFoundError",
