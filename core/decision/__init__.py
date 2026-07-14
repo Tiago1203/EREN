@@ -1,120 +1,125 @@
-"""Cognitive Decision Engine (CDE).
+"""EREN Cognitive Decision Engine (CDE).
 
-The decision component of EREN. Transforms hypotheses and evidence
-into structured decisions.
+Refactored from Planning Engine to be a complete decision-making system.
 
 Philosophy:
-- Reasoning = Think
-- Decision = Decide
+    Planning is only part of decision-making.
+    The Decision Engine decides the best strategy to achieve a cognitive goal.
 
-EREN NO uses AI. EREN NO calls LLMs. EREN NO executes tools.
-EREN only organizes decision infrastructure.
+    LLM responds.
+    Decision Engine decides what to do.
 
-Architecture only -- no AI, no implementations.
+    Never executes tasks.
+    Never queries providers.
+    Never uses OpenAI directly.
+
+    Only takes decisions.
+
+Architecture:
+    Decision Engine
+        ├── Goal Analyzer
+        ├── Planning Module
+        │        ├── Task Decomposer
+        │        └── Dependency Resolver
+        ├── Strategy Selector
+        ├── Risk Evaluator
+        ├── Execution Policy
+        ├── Replanner
+        ├── Decision Builder
+        └── Metrics
 """
 
 from __future__ import annotations
 
-from core.decision.decision_engine import (
-    CognitiveDecisionEngine,
-    DecisionCapabilityRegistrar,
-    DecisionEventPublisher,
-)
-from core.decision.decision_evaluator import (
-    ActionSelectorComponent,
-    DecisionEvaluatorComponent,
-    PriorityEvaluatorComponent,
-    RiskEvaluatorComponent,
-)
-from core.decision.decision_metrics import DecisionHealthCheck, DecisionMetricsCollector
-from core.decision.decision_policies import (
-    BalancedPolicy,
-    ConservativePolicy,
-    DecisionPolicyComponent,
-    PermissivePolicy,
-)
-from core.decision.decision_strategy import (
-    BalancedStrategy,
-    ConfidenceBasedStrategy,
-    ConservativeStrategy,
+# Types
+from core.decision.types import (
+    # Enums
     DecisionStrategy,
-    DecisionStrategyFactory,
-    DecisionStrategyType,
-    SpeedStrategy,
-)
-from core.decision.decision_trace import DecisionTraceBuilder, DecisionTraceEvent
-from core.decision.decision_types import (
-    ActionSelector,
-    Decision,
-    DecisionCandidate,
-    DecisionCategory,
-    DECISION_CATEGORY_MAP,
-    DECISION_PRIORITY_MAP,
-    DECISION_RISK_MAP,
-    DecisionContext,
-    DecisionMetrics,
-    DecisionPolicy,
-    DecisionPolicyRule,
-    DecisionPriority,
-    DecisionStatus,
-    DecisionTrace,
-    DecisionType,
-    PriorityEvaluator,
-    RiskEvaluator,
+    ExecutionPolicy,
     RiskLevel,
+    TaskStatus,
+    TaskPriority,
+    DependencyType,
+    GoalType,
+    DecisionStatus,
+    # Classes
+    DecisionTask,
+    Goal,
+    GoalAnalysis,
+    DecisionPlan,
+    StrategySelection,
+    RiskAssessment,
+    ExecutionDecision,
+    ReplanningReason,
+    DecisionMetrics,
+)
+
+# Components
+from core.decision.goal_analyzer import GoalAnalyzer
+from core.decision.task_decomposer import TaskDecomposer
+from core.decision.dependency_resolver import DependencyResolver
+from core.decision.strategy_selector import StrategySelector
+from core.decision.risk_evaluator import RiskEvaluator
+from core.decision.execution_policy import ExecutionPolicyManager
+from core.decision.replanner import Replanner
+from core.decision.decision_builder import DecisionBuilder
+
+# Events and metrics
+from core.decision.events import (
+    DecisionEventType,
+    DecisionEvent,
+    DecisionEventBus,
+    get_event_bus,
+    reset_event_bus,
+)
+from core.decision.metrics import DecisionMetricsCollector
+
+# Main engine
+from core.decision.engine import (
+    CognitiveDecisionEngine,
+    get_decision_engine,
+    reset_decision_engine,
 )
 
 __all__ = [
-    # Core Engine
-    "CognitiveDecisionEngine",
-    "DecisionCapabilityRegistrar",
-    "DecisionEventPublisher",
-    # Evaluators
-    "RiskEvaluatorComponent",
-    "PriorityEvaluatorComponent",
-    "DecisionEvaluatorComponent",
-    "ActionSelectorComponent",
-    # Policies
-    "DecisionPolicyComponent",
-    "ConservativePolicy",
-    "BalancedPolicy",
-    "PermissivePolicy",
-    # Strategies
-    "DecisionStrategy",
-    "DecisionStrategyType",
-    "DecisionStrategyFactory",
-    "ConservativeStrategy",
-    "BalancedStrategy",
-    "SpeedStrategy",
-    "ConfidenceBasedStrategy",
-    # Trace
-    "DecisionTraceBuilder",
-    "DecisionTraceEvent",
-    # Types
-    "Decision",
-    "DecisionCandidate",
-    "DecisionContext",
-    "DecisionTrace",
-    "DecisionPolicyRule",
-    "DecisionMetrics",
     # Enums
-    "DecisionType",
-    "DecisionPriority",
-    "DecisionStatus",
-    "DecisionCategory",
-    "DecisionStrategyType",
+    "DecisionStrategy",
+    "ExecutionPolicy",
     "RiskLevel",
-    # protocols
+    "TaskStatus",
+    "TaskPriority",
+    "DependencyType",
+    "GoalType",
+    "DecisionStatus",
+    # Classes
+    "DecisionTask",
+    "Goal",
+    "GoalAnalysis",
+    "DecisionPlan",
+    "StrategySelection",
+    "RiskAssessment",
+    "ExecutionDecision",
+    "ReplanningReason",
+    "DecisionMetrics",
+    # Components
+    "GoalAnalyzer",
+    "TaskDecomposer",
+    "DependencyResolver",
+    "StrategySelector",
     "RiskEvaluator",
-    "PriorityEvaluator",
-    "DecisionEvaluator",
-    "ActionSelector",
-    "DecisionPolicy",
-    # Constants
-    "DECISION_CATEGORY_MAP",
-    "DECISION_PRIORITY_MAP",
-    "DECISION_RISK_MAP",
+    "ExecutionPolicyManager",
+    "Replanner",
+    "DecisionBuilder",
+    # Events
+    "DecisionEventType",
+    "DecisionEvent",
+    "DecisionEventBus",
+    "get_event_bus",
+    "reset_event_bus",
     # Metrics
     "DecisionMetricsCollector",
-    "DecisionHealthCheck",
+    # Main engine
+    "CognitiveDecisionEngine",
+    "get_decision_engine",
+    "reset_decision_engine",
 ]
