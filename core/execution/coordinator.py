@@ -7,21 +7,17 @@ from __future__ import annotations
 
 import threading
 import uuid
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any, Callable
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING, Any
 
 from core.execution.context import ExecutionContext
+from core.execution.exceptions import (
+    ExecutionCancelledError,
+    PipelineExecutionError,
+    RoutingError,
+)
 from core.execution.result import ExecutionResult
 from core.execution.validator import ExecutionValidator
-from core.execution.types import ExecutionState, ValidationResult
-from core.execution.exceptions import (
-    ExecutionException,
-    SessionCreationError,
-    RoutingError,
-    PipelineExecutionError,
-    ExecutionCancelledError,
-    ComponentNotAvailableError,
-)
 
 if TYPE_CHECKING:
     pass
@@ -216,7 +212,7 @@ class ExecutionCoordinator:
         result = ExecutionResult(
             execution_id=execution_id,
             session_id=session_id,
-            started_at=datetime.now(timezone.utc),
+            started_at=datetime.now(UTC),
         )
 
         # Create context
@@ -314,7 +310,7 @@ class ExecutionCoordinator:
         context.transition_to("creating_session")
         result.add_event("SessionCreating")
 
-        session_start = datetime.now(timezone.utc)
+        session_start = datetime.now(UTC)
 
         # Create session via manager (if available)
         if self._session_manager:
@@ -329,7 +325,7 @@ class ExecutionCoordinator:
                 pass  # Session manager might not be initialized
 
         result.session_creation_time_ms = int(
-            (datetime.now(timezone.utc) - session_start).total_seconds() * 1000
+            (datetime.now(UTC) - session_start).total_seconds() * 1000
         )
         result.add_event("SessionCreated", {"session_id": context.session_id})
 
@@ -347,7 +343,7 @@ class ExecutionCoordinator:
         context.transition_to("routing")
         result.add_event("RoutingStarted")
 
-        routing_start = datetime.now(timezone.utc)
+        routing_start = datetime.now(UTC)
 
         # Route via router (if available)
         if self._router:
@@ -375,7 +371,7 @@ class ExecutionCoordinator:
             })
 
         result.routing_time_ms = int(
-            (datetime.now(timezone.utc) - routing_start).total_seconds() * 1000
+            (datetime.now(UTC) - routing_start).total_seconds() * 1000
         )
         result.add_event("RoutingCompleted", {
             "pipeline": result.selected_pipeline,
@@ -396,7 +392,7 @@ class ExecutionCoordinator:
         context.transition_to("pipeline_execution")
         result.add_event("PipelineExecutionStarted")
 
-        pipeline_start = datetime.now(timezone.utc)
+        pipeline_start = datetime.now(UTC)
 
         # Execute pipeline (if router and builder available)
         if self._router and self._pipeline_builder:
@@ -436,7 +432,7 @@ class ExecutionCoordinator:
             })
 
         result.pipeline_time_ms = int(
-            (datetime.now(timezone.utc) - pipeline_start).total_seconds() * 1000
+            (datetime.now(UTC) - pipeline_start).total_seconds() * 1000
         )
         result.add_event("PipelineExecutionCompleted", {
             "duration_ms": result.pipeline_time_ms,
@@ -456,7 +452,7 @@ class ExecutionCoordinator:
         context.transition_to("updating_context")
         result.add_event("ContextUpdating")
 
-        update_start = datetime.now(timezone.utc)
+        update_start = datetime.now(UTC)
 
         # Collect updates from pipeline result
         if result.pipeline_result:
@@ -477,7 +473,7 @@ class ExecutionCoordinator:
                 pass
 
         result.context_update_time_ms = int(
-            (datetime.now(timezone.utc) - update_start).total_seconds() * 1000
+            (datetime.now(UTC) - update_start).total_seconds() * 1000
         )
         result.add_event("ContextUpdated", {
             "updates_count": len(context.get_context_updates()),
@@ -497,7 +493,7 @@ class ExecutionCoordinator:
         context.transition_to("completing_session")
         result.add_event("SessionCompleting")
 
-        completion_start = datetime.now(timezone.utc)
+        completion_start = datetime.now(UTC)
 
         # Complete session via manager (if available)
         if self._session_manager:
@@ -507,7 +503,7 @@ class ExecutionCoordinator:
                 pass
 
         result.session_completion_time_ms = int(
-            (datetime.now(timezone.utc) - completion_start).total_seconds() * 1000
+            (datetime.now(UTC) - completion_start).total_seconds() * 1000
         )
         result.add_event("SessionCompleted")
 

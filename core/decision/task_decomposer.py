@@ -9,13 +9,12 @@ import uuid
 from typing import TYPE_CHECKING
 
 from core.decision.types import (
+    DecisionTask,
     Goal,
     GoalAnalysis,
-    DecisionTask,
-    TaskPriority,
-    TaskStatus,
     GoalType,
     RiskLevel,
+    TaskPriority,
 )
 
 if TYPE_CHECKING:
@@ -99,7 +98,7 @@ class TaskDecomposer:
             DecisionTask(
                 task_id=str(uuid.uuid4()),
                 name="Retrieve relevant knowledge",
-                description=f"Search medical knowledge base for relevant information",
+                description="Search medical knowledge base for relevant information",
                 task_type="retrieval",
                 capability="knowledge.retrieve",
                 priority=TaskPriority.HIGH,

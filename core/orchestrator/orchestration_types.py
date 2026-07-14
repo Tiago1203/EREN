@@ -8,7 +8,7 @@ Architecture only -- no implementations, no business logic.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Protocol
 
@@ -119,7 +119,7 @@ class SessionMetadata:
     def __post_init__(self) -> None:
         """Set timestamps if not provided."""
         if not self.created_at:
-            object.__setattr__(self, 'created_at', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'created_at', datetime.now(UTC).isoformat())
 
 
 @dataclass(frozen=True)
@@ -135,7 +135,7 @@ class StateTransition:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            object.__setattr__(self, 'timestamp', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'timestamp', datetime.now(UTC).isoformat())
 
 
 @dataclass(frozen=True)
@@ -155,7 +155,7 @@ class TraceEntry:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            object.__setattr__(self, 'timestamp', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'timestamp', datetime.now(UTC).isoformat())
 
 
 # =============================================================================
@@ -272,7 +272,7 @@ class CognitiveSession:
         """
         entry = TraceEntry(
             entry_id=f"trace_{len(self.trace_history)}",
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             from_state=self.state,
             to_state=to_state,
             reason=reason,
@@ -310,7 +310,7 @@ class CognitiveSession:
 
         self.metadata = replace(
             self.metadata,
-            finished_at=datetime.now(timezone.utc).isoformat(),
+            finished_at=datetime.now(UTC).isoformat(),
         )
         self.is_active = False
 
@@ -326,7 +326,7 @@ class CognitiveSession:
         self.state = OrchestrationState.FAILED
         self.metadata = replace(
             self.metadata,
-            finished_at=datetime.now(timezone.utc).isoformat(),
+            finished_at=datetime.now(UTC).isoformat(),
         )
         self.is_active = False
 
@@ -342,7 +342,7 @@ class CognitiveSession:
         self.state = OrchestrationState.CANCELLED
         self.metadata = replace(
             self.metadata,
-            finished_at=datetime.now(timezone.utc).isoformat(),
+            finished_at=datetime.now(UTC).isoformat(),
         )
         self.is_active = False
 

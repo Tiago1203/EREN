@@ -1,6 +1,6 @@
 """Lifecycle trace for the Cognitive Lifecycle Manager."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 class LifecycleTraceEntry:
@@ -73,7 +73,7 @@ class LifecycleTraceCollector:
             entry_id=f"lifecycle_trace_{self._entry_count}",
             session_id=session_id,
             correlation_id=correlation_id,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             from_state=from_state,
             to_state=to_state,
             event=event,

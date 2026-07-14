@@ -34,7 +34,7 @@ from core.registry.exceptions import (
     ValidationError,
 )
 from core.registry.models import EngineDescriptor, RegistrySnapshot
-from core.registry.types import EngineFilter, EngineStatus, SearchOptions, VersionRequirement
+from core.registry.types import EngineStatus, SearchOptions, VersionRequirement
 
 
 class EngineRegistry:

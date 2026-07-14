@@ -6,20 +6,19 @@ Manages model registration, discovery, and querying.
 from __future__ import annotations
 
 import threading
-from typing import TYPE_CHECKING, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
-from core.models.descriptor import ModelDescriptor
 from core.models.catalog import ModelCatalog
+from core.models.descriptor import ModelDescriptor
+from core.models.exceptions import (
+    ModelAlreadyRegisteredError,
+    ModelNotFoundError,
+)
 from core.models.types import (
     ModelCategory,
-    ModelState,
     ModelSelectionPolicy,
-    ModelCapabilities,
-)
-from core.models.exceptions import (
-    ModelNotFoundError,
-    ModelAlreadyRegisteredError,
-    ModelNotRegisteredError,
+    ModelState,
 )
 
 if TYPE_CHECKING:
@@ -249,7 +248,7 @@ class ModelRegistry:
         with self._lock:
             # Filter by capabilities if specified
             candidates = list(self._models.values())
-            
+
             if capabilities:
                 candidates = [
                     d for d in candidates

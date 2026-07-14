@@ -14,9 +14,10 @@ from __future__ import annotations
 
 import threading
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Callable
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     pass
@@ -51,7 +52,7 @@ class LivenessReport:
 
     is_alive: bool
     checks: list[LivenessCheck]
-    checked_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    checked_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     total_duration_ms: int = 0
     average_response_time_ms: int = 0
     timeout_failures: list[str] = field(default_factory=list)
@@ -185,7 +186,7 @@ class LivenessChecker:
                     passed, message, response_time = self._checks[check_name]()
                 except Exception as e:
                     passed = False
-                    message = f"Check failed: {str(e)}"
+                    message = f"Check failed: {e!s}"
                     response_time = int((time.time() - check_start) * 1000)
             else:
                 # Default simulated check for scaffolding
@@ -222,7 +223,7 @@ class LivenessChecker:
                     passed, message, response_time = check_fn()
                 except Exception as e:
                     passed = False
-                    message = f"Check failed: {str(e)}"
+                    message = f"Check failed: {e!s}"
                     response_time = int((time.time() - check_start) * 1000)
 
                 if response_time >= self._default_timeout_ms:
@@ -270,7 +271,7 @@ class LivenessChecker:
                 passed, message, response_time = self._checks[check_name]()
             except Exception as e:
                 passed = False
-                message = f"Check failed: {str(e)}"
+                message = f"Check failed: {e!s}"
                 response_time = int((time.time() - check_start) * 1000)
         elif check_name in self.LIVENESS_CHECKS:
             check_def = self.LIVENESS_CHECKS[check_name]

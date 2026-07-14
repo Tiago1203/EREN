@@ -7,7 +7,7 @@ timing, counts, and performance data for the cognitive cycle.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 
@@ -143,7 +143,7 @@ class RuntimeMetrics:
     def __post_init__(self) -> None:
         """Initialize timestamps."""
         if not self.created_at:
-            self.created_at = datetime.now(timezone.utc).isoformat()
+            self.created_at = datetime.now(UTC).isoformat()
 
     def record_initialization(self, duration_ms: int) -> None:
         """Record initialization completion.
@@ -171,7 +171,7 @@ class RuntimeMetrics:
 
     def record_runtime_start(self) -> None:
         """Record runtime start."""
-        self.started_at = datetime.now(timezone.utc).isoformat()
+        self.started_at = datetime.now(UTC).isoformat()
 
     def record_runtime_completion(
         self,
@@ -184,7 +184,7 @@ class RuntimeMetrics:
             completed_at: Completion timestamp.
             total_duration_ms: Total runtime duration.
         """
-        self.completed_at = completed_at or datetime.now(timezone.utc).isoformat()
+        self.completed_at = completed_at or datetime.now(UTC).isoformat()
         self.total_duration_ms = total_duration_ms
 
     # -------------------------------------------------------------------------
@@ -225,7 +225,7 @@ class RuntimeMetrics:
         # Find and update the session metrics
         for session in self._session_metrics:
             if session.session_id == session_id:
-                session.completed_at = datetime.now(timezone.utc).isoformat()
+                session.completed_at = datetime.now(UTC).isoformat()
                 session.duration_ms = duration_ms
                 session.cycles_completed = cycles_completed
                 session.success = success
@@ -258,7 +258,7 @@ class RuntimeMetrics:
         """
         cycle = CycleMetrics(
             cycle_id=cycle_id,
-            started_at=datetime.now(timezone.utc).isoformat(),
+            started_at=datetime.now(UTC).isoformat(),
         )
         self._cycle_metrics.append(cycle)
         return cycle
@@ -298,7 +298,7 @@ class RuntimeMetrics:
         # Find and update the cycle metrics
         for cycle in self._cycle_metrics:
             if cycle.cycle_id == cycle_id:
-                cycle.completed_at = datetime.now(timezone.utc).isoformat()
+                cycle.completed_at = datetime.now(UTC).isoformat()
                 cycle.duration_ms = duration_ms
                 cycle.success = success
                 cycle.error = error
@@ -321,7 +321,7 @@ class RuntimeMetrics:
         """
         stage = StageMetrics(
             stage_name=stage_name,
-            started_at=datetime.now(timezone.utc).isoformat(),
+            started_at=datetime.now(UTC).isoformat(),
         )
         self._stage_metrics.append(stage)
         return stage
@@ -344,7 +344,7 @@ class RuntimeMetrics:
         # Find and update the most recent stage with this name
         for stage in reversed(self._stage_metrics):
             if stage.stage_name == stage_name and not stage.completed_at:
-                stage.completed_at = datetime.now(timezone.utc).isoformat()
+                stage.completed_at = datetime.now(UTC).isoformat()
                 stage.duration_ms = duration_ms
                 stage.success = success
                 stage.error = error

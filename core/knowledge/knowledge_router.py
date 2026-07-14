@@ -15,12 +15,10 @@ from .knowledge_registry import KnowledgeRegistry
 from .knowledge_types import (
     KnowledgeQuery,
     KnowledgeResult,
-    KnowledgeRoute,
     KnowledgeSource,
     QueryType,
     ResultConfidence,
     ResultRelevance,
-    SOURCE_QUERY_MAPPING,
 )
 
 if TYPE_CHECKING:

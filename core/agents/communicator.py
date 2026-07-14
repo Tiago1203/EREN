@@ -6,7 +6,6 @@ Handles inter-agent communication.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
 
 from core.agents.types import AgentMessage
@@ -116,7 +115,7 @@ class AgentCommunicator:
         Returns:
             Message or None.
         """
-        if receiver_id in self._pending and self._pending[receiver_id]:
+        if self._pending.get(receiver_id):
             return self._pending[receiver_id].pop(0)
         return None
 

@@ -6,11 +6,9 @@ Architecture only -- no implementations.
 """
 
 import threading
-from typing import Callable, Optional
 
 from .exceptions import (
     ModuleAlreadyRegisteredException,
-    ModuleNotFoundException,
 )
 from .module_descriptor import ModuleDescriptor, ModuleInstance
 
@@ -112,7 +110,7 @@ class ModuleRegistry:
                 return True
             return False
 
-    def get(self, module_name: str) -> Optional[ModuleDescriptor]:
+    def get(self, module_name: str) -> ModuleDescriptor | None:
         """Get a module descriptor.
 
         Args:
@@ -124,7 +122,7 @@ class ModuleRegistry:
         with self._lock:
             return self._modules.get(module_name)
 
-    def get_instance(self, module_name: str) -> Optional[ModuleInstance]:
+    def get_instance(self, module_name: str) -> ModuleInstance | None:
         """Get a module instance.
 
         Args:
@@ -136,7 +134,7 @@ class ModuleRegistry:
         with self._lock:
             return self._instances.get(module_name)
 
-    def create_instance(self, module_name: str) -> Optional[ModuleInstance]:
+    def create_instance(self, module_name: str) -> ModuleInstance | None:
         """Create a module instance.
 
         Args:

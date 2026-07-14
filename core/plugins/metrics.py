@@ -8,7 +8,7 @@ from __future__ import annotations
 import threading
 from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from core.plugins.types import PluginState
 
@@ -19,7 +19,7 @@ class MetricSnapshot:
 
     name: str
     value: float
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
     tags: dict | None = None
 
 
@@ -47,7 +47,7 @@ class PluginMetrics:
     def start(self) -> None:
         """Start metrics collection."""
         with self._lock:
-            self._start_time = datetime.now(timezone.utc)
+            self._start_time = datetime.now(UTC)
 
     def record_load(self, plugin_id: str, duration_ms: float) -> None:
         """Record plugin load.

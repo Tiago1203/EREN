@@ -6,7 +6,8 @@ Manages retrieval strategies and memory providers.
 from __future__ import annotations
 
 import threading
-from typing import TYPE_CHECKING, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 from core.retrieval.types import MemorySource
 
@@ -36,7 +37,7 @@ class RetrievalRegistry:
     # Strategies
     # =========================================================================
 
-    def register_strategy(self, name: str, strategy: "RetrievalStrategy") -> None:
+    def register_strategy(self, name: str, strategy: RetrievalStrategy) -> None:
         """Register a retrieval strategy.
 
         Args:
@@ -46,7 +47,7 @@ class RetrievalRegistry:
         with self._lock:
             self._strategies[name] = strategy
 
-    def get_strategy(self, name: str) -> "RetrievalStrategy | None":
+    def get_strategy(self, name: str) -> RetrievalStrategy | None:
         """Get a strategy by name.
 
         Args:

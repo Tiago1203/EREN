@@ -5,7 +5,7 @@ Collects complete audit trail of container operations.
 Architecture only -- no implementations.
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 class ContainerTraceEntry:
@@ -76,7 +76,7 @@ class ContainerTraceCollector:
         self._entry_count += 1
         entry = ContainerTraceEntry(
             entry_id=f"container_trace_{self._entry_count}",
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             operation=operation,
             contract=contract,
             scope_id=scope_id,

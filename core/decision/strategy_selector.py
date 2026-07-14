@@ -8,12 +8,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from core.decision.types import (
-    Goal,
-    GoalAnalysis,
     DecisionStrategy,
     DecisionTask,
-    StrategySelection,
+    Goal,
+    GoalAnalysis,
     RiskLevel,
+    StrategySelection,
 )
 
 if TYPE_CHECKING:

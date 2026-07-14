@@ -10,10 +10,9 @@ from typing import TYPE_CHECKING
 
 from core.embeddings.types import (
     Embedding,
-    EmbeddingRequest,
-    EmbeddingResponse,
     EmbeddingModelInfo,
     EmbeddingProvider,
+    EmbeddingResponse,
     ProviderHealth,
 )
 

@@ -5,13 +5,14 @@ Manages workflow execution state.
 
 from __future__ import annotations
 
+from datetime import UTC
 from typing import TYPE_CHECKING, Any
 
 from core.workflows.types import (
-    WorkflowExecution,
     NodeExecution,
-    WorkflowStatus,
     NodeStatus,
+    WorkflowExecution,
+    WorkflowStatus,
 )
 
 if TYPE_CHECKING:
@@ -128,14 +129,14 @@ class StateManager:
         if not execution:
             return False
 
-        from datetime import datetime, timezone
+        from datetime import datetime
 
         execution.status = status
 
         if status == WorkflowStatus.RUNNING and not execution.started_at:
-            execution.started_at = datetime.now(timezone.utc)
+            execution.started_at = datetime.now(UTC)
         elif status in [WorkflowStatus.COMPLETED, WorkflowStatus.FAILED, WorkflowStatus.CANCELLED]:
-            execution.completed_at = datetime.now(timezone.utc)
+            execution.completed_at = datetime.now(UTC)
 
         return True
 
@@ -164,8 +165,8 @@ class StateManager:
         workflow_exec.status = WorkflowStatus.RUNNING
 
         if not workflow_exec.started_at:
-            from datetime import datetime, timezone
-            workflow_exec.started_at = datetime.now(timezone.utc)
+            from datetime import datetime
+            workflow_exec.started_at = datetime.now(UTC)
 
         return True
 
@@ -193,8 +194,8 @@ class StateManager:
         if node_exec:
             node_exec.status = NodeStatus.COMPLETED
             node_exec.result = result
-            from datetime import datetime, timezone
-            node_exec.completed_at = datetime.now(timezone.utc)
+            from datetime import datetime
+            node_exec.completed_at = datetime.now(UTC)
 
         if node_id in workflow_exec.current_node_ids:
             workflow_exec.current_node_ids.remove(node_id)
@@ -226,8 +227,8 @@ class StateManager:
         if node_exec:
             node_exec.status = NodeStatus.FAILED
             node_exec.error = error
-            from datetime import datetime, timezone
-            node_exec.completed_at = datetime.now(timezone.utc)
+            from datetime import datetime
+            node_exec.completed_at = datetime.now(UTC)
 
         if node_id in workflow_exec.current_node_ids:
             workflow_exec.current_node_ids.remove(node_id)

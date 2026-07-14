@@ -1,8 +1,6 @@
 """Cognitive Session Manager - Core Engine."""
 
 import uuid
-from dataclasses import replace
-from datetime import datetime, timezone
 
 
 class CognitiveSessionManager:
@@ -30,7 +28,7 @@ class CognitiveSessionManager:
         correlation_id = f"corr_{uuid.uuid4().hex[:16]}"
         context_id = f"ctx_{uuid.uuid4().hex[:16]}"
 
-        from core.session.session import SessionMetadata, CognitiveSession
+        from core.session.session import CognitiveSession, SessionMetadata
 
         metadata_obj = SessionMetadata(
             session_id=session_id,

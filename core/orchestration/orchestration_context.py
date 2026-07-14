@@ -8,7 +8,6 @@ Architecture only -- no implementations, no business logic.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -260,7 +259,7 @@ class OrchestrationContext:
             "metadata": self.metadata,
         }
 
-    def copy(self) -> "OrchestrationContext":
+    def copy(self) -> OrchestrationContext:
         """Create a copy of the context.
 
         Returns:

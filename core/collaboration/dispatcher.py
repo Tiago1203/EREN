@@ -5,7 +5,7 @@ Dispatches tasks to agents in collaboration.
 
 from __future__ import annotations
 
-import uuid
+from datetime import UTC
 from typing import TYPE_CHECKING, Any
 
 from core.collaboration.types import TaskAssignment
@@ -153,8 +153,8 @@ class TaskDispatcher:
             return False
 
         assignment.status = "accepted"
-        from datetime import datetime, timezone
-        assignment.accepted_at = datetime.now(timezone.utc)
+        from datetime import datetime
+        assignment.accepted_at = datetime.now(UTC)
         return True
 
     def decline(
@@ -196,8 +196,8 @@ class TaskDispatcher:
 
         assignment.status = "completed"
         assignment.result = result
-        from datetime import datetime, timezone
-        assignment.completed_at = datetime.now(timezone.utc)
+        from datetime import datetime
+        assignment.completed_at = datetime.now(UTC)
         return True
 
     def fail(
@@ -220,8 +220,8 @@ class TaskDispatcher:
 
         assignment.status = "failed"
         assignment.error = error
-        from datetime import datetime, timezone
-        assignment.completed_at = datetime.now(timezone.utc)
+        from datetime import datetime
+        assignment.completed_at = datetime.now(UTC)
         return True
 
     def cancel(
@@ -241,8 +241,8 @@ class TaskDispatcher:
             return False
 
         assignment.status = "cancelled"
-        from datetime import datetime, timezone
-        assignment.completed_at = datetime.now(timezone.utc)
+        from datetime import datetime
+        assignment.completed_at = datetime.now(UTC)
         return True
 
     def reassign(

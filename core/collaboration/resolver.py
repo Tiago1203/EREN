@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -47,7 +47,7 @@ class Conflict:
     # Status
     is_resolved: bool = False
 
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     @classmethod
     def create(
@@ -81,7 +81,7 @@ class Resolution:
     # Metadata
     metadata: dict = field(default_factory=dict)
 
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 class ConflictResolver:
@@ -195,7 +195,7 @@ class ConflictResolver:
 
         conflict.resolution = resolution
         conflict.resolved_by = resolved_by
-        conflict.resolved_at = datetime.now(timezone.utc)
+        conflict.resolved_at = datetime.now(UTC)
         conflict.is_resolved = True
 
         # Record resolution

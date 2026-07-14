@@ -6,7 +6,7 @@ Provides the descriptor for plugin metadata and state management.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from core.plugins.types import PluginManifest, PluginState
@@ -35,7 +35,7 @@ class PluginDescriptor:
     last_error: datetime | None = None
 
     # Timing
-    discovered_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    discovered_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     registered_at: datetime | None = None
     loaded_at: datetime | None = None
     initialized_at: datetime | None = None
@@ -126,7 +126,7 @@ class PluginDescriptor:
         """Get uptime in seconds."""
         if not self.activated_at:
             return None
-        return (datetime.now(timezone.utc) - self.activated_at).total_seconds()
+        return (datetime.now(UTC) - self.activated_at).total_seconds()
 
     # =========================================================================
     # State Management
@@ -149,7 +149,7 @@ class PluginDescriptor:
             self.state = new_state
 
             # Update timestamps
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
             if new_state == PluginState.REGISTERED:
                 self.registered_at = now
             elif new_state == PluginState.LOADED:
@@ -176,7 +176,7 @@ class PluginDescriptor:
         """
         with self._lock:
             self.error = error
-            self.last_error = datetime.now(timezone.utc)
+            self.last_error = datetime.now(UTC)
 
     def clear_error(self) -> None:
         """Clear error information."""
@@ -245,7 +245,7 @@ class PluginDescriptor:
                 "metadata": dict(self.metadata),
             }
 
-    def copy(self) -> "PluginDescriptor":
+    def copy(self) -> PluginDescriptor:
         """Create a copy of the descriptor.
 
         Returns:

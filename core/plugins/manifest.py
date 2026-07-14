@@ -8,10 +8,10 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
-from core.plugins.types import PluginCategory, PluginPriority, PluginManifest
 from core.plugins.exceptions import PluginManifestError
+from core.plugins.types import PluginCategory, PluginManifest, PluginPriority
 
 if TYPE_CHECKING:
     pass
@@ -70,7 +70,7 @@ class PluginManifestParser:
             raise PluginManifestError(f"Manifest file not found: {path}", str(path))
 
         try:
-            with open(path, "r") as f:
+            with open(path) as f:
                 data = json.load(f)
             return cls.from_dict(data)
         except json.JSONDecodeError as e:
@@ -173,7 +173,7 @@ class PluginManifestBuilder:
     _configuration: dict = field(default_factory=dict)
     _metadata: dict = field(default_factory=dict)
 
-    def plugin_id(self, plugin_id: str) -> "PluginManifestBuilder":
+    def plugin_id(self, plugin_id: str) -> PluginManifestBuilder:
         """Set plugin ID.
 
         Args:
@@ -185,7 +185,7 @@ class PluginManifestBuilder:
         self._plugin_id = plugin_id
         return self
 
-    def version(self, version: str) -> "PluginManifestBuilder":
+    def version(self, version: str) -> PluginManifestBuilder:
         """Set version.
 
         Args:
@@ -197,7 +197,7 @@ class PluginManifestBuilder:
         self._version = version
         return self
 
-    def name(self, name: str) -> "PluginManifestBuilder":
+    def name(self, name: str) -> PluginManifestBuilder:
         """Set name.
 
         Args:
@@ -209,7 +209,7 @@ class PluginManifestBuilder:
         self._name = name
         return self
 
-    def description(self, description: str) -> "PluginManifestBuilder":
+    def description(self, description: str) -> PluginManifestBuilder:
         """Set description.
 
         Args:
@@ -221,7 +221,7 @@ class PluginManifestBuilder:
         self._description = description
         return self
 
-    def author(self, author: str) -> "PluginManifestBuilder":
+    def author(self, author: str) -> PluginManifestBuilder:
         """Set author.
 
         Args:
@@ -233,7 +233,7 @@ class PluginManifestBuilder:
         self._author = author
         return self
 
-    def category(self, category: PluginCategory) -> "PluginManifestBuilder":
+    def category(self, category: PluginCategory) -> PluginManifestBuilder:
         """Set category.
 
         Args:
@@ -245,7 +245,7 @@ class PluginManifestBuilder:
         self._category = category
         return self
 
-    def priority(self, priority: int) -> "PluginManifestBuilder":
+    def priority(self, priority: int) -> PluginManifestBuilder:
         """Set priority.
 
         Args:
@@ -257,7 +257,7 @@ class PluginManifestBuilder:
         self._priority = priority
         return self
 
-    def implements(self, *contracts: str) -> "PluginManifestBuilder":
+    def implements(self, *contracts: str) -> PluginManifestBuilder:
         """Add contracts.
 
         Args:
@@ -269,7 +269,7 @@ class PluginManifestBuilder:
         self._contracts.extend(contracts)
         return self
 
-    def depends_on(self, *dependencies: str) -> "PluginManifestBuilder":
+    def depends_on(self, *dependencies: str) -> PluginManifestBuilder:
         """Add dependencies.
 
         Args:
@@ -281,7 +281,7 @@ class PluginManifestBuilder:
         self._dependencies.extend(dependencies)
         return self
 
-    def provides(self, *capabilities: str) -> "PluginManifestBuilder":
+    def provides(self, *capabilities: str) -> PluginManifestBuilder:
         """Add capabilities.
 
         Args:
@@ -293,7 +293,7 @@ class PluginManifestBuilder:
         self._capabilities.extend(capabilities)
         return self
 
-    def configuration(self, config: dict) -> "PluginManifestBuilder":
+    def configuration(self, config: dict) -> PluginManifestBuilder:
         """Set configuration.
 
         Args:
@@ -305,7 +305,7 @@ class PluginManifestBuilder:
         self._configuration = config
         return self
 
-    def metadata(self, metadata: dict) -> "PluginManifestBuilder":
+    def metadata(self, metadata: dict) -> PluginManifestBuilder:
         """Set metadata.
 
         Args:

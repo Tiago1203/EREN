@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import threading
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING
 
@@ -31,7 +31,7 @@ class HealthStatus(str, Enum):
     FAILED = "failed"
 
     @classmethod
-    def from_score(cls, score: float) -> "HealthStatus":
+    def from_score(cls, score: float) -> HealthStatus:
         """Determine health status from a numeric score (0-100).
 
         Args:
@@ -64,7 +64,7 @@ class ComponentHealth:
         self.status = status
         self.message = message
         self.details = details or {}
-        self.checked_at = datetime.now(timezone.utc)
+        self.checked_at = datetime.now(UTC)
 
     def to_dict(self) -> dict:
         """Convert to dictionary representation."""
@@ -84,7 +84,7 @@ class HealthCheckResult:
     overall_status: HealthStatus
     overall_score: float
     component_checks: list[ComponentHealth]
-    checked_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    checked_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     duration_ms: int = 0
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
@@ -281,7 +281,7 @@ class SystemHealth:
 
             overall_status, overall_score = self.get_overall_status()
 
-            self._last_full_check = datetime.now(timezone.utc)
+            self._last_full_check = datetime.now(UTC)
             self._check_count += 1
 
             duration_ms = int((time.time() - start_time) * 1000)

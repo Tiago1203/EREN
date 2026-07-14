@@ -8,27 +8,23 @@ from __future__ import annotations
 import hashlib
 import threading
 import uuid
-from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
-from core.knowledge.registry_types import (
-    KnowledgeEntry,
-    KnowledgeStatus,
-    PermissionLevel,
-    RegistrySearchQuery,
-    RegistryStatistics,
-    AuditAction,
-)
-from core.knowledge.registry_exceptions import (
-    KnowledgeNotFoundError,
-    DocumentNotFoundError,
-    DuplicateKnowledgeError,
-    PermissionDeniedError,
-)
 from core.knowledge.catalog import KnowledgeCatalog, get_knowledge_catalog
 from core.knowledge.collections import KnowledgeCollections, get_knowledge_collections
-from core.knowledge.versions import VersionManager, get_version_manager
 from core.knowledge.permissions import AuditLogger, PermissionChecker, get_audit_logger
+from core.knowledge.registry_exceptions import (
+    DuplicateKnowledgeError,
+    KnowledgeNotFoundError,
+)
+from core.knowledge.registry_types import (
+    AuditAction,
+    KnowledgeEntry,
+    KnowledgeStatus,
+    RegistrySearchQuery,
+    RegistryStatistics,
+)
+from core.knowledge.versions import VersionManager, get_version_manager
 
 if TYPE_CHECKING:
     pass

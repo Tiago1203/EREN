@@ -7,15 +7,12 @@ from __future__ import annotations
 
 import threading
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from core.knowledge_assets.types import (
     AssetMetadata,
-    LifecycleState,
     AssetSearchQuery,
-    AuditLog,
-    AuditAction,
 )
 
 if TYPE_CHECKING:
@@ -101,7 +98,7 @@ class AssetCatalog:
             if asset.asset_id not in self._assets:
                 return False
 
-            asset.updated_at = datetime.now(timezone.utc)
+            asset.updated_at = datetime.now(UTC)
             self._assets[asset.asset_id] = asset
             return True
 

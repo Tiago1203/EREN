@@ -15,7 +15,7 @@ from __future__ import annotations
 import threading
 from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import TYPE_CHECKING
 
 from .cognitive_context import CognitiveContext
@@ -345,7 +345,7 @@ class ContextManager:
         if not context:
             return None
 
-        failed = context.fail({"error": error, "timestamp": datetime.now(timezone.utc).isoformat()})
+        failed = context.fail({"error": error, "timestamp": datetime.now(UTC).isoformat()})
 
         return self.update_context(failed)
 
@@ -364,12 +364,13 @@ class ContextManager:
             return None
 
         from dataclasses import replace
+
         from .context_types import ContextStatus
 
         cancelled = replace(
             context,
             status=ContextStatus.CANCELLED,
-            updated_at=datetime.now(timezone.utc).isoformat(),
+            updated_at=datetime.now(UTC).isoformat(),
         )
 
         return self.update_context(cancelled)
@@ -413,7 +414,7 @@ class ContextManager:
             Number of contexts cleaned up.
         """
         with self._lock:
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
             expired_ids = []
 
             for context_id, context in self._contexts.items():

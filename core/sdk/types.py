@@ -6,9 +6,8 @@ Defines all types, enums, and value objects used by the SDK.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     pass
@@ -33,17 +32,17 @@ class CapabilityState(str, Enum):
     DISPOSED = "disposed"
 
     @classmethod
-    def is_terminal(cls, state: "CapabilityState") -> bool:
+    def is_terminal(cls, state: CapabilityState) -> bool:
         """Check if state is terminal."""
         return state in (cls.COMPLETED, cls.FAILED, cls.DISPOSED)
 
     @classmethod
-    def is_active(cls, state: "CapabilityState") -> bool:
+    def is_active(cls, state: CapabilityState) -> bool:
         """Check if state represents an active capability."""
         return state in (cls.READY, cls.EXECUTING)
 
     @classmethod
-    def can_transition(cls, from_state: "CapabilityState", to_state: "CapabilityState") -> bool:
+    def can_transition(cls, from_state: CapabilityState, to_state: CapabilityState) -> bool:
         """Check if transition is valid."""
         valid_transitions = {
             cls.CREATED: [cls.VALIDATED, cls.FAILED],

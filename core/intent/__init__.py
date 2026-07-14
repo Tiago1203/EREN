@@ -14,13 +14,13 @@ from core.intent.interfaces import IntentClassifier, IntentPort
 from core.intent.models import IntentResult, IntentType
 
 __all__ = [
-    "IntentEngine",
-    "IntentPort",
-    "IntentClassifier",
-    "RuleBasedIntentClassifier",
     "DEFAULT_LEXICON",
-    "IntentType",
-    "IntentResult",
-    "IntentError",
     "ClassificationError",
+    "IntentClassifier",
+    "IntentEngine",
+    "IntentError",
+    "IntentPort",
+    "IntentResult",
+    "IntentType",
+    "RuleBasedIntentClassifier",
 ]

@@ -6,24 +6,23 @@ Main manager for plugin lifecycle and coordination.
 from __future__ import annotations
 
 import threading
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
-from core.plugins.descriptor import PluginDescriptor
-from core.plugins.registry import PluginRegistry, get_plugin_registry
-from core.plugins.loader import PluginLoader
 from core.plugins.context import PluginContext
-from core.plugins.types import (
-    PluginState,
-    PluginCategory,
-    PluginPolicy,
-    ValidationResult,
-)
+from core.plugins.descriptor import PluginDescriptor
 from core.plugins.exceptions import (
+    PluginActivationError,
     PluginException,
     PluginNotFoundError,
-    PluginAlreadyRegisteredError,
-    PluginActivationError,
+)
+from core.plugins.loader import PluginLoader
+from core.plugins.registry import PluginRegistry, get_plugin_registry
+from core.plugins.types import (
+    PluginCategory,
+    PluginPolicy,
+    PluginState,
+    ValidationResult,
 )
 
 if TYPE_CHECKING:

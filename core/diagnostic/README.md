@@ -1,27 +1,34 @@
-# core/diagnostic — Diagnostic engine
+# core/diagnostic — DEPRECATED
 
-> **Status:** scaffolding only. Empty classes, no logic, AI, or agents yet.
+> ⚠️ **Este módulo está DEPRECADO y será eliminado en versión 2.0.0**
 
-## Responsibility
+## Aviso de Deprecación
 
-The **clinical-engineering fault-analysis** capability. Given the symptoms of a
-malfunctioning biomedical device (error codes, observed behavior, equipment
-metadata, history), the diagnostic engine analyzes the situation and proposes
-**ranked troubleshooting hypotheses and next steps**, drawing on knowledge and
-past cases and justifying each hypothesis.
+Este módulo existe únicamente por razones de compatibilidad hacia atrás.
 
-This is EREN's domain-specialized engine: it encodes *how a biomedical engineer
-diagnoses equipment failures* as an orchestrated capability.
+**Por favor use `core/diagnostics` en su lugar.**
 
-## Files
+## Migración
 
-| File | Purpose |
-| --- | --- |
-| `engine.py` | `DiagnosticEngine` — analyze faults, propose hypotheses. |
-| `interfaces.py` | `DiagnosticPort` — contract to submit symptoms and get a diagnosis. |
-| `exceptions.py` | `DiagnosticError` — base error for diagnostic failures. |
-| `models.py` | Data structures for symptoms, hypotheses and recommendations. |
+```python
+# ANTIGUO (deprecated)
+from core.diagnostic import DiagnosticEngine
 
-## Boundaries
-- Diagnostic reasoning about equipment — no UI; relies on other engines for evidence.
-- May depend on `packages/*`; never on `apps/*`.
+# NUEVO (recommended)
+from core.diagnostics import DiagnosticEngine
+```
+
+## Historia
+
+- **2026-07-14**: Módulo deprecado, toda la funcionalidad movida a `core/diagnostics`
+- **2.0.0** (planeado): Este módulo será eliminado
+
+## Documentación Relacionada
+
+- [docs/architecture/MIGRATION_GUIDE.md](../../docs/architecture/MIGRATION_GUIDE.md)
+- [docs/adr/ADR-001-duplicate-modules.md](../../docs/adr/ADR-001-duplicate-modules.md)
+- [core/diagnostics/README.md](../diagnostics/README.md) — Documentación oficial
+
+---
+
+*Este módulo será eliminado en versión 2.0.0*

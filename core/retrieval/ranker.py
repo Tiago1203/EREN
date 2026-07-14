@@ -5,15 +5,15 @@ Ranks retrieval results by relevance and quality.
 
 from __future__ import annotations
 
+from datetime import UTC
 from typing import TYPE_CHECKING
 
+from core.retrieval.exceptions import RankingError
 from core.retrieval.types import (
+    MemorySource,
     RetrievalQuery,
     RetrievalResult,
-    RetrievalResponse,
-    MemorySource,
 )
-from core.retrieval.exceptions import RankingError
 
 if TYPE_CHECKING:
     pass
@@ -209,8 +209,8 @@ class ContextualRanker(ResultRanker):
                 result.relevance_score *= 1.1
 
             # Boost recent results
-            from datetime import datetime, timezone, timedelta
-            age = datetime.now(timezone.utc) - result.timestamp
+            from datetime import datetime, timedelta
+            age = datetime.now(UTC) - result.timestamp
             if age < timedelta(hours=1):
                 result.relevance_score *= 1.1
             elif age < timedelta(hours=24):

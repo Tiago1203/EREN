@@ -8,27 +8,6 @@ Architecture only — no AI, no implementations.
 
 from __future__ import annotations
 
-# Import from models.py (existing Pydantic models)
-from core.context.models import (
-    Citation,
-    ClinicalContext,
-    CognitiveState,
-    Conversation,
-    ConversationTurn,
-    ExecutionMetadata,
-    Identity,
-    KnowledgeState,
-    MemoryRecord,
-    MemoryState,
-    MessageRole,
-    Regulation,
-    ResultState,
-    RetrievedCase,
-    RetrievedDocument,
-    UserInfo,
-    UserRole,
-)
-
 # Import new CCBS components
 from core.context.blackboard import CognitiveBlackboard
 from core.context.cognitive_context import CognitiveContext
@@ -75,12 +54,33 @@ from core.context.exceptions import (
     ContextCapacityError,
     ContextError,
     ContextExpiredError,
+    ContextImmutableError,
     ContextMergeError,
     ContextNotFoundError,
     ContextSnapshotError,
     ContextStatusError,
-    ContextImmutableError,
     ContextValidationError,
+)
+
+# Import from models.py (existing Pydantic models)
+from core.context.models import (
+    Citation,
+    ClinicalContext,
+    CognitiveState,
+    Conversation,
+    ConversationTurn,
+    ExecutionMetadata,
+    Identity,
+    KnowledgeState,
+    MemoryRecord,
+    MemoryState,
+    MessageRole,
+    Regulation,
+    ResultState,
+    RetrievedCase,
+    RetrievedDocument,
+    UserInfo,
+    UserRole,
 )
 
 __all__ = [

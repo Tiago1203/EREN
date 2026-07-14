@@ -5,13 +5,12 @@ Collects, ranks, and evaluates evidence.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from core.reasoning.reasoning_types import (
     Evidence,
-    EvidenceType,
     EvidenceSource,
-    EvidenceRelation,
+    EvidenceType,
 )
 
 if TYPE_CHECKING:

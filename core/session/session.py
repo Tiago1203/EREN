@@ -1,7 +1,7 @@
 """Session definition for the Cognitive Session Manager."""
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 @dataclass
@@ -19,7 +19,7 @@ class SessionMetadata:
 
     def __post_init__(self):
         if not self.created_at:
-            self.created_at = datetime.now(timezone.utc).isoformat()
+            self.created_at = datetime.now(UTC).isoformat()
 
 
 class SessionState:
@@ -64,7 +64,7 @@ class CognitiveSession:
         self.is_active = True
         self.state = SessionState.ACTIVE
         self.state_history.append(SessionState.ACTIVE)
-        self.last_activity = datetime.now(timezone.utc).isoformat()
+        self.last_activity = datetime.now(UTC).isoformat()
 
     def pause(self):
         self.state = SessionState.PAUSED

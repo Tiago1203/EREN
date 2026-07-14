@@ -5,6 +5,7 @@ Ranks and prioritizes context items.
 
 from __future__ import annotations
 
+from datetime import UTC
 from typing import TYPE_CHECKING
 
 from core.context.engine.types import (
@@ -92,9 +93,9 @@ class ContextRanker:
 
     def _calculate_recency(self, timestamp) -> float:
         """Calculate recency score (0-1)."""
-        from datetime import datetime, timezone
+        from datetime import datetime
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         age = (now - timestamp).total_seconds()
 
         # Decay over 24 hours

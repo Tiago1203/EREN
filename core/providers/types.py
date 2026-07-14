@@ -6,9 +6,9 @@ Defines all types, enums, and value objects used by the provider system.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     pass
@@ -30,12 +30,12 @@ class ProviderType(str, Enum):
     CUSTOM = "custom"
 
     @classmethod
-    def is_local(cls, provider_type: "ProviderType") -> bool:
+    def is_local(cls, provider_type: ProviderType) -> bool:
         """Check if provider is local (runs on-premise)."""
         return provider_type == cls.OLLAMA
 
     @classmethod
-    def is_cloud(cls, provider_type: "ProviderType") -> bool:
+    def is_cloud(cls, provider_type: ProviderType) -> bool:
         """Check if provider is cloud-based."""
         return provider_type in (cls.OPENAI, cls.CLAUDE, cls.GEMINI, cls.AZURE_OPENAI)
 
@@ -75,7 +75,7 @@ class SelectionPolicy(str, Enum):
     RANDOM = "random"
 
     @classmethod
-    def is_fallback_policy(cls, policy: "SelectionPolicy") -> bool:
+    def is_fallback_policy(cls, policy: SelectionPolicy) -> bool:
         """Check if policy supports fallback."""
         return policy in (cls.FAILOVER, cls.PRIORITY)
 
@@ -93,7 +93,7 @@ class ProviderHealth:
     state: ProviderState = ProviderState.UNHEALTHY
     latency_ms: int = 0
     message: str = ""
-    last_check: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    last_check: datetime = field(default_factory=lambda: datetime.now(UTC))
     details: dict = field(default_factory=dict)
 
     def to_dict(self) -> dict:

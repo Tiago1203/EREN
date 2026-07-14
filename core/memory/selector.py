@@ -10,9 +10,8 @@ from typing import TYPE_CHECKING
 from core.memory.base import BaseMemoryInterface
 from core.memory.registry import MemoryRegistry
 from core.memory.types import (
-    MemoryType,
-    MemoryState,
     MemoryAccessPolicy,
+    MemoryType,
 )
 
 if TYPE_CHECKING:

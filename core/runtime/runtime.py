@@ -21,14 +21,11 @@ from __future__ import annotations
 
 import threading
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from .exceptions import (
-    ComponentNotAvailableError,
-    HealthCheckError,
     RuntimeBootError,
-    RuntimeException,
     RuntimeExecutionError,
     RuntimeInitializationError,
     RuntimeShutdownError,
@@ -43,8 +40,6 @@ from .runtime_events import (
     RuntimeBootStarted,
     RuntimeCompleted,
     RuntimeEvent,
-    RuntimeEventType,
-    RuntimeFailed,
     RuntimeInitialized,
     RuntimeShutdown,
     RuntimeStarted,
@@ -238,7 +233,7 @@ class CognitiveRuntime:
     # Initialization
     # =============================================================================
 
-    def initialize(self) -> "CognitiveRuntime":
+    def initialize(self) -> CognitiveRuntime:
         """Initialize the runtime.
 
         Initializes the Composition Root, builds the Container,
@@ -258,7 +253,7 @@ class CognitiveRuntime:
         try:
             self._transition_to(RuntimeState.INITIALIZING)
 
-            start_time = datetime.now(timezone.utc)
+            start_time = datetime.now(UTC)
 
             self._publish_event(RuntimeStarted(
                 runtime_id=self._runtime_id,
@@ -288,7 +283,7 @@ class CognitiveRuntime:
 
             # Calculate duration
             duration_ms = int(
-                (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                (datetime.now(UTC) - start_time).total_seconds() * 1000
             )
             self._metrics.record_initialization(duration_ms)
 
@@ -392,11 +387,12 @@ class CognitiveRuntime:
 
     def _initialize_engines(self) -> None:
         """Initialize all cognitive engines."""
+        from core.decision.decision_engine import CognitiveDecisionEngine
+
         from core.knowledge.knowledge_engine import CognitiveKnowledgeEngine
         from core.memory.memory_engine import CognitiveMemoryEngine
         from core.planner.planner_engine import PlannerEngine
         from core.reasoning.reasoning_engine import CognitiveReasoningEngine
-        from core.decision.decision_engine import CognitiveDecisionEngine
 
         # Note: Some engines may be None in simulation mode
         if self._configuration.enable_planner:
@@ -428,7 +424,7 @@ class CognitiveRuntime:
     # Boot
     # =============================================================================
 
-    def boot(self) -> "CognitiveRuntime":
+    def boot(self) -> CognitiveRuntime:
         """Execute the boot process.
 
         Runs the Boot Manager to prepare all components.
@@ -450,7 +446,7 @@ class CognitiveRuntime:
         try:
             self._transition_to(RuntimeState.BOOTING)
 
-            start_time = datetime.now(timezone.utc)
+            start_time = datetime.now(UTC)
 
             self._publish_event(RuntimeBootStarted(
                 runtime_id=self._runtime_id,
@@ -465,7 +461,7 @@ class CognitiveRuntime:
 
             # Calculate duration
             duration_ms = int(
-                (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                (datetime.now(UTC) - start_time).total_seconds() * 1000
             )
             self._metrics.record_boot(duration_ms)
 
@@ -521,7 +517,7 @@ class CognitiveRuntime:
             runtime_id=self._runtime_id,
         ))
 
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
 
         # Set validator strict mode
         self._validator.set_strict_mode(self._configuration.strict_validation)
@@ -547,7 +543,7 @@ class CognitiveRuntime:
         )
 
         duration_ms = int(
-            (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+            (datetime.now(UTC) - start_time).total_seconds() * 1000
         )
         self._metrics.record_validation(duration_ms)
 
@@ -606,7 +602,7 @@ class CognitiveRuntime:
     # Start
     # =============================================================================
 
-    def start(self) -> "CognitiveRuntime":
+    def start(self) -> CognitiveRuntime:
         """Start the runtime.
 
         Performs final validation (if configured) and starts the runtime.
@@ -624,10 +620,10 @@ class CognitiveRuntime:
             # Ensure proper state
             if self.state == RuntimeState.CREATED:
                 self.initialize()
-                
+
             if self.state == RuntimeState.INITIALIZED:
                 self.boot()
-                
+
             if self.state == RuntimeState.BOOTED:
                 # Auto-validate if configured
                 if self._configuration.validate_before_start:
@@ -636,7 +632,7 @@ class CognitiveRuntime:
                         raise RuntimeStartError(
                             f"Pre-start validation failed: {report.critical_failures}"
                         )
-                    
+
             if self.state != RuntimeState.VALIDATED and self.state != RuntimeState.RUNNING:
                 raise RuntimeStartError(
                     f"Cannot start from state: {self.state.value}"
@@ -752,7 +748,7 @@ class CognitiveRuntime:
             raise RuntimeStartError("Runtime must be running")
 
         try:
-            session.started_at = datetime.now(timezone.utc).isoformat()
+            session.started_at = datetime.now(UTC).isoformat()
 
             self._publish_event(SessionStarted(
                 runtime_id=self._runtime_id,
@@ -794,7 +790,7 @@ class CognitiveRuntime:
             The completed session.
         """
         try:
-            session.completed_at = datetime.now(timezone.utc).isoformat()
+            session.completed_at = datetime.now(UTC).isoformat()
             duration_ms = 0
             if session.started_at:
                 started = datetime.fromisoformat(session.started_at)
@@ -926,11 +922,11 @@ class CognitiveRuntime:
             if self._metrics.started_at:
                 started = datetime.fromisoformat(self._metrics.started_at)
                 total_duration_ms = int(
-                    (datetime.now(timezone.utc) - started).total_seconds() * 1000
+                    (datetime.now(UTC) - started).total_seconds() * 1000
                 )
 
             self._metrics.record_runtime_completion(
-                completed_at=datetime.now(timezone.utc).isoformat(),
+                completed_at=datetime.now(UTC).isoformat(),
                 total_duration_ms=total_duration_ms,
             )
 
@@ -939,7 +935,7 @@ class CognitiveRuntime:
             self._publish_event(RuntimeCompleted(
                 runtime_id=self._runtime_id,
                 payload={
-                    "completed_at": datetime.now(timezone.utc).isoformat(),
+                    "completed_at": datetime.now(UTC).isoformat(),
                     "total_duration_ms": total_duration_ms,
                     "cycles_completed": self._metrics.cycles_completed,
                     "sessions_completed": self._metrics.sessions_completed,
@@ -1020,7 +1016,7 @@ class CognitiveRuntime:
     # Context Manager
     # =============================================================================
 
-    def __enter__(self) -> "CognitiveRuntime":
+    def __enter__(self) -> CognitiveRuntime:
         """Context manager entry."""
         return self
 

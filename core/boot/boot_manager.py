@@ -15,7 +15,7 @@ can create real instances later.
 """
 
 import threading
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from .boot_events import BootEventPublisher, BootEventType
 from .boot_metrics import BootMetricsCollector
@@ -110,7 +110,7 @@ class CognitiveBootManager:
         Returns:
             BootResult with success status and details.
         """
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
 
         with self._lock:
             self._metrics.record_boot_started()
@@ -142,7 +142,7 @@ class CognitiveBootManager:
                 if failed_steps:
                     self._state = BootState.FAILED
                     duration_ms = int(
-                        (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                        (datetime.now(UTC) - start_time).total_seconds() * 1000
                     )
                     self._metrics.record_boot_failure(duration_ms)
 
@@ -164,7 +164,7 @@ class CognitiveBootManager:
                 # Boot successful
                 self._state = BootState.READY
                 duration_ms = int(
-                    (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                    (datetime.now(UTC) - start_time).total_seconds() * 1000
                 )
                 self._metrics.record_boot_success(duration_ms)
 
@@ -190,7 +190,7 @@ class CognitiveBootManager:
 
             except Exception as e:
                 duration_ms = int(
-                    (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                    (datetime.now(UTC) - start_time).total_seconds() * 1000
                 )
                 self._state = BootState.FAILED
                 self._metrics.record_boot_failure(duration_ms)
@@ -224,7 +224,7 @@ class CognitiveBootManager:
         step = BootStep(name=step_name, state=target_state)
         step.status = BootStatus.IN_PROGRESS
 
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
 
         self._event_publisher.publish(
             BootEventType.BOOT_STEP_STARTED,
@@ -248,7 +248,7 @@ class CognitiveBootManager:
 
             step.status = BootStatus.COMPLETED
             step.duration_ms = int(
-                (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                (datetime.now(UTC) - start_time).total_seconds() * 1000
             )
             self._metrics.record_step_completed()
 
@@ -269,7 +269,7 @@ class CognitiveBootManager:
             step.status = BootStatus.FAILED
             step.error = str(e)
             step.duration_ms = int(
-                (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                (datetime.now(UTC) - start_time).total_seconds() * 1000
             )
             self._metrics.record_step_failed()
 

@@ -6,15 +6,15 @@ Provides a builder pattern for creating capabilities.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Type
+from typing import TYPE_CHECKING, Any
 
-from core.sdk.types import (
-    CapabilityCategory,
-    CapabilityPriority,
-    CapabilityMetadata,
-)
 from core.sdk.capability import BaseCapability
 from core.sdk.exceptions import CapabilityBuilderError
+from core.sdk.types import (
+    CapabilityCategory,
+    CapabilityMetadata,
+    CapabilityPriority,
+)
 
 if TYPE_CHECKING:
     pass
@@ -56,9 +56,9 @@ class CapabilityBuilder:
     _metadata: dict = field(default_factory=dict)
 
     # Implementation
-    _implementation: Type[BaseCapability] | None = None
+    _implementation: type[BaseCapability] | None = None
 
-    def named(self, name: str) -> "CapabilityBuilder":
+    def named(self, name: str) -> CapabilityBuilder:
         """Set capability name.
 
         Args:
@@ -70,7 +70,7 @@ class CapabilityBuilder:
         self._name = name
         return self
 
-    def version(self, version: str) -> "CapabilityBuilder":
+    def version(self, version: str) -> CapabilityBuilder:
         """Set capability version.
 
         Args:
@@ -82,7 +82,7 @@ class CapabilityBuilder:
         self._version = version
         return self
 
-    def category(self, category: CapabilityCategory) -> "CapabilityBuilder":
+    def category(self, category: CapabilityCategory) -> CapabilityBuilder:
         """Set capability category.
 
         Args:
@@ -94,7 +94,7 @@ class CapabilityBuilder:
         self._category = category
         return self
 
-    def description(self, description: str) -> "CapabilityBuilder":
+    def description(self, description: str) -> CapabilityBuilder:
         """Set capability description.
 
         Args:
@@ -106,7 +106,7 @@ class CapabilityBuilder:
         self._description = description
         return self
 
-    def author(self, author: str) -> "CapabilityBuilder":
+    def author(self, author: str) -> CapabilityBuilder:
         """Set capability author.
 
         Args:
@@ -118,7 +118,7 @@ class CapabilityBuilder:
         self._author = author
         return self
 
-    def implements(self, *contracts: str) -> "CapabilityBuilder":
+    def implements(self, *contracts: str) -> CapabilityBuilder:
         """Add contracts.
 
         Args:
@@ -130,7 +130,7 @@ class CapabilityBuilder:
         self._contracts.extend(contracts)
         return self
 
-    def depends_on(self, *dependencies: str) -> "CapabilityBuilder":
+    def depends_on(self, *dependencies: str) -> CapabilityBuilder:
         """Add dependencies.
 
         Args:
@@ -142,7 +142,7 @@ class CapabilityBuilder:
         self._dependencies.extend(dependencies)
         return self
 
-    def priority(self, priority: int) -> "CapabilityBuilder":
+    def priority(self, priority: int) -> CapabilityBuilder:
         """Set priority.
 
         Args:
@@ -154,7 +154,7 @@ class CapabilityBuilder:
         self._priority = priority
         return self
 
-    def configure(self, **config: Any) -> "CapabilityBuilder":
+    def configure(self, **config: Any) -> CapabilityBuilder:
         """Add configuration.
 
         Args:
@@ -166,7 +166,7 @@ class CapabilityBuilder:
         self._configuration.update(config)
         return self
 
-    def metadata(self, **meta: Any) -> "CapabilityBuilder":
+    def metadata(self, **meta: Any) -> CapabilityBuilder:
         """Add metadata.
 
         Args:
@@ -178,7 +178,7 @@ class CapabilityBuilder:
         self._metadata.update(meta)
         return self
 
-    def with_implementation(self, implementation: Type[BaseCapability]) -> "CapabilityBuilder":
+    def with_implementation(self, implementation: type[BaseCapability]) -> CapabilityBuilder:
         """Set capability implementation.
 
         Args:
@@ -214,7 +214,7 @@ class CapabilityBuilder:
             metadata=self._metadata,
         )
 
-    def create(self) -> Type[BaseCapability]:
+    def create(self) -> type[BaseCapability]:
         """Create a capability class.
 
         Returns:
@@ -263,7 +263,7 @@ class CapabilityClassBuilder(CapabilityBuilder):
     _shutdown_func: Any = None
     _health_func: Any = None
 
-    def executes(self, func: Any) -> "CapabilityClassBuilder":
+    def executes(self, func: Any) -> CapabilityClassBuilder:
         """Set execution function.
 
         Args:
@@ -275,7 +275,7 @@ class CapabilityClassBuilder(CapabilityBuilder):
         self._execute_func = func
         return self
 
-    def on_initialize(self, func: Any) -> "CapabilityClassBuilder":
+    def on_initialize(self, func: Any) -> CapabilityClassBuilder:
         """Set initialization function.
 
         Args:
@@ -287,7 +287,7 @@ class CapabilityClassBuilder(CapabilityBuilder):
         self._initialize_func = func
         return self
 
-    def on_shutdown(self, func: Any) -> "CapabilityClassBuilder":
+    def on_shutdown(self, func: Any) -> CapabilityClassBuilder:
         """Set shutdown function.
 
         Args:
@@ -299,7 +299,7 @@ class CapabilityClassBuilder(CapabilityBuilder):
         self._shutdown_func = func
         return self
 
-    def on_health(self, func: Any) -> "CapabilityClassBuilder":
+    def on_health(self, func: Any) -> CapabilityClassBuilder:
         """Set health check function.
 
         Args:
@@ -311,7 +311,7 @@ class CapabilityClassBuilder(CapabilityBuilder):
         self._health_func = func
         return self
 
-    def create_class(self) -> Type[BaseCapability]:
+    def create_class(self) -> type[BaseCapability]:
         """Create a capability class.
 
         Returns:

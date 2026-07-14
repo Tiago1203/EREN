@@ -5,7 +5,7 @@ Manages agent registration and discovery.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from core.agents.types import (
@@ -51,7 +51,7 @@ class AgentRegistry:
         """
         self._agents[manifest.agent_id] = manifest
         self._status[manifest.agent_id] = AgentStatus.IDLE
-        self._last_seen[manifest.agent_id] = datetime.now(timezone.utc)
+        self._last_seen[manifest.agent_id] = datetime.now(UTC)
         return manifest
 
     def unregister(self, agent_id: str) -> bool:
@@ -138,7 +138,7 @@ class AgentRegistry:
             status: New status.
         """
         self._status[agent_id] = status
-        self._last_seen[agent_id] = datetime.now(timezone.utc)
+        self._last_seen[agent_id] = datetime.now(UTC)
 
     def get_status(self, agent_id: str) -> AgentStatus | None:
         """Get agent status.
@@ -157,7 +157,7 @@ class AgentRegistry:
         Args:
             agent_id: Agent ID.
         """
-        self._last_seen[agent_id] = datetime.now(timezone.utc)
+        self._last_seen[agent_id] = datetime.now(UTC)
 
     def get_last_seen(self, agent_id: str) -> datetime | None:
         """Get agent last seen timestamp.

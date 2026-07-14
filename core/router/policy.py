@@ -8,13 +8,12 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
-from core.router.types import (
-    RoutingPolicy,
-    PipelineMetadata,
-    CandidatePipeline,
-)
 from core.router.context import RouterContext
-from core.router.result import RoutingResult
+from core.router.types import (
+    CandidatePipeline,
+    PipelineMetadata,
+    RoutingPolicy,
+)
 
 if TYPE_CHECKING:
     pass

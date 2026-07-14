@@ -6,16 +6,17 @@ Represents the result of a routing operation.
 from __future__ import annotations
 
 import threading
-import time
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from core.router.types import (
+    CandidatePipeline,
+    PipelineMetadata,
     RouterState,
     RoutingPolicy,
-    PipelineMetadata,
-    CandidatePipeline,
+)
+from core.router.types import (
     RoutingResult as RoutingResultType,
 )
 
@@ -32,7 +33,7 @@ class RoutingResult:
 
     # State
     state: RouterState = RouterState.CREATED
-    started_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    started_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     finished_at: datetime | None = None
     duration_ms: int = 0
 
@@ -124,13 +125,13 @@ class RoutingResult:
     def start(self) -> None:
         """Mark routing as started."""
         with self._lock:
-            self.started_at = datetime.now(timezone.utc)
+            self.started_at = datetime.now(UTC)
             self.state = RouterState.ANALYZING
 
     def complete(self) -> None:
         """Mark routing as completed."""
         with self._lock:
-            self.finished_at = datetime.now(timezone.utc)
+            self.finished_at = datetime.now(UTC)
             self.duration_ms = int(
                 (self.finished_at - self.started_at).total_seconds() * 1000
             )
@@ -146,7 +147,7 @@ class RoutingResult:
             error: Error message.
         """
         with self._lock:
-            self.finished_at = datetime.now(timezone.utc)
+            self.finished_at = datetime.now(UTC)
             self.duration_ms = int(
                 (self.finished_at - self.started_at).total_seconds() * 1000
             )
@@ -156,7 +157,7 @@ class RoutingResult:
     def cancel(self) -> None:
         """Mark routing as cancelled."""
         with self._lock:
-            self.finished_at = datetime.now(timezone.utc)
+            self.finished_at = datetime.now(UTC)
             self.duration_ms = int(
                 (self.finished_at - self.started_at).total_seconds() * 1000
             )
@@ -216,7 +217,7 @@ class RoutingResult:
         """
         with self._lock:
             self.trace_entries.append({
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "operation": operation,
                 "details": details or {},
             })
@@ -234,7 +235,7 @@ class RoutingResult:
         """
         with self._lock:
             self.events.append({
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "event_type": event_type,
                 "data": data or {},
             })

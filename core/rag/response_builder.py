@@ -9,11 +9,11 @@ import uuid
 from typing import TYPE_CHECKING
 
 from core.rag.types import (
-    RAGQuery,
-    RAGResponse,
-    RAGPrompt,
     Citation,
     ConfidenceLevel,
+    RAGPrompt,
+    RAGQuery,
+    RAGResponse,
     ResponseFormat,
 )
 

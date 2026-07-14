@@ -18,7 +18,6 @@ from .types import (
     CapabilityCategory,
     CapabilityFilter,
     CapabilityPriority,
-    CapabilityStatus,
     SearchOptions,
 )
 

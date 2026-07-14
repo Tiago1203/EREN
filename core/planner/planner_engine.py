@@ -22,37 +22,75 @@ from __future__ import annotations
 # Re-export the original stub class for backwards compatibility
 from .engine import PlannerEngine as PlannerEngine
 
-# Re-export the main capability class
-from .planner import (
-    Planner as Planner,
-    EngineSelectionError as EngineSelectionError,
-    InvalidIntentionError as InvalidIntentionError,
-    PlanCreationError as PlanCreationError,
-    PlannerError as PlannerError,
-    StepOrderingError as StepOrderingError,
-)
-
 # Re-export models
 from .models import (
     CognitiveEngineId as CognitiveEngineId,
+)
+from .models import (
     EngineSelection as EngineSelection,
+)
+from .models import (
     Intention as Intention,
+)
+from .models import (
     Plan as Plan,
+)
+from .models import (
     PlanStep as PlanStep,
+)
+from .planner import (
+    EngineSelectionError as EngineSelectionError,
+)
+from .planner import (
+    InvalidIntentionError as InvalidIntentionError,
+)
+from .planner import (
+    PlanCreationError as PlanCreationError,
+)
+
+# Re-export the main capability class
+from .planner import (
+    Planner as Planner,
+)
+from .planner import (
+    PlannerError as PlannerError,
+)
+from .planner import (
+    StepOrderingError as StepOrderingError,
 )
 
 # Re-export types
 from .types import (
     EngineSelector as EngineSelector,
+)
+from .types import (
     ExecutionContext as ExecutionContext,
+)
+from .types import (
     GoalType as GoalType,
+)
+from .types import (
     PlannerCallback as PlannerCallback,
+)
+from .types import (
     PlannerResult as PlannerResult,
+)
+from .types import (
     PlanningStrategy as PlanningStrategy,
+)
+from .types import (
     ReplanReason as ReplanReason,
+)
+from .types import (
     StepOrderer as StepOrderer,
+)
+from .types import (
     StepValidator as StepValidator,
+)
+from .types import (
     TaskPriority as TaskPriority,
+)
+from .types import (
     TaskStatus as TaskStatus,
 )
 

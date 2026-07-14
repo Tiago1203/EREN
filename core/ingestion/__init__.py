@@ -6,73 +6,73 @@ Pipeline ONLY orchestrates - never implements logic.
 
 from __future__ import annotations
 
-# Types
-from core.ingestion.types import (
-    DocumentType,
-    DocumentSource,
-    IngestionStatus,
-    IngestionMetadata,
-    RawDocument,
-    ExtractedDocument,
-    CleanedDocument,
-    DocumentChunk,
-    ChunkedDocument,
-    IngestedDocument,
-    IngestionStatistics,
+# Chunking (NEW: separated by strategy)
+from core.ingestion.chunking import (
+    BaseChunkBuilder,
+    ParagraphChunkBuilder,
+    RecursiveChunkBuilder,
+    SentenceChunkBuilder,
+    SlidingWindowChunkBuilder,
 )
 
 # Exceptions
 from core.ingestion.exceptions import (
-    IngestionError,
-    ExtractionError,
-    UnsupportedFormatError,
-    CleaningError,
     ChunkingError,
-    EmbeddingError,
-    StorageError,
-    PipelineError,
-    ValidationError,
+    CleaningError,
     ConfigurationError,
+    EmbeddingError,
+    ExtractionError,
+    IngestionError,
+    PipelineError,
     RegistryError,
+    StorageError,
+    UnsupportedFormatError,
+    ValidationError,
 )
 
 # Extractors
 from core.ingestion.extractor import (
     BaseExtractor,
-    PDFExtractor,
     DocxExtractor,
-    TextExtractor,
-    HTMLExtractor,
+    ExtractorFactory,
     FHIRExtractor,
     HL7Extractor,
-    ExtractorFactory,
-)
-
-# Processors (NEW: separated by responsibility)
-from core.ingestion.processors import (
-    TextProcessor,
-    TextNormalizer,
-    MedicalProcessor,
-    MedicalTerminologyNormalizer,
-)
-
-# Chunking (NEW: separated by strategy)
-from core.ingestion.chunking import (
-    BaseChunkBuilder,
-    SentenceChunkBuilder,
-    RecursiveChunkBuilder,
-    SlidingWindowChunkBuilder,
-    ParagraphChunkBuilder,
+    HTMLExtractor,
+    PDFExtractor,
+    TextExtractor,
 )
 
 # Pipeline
 from core.ingestion.pipeline import KnowledgeIngestionPipeline
+
+# Processors (NEW: separated by responsibility)
+from core.ingestion.processors import (
+    MedicalProcessor,
+    MedicalTerminologyNormalizer,
+    TextNormalizer,
+    TextProcessor,
+)
 
 # Registry
 from core.ingestion.registry import (
     DocumentRegistry,
     get_document_registry,
     reset_document_registry,
+)
+
+# Types
+from core.ingestion.types import (
+    ChunkedDocument,
+    CleanedDocument,
+    DocumentChunk,
+    DocumentSource,
+    DocumentType,
+    ExtractedDocument,
+    IngestedDocument,
+    IngestionMetadata,
+    IngestionStatistics,
+    IngestionStatus,
+    RawDocument,
 )
 
 __all__ = [

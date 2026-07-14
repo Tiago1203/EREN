@@ -28,57 +28,57 @@ Example:
 
 from __future__ import annotations
 
-from core.diagnostics.engine import ERENDiagnostics, DiagnosticsEngine
-from core.diagnostics.exceptions import (
-    DiagnosticsException,
-    DiagnosticsInitializationError,
-    ValidationError,
-    ArchitectureError,
-    ContractViolationError,
-    DependencyError,
-    CircularDependencyError,
-    IntegrationError,
-    HealthCheckError,
-    ReadinessCheckError,
-    LivenessCheckError,
-    PerformanceError,
-    TimeoutError,
-    ConfigurationError,
-    ComponentNotFoundError,
-    EventBusError,
-    RegistryError,
-    ContainerError,
-    BootError,
-    RuntimeError,
-    SchedulerError,
-    SessionError,
-    ContextError,
-    BlackboardError,
-    OrchestratorError,
-    PlannerError,
-    KnowledgeError,
-    MemoryError,
-    ReasoningError,
-    DecisionError,
-    ToolEngineError,
-    LifecycleError,
-)
-from core.diagnostics.health import SystemHealth, HealthStatus
-from core.diagnostics.readiness import ReadinessChecker
-from core.diagnostics.liveness import LivenessChecker
-from core.diagnostics.architecture import ArchitectureValidator, ArchitectureReport
+from core.diagnostics.architecture import ArchitectureReport, ArchitectureValidator
 from core.diagnostics.contracts import ContractValidator, ContractViolation
-from core.diagnostics.dependencies import DependencyValidator, DependencyReport
-from core.diagnostics.integration import IntegrationValidator, IntegrationReport
-from core.diagnostics.runtime import RuntimeValidator, RuntimeReport
-from core.diagnostics.performance import PerformanceProfiler
-from core.diagnostics.report import DiagnosticReport, ReportGenerator
-from core.diagnostics.score import DiagnosticScore, ScoreCategory
+from core.diagnostics.dependencies import DependencyReport, DependencyValidator
+from core.diagnostics.engine import DiagnosticsEngine, ERENDiagnostics
 from core.diagnostics.events import (
     DiagnosticsEventPublisher,
     DiagnosticsEventType,
 )
+from core.diagnostics.exceptions import (
+    ArchitectureError,
+    BlackboardError,
+    BootError,
+    CircularDependencyError,
+    ComponentNotFoundError,
+    ConfigurationError,
+    ContainerError,
+    ContextError,
+    ContractViolationError,
+    DecisionError,
+    DependencyError,
+    DiagnosticsException,
+    DiagnosticsInitializationError,
+    EventBusError,
+    HealthCheckError,
+    IntegrationError,
+    KnowledgeError,
+    LifecycleError,
+    LivenessCheckError,
+    MemoryError,
+    OrchestratorError,
+    PerformanceError,
+    PlannerError,
+    ReadinessCheckError,
+    ReasoningError,
+    RegistryError,
+    RuntimeError,
+    SchedulerError,
+    SessionError,
+    TimeoutError,
+    ToolEngineError,
+    ValidationError,
+)
+from core.diagnostics.health import HealthStatus, SystemHealth
+from core.diagnostics.integration import IntegrationReport, IntegrationValidator
+from core.diagnostics.liveness import LivenessChecker
 from core.diagnostics.metrics import DiagnosticsMetrics
+from core.diagnostics.performance import PerformanceProfiler
+from core.diagnostics.readiness import ReadinessChecker
+from core.diagnostics.report import DiagnosticReport, ReportGenerator
+from core.diagnostics.runtime import RuntimeReport, RuntimeValidator
+from core.diagnostics.score import DiagnosticScore, ScoreCategory
 from core.diagnostics.trace import DiagnosticsTrace
 
 __all__ = [

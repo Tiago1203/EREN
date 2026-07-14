@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import threading
 from collections import defaultdict
-from collections.abc import Callable, Sequence
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from typing import TYPE_CHECKING, Any
 
@@ -38,7 +38,7 @@ class EventPublisher:
     (or the concrete EventBus) via dependency injection.
     """
 
-    def publish(self, event: "Event") -> None:
+    def publish(self, event: Event) -> None:
         """Emit ``event`` to all interested subscribers.
 
         Args:
@@ -58,11 +58,11 @@ class EventSubscriber:
     """
 
     @property
-    def subscribed_types(self) -> tuple["EventType", ...]:
+    def subscribed_types(self) -> tuple[EventType, ...]:
         """Event types this subscriber is interested in."""
         return ()
 
-    def handle(self, event: "Event") -> None:
+    def handle(self, event: Event) -> None:
         """React to a delivered ``event``.
 
         Args:
@@ -116,7 +116,7 @@ class EventBus:
                         Defaults to min(32, cpu_count + 4).
             async_mode: If True, use async event dispatch.
         """
-        self._subscriptions: dict["EventType", list[tuple[int, EventSubscriber]]] = (
+        self._subscriptions: dict[EventType, list[tuple[int, EventSubscriber]]] = (
             defaultdict(list)
         )
         self._wildcard_subscribers: list[tuple[int, EventSubscriber]] = []
@@ -133,7 +133,7 @@ class EventBus:
 
     def subscribe(
         self,
-        event_type: "EventType",
+        event_type: EventType,
         subscriber: EventSubscriber,
         priority: int = 0,
     ) -> None:
@@ -172,7 +172,7 @@ class EventBus:
 
     def unsubscribe(
         self,
-        event_type: "EventType",
+        event_type: EventType,
         subscriber: EventSubscriber,
     ) -> bool:
         """Remove ``subscriber`` from ``event_type``.
@@ -238,7 +238,7 @@ class EventBus:
     # Event publishing
     # --------------------------------------------------------------------------
 
-    def publish(self, event: "Event") -> None:
+    def publish(self, event: Event) -> None:
         """Deliver ``event`` to every subscriber registered for its type.
 
         This is a synchronous operation: all subscribers are called in the
@@ -253,7 +253,7 @@ class EventBus:
         """
         self._dispatch(event, sync=True)
 
-    def publish_async(self, event: "Event") -> None:
+    def publish_async(self, event: Event) -> None:
         """Deliver ``event`` asynchronously to subscribers.
 
         Uses a thread pool to dispatch events without blocking the caller.
@@ -266,7 +266,7 @@ class EventBus:
 
         self._executor.submit(self._dispatch, event, sync=True)
 
-    def _dispatch(self, event: "Event", *, sync: bool = True) -> None:
+    def _dispatch(self, event: Event, *, sync: bool = True) -> None:
         """Internal dispatch method.
 
         Args:
@@ -305,7 +305,7 @@ class EventBus:
     # Query methods
     # --------------------------------------------------------------------------
 
-    def get_subscriber_count(self, event_type: "EventType | None" = None) -> int:
+    def get_subscriber_count(self, event_type: EventType | None = None) -> int:
         """Get the number of subscribers.
 
         Args:
@@ -326,7 +326,7 @@ class EventBus:
                 return len(self._subscriptions[event_type])
             return 0
 
-    def get_subscribed_types(self) -> set["EventType"]:
+    def get_subscribed_types(self) -> set[EventType]:
         """Get all event types with active subscriptions.
 
         Returns:
@@ -348,7 +348,7 @@ class EventBus:
             self._executor.shutdown(wait=True)
             self._executor = None
 
-    def __enter__(self) -> "EventBus":
+    def __enter__(self) -> EventBus:
         """Context manager entry."""
         return self
 

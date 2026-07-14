@@ -18,35 +18,44 @@ Capabilities:
 
 from __future__ import annotations
 
-from core.embeddings.types import (
-    EmbeddingProvider,
-    EmbeddingPolicy,
-    Embedding,
-    EmbeddingRequest,
-    EmbeddingResponse,
-    EmbeddingModelInfo,
-    ProviderHealth,
-    EmbeddingMetrics,
-    EmbeddingTrace,
+from core.embeddings.configuration import (
+    EmbeddingConfiguration,
+    ProviderConfiguration,
+)
+from core.embeddings.events import (
+    EmbeddingEvent,
+    EmbeddingEventBus,
+    get_embedding_event_bus,
+    reset_embedding_event_bus,
 )
 from core.embeddings.exceptions import (
-    EmbeddingError,
-    ProviderNotFoundError,
-    ModelNotFoundError,
-    ProviderUnavailableError,
-    GenerationError,
-    ValidationError,
-    ConfigurationError,
-    HealthCheckError,
-    RateLimitError,
     AuthenticationError,
+    ConfigurationError,
+    EmbeddingError,
+    GenerationError,
+    HealthCheckError,
+    ModelNotFoundError,
+    ProviderNotFoundError,
+    ProviderUnavailableError,
+    RateLimitError,
     RegistryError,
     SelectionError,
+    ValidationError,
+)
+from core.embeddings.manager import (
+    EmbeddingManager,
+    get_embedding_manager,
+    reset_embedding_manager,
+)
+from core.embeddings.metrics import (
+    EmbeddingMetricsCollector,
+    get_embedding_metrics,
+    reset_embedding_metrics,
 )
 from core.embeddings.provider import (
     BaseEmbeddingProvider,
-    OpenAIEmbeddingProvider,
     OllamaEmbeddingProvider,
+    OpenAIEmbeddingProvider,
 )
 from core.embeddings.registry import (
     EmbeddingRegistry,
@@ -56,30 +65,21 @@ from core.embeddings.registry import (
 from core.embeddings.selector import (
     EmbeddingSelector,
 )
-from core.embeddings.manager import (
-    EmbeddingManager,
-    get_embedding_manager,
-    reset_embedding_manager,
-)
-from core.embeddings.configuration import (
-    EmbeddingConfiguration,
-    ProviderConfiguration,
-)
-from core.embeddings.metrics import (
-    EmbeddingMetricsCollector,
-    get_embedding_metrics,
-    reset_embedding_metrics,
-)
-from core.embeddings.events import (
-    EmbeddingEvent,
-    EmbeddingEventBus,
-    get_embedding_event_bus,
-    reset_embedding_event_bus,
-)
 from core.embeddings.trace import (
     EmbeddingTracer,
     get_embedding_tracer,
     reset_embedding_tracer,
+)
+from core.embeddings.types import (
+    Embedding,
+    EmbeddingMetrics,
+    EmbeddingModelInfo,
+    EmbeddingPolicy,
+    EmbeddingProvider,
+    EmbeddingRequest,
+    EmbeddingResponse,
+    EmbeddingTrace,
+    ProviderHealth,
 )
 
 __all__ = [

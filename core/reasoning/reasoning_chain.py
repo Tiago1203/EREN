@@ -8,11 +8,8 @@ Architecture only — no AI, no business logic.
 from __future__ import annotations
 
 import uuid
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
-from .confidence_model import ConfidenceCalculatorFactory
 from .reasoning_types import (
     ConfidenceLevel,
     ConfidenceScore,

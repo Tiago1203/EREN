@@ -5,7 +5,7 @@ Collects complete audit trail of composition operations.
 Architecture only -- no implementations.
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 class CompositionTraceEntry:
@@ -72,7 +72,7 @@ class CompositionTraceCollector:
         self._entry_count += 1
         entry = CompositionTraceEntry(
             entry_id=f"composition_trace_{self._entry_count}",
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             operation=operation,
             module_name=module_name,
             duration_ms=duration_ms,

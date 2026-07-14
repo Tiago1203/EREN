@@ -7,12 +7,12 @@ Architecture only -- no implementations.
 
 import threading
 import uuid
-from datetime import datetime, timezone
-from typing import Any, Callable, Optional
+from datetime import UTC, datetime
+from typing import Any, Optional
 
+from .exceptions import ScopeDisposedException
 from .service_descriptor import ServiceInstance
 from .service_factory import ServiceFactory
-from .exceptions import ScopeDisposedException
 
 
 class ScopeType:
@@ -48,12 +48,12 @@ class ServiceScope:
         self._scope_id = scope_id or str(uuid.uuid4())
         self._scope_type = scope_type
         self._parent = parent
-        self._children: list["ServiceScope"] = []
+        self._children: list[ServiceScope] = []
         self._instances: dict[str, ServiceInstance] = {}
         self._factories: dict[str, ServiceFactory] = {}
         self._is_disposed = False
         self._lock = threading.RLock()
-        self._created_at = datetime.now(timezone.utc).isoformat()
+        self._created_at = datetime.now(UTC).isoformat()
 
         # Register with parent
         if parent is not None:
@@ -131,7 +131,7 @@ class ServiceScope:
 
             service_instance = ServiceInstance(
                 instance=instance_obj,
-                created_at=datetime.now(timezone.utc).isoformat(),
+                created_at=datetime.now(UTC).isoformat(),
                 scope_id=self._scope_id,
             )
 
@@ -151,7 +151,7 @@ class ServiceScope:
         with self._lock:
             self._factories[contract] = factory
 
-    def get_instance(self, contract: str) -> Optional[Any]:
+    def get_instance(self, contract: str) -> Any | None:
         """Get an existing instance in this scope.
 
         Args:

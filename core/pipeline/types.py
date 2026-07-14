@@ -6,7 +6,7 @@ Defines all types, enums, and value objects used by the pipeline system.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any
 
@@ -32,27 +32,27 @@ class PipelineState(str, Enum):
     CANCELLED = "cancelled"
 
     @classmethod
-    def is_terminal(cls, state: "PipelineState") -> bool:
+    def is_terminal(cls, state: PipelineState) -> bool:
         """Check if state is terminal (no further transitions)."""
         return state in (cls.COMPLETED, cls.FAILED, cls.CANCELLED)
 
     @classmethod
-    def can_start(cls, state: "PipelineState") -> bool:
+    def can_start(cls, state: PipelineState) -> bool:
         """Check if pipeline can start from this state."""
         return state in (cls.READY,)
 
     @classmethod
-    def can_pause(cls, state: "PipelineState") -> bool:
+    def can_pause(cls, state: PipelineState) -> bool:
         """Check if pipeline can pause from this state."""
         return state in (cls.RUNNING, cls.WAITING)
 
     @classmethod
-    def can_resume(cls, state: "PipelineState") -> bool:
+    def can_resume(cls, state: PipelineState) -> bool:
         """Check if pipeline can resume from this state."""
         return state in (cls.PAUSED,)
 
     @classmethod
-    def can_cancel(cls, state: "PipelineState") -> bool:
+    def can_cancel(cls, state: PipelineState) -> bool:
         """Check if pipeline can cancel from this state."""
         return state in (cls.CREATED, cls.READY, cls.RUNNING, cls.WAITING, cls.PAUSED)
 
@@ -69,7 +69,7 @@ class StageState(str, Enum):
     CANCELLED = "cancelled"
 
     @classmethod
-    def is_terminal(cls, state: "StageState") -> bool:
+    def is_terminal(cls, state: StageState) -> bool:
         """Check if state is terminal."""
         return state in (cls.SKIPPED, cls.FAILED, cls.COMPLETED, cls.CANCELLED)
 
@@ -133,7 +133,7 @@ class StageResult:
     stage_name: str
     stage_type: StageType
     status: StageState
-    started_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    started_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     finished_at: datetime | None = None
     duration_ms: int = 0
     output: Any = None
@@ -181,7 +181,7 @@ class PipelineResult:
     pipeline_id: str
     pipeline_name: str
     status: PipelineState
-    started_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    started_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     finished_at: datetime | None = None
     duration_ms: int = 0
     completed_stages: list[str] = field(default_factory=list)

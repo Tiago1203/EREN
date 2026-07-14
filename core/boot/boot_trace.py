@@ -5,7 +5,7 @@ Collects complete audit trail of boot operations.
 Architecture only -- no implementations.
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 class BootTraceEntry:
@@ -68,7 +68,7 @@ class BootTraceCollector:
         self._entry_count += 1
         entry = BootTraceEntry(
             entry_id=f"boot_trace_{self._entry_count}",
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             step_name=step_name,
             state=state,
             status=status,

@@ -20,7 +20,7 @@ Design:
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from uuid import uuid4
 
@@ -29,7 +29,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 def _utcnow() -> datetime:
     """Return the current UTC timestamp (timezone-aware)."""
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 def _new_id() -> str:
@@ -146,7 +146,6 @@ class Event(BaseModel):
         source: str | None = None,
     ) -> Event:
         """Return a copy with updated context fields."""
-        from pydantic import Field as PydanticField
         updates: dict[str, object] = {}
         if correlation_id is not None:
             updates["correlation_id"] = correlation_id

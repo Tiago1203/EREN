@@ -10,9 +10,10 @@ from __future__ import annotations
 import threading
 import uuid
 from collections import defaultdict
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Callable
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from .reasoning_types import (
     ConfidenceScore,
@@ -230,7 +231,7 @@ class HypothesisManager:
                 supporting_evidence=tuple(supporting),
                 contradicting_evidence=tuple(contradicting),
                 status=new_status,
-                updated_at=datetime.now(timezone.utc).isoformat(),
+                updated_at=datetime.now(UTC).isoformat(),
             )
 
             self._state.hypotheses[hypothesis_id] = updated
@@ -273,7 +274,7 @@ class HypothesisManager:
                 hypothesis,
                 supporting_evidence=tuple(supporting),
                 contradicting_evidence=tuple(contradicting),
-                updated_at=datetime.now(timezone.utc).isoformat(),
+                updated_at=datetime.now(UTC).isoformat(),
             )
 
             self._state.hypotheses[hypothesis_id] = updated
@@ -315,7 +316,7 @@ class HypothesisManager:
             updated = replace(
                 hypothesis,
                 status=status,
-                updated_at=datetime.now(timezone.utc).isoformat(),
+                updated_at=datetime.now(UTC).isoformat(),
             )
 
             self._state.hypotheses[hypothesis_id] = updated
@@ -363,7 +364,7 @@ class HypothesisManager:
                 hypothesis,
                 confidence_score=confidence.value,
                 confidence_reasons=confidence.reasons,
-                updated_at=datetime.now(timezone.utc).isoformat(),
+                updated_at=datetime.now(UTC).isoformat(),
             )
 
             self._state.hypotheses[hypothesis_id] = updated

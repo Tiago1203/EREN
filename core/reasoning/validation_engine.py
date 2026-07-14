@@ -5,13 +5,13 @@ Verifies decisions, contrasts with rules and guidelines.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 from core.reasoning.reasoning_types import (
     Decision,
-    Hypothesis,
     Evidence,
-    ConfidenceScore,
+    Hypothesis,
 )
 
 if TYPE_CHECKING:

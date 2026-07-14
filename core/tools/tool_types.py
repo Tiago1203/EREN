@@ -8,7 +8,7 @@ Architecture only — no business logic, no AI.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum, IntEnum
 from typing import TYPE_CHECKING, Any
 
@@ -172,7 +172,7 @@ class ToolMetadata:
     @classmethod
     def now(cls, **kwargs) -> ToolMetadata:
         """Create metadata with current timestamp."""
-        timestamp = datetime.now(timezone.utc).isoformat()
+        timestamp = datetime.now(UTC).isoformat()
         return cls(
             created_at=timestamp,
             updated_at=timestamp,
@@ -244,7 +244,7 @@ class ToolResult:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            self.timestamp = datetime.now(timezone.utc).isoformat()
+            self.timestamp = datetime.now(UTC).isoformat()
 
     def is_success(self) -> bool:
         """Check if execution was successful."""
@@ -302,7 +302,7 @@ class PipelineResult:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            self.timestamp = datetime.now(timezone.utc).isoformat()
+            self.timestamp = datetime.now(UTC).isoformat()
 
 
 # =============================================================================
@@ -445,7 +445,7 @@ class ToolEvent:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            self.timestamp = datetime.now(timezone.utc).isoformat()
+            self.timestamp = datetime.now(UTC).isoformat()
 
 
 # =============================================================================

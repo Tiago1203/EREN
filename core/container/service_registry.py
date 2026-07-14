@@ -6,17 +6,16 @@ Architecture only -- no implementations.
 """
 
 import threading
-from typing import Any, Callable, Optional
+from collections.abc import Callable
+from typing import Any
 
-from .service_descriptor import ServiceDescriptor
-from .service_factory import ServiceFactory
-from .service_lifetime import ServiceLifetime
 from .exceptions import (
     DuplicateServiceException,
     InvalidLifetimeException,
-    RegistrationException,
-    ServiceNotFoundException,
 )
+from .service_descriptor import ServiceDescriptor
+from .service_factory import ServiceFactory
+from .service_lifetime import ServiceLifetime
 
 
 class ServiceRegistry:
@@ -45,7 +44,7 @@ class ServiceRegistry:
         implementation: Any,
         lifetime: str = ServiceLifetime.TRANSIENT,
         *,
-        factory: Optional[Callable] = None,
+        factory: Callable | None = None,
         arguments: tuple = None,
         keyword_arguments: dict = None,
         tags: set = None,
@@ -138,7 +137,7 @@ class ServiceRegistry:
             replace=replace,
         )
 
-    def get_descriptor(self, contract: str) -> Optional[ServiceDescriptor]:
+    def get_descriptor(self, contract: str) -> ServiceDescriptor | None:
         """Get a service descriptor.
 
         Args:
@@ -166,7 +165,7 @@ class ServiceRegistry:
         with self._lock:
             return list(self._descriptors.get(contract, []))
 
-    def get_factory(self, contract: str) -> Optional[ServiceFactory]:
+    def get_factory(self, contract: str) -> ServiceFactory | None:
         """Get a service factory.
 
         Args:

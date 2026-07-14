@@ -5,7 +5,7 @@ Base module classes for EREN composition.
 Architecture only -- no implementations.
 """
 
-from typing import Any, Callable, Optional
+from typing import Any
 
 from .module_descriptor import ModuleDescriptor
 
@@ -23,7 +23,7 @@ class CompositionModule:
             name: Module name.
         """
         self._name = name
-        self._descriptor: Optional[ModuleDescriptor] = None
+        self._descriptor: ModuleDescriptor | None = None
 
     @property
     def name(self) -> str:

@@ -6,9 +6,9 @@ Defines all types, enums, and value objects used by the plugin system.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     pass
@@ -32,12 +32,12 @@ class PluginState(str, Enum):
     UNLOADED = "unloaded"
 
     @classmethod
-    def is_active(cls, state: "PluginState") -> bool:
+    def is_active(cls, state: PluginState) -> bool:
         """Check if state represents an active plugin."""
         return state == cls.ACTIVE
 
     @classmethod
-    def can_transition(cls, from_state: "PluginState", to_state: "PluginState") -> bool:
+    def can_transition(cls, from_state: PluginState, to_state: PluginState) -> bool:
         """Check if transition is valid."""
         valid_transitions = {
             cls.DISCOVERED: [cls.REGISTERED, cls.FAILED],

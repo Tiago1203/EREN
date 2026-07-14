@@ -8,9 +8,9 @@ Architecture only — no AI, no business logic.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum, IntEnum
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     pass
@@ -68,9 +68,9 @@ class Hypothesis:
     def __post_init__(self) -> None:
         """Set timestamps if not provided."""
         if not self.created_at:
-            object.__setattr__(self, 'created_at', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'created_at', datetime.now(UTC).isoformat())
         if not self.updated_at:
-            object.__setattr__(self, 'updated_at', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'updated_at', datetime.now(UTC).isoformat())
 
     def is_active(self) -> bool:
         """Check if hypothesis is active."""
@@ -144,7 +144,7 @@ class Evidence:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            object.__setattr__(self, 'timestamp', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'timestamp', datetime.now(UTC).isoformat())
 
     def supports(self) -> bool:
         """Check if evidence supports hypotheses."""
@@ -187,7 +187,7 @@ class ConfidenceScore:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.calculated_at:
-            object.__setattr__(self, 'calculated_at', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'calculated_at', datetime.now(UTC).isoformat())
 
     def is_confident(self, threshold: float = 0.5) -> bool:
         """Check if confidence exceeds threshold."""
@@ -256,7 +256,7 @@ class Decision:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.created_at:
-            object.__setattr__(self, 'created_at', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'created_at', datetime.now(UTC).isoformat())
 
 
 # =============================================================================
@@ -306,7 +306,7 @@ class ReasoningChain:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.created_at:
-            object.__setattr__(self, 'created_at', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'created_at', datetime.now(UTC).isoformat())
 
 
 # =============================================================================
@@ -328,7 +328,7 @@ class ReasoningEvent:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            object.__setattr__(self, 'timestamp', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'timestamp', datetime.now(UTC).isoformat())
 
 
 @dataclass(frozen=True, slots=True)
@@ -347,9 +347,9 @@ class ReasoningTrace:
     def __post_init__(self) -> None:
         """Set timestamps if not provided."""
         if not self.created_at:
-            object.__setattr__(self, 'created_at', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'created_at', datetime.now(UTC).isoformat())
         if not self.updated_at:
-            object.__setattr__(self, 'updated_at', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'updated_at', datetime.now(UTC).isoformat())
 
 
 # =============================================================================

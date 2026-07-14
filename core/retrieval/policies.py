@@ -5,11 +5,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from core.retrieval.types import (
+    MemorySource,
+    RetrievalPlan,
     RetrievalPolicy,
     RetrievalQuery,
-    RetrievalPlan,
     RetrievalStep,
-    MemorySource,
 )
 
 if TYPE_CHECKING:

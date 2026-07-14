@@ -9,16 +9,13 @@ from __future__ import annotations
 
 import threading
 import uuid
-from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
 
 from .scheduling_events import SchedulingEventPublisher
 from .scheduling_metrics import SchedulingMetricsCollector
 from .scheduling_policy import PolicyPresets, SchedulingPolicy
-from .scheduling_queue import MultiQueueManager, SchedulingQueue
+from .scheduling_queue import MultiQueueManager
 from .scheduling_strategy import (
-    FIFOStrategy,
-    PriorityStrategy,
     SchedulingStrategy,
     StrategyFactory,
 )

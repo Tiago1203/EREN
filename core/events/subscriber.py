@@ -10,7 +10,7 @@ protocol from `bus.py`. No business logic, AI, or dispatching lives here.
 from __future__ import annotations
 
 import logging
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
@@ -37,7 +37,7 @@ class BaseSubscriber:
 
     def __init__(
         self,
-        event_types: tuple["EventType", ...] | None = None,
+        event_types: tuple[EventType, ...] | None = None,
         log_events: bool = False,
         raise_on_error: bool = False,
     ) -> None:
@@ -53,11 +53,11 @@ class BaseSubscriber:
         self._raise_on_error = raise_on_error
 
     @property
-    def subscribed_types(self) -> tuple["EventType", ...]:
+    def subscribed_types(self) -> tuple[EventType, ...]:
         """Return the event types this subscriber is interested in."""
         return self._event_types
 
-    def handle(self, event: "Event") -> None:
+    def handle(self, event: Event) -> None:
         """Handle a received event.
 
         Args:
@@ -68,13 +68,13 @@ class BaseSubscriber:
 
         try:
             self.on_event(event)
-        except Exception as e:
+        except Exception:
             logger.exception("Error handling event %s in %s", event.type, self)
             if self._raise_on_error:
                 raise
 
     @abstractmethod
-    def on_event(self, event: "Event") -> None:
+    def on_event(self, event: Event) -> None:
         """Process the event.
 
         Override this method to implement custom event handling logic.
@@ -108,9 +108,9 @@ class FunctionSubscriber:
 
     def __init__(
         self,
-        event_types: tuple["EventType", ...] = (),
-        handler: Callable[["Event"], Any] | None = None,
-        predicate: Callable[["Event"], bool] | None = None,
+        event_types: tuple[EventType, ...] = (),
+        handler: Callable[[Event], Any] | None = None,
+        predicate: Callable[[Event], bool] | None = None,
     ) -> None:
         """Initialize the function subscriber.
 
@@ -125,11 +125,11 @@ class FunctionSubscriber:
         self._predicate = predicate
 
     @property
-    def subscribed_types(self) -> tuple["EventType", ...]:
+    def subscribed_types(self) -> tuple[EventType, ...]:
         """Return the event types this subscriber is interested in."""
         return self._event_types
 
-    def handle(self, event: "Event") -> None:
+    def handle(self, event: Event) -> None:
         """Handle the event by calling the handler.
 
         Args:
@@ -167,13 +167,13 @@ class MultiHandlerSubscriber:
 
     def __init__(self) -> None:
         """Initialize the multi-handler subscriber."""
-        self._handlers: list[tuple[Callable[["Event"], bool], Callable[["Event"], Any]]] = []
-        self._fallback: Callable[["Event"], Any] | None = None
+        self._handlers: list[tuple[Callable[[Event], bool], Callable[[Event], Any]]] = []
+        self._fallback: Callable[[Event], Any] | None = None
 
     @property
-    def subscribed_types(self) -> tuple["EventType", ...]:
+    def subscribed_types(self) -> tuple[EventType, ...]:
         """Return all event types this subscriber handles."""
-        types: set["EventType"] = set()
+        types: set[EventType] = set()
         for predicate, _ in self._handlers:
             if isinstance(predicate, type(predicate)) and hasattr(predicate, "value"):
                 # It's an EventType enum
@@ -182,8 +182,8 @@ class MultiHandlerSubscriber:
 
     def register(
         self,
-        event_type_or_predicate: "EventType | Callable[[Event], bool]",
-        handler: Callable[["Event"], Any],
+        event_type_or_predicate: EventType | Callable[[Event], bool],
+        handler: Callable[[Event], Any],
     ) -> None:
         """Register a handler for an event type or predicate.
 
@@ -194,7 +194,7 @@ class MultiHandlerSubscriber:
         """
         self._handlers.append((event_type_or_predicate, handler))  # type: ignore
 
-    def register_fallback(self, handler: Callable[["Event"], Any]) -> None:
+    def register_fallback(self, handler: Callable[[Event], Any]) -> None:
         """Register a fallback handler for unmatched events.
 
         Args:
@@ -202,7 +202,7 @@ class MultiHandlerSubscriber:
         """
         self._fallback = handler
 
-    def handle(self, event: "Event") -> None:
+    def handle(self, event: Event) -> None:
         """Route the event to the appropriate handler.
 
         Args:
@@ -234,7 +234,7 @@ class LoggingSubscriber:
 
     def __init__(
         self,
-        event_types: tuple["EventType", ...] | None = None,
+        event_types: tuple[EventType, ...] | None = None,
         log_level: int = logging.INFO,
         include_payload: bool = False,
     ) -> None:
@@ -251,11 +251,11 @@ class LoggingSubscriber:
         self._logger = logging.getLogger(f"{__name__}.{id(self)}")
 
     @property
-    def subscribed_types(self) -> tuple["EventType", ...]:
+    def subscribed_types(self) -> tuple[EventType, ...]:
         """Return the event types this subscriber is interested in."""
         return self._event_types
 
-    def handle(self, event: "Event") -> None:
+    def handle(self, event: Event) -> None:
         """Log the event.
 
         Args:
@@ -298,11 +298,11 @@ class AuditSubscriber:
         self._records: list[dict[str, Any]] = []
 
     @property
-    def subscribed_types(self) -> tuple["EventType", ...]:
+    def subscribed_types(self) -> tuple[EventType, ...]:
         """Return all event types (audit subscriber sees everything)."""
         return ()
 
-    def handle(self, event: "Event") -> None:
+    def handle(self, event: Event) -> None:
         """Create an audit record for the event.
 
         Args:
@@ -327,7 +327,7 @@ class AuditSubscriber:
 
     def get_records(
         self,
-        event_type: "EventType | None" = None,
+        event_type: EventType | None = None,
         correlation_id: str | None = None,
     ) -> list[dict[str, Any]]:
         """Get audit records matching criteria.
@@ -364,14 +364,14 @@ class MetricSubscriber:
     def __init__(self) -> None:
         """Initialize the metric subscriber."""
         self._event_counts: dict[str, int] = {}
-        self._events_by_type: dict[str, list["Event"]] = {}
+        self._events_by_type: dict[str, list[Event]] = {}
 
     @property
-    def subscribed_types(self) -> tuple["EventType", ...]:
+    def subscribed_types(self) -> tuple[EventType, ...]:
         """Return all event types."""
         return ()
 
-    def handle(self, event: "Event") -> None:
+    def handle(self, event: Event) -> None:
         """Collect metrics for the event.
 
         Args:
@@ -400,7 +400,7 @@ class MetricSubscriber:
         """
         return sum(self._event_counts.values())
 
-    def get_events(self, event_type: "EventType") -> list["Event"]:
+    def get_events(self, event_type: EventType) -> list[Event]:
         """Get all events of a specific type.
 
         Args:

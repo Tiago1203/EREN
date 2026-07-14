@@ -6,14 +6,15 @@ Manages plugin registration and discovery.
 from __future__ import annotations
 
 import threading
-from typing import TYPE_CHECKING, Any, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 from core.plugins.descriptor import PluginDescriptor
-from core.plugins.types import PluginState, PluginCategory
 from core.plugins.exceptions import (
-    PluginNotFoundError,
     PluginAlreadyRegisteredError,
+    PluginNotFoundError,
 )
+from core.plugins.types import PluginCategory, PluginState
 
 if TYPE_CHECKING:
     pass

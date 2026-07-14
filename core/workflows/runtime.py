@@ -6,20 +6,20 @@ Runtime for orchestrating workflow execution.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any, Callable
+from collections.abc import Callable
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
+from core.workflows.checkpoint import get_checkpoint_manager
+from core.workflows.executor import get_task_executor
+from core.workflows.scheduler import get_workflow_scheduler
+from core.workflows.state_store import get_state_store
 from core.workflows.types import (
+    NodeExecution,
     WorkflowDefinition,
     WorkflowExecution,
     WorkflowStatus,
-    NodeExecution,
-    NodeStatus,
 )
-from core.workflows.state_store import get_state_store, StateStore
-from core.workflows.checkpoint import get_checkpoint_manager, CheckpointManager
-from core.workflows.scheduler import get_workflow_scheduler, WorkflowScheduler
-from core.workflows.executor import get_task_executor, TaskExecutor
 
 if TYPE_CHECKING:
     pass
@@ -135,7 +135,7 @@ class WorkflowRuntime:
             raise ValueError(f"Invalid workflow: {errors}")
 
         execution.status = WorkflowStatus.RUNNING
-        execution.started_at = datetime.now(timezone.utc)
+        execution.started_at = datetime.now(UTC)
         self._state_store.save_execution(execution)
 
         self._emit_event("workflow_started", execution)
@@ -205,7 +205,7 @@ class WorkflowRuntime:
             return False
 
         execution.status = WorkflowStatus.CANCELLED
-        execution.completed_at = datetime.now(timezone.utc)
+        execution.completed_at = datetime.now(UTC)
         self._state_store.save_execution(execution)
 
         self._emit_event("workflow_cancelled", execution)
@@ -229,7 +229,7 @@ class WorkflowRuntime:
             Finished execution.
         """
         execution.status = status
-        execution.completed_at = datetime.now(timezone.utc)
+        execution.completed_at = datetime.now(UTC)
         execution.error_message = error_message
 
         self._state_store.save_execution(execution)

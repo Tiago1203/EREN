@@ -8,18 +8,16 @@ from __future__ import annotations
 import time
 from typing import TYPE_CHECKING
 
-from core.planning.types import (
-    Goal,
-    GoalAnalysis,
-    Task,
-    ExecutionPlan,
-    PlanStatus,
-    PlanningMetrics,
-)
-from core.planning.goal_analyzer import GoalAnalyzer
-from core.planning.task_decomposer import TaskDecomposer
 from core.planning.dependency_resolver import DependencyResolver
+from core.planning.goal_analyzer import GoalAnalyzer
 from core.planning.plan_builder import PlanBuilder
+from core.planning.task_decomposer import TaskDecomposer
+from core.planning.types import (
+    ExecutionPlan,
+    PlanningMetrics,
+    PlanStatus,
+    Task,
+)
 
 if TYPE_CHECKING:
     pass

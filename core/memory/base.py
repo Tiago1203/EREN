@@ -7,16 +7,15 @@ The Orchestrator never knows concrete implementations like PostgreSQL, Redis, Ch
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, AsyncIterator
+from typing import TYPE_CHECKING
 
 from core.memory.types import (
-    MemoryType,
-    MemoryState,
-    MemoryQuery,
-    MemoryResult,
-    MemoryResponse,
     MemoryEntry,
     MemoryMetrics,
+    MemoryQuery,
+    MemoryResponse,
+    MemoryState,
+    MemoryType,
 )
 
 if TYPE_CHECKING:

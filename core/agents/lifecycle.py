@@ -5,14 +5,12 @@ Manages agent lifecycle and state transitions.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Callable
+from collections.abc import Callable
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from core.agents.types import (
     AgentManifest,
-    AgentStatus,
-    AgentTask,
-    TaskStatus,
 )
 
 if TYPE_CHECKING:
@@ -218,7 +216,7 @@ class LifecycleManager:
         self._lifecycle_history[agent_id].append({
             "state": state_value,
             "reason": reason,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         })
 
     def _trigger_callbacks(

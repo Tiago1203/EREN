@@ -7,7 +7,7 @@ including the container, event bus, capability registry, and all engines.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 
@@ -57,7 +57,7 @@ class ComponentHealth:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.last_check:
-            self.last_check = datetime.now(timezone.utc).isoformat()
+            self.last_check = datetime.now(UTC).isoformat()
 
     def is_healthy(self) -> bool:
         """Check if component is healthy."""
@@ -103,7 +103,7 @@ class RuntimeHealth:
     def __post_init__(self) -> None:
         """Initialize timestamp and summary."""
         if not self.timestamp:
-            self.timestamp = datetime.now(timezone.utc).isoformat()
+            self.timestamp = datetime.now(UTC).isoformat()
         if not self.summary:
             self._update_summary()
 
@@ -305,7 +305,7 @@ class RuntimeHealthChecker:
 
     def _check_container(self, container) -> None:
         """Check the DI Container."""
-        start = datetime.now(timezone.utc)
+        start = datetime.now(UTC)
 
         if container is None:
             health = ComponentHealth(
@@ -324,7 +324,7 @@ class RuntimeHealthChecker:
                 is_critical=True,
             )
         else:
-            response_time = int((datetime.now(timezone.utc) - start).total_seconds() * 1000)
+            response_time = int((datetime.now(UTC) - start).total_seconds() * 1000)
             health = ComponentHealth(
                 component_type=ComponentType.CONTAINER,
                 component_name="DI Container",
@@ -338,7 +338,7 @@ class RuntimeHealthChecker:
 
     def _check_event_bus(self, event_bus) -> None:
         """Check the Event Bus."""
-        start = datetime.now(timezone.utc)
+        start = datetime.now(UTC)
 
         if event_bus is None:
             health = ComponentHealth(
@@ -350,7 +350,7 @@ class RuntimeHealthChecker:
             )
         else:
             subscriber_count = getattr(event_bus, 'get_subscriber_count', lambda: 0)()
-            response_time = int((datetime.now(timezone.utc) - start).total_seconds() * 1000)
+            response_time = int((datetime.now(UTC) - start).total_seconds() * 1000)
             health = ComponentHealth(
                 component_type=ComponentType.EVENT_BUS,
                 component_name="Event Bus",

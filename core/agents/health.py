@@ -5,13 +5,12 @@ Manages agent health and heartbeat.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from core.agents.types import (
     AgentHealth,
     AgentHealthStatus,
-    AgentStatus,
 )
 
 if TYPE_CHECKING:
@@ -52,7 +51,7 @@ class AgentHealthManager:
         health = AgentHealth(
             agent_id=agent_id,
             status=initial_status,
-            last_heartbeat=datetime.now(timezone.utc),
+            last_heartbeat=datetime.now(UTC),
         )
         self._health[agent_id] = health
         return health
@@ -91,7 +90,7 @@ class AgentHealthManager:
             agent_id: Agent ID.
         """
         if agent_id in self._health:
-            self._health[agent_id].last_heartbeat = datetime.now(timezone.utc)
+            self._health[agent_id].last_heartbeat = datetime.now(UTC)
 
     def record_task_start(self, agent_id: str) -> None:
         """Record task start for agent.
@@ -189,7 +188,7 @@ class AgentHealthManager:
             List of stale agent IDs.
         """
         stale = []
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         for agent_id, health in self._health.items():
             age = (now - health.last_heartbeat).total_seconds()

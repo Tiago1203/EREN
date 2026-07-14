@@ -19,6 +19,10 @@ from core.scheduler.exceptions import (
     TaskNotFoundError,
     TaskTimeoutError,
 )
+from core.scheduler.scheduler import (
+    CognitiveScheduler,
+    SchedulerFactory,
+)
 from core.scheduler.scheduling_events import (
     SchedulingEventPublisher,
     SchedulingEventType,
@@ -38,14 +42,14 @@ from core.scheduler.scheduling_policy import (
 from core.scheduler.scheduling_queue import (
     MultiQueueManager,
     QueueEntry,
-    SchedulingQueue,
     QueueStatistics,
+    SchedulingQueue,
 )
 from core.scheduler.scheduling_strategy import (
     CriticalFirstStrategy,
     DeadlineFirstStrategy,
-    FIFOStrategy,
     FairSchedulingStrategy,
+    FIFOStrategy,
     PriorityStrategy,
     SchedulingStrategy,
     StrategyFactory,
@@ -55,6 +59,7 @@ from core.scheduler.scheduling_trace import (
     SchedulingTraceEntry,
 )
 from core.scheduler.scheduling_types import (
+    VALID_TASK_TRANSITIONS,
     CognitiveTask,
     QueueStatistics,
     SchedulingDecision,
@@ -63,11 +68,6 @@ from core.scheduler.scheduling_types import (
     TaskPriority,
     TaskState,
     TaskType,
-    VALID_TASK_TRANSITIONS,
-)
-from core.scheduler.scheduler import (
-    CognitiveScheduler,
-    SchedulerFactory,
 )
 
 __all__ = [

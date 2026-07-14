@@ -9,7 +9,7 @@ Architecture only — no business logic, no AI.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from .types import (
@@ -22,7 +22,7 @@ from .types import (
 )
 
 if TYPE_CHECKING:
-    from core.contracts import CognitiveEngine
+    pass
 
 
 # =============================================================================
@@ -97,7 +97,7 @@ class EngineDescriptor:
         Returns:
             A new EngineDescriptor instance
         """
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
 
         return cls(
             engine_id=engine_id,
@@ -215,7 +215,7 @@ class RegistrySnapshot:
         """Create a snapshot from a live registry."""
         descriptors = tuple(registry.list())
         return cls(
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             engine_count=len(descriptors),
             descriptors=descriptors,
             active_count=sum(1 for d in descriptors if d.is_active()),
@@ -224,4 +224,4 @@ class RegistrySnapshot:
 
 
 # Import EngineRegistry for type hints
-from core.registry.registry import EngineRegistry  # noqa: E402, F401
+from core.registry.registry import EngineRegistry  # noqa: E402

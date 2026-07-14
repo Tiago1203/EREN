@@ -7,7 +7,7 @@ coordinating the flow from planning through reasoning to action.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 from uuid import uuid4
 
@@ -27,12 +27,8 @@ from .runtime_events import (
     ReasoningCompleted,
     RuntimeEvent,
     RuntimeEventType,
-    SessionCompleted,
-    SessionCreated,
-    SessionFailed,
-    SessionStarted,
 )
-from .runtime_metrics import CycleMetrics, RuntimeMetrics
+from .runtime_metrics import RuntimeMetrics
 from .runtime_trace import RuntimeTraceCollector
 
 
@@ -238,7 +234,7 @@ class CognitiveCycleExecutor:
             payload={"intent": intent},
         ))
 
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
         engine_name = "planner"
         session.add_engine_executed(engine_name)
 
@@ -306,7 +302,7 @@ class CognitiveCycleExecutor:
             payload={"query": session.intent.get("query", "")},
         ))
 
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
         engine_name = "knowledge_engine"
         session.add_engine_executed(engine_name)
 
@@ -367,7 +363,7 @@ class CognitiveCycleExecutor:
             payload={"query": session.intent.get("query", "")},
         ))
 
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
         engine_name = "memory_engine"
         session.add_engine_executed(engine_name)
 
@@ -429,7 +425,7 @@ class CognitiveCycleExecutor:
             },
         ))
 
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
         engine_name = "reasoning_engine"
         session.add_engine_executed(engine_name)
 
@@ -496,7 +492,7 @@ class CognitiveCycleExecutor:
         stage_name = "decision"
         session.set_stage(stage_name)
 
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
         engine_name = "decision_engine"
         session.add_engine_executed(engine_name)
 
@@ -555,7 +551,7 @@ class CognitiveCycleExecutor:
         stage_name = "action"
         session.set_stage(stage_name)
 
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
         engine_name = "tool_engine"
         session.add_engine_executed(engine_name)
 
@@ -622,7 +618,7 @@ class CognitiveCycleExecutor:
         stage_name = "context_update"
         session.set_stage(stage_name)
 
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
 
         try:
             if self._simulation_mode:
@@ -699,4 +695,4 @@ class CognitiveCycleExecutor:
         Returns:
             Duration in milliseconds.
         """
-        return int((datetime.now(timezone.utc) - start_time).total_seconds() * 1000)
+        return int((datetime.now(UTC) - start_time).total_seconds() * 1000)

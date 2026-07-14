@@ -5,8 +5,7 @@ Tracks decision performance and statistics.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from core.decision.types import DecisionMetrics
@@ -70,7 +69,7 @@ class DecisionMetricsCollector:
             "strategy": strategy,
             "task_count": task_count,
             "decision_time_ms": decision_time_ms,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         })
 
         self._metrics.by_goal_type[goal_type] = (
@@ -108,7 +107,7 @@ class DecisionMetricsCollector:
             "plan_id": plan_id,
             "success": success,
             "duration_seconds": duration_seconds,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         })
 
     def record_replan(
@@ -136,7 +135,7 @@ class DecisionMetricsCollector:
             "original_plan_id": original_plan_id,
             "new_plan_id": new_plan_id,
             "reason": reason,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         })
 
     def get_metrics(self) -> DecisionMetrics:

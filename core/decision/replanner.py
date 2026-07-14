@@ -6,15 +6,15 @@ Handles plan modification and replanning.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from core.decision.types import (
     DecisionPlan,
-    DecisionTask,
     DecisionStatus,
-    TaskStatus,
+    DecisionTask,
     ReplanningReason,
+    TaskStatus,
 )
 
 if TYPE_CHECKING:
@@ -99,9 +99,9 @@ class Replanner:
             Cancelled plan.
         """
         plan.status = DecisionStatus.CANCELLED
-        plan.completed_at = datetime.now(timezone.utc)
+        plan.completed_at = datetime.now(UTC)
         plan.metadata["cancellation_reason"] = reason
-        plan.metadata["cancelled_at"] = datetime.now(timezone.utc).isoformat()
+        plan.metadata["cancelled_at"] = datetime.now(UTC).isoformat()
 
         return plan
 
@@ -119,7 +119,7 @@ class Replanner:
             if task.status == TaskStatus.PENDING:
                 task.status = TaskStatus.SKIPPED
 
-        plan.metadata["paused_at"] = datetime.now(timezone.utc).isoformat()
+        plan.metadata["paused_at"] = datetime.now(UTC).isoformat()
         return plan
 
     def resume_plan(self, plan: DecisionPlan) -> DecisionPlan:
@@ -136,7 +136,7 @@ class Replanner:
             if task.status == TaskStatus.SKIPPED:
                 task.status = TaskStatus.PENDING
 
-        plan.metadata["resumed_at"] = datetime.now(timezone.utc).isoformat()
+        plan.metadata["resumed_at"] = datetime.now(UTC).isoformat()
         return plan
 
     def modify_task(
@@ -160,9 +160,9 @@ class Replanner:
             for key, value in modifications.items():
                 if hasattr(task, key):
                     setattr(task, key, value)
-            task.updated_at = datetime.now(timezone.utc)
+            task.updated_at = datetime.now(UTC)
 
-        plan.updated_at = datetime.now(timezone.utc)
+        plan.updated_at = datetime.now(UTC)
         return plan
 
     def add_task(
@@ -192,7 +192,7 @@ class Replanner:
         else:
             plan.tasks.append(task)
 
-        plan.updated_at = datetime.now(timezone.utc)
+        plan.updated_at = datetime.now(UTC)
         return plan
 
     def remove_task(
@@ -217,7 +217,7 @@ class Replanner:
             if task_id in task.depends_on:
                 task.depends_on.remove(task_id)
 
-        plan.updated_at = datetime.now(timezone.utc)
+        plan.updated_at = datetime.now(UTC)
         return plan
 
     def skip_task(
@@ -240,10 +240,10 @@ class Replanner:
         if task:
             task.status = TaskStatus.SKIPPED
             task.error = reason
-            task.completed_at = datetime.now(timezone.utc)
+            task.completed_at = datetime.now(UTC)
             task.metadata["skipped_reason"] = reason
 
-        plan.updated_at = datetime.now(timezone.utc)
+        plan.updated_at = datetime.now(UTC)
         return plan
 
     def retry_task(
@@ -269,7 +269,7 @@ class Replanner:
             task.completed_at = None
             task.result = None
 
-        plan.updated_at = datetime.now(timezone.utc)
+        plan.updated_at = datetime.now(UTC)
         return plan
 
     def _modify_tasks(

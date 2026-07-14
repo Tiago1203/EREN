@@ -8,17 +8,13 @@ from __future__ import annotations
 import threading
 import time
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
-from core.pipeline.types import StageMetadata, StageResult, StageState, StageType
 from core.pipeline.exceptions import (
-    StageExecutionError,
-    StageTimeoutError,
-    StageCancelledError,
     CancellationRequestedError,
 )
+from core.pipeline.types import StageMetadata, StageResult, StageState, StageType
 
 if TYPE_CHECKING:
     from core.pipeline.context import PipelineContext
@@ -137,7 +133,7 @@ class PipelineStage(ABC):
         ...
 
     @abstractmethod
-    async def execute(self, context: "PipelineContext") -> Any:
+    async def execute(self, context: PipelineContext) -> Any:
         """Execute the stage logic.
 
         This method must be implemented by all stages.
@@ -158,7 +154,7 @@ class PipelineStage(ABC):
 
     def execute_with_retry(
         self,
-        context: "PipelineContext",
+        context: PipelineContext,
     ) -> StageResult:
         """Execute stage with retry support.
 
@@ -168,7 +164,6 @@ class PipelineStage(ABC):
         Returns:
             StageResult with execution outcome.
         """
-        import asyncio
 
         start_time = time.time()
         retry_attempts = 0
@@ -207,8 +202,8 @@ class PipelineStage(ABC):
                     stage_name=self._name,
                     stage_type=self._stage_type,
                     status=StageState.COMPLETED,
-                    started_at=datetime.fromtimestamp(start_time, tz=timezone.utc),
-                    finished_at=datetime.now(timezone.utc),
+                    started_at=datetime.fromtimestamp(start_time, tz=UTC),
+                    finished_at=datetime.now(UTC),
                     duration_ms=duration_ms,
                     output=output,
                     retry_attempts=retry_attempts,
@@ -241,8 +236,8 @@ class PipelineStage(ABC):
             stage_name=self._name,
             stage_type=self._stage_type,
             status=StageState.FAILED,
-            started_at=datetime.fromtimestamp(start_time, tz=timezone.utc),
-            finished_at=datetime.now(timezone.utc),
+            started_at=datetime.fromtimestamp(start_time, tz=UTC),
+            finished_at=datetime.now(UTC),
             duration_ms=duration_ms,
             errors=errors,
             retry_attempts=retry_attempts,
@@ -250,7 +245,7 @@ class PipelineStage(ABC):
 
     def _create_result(
         self,
-        context: "PipelineContext",
+        context: PipelineContext,
         status: StageState,
         start_time: float,
         errors: list[str] | None = None,
@@ -271,8 +266,8 @@ class PipelineStage(ABC):
             stage_name=self._name,
             stage_type=self._stage_type,
             status=status,
-            started_at=datetime.fromtimestamp(start_time, tz=timezone.utc),
-            finished_at=datetime.now(timezone.utc),
+            started_at=datetime.fromtimestamp(start_time, tz=UTC),
+            finished_at=datetime.now(UTC),
             duration_ms=duration_ms,
             errors=errors or [],
         )
@@ -324,7 +319,7 @@ class PlanningStage(PipelineStage):
     def describe(self) -> str:
         return "Decomposes intent into executable plan"
 
-    async def execute(self, context: "PipelineContext") -> Any:
+    async def execute(self, context: PipelineContext) -> Any:
         # Implementation delegates to Planner via contract
         # This is infrastructure only
         return {"plan": "infrastructure_only"}
@@ -346,7 +341,7 @@ class KnowledgeStage(PipelineStage):
     def describe(self) -> str:
         return "Retrieves relevant knowledge"
 
-    async def execute(self, context: "PipelineContext") -> Any:
+    async def execute(self, context: PipelineContext) -> Any:
         return {"knowledge": "infrastructure_only"}
 
 
@@ -366,7 +361,7 @@ class MemoryStage(PipelineStage):
     def describe(self) -> str:
         return "Performs memory operations"
 
-    async def execute(self, context: "PipelineContext") -> Any:
+    async def execute(self, context: PipelineContext) -> Any:
         return {"memory": "infrastructure_only"}
 
 
@@ -386,7 +381,7 @@ class ReasoningStage(PipelineStage):
     def describe(self) -> str:
         return "Performs logical reasoning"
 
-    async def execute(self, context: "PipelineContext") -> Any:
+    async def execute(self, context: PipelineContext) -> Any:
         return {"reasoning": "infrastructure_only"}
 
 
@@ -406,7 +401,7 @@ class DecisionStage(PipelineStage):
     def describe(self) -> str:
         return "Makes decisions"
 
-    async def execute(self, context: "PipelineContext") -> Any:
+    async def execute(self, context: PipelineContext) -> Any:
         return {"decision": "infrastructure_only"}
 
 
@@ -426,7 +421,7 @@ class ToolStage(PipelineStage):
     def describe(self) -> str:
         return "Executes tools"
 
-    async def execute(self, context: "PipelineContext") -> Any:
+    async def execute(self, context: PipelineContext) -> Any:
         return {"tools": "infrastructure_only"}
 
 
@@ -446,5 +441,5 @@ class ContextUpdateStage(PipelineStage):
     def describe(self) -> str:
         return "Updates shared context"
 
-    async def execute(self, context: "PipelineContext") -> Any:
+    async def execute(self, context: PipelineContext) -> Any:
         return {"context_updated": True}

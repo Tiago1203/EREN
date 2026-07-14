@@ -6,14 +6,15 @@ Manages provider registration and discovery.
 from __future__ import annotations
 
 import threading
-from typing import TYPE_CHECKING, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
-from core.providers.provider import BaseProvider
-from core.providers.types import ProviderType, ProviderState, ProviderConfig
 from core.providers.exceptions import (
-    ProviderNotFoundError,
     ProviderAlreadyRegisteredError,
+    ProviderNotFoundError,
 )
+from core.providers.provider import BaseProvider
+from core.providers.types import ProviderConfig, ProviderState, ProviderType
 
 if TYPE_CHECKING:
     pass

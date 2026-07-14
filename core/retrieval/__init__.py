@@ -28,58 +28,16 @@ Responsibilities:
 
 from __future__ import annotations
 
-from core.retrieval.types import (
-    RetrievalPolicy,
-    MemorySource,
-    RetrievalQuery,
-    RetrievalResult,
-    RetrievalResponse,
-    RetrievalPlan,
-    RetrievalStep,
-    RetrievalMetrics,
-    RetrievalTrace,
-)
-from core.retrieval.exceptions import (
-    RetrievalError,
-    RetrievalPlanError,
-    RetrievalExecutionError,
-    NoResultsError,
-    MemorySourceUnavailableError,
-    PolicyNotSupportedError,
-    ContextOverflowError,
-    RankingError,
-    RegistryError,
-)
-from core.retrieval.registry import (
-    RetrievalRegistry,
-    get_retrieval_registry,
-    reset_retrieval_registry,
-)
-from core.retrieval.planner import RetrievalPlanner
-from core.retrieval.strategy import (
-    RetrievalStrategy,
-    SequentialStrategy,
-    ParallelStrategy,
-    FastestStrategy,
-    MergeAllStrategy,
-    RetrievalStrategyFactory,
-)
-from core.retrieval.ranker import (
-    ResultRanker,
-    ContextualRanker,
-    RankerFactory,
-)
 from core.retrieval.context_builder import (
-    ContextBuilder,
-    StructuredContextBuilder,
     CompactContextBuilder,
+    ContextBuilder,
     ContextBuilderFactory,
+    StructuredContextBuilder,
 )
-from core.retrieval.policies import RetrievalPolicyHandler
-from core.retrieval.metrics import (
-    RetrievalMetricsCollector,
-    get_retrieval_metrics,
-    reset_retrieval_metrics,
+from core.retrieval.engine import (
+    SemanticRetrievalEngine,
+    get_retrieval_engine,
+    reset_retrieval_engine,
 )
 from core.retrieval.events import (
     RetrievalEvent,
@@ -87,15 +45,57 @@ from core.retrieval.events import (
     get_retrieval_event_bus,
     reset_retrieval_event_bus,
 )
+from core.retrieval.exceptions import (
+    ContextOverflowError,
+    MemorySourceUnavailableError,
+    NoResultsError,
+    PolicyNotSupportedError,
+    RankingError,
+    RegistryError,
+    RetrievalError,
+    RetrievalExecutionError,
+    RetrievalPlanError,
+)
+from core.retrieval.metrics import (
+    RetrievalMetricsCollector,
+    get_retrieval_metrics,
+    reset_retrieval_metrics,
+)
+from core.retrieval.planner import RetrievalPlanner
+from core.retrieval.policies import RetrievalPolicyHandler
+from core.retrieval.ranker import (
+    ContextualRanker,
+    RankerFactory,
+    ResultRanker,
+)
+from core.retrieval.registry import (
+    RetrievalRegistry,
+    get_retrieval_registry,
+    reset_retrieval_registry,
+)
+from core.retrieval.strategy import (
+    FastestStrategy,
+    MergeAllStrategy,
+    ParallelStrategy,
+    RetrievalStrategy,
+    RetrievalStrategyFactory,
+    SequentialStrategy,
+)
 from core.retrieval.trace import (
     RetrievalTracer,
     get_retrieval_tracer,
     reset_retrieval_tracer,
 )
-from core.retrieval.engine import (
-    SemanticRetrievalEngine,
-    get_retrieval_engine,
-    reset_retrieval_engine,
+from core.retrieval.types import (
+    MemorySource,
+    RetrievalMetrics,
+    RetrievalPlan,
+    RetrievalPolicy,
+    RetrievalQuery,
+    RetrievalResponse,
+    RetrievalResult,
+    RetrievalStep,
+    RetrievalTrace,
 )
 
 __all__ = [

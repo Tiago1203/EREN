@@ -8,17 +8,14 @@ Architecture only — no business logic, no AI.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from .capability import Capability
 from .types import (
     CapabilityCategory,
-    CapabilityMetadata,
     CapabilityPriority,
     CapabilityStatus,
-    CriticalityLevel,
-    SecurityLevel,
 )
 
 if TYPE_CHECKING:
@@ -130,7 +127,7 @@ class RegistrySnapshot:
         version: str = "1.0.0",
     ) -> RegistrySnapshot:
         """Create a snapshot from current registry state."""
-        timestamp = datetime.now(timezone.utc).isoformat()
+        timestamp = datetime.now(UTC).isoformat()
 
         # Calculate statistics
         active = sum(1 for c in capabilities if c.status == CapabilityStatus.ACTIVE)

@@ -6,15 +6,15 @@ Builds execution plans from tasks.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from core.planning.types import (
+    ExecutionPlan,
     Goal,
     GoalAnalysis,
-    Task,
-    ExecutionPlan,
     PlanStatus,
+    Task,
 )
 
 if TYPE_CHECKING:
@@ -163,11 +163,11 @@ class PlanBuilder:
         Returns:
             Updated plan.
         """
-        plan.updated_at = datetime.now(timezone.utc)
+        plan.updated_at = datetime.now(UTC)
 
         for task in plan.tasks:
             if task.task_id == completed_task_id:
-                task.completed_at = datetime.now(timezone.utc)
+                task.completed_at = datetime.now(UTC)
                 task.result = result
 
                 if error:
@@ -184,7 +184,7 @@ class PlanBuilder:
         if plan.completed_tasks + plan.failed_tasks == len(plan.tasks):
             if plan.failed_tasks == 0:
                 plan.status = PlanStatus.COMPLETED
-                plan.completed_at = datetime.now(timezone.utc)
+                plan.completed_at = datetime.now(UTC)
             else:
                 plan.status = PlanStatus.FAILED
 

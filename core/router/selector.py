@@ -9,17 +9,16 @@ from typing import TYPE_CHECKING
 
 from core.router.context import RouterContext
 from core.router.policy import (
-    RoutingPolicyHandler,
-    PolicyFactory,
     FirstMatchPolicy,
-)
-from core.router.types import (
-    RoutingPolicy,
-    PipelineMetadata,
-    CandidatePipeline,
+    PolicyFactory,
+    RoutingPolicyHandler,
 )
 from core.router.result import RoutingResult
-from core.router.exceptions import SelectorError
+from core.router.types import (
+    CandidatePipeline,
+    PipelineMetadata,
+    RoutingPolicy,
+)
 
 if TYPE_CHECKING:
     pass

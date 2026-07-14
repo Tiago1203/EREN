@@ -9,20 +9,15 @@ from __future__ import annotations
 
 import threading
 from collections import defaultdict
-from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 from .exceptions import ToolAlreadyRegisteredError, ToolNotFoundError
 from .tool_descriptor import ToolDescriptor
 from .tool_executor import ToolExecutor
 from .tool_types import (
-    CircuitBreakerConfig,
-    RateLimitConfig,
-    RetryPolicy,
-    RetryStrategy,
     ToolCategory,
     ToolFilter,
-    ToolMetadata,
 )
 
 if TYPE_CHECKING:

@@ -15,21 +15,16 @@ It ONLY assembles the EREN Cognitive Operating System.
 
 import threading
 import uuid
-from datetime import datetime, timezone
-from typing import Any, Callable, Optional
+from datetime import UTC, datetime
 
 from .composition_builder import CompositionBuilder
 from .composition_events import CompositionEventPublisher, CompositionEventType
 from .composition_metrics import CompositionMetricsCollector
 from .composition_trace import CompositionTraceCollector
-from .composition_validator import CompositionValidator
 from .exceptions import (
     CompositionBuildException,
-    CompositionValidationException,
 )
 from .module_descriptor import ModuleDescriptor
-from .module_loader import ModuleLoader
-from .module_registry import ModuleRegistry
 
 
 class CognitiveCompositionRoot:
@@ -55,7 +50,7 @@ class CognitiveCompositionRoot:
 
     def __init__(
         self,
-        builder: Optional[CompositionBuilder] = None,
+        builder: CompositionBuilder | None = None,
     ):
         """Initialize the composition root.
 
@@ -73,9 +68,9 @@ class CognitiveCompositionRoot:
         # State
         self._is_built = False
         self._is_validated = False
-        self._runtime: Optional[dict] = None
+        self._runtime: dict | None = None
         self._lock = threading.RLock()
-        self._created_at = datetime.now(timezone.utc).isoformat()
+        self._created_at = datetime.now(UTC).isoformat()
 
         # Publish creation event
         self._event_publisher.publish(
@@ -161,7 +156,7 @@ class CognitiveCompositionRoot:
         Raises:
             CompositionValidationException: If validation fails.
         """
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
 
         self._trace.add_entry(
             operation="validate",
@@ -173,7 +168,7 @@ class CognitiveCompositionRoot:
         self._is_validated = True
 
         duration_ms = int(
-            (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+            (datetime.now(UTC) - start_time).total_seconds() * 1000
         )
         self._metrics.record_validation_time(duration_ms)
 
@@ -194,7 +189,7 @@ class CognitiveCompositionRoot:
         Raises:
             CompositionBuildException: If build fails.
         """
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
 
         self._trace.add_entry(
             operation="build",
@@ -212,7 +207,7 @@ class CognitiveCompositionRoot:
             self._is_built = True
 
             duration_ms = int(
-                (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                (datetime.now(UTC) - start_time).total_seconds() * 1000
             )
             self._metrics.record_build_time(duration_ms)
 
@@ -234,7 +229,7 @@ class CognitiveCompositionRoot:
 
         except Exception as e:
             duration_ms = int(
-                (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                (datetime.now(UTC) - start_time).total_seconds() * 1000
             )
             self._metrics.record_build_error()
 
@@ -262,7 +257,7 @@ class CognitiveCompositionRoot:
         """Get composition metrics."""
         return self._metrics.to_dict()
 
-    def get_runtime(self) -> Optional[dict]:
+    def get_runtime(self) -> dict | None:
         """Get the runtime."""
         return self._runtime
 

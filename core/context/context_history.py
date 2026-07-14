@@ -11,7 +11,7 @@ from __future__ import annotations
 import threading
 from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from .context_types import ContextStatus
@@ -61,9 +61,9 @@ class ContextHistory:
             context_id: The created context ID
         """
         record = HistoryRecord(
-            record_id=f"hist_{datetime.now(timezone.utc).isoformat()}",
+            record_id=f"hist_{datetime.now(UTC).isoformat()}",
             context_id=context_id,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             action="created",
         )
         self._add_record(context_id, record)
@@ -84,9 +84,9 @@ class ContextHistory:
             details: Optional additional details
         """
         record = HistoryRecord(
-            record_id=f"hist_{datetime.now(timezone.utc).isoformat()}",
+            record_id=f"hist_{datetime.now(UTC).isoformat()}",
             context_id=context_id,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             action="status_changed",
             from_status=from_status,
             to_status=to_status,
@@ -108,9 +108,9 @@ class ContextHistory:
             engine_id: Engine that made the update
         """
         record = HistoryRecord(
-            record_id=f"hist_{datetime.now(timezone.utc).isoformat()}",
+            record_id=f"hist_{datetime.now(UTC).isoformat()}",
             context_id=context_id,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             action="updated",
             details={"updates": updates, "engine_id": engine_id},
         )
@@ -132,9 +132,9 @@ class ContextHistory:
             details: Contribution details
         """
         record = HistoryRecord(
-            record_id=f"hist_{datetime.now(timezone.utc).isoformat()}",
+            record_id=f"hist_{datetime.now(UTC).isoformat()}",
             context_id=context_id,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             action="engine_contribution",
             details={
                 "engine_id": engine_id,
@@ -147,7 +147,7 @@ class ContextHistory:
     def record_final_state(
         self,
         context_id: str,
-        context: "CognitiveContext",
+        context: CognitiveContext,
     ) -> None:
         """Record the final state of a context.
 
@@ -156,9 +156,9 @@ class ContextHistory:
             context: The final context state
         """
         record = HistoryRecord(
-            record_id=f"hist_{datetime.now(timezone.utc).isoformat()}",
+            record_id=f"hist_{datetime.now(UTC).isoformat()}",
             context_id=context_id,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             action="finalized",
             to_status=context.status,
             details={

@@ -7,12 +7,13 @@ Architecture only -- no implementations.
 
 import threading
 import weakref
-from datetime import datetime, timezone
-from typing import Any, Callable, Optional
+from collections.abc import Callable
+from datetime import UTC, datetime
+from typing import Any
 
-from .service_descriptor import ServiceDescriptor, ServiceInstance
-from .service_lifetime import ServiceLifetime
 from .exceptions import FactoryExecutionException
+from .service_descriptor import ServiceDescriptor
+from .service_lifetime import ServiceLifetime
 
 
 class ServiceFactory:
@@ -28,10 +29,10 @@ class ServiceFactory:
             descriptor: Service descriptor.
         """
         self._descriptor = descriptor
-        self._instance: Optional[Any] = None
+        self._instance: Any | None = None
         self._lock = threading.RLock()
         self._lazy_initialized = False
-        self._created_at: Optional[str] = None
+        self._created_at: str | None = None
         self._resolution_count = 0
 
     @property
@@ -40,14 +41,14 @@ class ServiceFactory:
         return self._descriptor
 
     @property
-    def instance(self) -> Optional[Any]:
+    def instance(self) -> Any | None:
         """Get the current instance (if any)."""
         return self._instance
 
     def get_instance(
         self,
         resolver: Callable[[str], Any],
-        scope_id: Optional[str] = None,
+        scope_id: str | None = None,
     ) -> Any:
         """Get or create a service instance based on lifetime.
 
@@ -94,7 +95,7 @@ class ServiceFactory:
             with self._lock:
                 if self._instance is None:
                     self._instance = self._create_instance(resolver)
-                    self._created_at = datetime.now(timezone.utc).isoformat()
+                    self._created_at = datetime.now(UTC).isoformat()
         return self._instance
 
     def _get_lazy_singleton(self, resolver: Callable) -> Any:
@@ -110,7 +111,7 @@ class ServiceFactory:
             with self._lock:
                 if not self._lazy_initialized:
                     self._instance = self._create_instance(resolver)
-                    self._created_at = datetime.now(timezone.utc).isoformat()
+                    self._created_at = datetime.now(UTC).isoformat()
                     self._lazy_initialized = True
         return self._instance
 
@@ -127,7 +128,7 @@ class ServiceFactory:
             with self._lock:
                 if self._instance is None or self._is_garbage_collected():
                     self._instance = self._create_instance(resolver)
-                    self._created_at = datetime.now(timezone.utc).isoformat()
+                    self._created_at = datetime.now(UTC).isoformat()
         return self._instance
 
     def _is_garbage_collected(self) -> bool:
@@ -139,7 +140,7 @@ class ServiceFactory:
     def _get_scoped(
         self,
         resolver: Callable,
-        scope_id: Optional[str],
+        scope_id: str | None,
     ) -> Any:
         """Get scoped instance.
 

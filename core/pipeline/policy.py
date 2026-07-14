@@ -6,13 +6,13 @@ Defines execution policies for pipeline stages.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from core.pipeline.context import PipelineContext
     from core.pipeline.stage import PipelineStage
-    from core.pipeline.types import StageResult, ExecutionPolicy
+    from core.pipeline.types import StageResult
 
 
 class PipelinePolicy(ABC):
@@ -21,9 +21,9 @@ class PipelinePolicy(ABC):
     @abstractmethod
     def should_stop_on_failure(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
-        context: "PipelineContext",
+        stage: PipelineStage,
+        result: StageResult,
+        context: PipelineContext,
     ) -> bool:
         """Determine if pipeline should stop on stage failure.
 
@@ -40,8 +40,8 @@ class PipelinePolicy(ABC):
     @abstractmethod
     def should_retry(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
+        stage: PipelineStage,
+        result: StageResult,
         attempt: int,
     ) -> bool:
         """Determine if stage should be retried.
@@ -59,8 +59,8 @@ class PipelinePolicy(ABC):
     @abstractmethod
     def should_skip_optional_stage(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
+        stage: PipelineStage,
+        result: StageResult,
     ) -> bool:
         """Determine if optional stage should be skipped on failure.
 
@@ -76,7 +76,7 @@ class PipelinePolicy(ABC):
     @abstractmethod
     def should_strict_execution(
         self,
-        context: "PipelineContext",
+        context: PipelineContext,
     ) -> bool:
         """Determine if strict execution mode is enabled.
 
@@ -94,17 +94,17 @@ class StopOnFailurePolicy(PipelinePolicy):
 
     def should_stop_on_failure(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
-        context: "PipelineContext",
+        stage: PipelineStage,
+        result: StageResult,
+        context: PipelineContext,
     ) -> bool:
         """Always stop on required stage failure."""
         return stage.is_required
 
     def should_retry(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
+        stage: PipelineStage,
+        result: StageResult,
         attempt: int,
     ) -> bool:
         """Retry if stage has retry count configured."""
@@ -112,15 +112,15 @@ class StopOnFailurePolicy(PipelinePolicy):
 
     def should_skip_optional_stage(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
+        stage: PipelineStage,
+        result: StageResult,
     ) -> bool:
         """Skip optional stages on failure."""
         return True
 
     def should_strict_execution(
         self,
-        context: "PipelineContext",
+        context: PipelineContext,
     ) -> bool:
         """Strict mode disabled by default."""
         return False
@@ -131,17 +131,17 @@ class ContinueOnFailurePolicy(PipelinePolicy):
 
     def should_stop_on_failure(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
-        context: "PipelineContext",
+        stage: PipelineStage,
+        result: StageResult,
+        context: PipelineContext,
     ) -> bool:
         """Never stop on failure - always continue."""
         return False
 
     def should_retry(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
+        stage: PipelineStage,
+        result: StageResult,
         attempt: int,
     ) -> bool:
         """Retry if stage has retry count configured."""
@@ -149,15 +149,15 @@ class ContinueOnFailurePolicy(PipelinePolicy):
 
     def should_skip_optional_stage(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
+        stage: PipelineStage,
+        result: StageResult,
     ) -> bool:
         """Skip optional stages on failure."""
         return True
 
     def should_strict_execution(
         self,
-        context: "PipelineContext",
+        context: PipelineContext,
     ) -> bool:
         """Strict mode disabled."""
         return False
@@ -168,17 +168,17 @@ class StrictExecutionPolicy(PipelinePolicy):
 
     def should_stop_on_failure(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
-        context: "PipelineContext",
+        stage: PipelineStage,
+        result: StageResult,
+        context: PipelineContext,
     ) -> bool:
         """Stop on any failure."""
         return True
 
     def should_retry(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
+        stage: PipelineStage,
+        result: StageResult,
         attempt: int,
     ) -> bool:
         """No retries in strict mode."""
@@ -186,15 +186,15 @@ class StrictExecutionPolicy(PipelinePolicy):
 
     def should_skip_optional_stage(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
+        stage: PipelineStage,
+        result: StageResult,
     ) -> bool:
         """Don't skip optional stages in strict mode."""
         return False
 
     def should_strict_execution(
         self,
-        context: "PipelineContext",
+        context: PipelineContext,
     ) -> bool:
         """Strict mode always enabled."""
         return True
@@ -205,17 +205,17 @@ class SkipOptionalPolicy(PipelinePolicy):
 
     def should_stop_on_failure(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
-        context: "PipelineContext",
+        stage: PipelineStage,
+        result: StageResult,
+        context: PipelineContext,
     ) -> bool:
         """Stop only on required stage failure."""
         return stage.is_required
 
     def should_retry(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
+        stage: PipelineStage,
+        result: StageResult,
         attempt: int,
     ) -> bool:
         """Retry if stage has retry count configured."""
@@ -223,15 +223,15 @@ class SkipOptionalPolicy(PipelinePolicy):
 
     def should_skip_optional_stage(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
+        stage: PipelineStage,
+        result: StageResult,
     ) -> bool:
         """Always skip optional stages."""
         return True
 
     def should_strict_execution(
         self,
-        context: "PipelineContext",
+        context: PipelineContext,
     ) -> bool:
         """Strict mode disabled."""
         return False
@@ -250,17 +250,17 @@ class RetryStagePolicy(PipelinePolicy):
 
     def should_stop_on_failure(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
-        context: "PipelineContext",
+        stage: PipelineStage,
+        result: StageResult,
+        context: PipelineContext,
     ) -> bool:
         """Only stop after all retries exhausted."""
         return result.retry_attempts >= self._max_retries
 
     def should_retry(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
+        stage: PipelineStage,
+        result: StageResult,
         attempt: int,
     ) -> bool:
         """Retry up to max_retries times."""
@@ -268,15 +268,15 @@ class RetryStagePolicy(PipelinePolicy):
 
     def should_skip_optional_stage(
         self,
-        stage: "PipelineStage",
-        result: "StageResult",
+        stage: PipelineStage,
+        result: StageResult,
     ) -> bool:
         """Skip optional stages on failure."""
         return True
 
     def should_strict_execution(
         self,
-        context: "PipelineContext",
+        context: PipelineContext,
     ) -> bool:
         """Strict mode disabled."""
         return False

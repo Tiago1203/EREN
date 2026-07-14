@@ -31,41 +31,42 @@ Example:
 
 from __future__ import annotations
 
-# Types
-from core.planning.types import (
-    TaskStatus,
-    TaskPriority,
-    DependencyType,
-    GoalType,
-    PlanStatus,
-    Task,
-    Goal,
-    GoalAnalysis,
-    ExecutionPlan,
-    PlanningMetrics,
+from core.planning.dependency_resolver import DependencyResolver
+
+# Events and metrics
+from core.planning.events import (
+    PlanningEvent,
+    PlanningEventBus,
+    PlanningEventType,
+    get_event_bus,
+    reset_event_bus,
 )
 
 # Components
 from core.planning.goal_analyzer import GoalAnalyzer
-from core.planning.task_decomposer import TaskDecomposer
-from core.planning.dependency_resolver import DependencyResolver
-from core.planning.plan_builder import PlanBuilder
-
-# Events and metrics
-from core.planning.events import (
-    PlanningEventType,
-    PlanningEvent,
-    PlanningEventBus,
-    get_event_bus,
-    reset_event_bus,
-)
 from core.planning.metrics import PlanningMetricsCollector
+from core.planning.plan_builder import PlanBuilder
 
 # Main engine
 from core.planning.planner import (
     CognitivePlanningEngine,
     get_planning_engine,
     reset_planning_engine,
+)
+from core.planning.task_decomposer import TaskDecomposer
+
+# Types
+from core.planning.types import (
+    DependencyType,
+    ExecutionPlan,
+    Goal,
+    GoalAnalysis,
+    GoalType,
+    PlanningMetrics,
+    PlanStatus,
+    Task,
+    TaskPriority,
+    TaskStatus,
 )
 
 __all__ = [

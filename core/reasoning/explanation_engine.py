@@ -5,13 +5,13 @@ Generates explanations, justifications, and traceable reasoning.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from core.reasoning.reasoning_types import (
-    Hypothesis,
-    Evidence,
     ConfidenceScore,
     Decision,
+    Evidence,
+    Hypothesis,
 )
 
 if TYPE_CHECKING:

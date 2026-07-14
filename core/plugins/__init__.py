@@ -25,31 +25,8 @@ Example:
 
 from __future__ import annotations
 
-# Core Plugin
-from core.plugins.manager import PluginManager, get_plugin_manager
-from core.plugins.descriptor import PluginDescriptor
 from core.plugins.context import PluginContext
-from core.plugins.loader import PluginLoader
-from core.plugins.registry import (
-    PluginRegistry,
-    get_plugin_registry,
-    reset_plugin_registry,
-)
-
-# Manifest
-from core.plugins.manifest import (
-    PluginManifestParser,
-    PluginManifestBuilder,
-)
-from core.plugins.types import (
-    PluginState,
-    PluginCategory,
-    PluginPriority,
-    PluginPolicy,
-    PluginManifest,
-    PluginCapability,
-    ValidationResult,
-)
+from core.plugins.descriptor import PluginDescriptor
 
 # Observability
 from core.plugins.events import (
@@ -57,37 +34,60 @@ from core.plugins.events import (
     PluginEventType,
     get_plugin_event_publisher,
 )
+
+# Exceptions
+from core.plugins.exceptions import (
+    PluginActivationError,
+    PluginAlreadyRegisteredError,
+    PluginContractError,
+    PluginCyclicDependencyError,
+    PluginDependencyError,
+    PluginDisabledError,
+    PluginException,
+    PluginInitializationError,
+    PluginLoaderError,
+    PluginLoadError,
+    PluginManifestError,
+    PluginNotFoundError,
+    PluginPolicyViolationError,
+    PluginStateError,
+    PluginValidationError,
+    PluginVersionError,
+)
+from core.plugins.loader import PluginLoader
+
+# Core Plugin
+from core.plugins.manager import PluginManager, get_plugin_manager
+
+# Manifest
+from core.plugins.manifest import (
+    PluginManifestBuilder,
+    PluginManifestParser,
+)
 from core.plugins.metrics import (
     PluginMetrics,
     get_plugin_metrics,
     reset_plugin_metrics,
+)
+from core.plugins.registry import (
+    PluginRegistry,
+    get_plugin_registry,
+    reset_plugin_registry,
 )
 from core.plugins.trace import (
     PluginTrace,
     get_plugin_trace,
     reset_plugin_trace,
 )
-
-# Exceptions
-from core.plugins.exceptions import (
-    PluginException,
-    PluginInitializationError,
-    PluginLoadError,
-    PluginNotFoundError,
-    PluginAlreadyRegisteredError,
-    PluginValidationError,
-    PluginDependencyError,
-    PluginActivationError,
-    PluginStateError,
-    PluginManifestError,
-    PluginContractError,
-    PluginLoaderError,
-    PluginPolicyViolationError,
-    PluginCyclicDependencyError,
-    PluginDisabledError,
-    PluginVersionError,
+from core.plugins.types import (
+    PluginCapability,
+    PluginCategory,
+    PluginManifest,
+    PluginPolicy,
+    PluginPriority,
+    PluginState,
+    ValidationResult,
 )
-
 
 __all__ = [
     # Core

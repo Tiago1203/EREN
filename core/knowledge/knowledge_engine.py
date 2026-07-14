@@ -11,7 +11,6 @@ from __future__ import annotations
 import threading
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
 
 from .knowledge_metrics import KnowledgeMetricsCollector
@@ -21,18 +20,15 @@ from .knowledge_types import (
     KnowledgeEvidence,
     KnowledgeFilters,
     KnowledgeQuery,
-    KnowledgeResult,
     KnowledgeSession,
     KnowledgeSource,
     QueryPriority,
     QueryType,
-    ResultConfidence,
-    ResultRelevance,
 )
 
 # EventBus integration (optional)
 try:
-    from core.events import get_global_bus, Event
+    from core.events import Event, get_global_bus
     _HAS_EVENT_BUS = True
 except ImportError:
     _HAS_EVENT_BUS = False

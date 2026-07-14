@@ -53,47 +53,48 @@ Philosophy:
 
 from __future__ import annotations
 
-# Types
-from core.rag.types import (
-    RetrievalStrategy,
-    ResponseFormat,
-    ConfidenceLevel,
-    RAGQuery,
-    RetrievedChunk,
-    RetrievalResult,
-    RAGContext,
-    RAGPrompt,
-    Citation,
-    RAGResponse,
-    RAGResult,
-    PipelineStatistics,
-)
+from core.rag.citation_builder import CitationBuilder
+from core.rag.context_builder import ContextBuilder, Deduplicator
 
 # Exceptions
 from core.rag.exceptions import (
-    RAGError,
-    RetrievalError,
+    CitationError,
+    GenerationError,
+    ModelSelectionError,
     NoContextError,
     PromptBuildError,
-    TokenBudgetExceededError,
-    ModelSelectionError,
-    GenerationError,
-    CitationError,
-    ValidationError,
     ProviderError,
+    RAGError,
+    RetrievalError,
     TimeoutError,
+    TokenBudgetExceededError,
+    ValidationError,
 )
-
-# Components
-from core.rag.planner import RetrievalPlanner, RetrievalPlan
-from core.rag.context_builder import ContextBuilder, Deduplicator
-from core.rag.prompt_builder import PromptBuilder
-from core.rag.response_builder import ResponseBuilder
-from core.rag.citation_builder import CitationBuilder
-from core.rag.token_budget import TokenBudget, get_default_budget, reset_default_budget
 
 # Pipeline
 from core.rag.pipeline import CognitiveRAGPipeline
+
+# Components
+from core.rag.planner import RetrievalPlan, RetrievalPlanner
+from core.rag.prompt_builder import PromptBuilder
+from core.rag.response_builder import ResponseBuilder
+from core.rag.token_budget import TokenBudget, get_default_budget, reset_default_budget
+
+# Types
+from core.rag.types import (
+    Citation,
+    ConfidenceLevel,
+    PipelineStatistics,
+    RAGContext,
+    RAGPrompt,
+    RAGQuery,
+    RAGResponse,
+    RAGResult,
+    ResponseFormat,
+    RetrievalResult,
+    RetrievalStrategy,
+    RetrievedChunk,
+)
 
 __all__ = [
     # Types

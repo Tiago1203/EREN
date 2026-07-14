@@ -14,12 +14,13 @@ from __future__ import annotations
 
 import threading
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Callable
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from core.diagnostics.health import HealthStatus
+    pass
 
 
 @dataclass
@@ -51,7 +52,7 @@ class ReadinessReport:
 
     is_ready: bool
     checks: list[ReadinessCheck]
-    checked_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    checked_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     total_duration_ms: int = 0
     critical_failures: list[str] = field(default_factory=list)
     non_critical_failures: list[str] = field(default_factory=list)
@@ -201,7 +202,7 @@ class ReadinessChecker:
                     passed, message = self._checks[check_name]()
                 except Exception as e:
                     passed = False
-                    message = f"Check failed with error: {str(e)}"
+                    message = f"Check failed with error: {e!s}"
             else:
                 # Default check - component should be registered
                 passed = True
@@ -232,7 +233,7 @@ class ReadinessChecker:
                     passed, message = check_fn()
                 except Exception as e:
                     passed = False
-                    message = f"Check failed with error: {str(e)}"
+                    message = f"Check failed with error: {e!s}"
 
                 duration_ms = int((time.time() - check_start) * 1000)
 
@@ -277,7 +278,7 @@ class ReadinessChecker:
                 passed, message = self._checks[check_name]()
             except Exception as e:
                 passed = False
-                message = f"Check failed with error: {str(e)}"
+                message = f"Check failed with error: {e!s}"
         elif check_name in self.READINESS_CHECKS:
             check_def = self.READINESS_CHECKS[check_name]
             passed = True

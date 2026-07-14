@@ -9,7 +9,7 @@ Architecture only — no business logic, no AI.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum, IntEnum
 from typing import TYPE_CHECKING, Any
 
@@ -134,7 +134,7 @@ class Evidence:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            self.timestamp = datetime.now(timezone.utc).isoformat()
+            self.timestamp = datetime.now(UTC).isoformat()
 
 
 @dataclass
@@ -156,7 +156,7 @@ class Hypothesis:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.created_at:
-            self.created_at = datetime.now(timezone.utc).isoformat()
+            self.created_at = datetime.now(UTC).isoformat()
 
 
 # =============================================================================
@@ -179,7 +179,7 @@ class Observation:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            self.timestamp = datetime.now(timezone.utc).isoformat()
+            self.timestamp = datetime.now(UTC).isoformat()
 
 
 # =============================================================================
@@ -337,7 +337,7 @@ class BlackboardEntry:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            self.timestamp = datetime.now(timezone.utc).isoformat()
+            self.timestamp = datetime.now(UTC).isoformat()
 
     def is_active(self) -> bool:
         """Check if entry is active (not superseded)."""
@@ -377,7 +377,7 @@ class ContextMetadata:
 
     def __post_init__(self) -> None:
         """Set timestamps if not provided."""
-        timestamp = datetime.now(timezone.utc).isoformat()
+        timestamp = datetime.now(UTC).isoformat()
         if not self.created_at:
             self.created_at = timestamp
         if not self.updated_at:

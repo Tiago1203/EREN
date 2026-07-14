@@ -12,7 +12,6 @@ from .runtime import CognitiveRuntime
 from .runtime_configuration import (
     EngineConfiguration,
     RuntimeConfiguration,
-    SessionConfiguration,
 )
 
 
@@ -43,7 +42,7 @@ class RuntimeBuilder:
     # Configuration Methods
     # =============================================================================
 
-    def with_name(self, name: str) -> "RuntimeBuilder":
+    def with_name(self, name: str) -> RuntimeBuilder:
         """Set the runtime name.
 
         Args:
@@ -55,7 +54,7 @@ class RuntimeBuilder:
         self._configuration = self._configuration.merge(runtime_name=name)
         return self
 
-    def with_version(self, version: str) -> "RuntimeBuilder":
+    def with_version(self, version: str) -> RuntimeBuilder:
         """Set the runtime version.
 
         Args:
@@ -67,7 +66,7 @@ class RuntimeBuilder:
         self._configuration = self._configuration.merge(runtime_version=version)
         return self
 
-    def with_environment(self, environment: str) -> "RuntimeBuilder":
+    def with_environment(self, environment: str) -> RuntimeBuilder:
         """Set the runtime environment.
 
         Args:
@@ -79,7 +78,7 @@ class RuntimeBuilder:
         self._configuration = self._configuration.merge(environment=environment)
         return self
 
-    def with_simulation_mode(self, enabled: bool) -> "RuntimeBuilder":
+    def with_simulation_mode(self, enabled: bool) -> RuntimeBuilder:
         """Enable or disable simulation mode.
 
         In simulation mode, the runtime uses simulated data instead of
@@ -94,7 +93,7 @@ class RuntimeBuilder:
         self._configuration = self._configuration.merge(simulation_mode=enabled)
         return self
 
-    def with_simulation_delay(self, delay_ms: int) -> "RuntimeBuilder":
+    def with_simulation_delay(self, delay_ms: int) -> RuntimeBuilder:
         """Set the simulation delay between stages.
 
         Args:
@@ -106,7 +105,7 @@ class RuntimeBuilder:
         self._configuration = self._configuration.merge(simulation_delay_ms=delay_ms)
         return self
 
-    def with_auto_boot(self, enabled: bool) -> "RuntimeBuilder":
+    def with_auto_boot(self, enabled: bool) -> RuntimeBuilder:
         """Enable or disable auto-boot.
 
         Args:
@@ -118,7 +117,7 @@ class RuntimeBuilder:
         self._configuration = self._configuration.merge(auto_boot=enabled)
         return self
 
-    def with_auto_validate(self, enabled: bool) -> "RuntimeBuilder":
+    def with_auto_validate(self, enabled: bool) -> RuntimeBuilder:
         """Enable or disable auto-validation.
 
         Args:
@@ -130,7 +129,7 @@ class RuntimeBuilder:
         self._configuration = self._configuration.merge(auto_validate=enabled)
         return self
 
-    def with_validate_before_start(self, enabled: bool) -> "RuntimeBuilder":
+    def with_validate_before_start(self, enabled: bool) -> RuntimeBuilder:
         """Enable or disable pre-start validation.
 
         Args:
@@ -144,7 +143,7 @@ class RuntimeBuilder:
         )
         return self
 
-    def with_strict_validation(self, enabled: bool) -> "RuntimeBuilder":
+    def with_strict_validation(self, enabled: bool) -> RuntimeBuilder:
         """Enable or disable strict validation.
 
         In strict mode, warnings are treated as errors.
@@ -158,7 +157,7 @@ class RuntimeBuilder:
         self._configuration = self._configuration.merge(strict_validation=enabled)
         return self
 
-    def with_boot_timeout(self, timeout_ms: int) -> "RuntimeBuilder":
+    def with_boot_timeout(self, timeout_ms: int) -> RuntimeBuilder:
         """Set the boot timeout.
 
         Args:
@@ -170,7 +169,7 @@ class RuntimeBuilder:
         self._configuration = self._configuration.merge(boot_timeout_ms=timeout_ms)
         return self
 
-    def with_session_timeout(self, timeout_ms: int) -> "RuntimeBuilder":
+    def with_session_timeout(self, timeout_ms: int) -> RuntimeBuilder:
         """Set the session timeout.
 
         Args:
@@ -182,7 +181,7 @@ class RuntimeBuilder:
         self._configuration = self._configuration.merge(session_timeout_ms=timeout_ms)
         return self
 
-    def with_cycle_timeout(self, timeout_ms: int) -> "RuntimeBuilder":
+    def with_cycle_timeout(self, timeout_ms: int) -> RuntimeBuilder:
         """Set the cycle timeout.
 
         Args:
@@ -194,7 +193,7 @@ class RuntimeBuilder:
         self._configuration = self._configuration.merge(cycle_timeout_ms=timeout_ms)
         return self
 
-    def with_max_concurrent_sessions(self, max_sessions: int) -> "RuntimeBuilder":
+    def with_max_concurrent_sessions(self, max_sessions: int) -> RuntimeBuilder:
         """Set the maximum concurrent sessions.
 
         Args:
@@ -208,7 +207,7 @@ class RuntimeBuilder:
         )
         return self
 
-    def with_max_cycles_per_session(self, max_cycles: int) -> "RuntimeBuilder":
+    def with_max_cycles_per_session(self, max_cycles: int) -> RuntimeBuilder:
         """Set the maximum cycles per session.
 
         Args:
@@ -222,7 +221,7 @@ class RuntimeBuilder:
         )
         return self
 
-    def with_metrics_enabled(self, enabled: bool) -> "RuntimeBuilder":
+    def with_metrics_enabled(self, enabled: bool) -> RuntimeBuilder:
         """Enable or disable metrics collection.
 
         Args:
@@ -234,7 +233,7 @@ class RuntimeBuilder:
         self._configuration = self._configuration.merge(enable_metrics=enabled)
         return self
 
-    def with_trace_enabled(self, enabled: bool) -> "RuntimeBuilder":
+    def with_trace_enabled(self, enabled: bool) -> RuntimeBuilder:
         """Enable or disable trace recording.
 
         Args:
@@ -246,7 +245,7 @@ class RuntimeBuilder:
         self._configuration = self._configuration.merge(record_trace=enabled)
         return self
 
-    def with_health_checks_enabled(self, enabled: bool) -> "RuntimeBuilder":
+    def with_health_checks_enabled(self, enabled: bool) -> RuntimeBuilder:
         """Enable or disable health checks.
 
         Args:
@@ -260,7 +259,7 @@ class RuntimeBuilder:
         )
         return self
 
-    def with_event_publishing_enabled(self, enabled: bool) -> "RuntimeBuilder":
+    def with_event_publishing_enabled(self, enabled: bool) -> RuntimeBuilder:
         """Enable or disable event publishing.
 
         Args:
@@ -272,7 +271,7 @@ class RuntimeBuilder:
         self._configuration = self._configuration.merge(publish_events=enabled)
         return self
 
-    def with_graceful_shutdown_timeout(self, timeout_ms: int) -> "RuntimeBuilder":
+    def with_graceful_shutdown_timeout(self, timeout_ms: int) -> RuntimeBuilder:
         """Set the graceful shutdown timeout.
 
         Args:
@@ -286,7 +285,7 @@ class RuntimeBuilder:
         )
         return self
 
-    def with_debug_mode(self, enabled: bool) -> "RuntimeBuilder":
+    def with_debug_mode(self, enabled: bool) -> RuntimeBuilder:
         """Enable or disable debug mode.
 
         Args:
@@ -302,7 +301,7 @@ class RuntimeBuilder:
     # Engine Configuration Methods
     # =============================================================================
 
-    def with_engine_enabled(self, engine_name: str, enabled: bool) -> "RuntimeBuilder":
+    def with_engine_enabled(self, engine_name: str, enabled: bool) -> RuntimeBuilder:
         """Enable or disable a specific engine.
 
         Args:
@@ -328,7 +327,7 @@ class RuntimeBuilder:
         self,
         engine_name: str,
         config: EngineConfiguration,
-    ) -> "RuntimeBuilder":
+    ) -> RuntimeBuilder:
         """Set configuration for a specific engine.
 
         Args:
@@ -345,7 +344,7 @@ class RuntimeBuilder:
         self,
         engine_name: str,
         timeout_ms: int,
-    ) -> "RuntimeBuilder":
+    ) -> RuntimeBuilder:
         """Set timeout for a specific engine.
 
         Args:
@@ -370,7 +369,7 @@ class RuntimeBuilder:
     # Custom Configuration
     # =============================================================================
 
-    def with_custom_config(self, key: str, value: Any) -> "RuntimeBuilder":
+    def with_custom_config(self, key: str, value: Any) -> RuntimeBuilder:
         """Add custom configuration.
 
         Args:
@@ -385,7 +384,7 @@ class RuntimeBuilder:
         self._configuration = self._configuration.merge(custom_config=custom)
         return self
 
-    def with_custom_configs(self, configs: dict[str, Any]) -> "RuntimeBuilder":
+    def with_custom_configs(self, configs: dict[str, Any]) -> RuntimeBuilder:
         """Add multiple custom configurations.
 
         Args:
@@ -403,7 +402,7 @@ class RuntimeBuilder:
     # Presets
     # =============================================================================
 
-    def use_development_preset(self) -> "RuntimeBuilder":
+    def use_development_preset(self) -> RuntimeBuilder:
         """Use development preset configuration.
 
         Returns:
@@ -412,7 +411,7 @@ class RuntimeBuilder:
         self._configuration = RuntimeConfiguration.create_development()
         return self
 
-    def use_production_preset(self) -> "RuntimeBuilder":
+    def use_production_preset(self) -> RuntimeBuilder:
         """Use production preset configuration.
 
         Returns:
@@ -421,7 +420,7 @@ class RuntimeBuilder:
         self._configuration = RuntimeConfiguration.create_production()
         return self
 
-    def use_testing_preset(self) -> "RuntimeBuilder":
+    def use_testing_preset(self) -> RuntimeBuilder:
         """Use testing preset configuration.
 
         Returns:

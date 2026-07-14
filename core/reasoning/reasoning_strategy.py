@@ -7,9 +7,9 @@ Architecture only — no AI, no business logic.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Callable, Protocol
+from typing import TYPE_CHECKING, Protocol
 
-from .reasoning_types import Evidence, Hypothesis, ReasoningStrategy, StrategyConfig
+from .reasoning_types import Evidence, Hypothesis, ReasoningStrategy
 
 if TYPE_CHECKING:
     pass

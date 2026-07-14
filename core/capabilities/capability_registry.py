@@ -13,16 +13,13 @@ from collections import defaultdict
 from collections.abc import Sequence
 
 from .capability import Capability
-from .descriptor import CapabilityDescriptor, CapabilityMatch, RegistrySnapshot
+from .descriptor import CapabilityDescriptor, RegistrySnapshot
 from .exceptions import (
     CapabilityAlreadyRegisteredError,
     CapabilityNotFoundError,
-    CapabilityRegistryError,
 )
 from .types import (
     CapabilityCategory,
-    CapabilityFilter,
-    CapabilityId,
     CapabilityStatus,
     SearchOptions,
 )

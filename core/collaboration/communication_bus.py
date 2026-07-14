@@ -6,14 +6,13 @@ This is the infrastructure layer - it only handles message transport.
 
 from __future__ import annotations
 
-import uuid
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any, Callable
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any
 
 from core.collaboration.types import (
     CollaborationMessage,
-    MessageType,
     MessageStatus,
+    MessageType,
 )
 
 if TYPE_CHECKING:

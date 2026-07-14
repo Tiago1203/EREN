@@ -6,12 +6,12 @@ Handles workflow recovery, rollback, and compensation.
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from core.workflows.types import (
-    WorkflowExecution,
     CompensationRecord,
+    WorkflowExecution,
 )
 
 if TYPE_CHECKING:
@@ -95,7 +95,7 @@ class RecoveryManager:
                 if compensator:
                     compensator(record.node_id, record.action)
                 record.executed = True
-                record.executed_at = datetime.now(timezone.utc)
+                record.executed_at = datetime.now(UTC)
             except Exception as e:
                 record.error = str(e)
                 errors.append(str(e))

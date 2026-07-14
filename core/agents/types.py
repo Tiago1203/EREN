@@ -5,9 +5,8 @@ Types for the multi-agent system.
 
 from __future__ import annotations
 
-import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any
 
@@ -148,7 +147,7 @@ class AgentHealth:
     @property
     def uptime_seconds(self) -> float:
         """Calculate uptime in seconds."""
-        return (datetime.now(timezone.utc) - self.last_heartbeat).total_seconds()
+        return (datetime.now(UTC) - self.last_heartbeat).total_seconds()
 
 
 # =============================================================================
@@ -193,7 +192,7 @@ class AgentTask:
     correlation_id: str = ""
     metadata: dict = field(default_factory=dict)
 
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     @property
     def duration_seconds(self) -> float:
@@ -201,7 +200,7 @@ class AgentTask:
         if self.started_at and self.completed_at:
             return (self.completed_at - self.started_at).total_seconds()
         elif self.started_at:
-            return (datetime.now(timezone.utc) - self.started_at).total_seconds()
+            return (datetime.now(UTC) - self.started_at).total_seconds()
         return 0.0
 
     @property
@@ -233,13 +232,13 @@ class AgentContext:
     messages: list[dict] = field(default_factory=list)
 
     # Timestamps
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def put_result(self, task_id: str, result: Any) -> None:
         """Store task result."""
         self.task_results[task_id] = result
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
 
     def get_result(self, task_id: str) -> Any | None:
         """Get task result."""
@@ -248,7 +247,7 @@ class AgentContext:
     def put_shared(self, key: str, value: Any) -> None:
         """Store shared data."""
         self.shared_data[key] = value
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
 
     def get_shared(self, key: str) -> Any | None:
         """Get shared data."""
@@ -260,9 +259,9 @@ class AgentContext:
             "sender": sender,
             "message": message,
             "type": type,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         })
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
 
 
 # =============================================================================
@@ -287,7 +286,7 @@ class AgentMessage:
     # Metadata
     metadata: dict = field(default_factory=dict)
 
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 # =============================================================================
@@ -318,7 +317,7 @@ class RuntimeState:
     avg_task_duration_ms: float = 0.0
 
     # Timestamps
-    last_updated: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    last_updated: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 # =============================================================================

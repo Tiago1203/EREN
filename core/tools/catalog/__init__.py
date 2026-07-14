@@ -8,7 +8,7 @@ or agents. Concrete vendor adapters live elsewhere and satisfy these protocols.
 from __future__ import annotations
 
 from .base import ExternalTool, ToolCategory
-from .dicom import DICOMTool, DicomObject, DicomQuery, DicomReference
+from .dicom import DicomObject, DicomQuery, DicomReference, DICOMTool
 from .email import EmailAttachment, EmailMessage, EmailReceipt, EmailTool
 from .fhir import FhirQuery, FhirReference, FhirResource, FHIRTool
 from .hl7 import Hl7Ack, Hl7Message, Hl7ParseResult, Hl7Segment, HL7Tool

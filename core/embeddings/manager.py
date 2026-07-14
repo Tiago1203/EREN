@@ -10,23 +10,20 @@ import time
 import uuid
 from typing import TYPE_CHECKING
 
-from core.embeddings.types import (
-    Embedding,
-    EmbeddingRequest,
-    EmbeddingResponse,
-    EmbeddingModelInfo,
-    EmbeddingMetrics,
-    EmbeddingTrace,
-    EmbeddingProvider,
-    EmbeddingPolicy,
+from core.embeddings.exceptions import (
+    GenerationError,
 )
-from core.embeddings.provider import BaseEmbeddingProvider
 from core.embeddings.registry import EmbeddingRegistry, get_embedding_registry
 from core.embeddings.selector import EmbeddingSelector
-from core.embeddings.exceptions import (
-    EmbeddingError,
-    GenerationError,
-    SelectionError,
+from core.embeddings.types import (
+    Embedding,
+    EmbeddingMetrics,
+    EmbeddingModelInfo,
+    EmbeddingPolicy,
+    EmbeddingProvider,
+    EmbeddingRequest,
+    EmbeddingResponse,
+    EmbeddingTrace,
 )
 
 if TYPE_CHECKING:

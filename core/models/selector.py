@@ -7,14 +7,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from core.models.registry import ModelRegistry
 from core.models.descriptor import ModelDescriptor
-from core.models.types import (
-    ModelSelectionPolicy,
-    ModelState,
-    ModelCategory,
-)
 from core.models.exceptions import ModelSelectionError
+from core.models.registry import ModelRegistry
+from core.models.types import (
+    ModelCategory,
+    ModelSelectionPolicy,
+)
 
 if TYPE_CHECKING:
     pass

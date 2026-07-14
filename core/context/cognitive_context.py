@@ -10,8 +10,8 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from .context_types import (
     BlackboardEntry,
@@ -132,7 +132,7 @@ class CognitiveContext:
         Returns:
             A new CognitiveContext instance.
         """
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         context_id = f"ctx_{uuid.uuid4().hex[:16]}"
 
         return cls(
@@ -163,7 +163,7 @@ class CognitiveContext:
         stage: ProcessingStage | None = None,
     ) -> CognitiveContext:
         """Return new context with updated status."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         from dataclasses import replace
         return replace(
             self,
@@ -183,7 +183,7 @@ class CognitiveContext:
         confidence: Confidence | None = None,
     ) -> CognitiveContext:
         """Return new context marked as completed."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         from dataclasses import replace
         return replace(
             self,
@@ -197,7 +197,7 @@ class CognitiveContext:
 
     def fail(self, error: dict) -> CognitiveContext:
         """Return new context marked as failed."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         from dataclasses import replace
         new_errors = self.processing.errors + (error,)
         return replace(
@@ -219,7 +219,7 @@ class CognitiveContext:
         intent: IntentResult,
     ) -> CognitiveContext:
         """Return new context with intent result."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         from dataclasses import replace
         return replace(
             self,
@@ -237,7 +237,7 @@ class CognitiveContext:
         plan: PlanResult,
     ) -> CognitiveContext:
         """Return new context with plan result."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         from dataclasses import replace
         return replace(
             self,
@@ -259,7 +259,7 @@ class CognitiveContext:
         evidence: Evidence,
     ) -> CognitiveContext:
         """Return new context with added evidence."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         from dataclasses import replace
         return replace(
             self,
@@ -276,7 +276,7 @@ class CognitiveContext:
         hypothesis: Hypothesis,
     ) -> CognitiveContext:
         """Return new context with added hypothesis."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         from dataclasses import replace
         return replace(
             self,
@@ -293,7 +293,7 @@ class CognitiveContext:
         observation: Observation,
     ) -> CognitiveContext:
         """Return new context with added observation."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         from dataclasses import replace
         return replace(
             self,
@@ -317,7 +317,7 @@ class CognitiveContext:
         return replace(
             self,
             hypotheses=tuple(new_hypotheses),
-            updated_at=datetime.now(timezone.utc).isoformat(),
+            updated_at=datetime.now(UTC).isoformat(),
         )
 
     def rank_hypotheses(self) -> CognitiveContext:
@@ -342,7 +342,7 @@ class CognitiveContext:
         memory_ids: list[str],
     ) -> CognitiveContext:
         """Return new context with added memory IDs."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         from dataclasses import replace
         return replace(
             self,
@@ -355,7 +355,7 @@ class CognitiveContext:
         knowledge_ids: list[str],
     ) -> CognitiveContext:
         """Return new context with added knowledge IDs."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         from dataclasses import replace
         return replace(
             self,
@@ -372,7 +372,7 @@ class CognitiveContext:
         diagnosis: DiagnosisResult,
     ) -> CognitiveContext:
         """Return new context with diagnosis result."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         from dataclasses import replace
         return replace(
             self,
@@ -390,7 +390,7 @@ class CognitiveContext:
         workflow: WorkflowResult,
     ) -> CognitiveContext:
         """Return new context with workflow result."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         from dataclasses import replace
         return replace(
             self,
@@ -408,7 +408,7 @@ class CognitiveContext:
         tool_usage: ToolUsage,
     ) -> CognitiveContext:
         """Return new context with added tool usage."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         from dataclasses import replace
         return replace(
             self,
@@ -425,7 +425,7 @@ class CognitiveContext:
         entry: BlackboardEntry,
     ) -> CognitiveContext:
         """Return new context with added blackboard entry."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         from dataclasses import replace
         return replace(
             self,

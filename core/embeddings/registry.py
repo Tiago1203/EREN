@@ -8,9 +8,9 @@ from __future__ import annotations
 import threading
 from typing import TYPE_CHECKING
 
-from core.embeddings.types import EmbeddingProvider
+from core.embeddings.exceptions import ProviderNotFoundError, RegistryError
 from core.embeddings.provider import BaseEmbeddingProvider
-from core.embeddings.exceptions import RegistryError, ProviderNotFoundError
+from core.embeddings.types import EmbeddingProvider
 
 if TYPE_CHECKING:
     pass

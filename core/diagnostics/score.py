@@ -20,8 +20,8 @@ Philosophy:
 from __future__ import annotations
 
 import threading
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING
 
@@ -262,7 +262,7 @@ class DiagnosticScore:
             Dictionary with complete score information.
         """
         with self._lock:
-            self._calculated_at = datetime.now(timezone.utc)
+            self._calculated_at = datetime.now(UTC)
 
             is_ready, status = self.get_production_readiness()
 

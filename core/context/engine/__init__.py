@@ -22,29 +22,30 @@ Philosophy:
 
 from __future__ import annotations
 
-# Types - import from local module to avoid circular imports
-from core.context.engine.types import (
-    ContextPriority,
-    ContextSource,
-    ContextItem,
-    ContextPackage,
-    ContextQuery,
-    ContextRetrievalResult,
-    generate_id,
-)
+from core.context.engine.builder import ContextBuilder
+from core.context.engine.compressor import ContextCompressor
 
 # Components
 from core.context.engine.deduplicator import ContextDeduplicator
-from core.context.engine.merger import ContextMerger
-from core.context.engine.compressor import ContextCompressor
-from core.context.engine.ranking import ContextRanker
-from core.context.engine.builder import ContextBuilder
 
 # Engine
 from core.context.engine.engine import (
     CognitiveContextEngine,
     get_context_engine,
     reset_context_engine,
+)
+from core.context.engine.merger import ContextMerger
+from core.context.engine.ranking import ContextRanker
+
+# Types - import from local module to avoid circular imports
+from core.context.engine.types import (
+    ContextItem,
+    ContextPackage,
+    ContextPriority,
+    ContextQuery,
+    ContextRetrievalResult,
+    ContextSource,
+    generate_id,
 )
 
 __all__ = [

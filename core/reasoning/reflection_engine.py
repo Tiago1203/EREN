@@ -5,12 +5,11 @@ Handles self-evaluation, error detection, and revision.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from core.reasoning.reasoning_types import (
-    Hypothesis,
     Evidence,
-    ConfidenceScore,
+    Hypothesis,
 )
 
 if TYPE_CHECKING:

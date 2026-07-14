@@ -15,23 +15,23 @@ The orchestration contracts define:
 from __future__ import annotations
 
 from core.orchestration.cognitive_cycle import (
+    DEFAULT_CYCLE_CONFIG,
+    PHASE_DEPENDENCIES,
+    PHASE_ENGINE_MAP,
+    CognitiveCycle,
     CycleConfiguration,
     CycleMetadata,
     CyclePhase,
     CycleState,
-    CognitiveCycle,
-    DEFAULT_CYCLE_CONFIG,
-    PHASE_DEPENDENCIES,
-    PHASE_ENGINE_MAP,
     PhaseResult,
     PhaseTransition,
 )
 from core.orchestration.engine_pipeline import (
-    get_default_pipeline,
+    PipelineBuilder,
     PipelineDefinition,
     PipelineExecutor,
-    PipelineBuilder,
     PipelineStage,
+    get_default_pipeline,
 )
 from core.orchestration.engine_result import (
     EngineResult,
@@ -53,6 +53,11 @@ from core.orchestration.execution_graph import (
     GraphNode,
     NodeType,
 )
+from core.orchestration.orchestration_context import (
+    ContextFactory,
+    ContextKey,
+    OrchestrationContext,
+)
 from core.orchestration.orchestration_contracts import (
     CognitiveEngine,
     ContractViolationError,
@@ -60,11 +65,6 @@ from core.orchestration.orchestration_contracts import (
     EngineType,
     Plannable,
     Stateful,
-)
-from core.orchestration.orchestration_context import (
-    ContextFactory,
-    ContextKey,
-    OrchestrationContext,
 )
 from core.orchestration.transition_manager import (
     TransitionHandler,

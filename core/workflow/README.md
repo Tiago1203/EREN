@@ -1,27 +1,34 @@
-# core/workflow — Workflow engine
+# core/workflow — DEPRECATED
 
-> **Status:** scaffolding only. Empty classes, no logic, AI, or agents yet.
+> ⚠️ **Este módulo está DEPRECADO y será eliminado en versión 2.0.0**
 
-## Responsibility
+## Aviso de Deprecación
 
-Models and drives **long-running, multi-step operational processes** — e.g. a
-preventive-maintenance procedure or an incident-resolution workflow. It defines
-the states of a process, the allowed transitions between them, and tracks the
-progress of a running instance until completion.
+Este módulo existe únicamente por razones de compatibilidad hacia atrás.
 
-Where the **planner** decides the abstract sequence of steps for a single
-cognitive request, the **workflow** engine governs durable, stateful business
-processes that may span time, users and interactions.
+**Por favor use `core/workflows` en su lugar.**
 
-## Files
+## Migración
 
-| File | Purpose |
-| --- | --- |
-| `engine.py` | `WorkflowEngine` — define and advance stateful processes. |
-| `interfaces.py` | `WorkflowPort` — contract to start/advance/query a workflow. |
-| `exceptions.py` | `WorkflowError` — base error for workflow failures. |
-| `models.py` | Data structures for workflow definitions, states and instances. |
+```python
+# ANTIGUO (deprecated)
+from core.workflow import WorkflowEngine
 
-## Boundaries
-- Process orchestration capability — no UI; persistence is injected.
-- May depend on `packages/*`; never on `apps/*`.
+# NUEVO (recommended)
+from core.workflows import WorkflowEngine
+```
+
+## Historia
+
+- **2026-07-14**: Módulo deprecado, toda la funcionalidad movida a `core/workflows`
+- **2.0.0** (planeado): Este módulo será eliminado
+
+## Documentación Relacionada
+
+- [docs/architecture/MIGRATION_GUIDE.md](../../docs/architecture/MIGRATION_GUIDE.md)
+- [docs/adr/ADR-001-duplicate-modules.md](../../docs/adr/ADR-001-duplicate-modules.md)
+- [core/workflows/README.md](../workflows/README.md) — Documentación oficial
+
+---
+
+*Este módulo será eliminado en versión 2.0.0*

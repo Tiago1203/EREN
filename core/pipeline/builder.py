@@ -5,13 +5,12 @@ Fluent builder for constructing pipeline instances.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Type
+from typing import TYPE_CHECKING
 
 from core.pipeline.pipeline import CognitivePipeline
+from core.pipeline.policy import PipelinePolicy, PolicyConfig, PolicyFactory
 from core.pipeline.stage import PipelineStage
-from core.pipeline.policy import PipelinePolicy, PolicyFactory, PolicyConfig
-from core.pipeline.types import PipelineConfig, StageType
-from core.pipeline.exceptions import PipelineConfigurationError
+from core.pipeline.types import PipelineConfig
 
 if TYPE_CHECKING:
     pass
@@ -43,7 +42,7 @@ class PipelineBuilder:
         self._metrics = None
         self._trace = None
 
-    def named(self, name: str) -> "PipelineBuilder":
+    def named(self, name: str) -> PipelineBuilder:
         """Set the pipeline name.
 
         Args:
@@ -55,7 +54,7 @@ class PipelineBuilder:
         self._name = name
         return self
 
-    def with_id(self, pipeline_id: str) -> "PipelineBuilder":
+    def with_id(self, pipeline_id: str) -> PipelineBuilder:
         """Set the pipeline ID.
 
         Args:
@@ -67,7 +66,7 @@ class PipelineBuilder:
         self._pipeline_id = pipeline_id
         return self
 
-    def with_stage(self, stage: PipelineStage | Type[PipelineStage]) -> "PipelineBuilder":
+    def with_stage(self, stage: PipelineStage | type[PipelineStage]) -> PipelineBuilder:
         """Add a stage to the pipeline.
 
         Args:
@@ -85,7 +84,7 @@ class PipelineBuilder:
         self._stages.append(stage_instance)
         return self
 
-    def with_stages(self, stages: list[PipelineStage | Type[PipelineStage]]) -> "PipelineBuilder":
+    def with_stages(self, stages: list[PipelineStage | type[PipelineStage]]) -> PipelineBuilder:
         """Add multiple stages.
 
         Args:
@@ -98,7 +97,7 @@ class PipelineBuilder:
             self.with_stage(stage)
         return self
 
-    def with_policy(self, policy: PipelinePolicy | str | Type[PipelinePolicy]) -> "PipelineBuilder":
+    def with_policy(self, policy: PipelinePolicy | str | type[PipelinePolicy]) -> PipelineBuilder:
         """Set the execution policy.
 
         Args:
@@ -115,7 +114,7 @@ class PipelineBuilder:
             self._policy = policy
         return self
 
-    def with_policy_config(self, config: PolicyConfig) -> "PipelineBuilder":
+    def with_policy_config(self, config: PolicyConfig) -> PipelineBuilder:
         """Set policy configuration.
 
         Args:
@@ -127,7 +126,7 @@ class PipelineBuilder:
         self._policy = config.create_policy()
         return self
 
-    def with_config(self, config: PipelineConfig) -> "PipelineBuilder":
+    def with_config(self, config: PipelineConfig) -> PipelineBuilder:
         """Set pipeline configuration.
 
         Args:
@@ -139,7 +138,7 @@ class PipelineBuilder:
         self._config = config
         return self
 
-    def with_timeout(self, stage_timeout: float, pipeline_timeout: float) -> "PipelineBuilder":
+    def with_timeout(self, stage_timeout: float, pipeline_timeout: float) -> PipelineBuilder:
         """Set timeout configuration.
 
         Args:
@@ -170,7 +169,7 @@ class PipelineBuilder:
         event_publisher=None,
         metrics=None,
         trace=None,
-    ) -> "PipelineBuilder":
+    ) -> PipelineBuilder:
         """Set observability components.
 
         Args:
@@ -236,13 +235,13 @@ class DefaultPipelineBuilder:
             Default cognitive pipeline.
         """
         from core.pipeline.stage import (
-            PlanningStage,
+            ContextUpdateStage,
+            DecisionStage,
             KnowledgeStage,
             MemoryStage,
+            PlanningStage,
             ReasoningStage,
-            DecisionStage,
             ToolStage,
-            ContextUpdateStage,
         )
 
         return (
@@ -267,9 +266,9 @@ class DefaultPipelineBuilder:
             Minimal cognitive pipeline.
         """
         from core.pipeline.stage import (
+            DecisionStage,
             PlanningStage,
             ReasoningStage,
-            DecisionStage,
         )
 
         return (
@@ -290,9 +289,9 @@ class DefaultPipelineBuilder:
             Research-focused pipeline.
         """
         from core.pipeline.stage import (
-            PlanningStage,
             KnowledgeStage,
             MemoryStage,
+            PlanningStage,
             ReasoningStage,
         )
 
@@ -386,13 +385,13 @@ class PipelinePreset:
             raise ValueError(f"Unknown preset: {name}")
 
         from core.pipeline.stage import (
-            PlanningStage,
+            ContextUpdateStage,
+            DecisionStage,
             KnowledgeStage,
             MemoryStage,
+            PlanningStage,
             ReasoningStage,
-            DecisionStage,
             ToolStage,
-            ContextUpdateStage,
         )
 
         stage_map = {

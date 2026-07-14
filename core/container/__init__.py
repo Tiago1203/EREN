@@ -10,7 +10,7 @@ from core.container.container_builder import ContainerBuilder
 from core.container.container_events import ContainerEventPublisher, ContainerEventType
 from core.container.container_metrics import ContainerMetricsCollector
 from core.container.container_trace import ContainerTraceCollector, ContainerTraceEntry
-from core.container.dependency_graph import DependencyGraph, DependencyNode, DependencyEdge
+from core.container.dependency_graph import DependencyEdge, DependencyGraph, DependencyNode
 from core.container.dependency_validator import (
     DependencyValidator,
     ValidationError,

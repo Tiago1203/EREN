@@ -7,13 +7,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from core.ingestion.chunking.chunk_builder import BaseChunkBuilder
 from core.ingestion.types import (
-    CleanedDocument,
     ChunkedDocument,
+    CleanedDocument,
     DocumentChunk,
     IngestionMetadata,
 )
-from core.ingestion.chunking.chunk_builder import BaseChunkBuilder
 
 if TYPE_CHECKING:
     pass

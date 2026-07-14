@@ -7,16 +7,13 @@ Architecture only -- no implementations.
 
 import threading
 from dataclasses import dataclass, field
-from typing import Any, Callable, Optional
 
 from .dependency_graph import DependencyGraph
-from .service_registry import ServiceRegistry
-from .service_lifetime import ServiceLifetime
 from .exceptions import (
     CircularDependencyException,
-    OrphanDependencyException,
-    ValidationException,
 )
+from .service_lifetime import ServiceLifetime
+from .service_registry import ServiceRegistry
 
 
 @dataclass

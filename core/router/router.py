@@ -7,24 +7,18 @@ from __future__ import annotations
 
 import threading
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from core.router.context import RouterContext
-from core.router.result import RoutingResult
 from core.router.matcher import PipelineMatcher
-from core.router.selector import PipelineSelector
+from core.router.policy import RoutingPolicy
 from core.router.registry import RoutingRegistry, get_routing_registry
-from core.router.policy import PolicyFactory, RoutingPolicy
+from core.router.result import RoutingResult
+from core.router.selector import PipelineSelector
 from core.router.types import (
-    RouterState,
-    PipelineMetadata,
     CandidatePipeline,
-)
-from core.router.exceptions import (
-    RouterException,
-    RoutingError,
-    NoMatchingPipelineError,
+    RouterState,
 )
 
 if TYPE_CHECKING:
@@ -190,7 +184,7 @@ class CapabilityRouter:
             RouterException: If routing fails.
         """
         result = RoutingResult()
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
 
         try:
             result.start()
@@ -244,7 +238,7 @@ class CapabilityRouter:
             # Update statistics
             with self._lock:
                 self._routing_count += 1
-                duration = (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+                duration = (datetime.now(UTC) - start_time).total_seconds() * 1000
                 self._total_duration_ms += duration
 
                 if result.is_success:

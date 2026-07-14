@@ -6,32 +6,29 @@ Separated from communication - this handles coordination logic only.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
 
-from core.collaboration.types import (
-    CollaborationSession,
-    CollaborationMessage,
-    MessageType,
-    CollaborationMetrics,
-)
-from core.collaboration.protocol import (
-    MessageBuilder,
-    CommunicationPattern,
-)
+from core.collaboration.aggregator import get_result_aggregator
 from core.collaboration.communication_bus import (
-    CommunicationBus,
     get_communication_bus,
 )
+from core.collaboration.consensus import get_consensus_manager
+from core.collaboration.dispatcher import get_task_dispatcher
+from core.collaboration.protocol import (
+    CommunicationPattern,
+    MessageBuilder,
+)
+from core.collaboration.resolver import get_conflict_resolver
 from core.collaboration.sessions import (
-    SessionManager,
     get_session_manager,
 )
-from core.collaboration.shared_context import SharedContext, get_shared_context
-from core.collaboration.consensus import ConsensusManager, get_consensus_manager
-from core.collaboration.resolver import ConflictResolver, get_conflict_resolver
-from core.collaboration.aggregator import ResultAggregator, get_result_aggregator
-from core.collaboration.dispatcher import TaskDispatcher, get_task_dispatcher
+from core.collaboration.shared_context import get_shared_context
+from core.collaboration.types import (
+    CollaborationMessage,
+    CollaborationMetrics,
+    CollaborationSession,
+    MessageType,
+)
 
 if TYPE_CHECKING:
     pass

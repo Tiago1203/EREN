@@ -7,12 +7,12 @@ Architecture only -- no implementations, no business logic.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any, Callable
+from collections.abc import Callable
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from .cognitive_cycle import CyclePhase, CycleState, PhaseTransition
+    from .cognitive_cycle import PhaseTransition
 
 
 # =============================================================================

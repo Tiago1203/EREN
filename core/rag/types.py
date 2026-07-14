@@ -6,9 +6,9 @@ Types for the Cognitive RAG Pipeline.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     pass
@@ -61,21 +61,21 @@ class RAGQuery:
     conversation_id: str = ""
     user_id: str = ""
     session_id: str = ""
-    
+
     # Retrieval options
     top_k: int = 10
     retrieval_strategy: RetrievalStrategy = RetrievalStrategy.SEMANTIC
     min_relevance_score: float = 0.5
-    
+
     # Response options
     response_format: ResponseFormat = ResponseFormat.TEXT
     include_citations: bool = True
     include_confidence: bool = True
-    
+
     # Budget
     max_tokens: int = 4000
-    
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 # =============================================================================
@@ -91,29 +91,29 @@ class RetrievedChunk:
     content: str
     document_id: str
     title: str = ""
-    
+
     # Relevance
     relevance_score: float = 0.0
     rank: int = 0
-    
+
     # Source info
     source_type: str = ""
     source_uri: str = ""
     author: str = ""
     institution: str = ""
     hospital: str = ""
-    
+
     # Metadata
     language: str = "en"
     medical_specialty: str = ""
     tags: list[str] = field(default_factory=list)
     metadata: dict = field(default_factory=dict)
-    
+
     # Provenance
     asset_id: str = ""
     version: str = ""
-    
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 @dataclass
@@ -124,11 +124,11 @@ class RetrievalResult:
     chunks: list[RetrievedChunk]
     total_chunks: int = 0
     retrieval_time_ms: int = 0
-    
+
     # Deduplication
     unique_chunks: int = 0
     duplicate_count: int = 0
-    
+
     # Statistics
     avg_relevance: float = 0.0
     max_relevance: float = 0.0
@@ -145,23 +145,23 @@ class RAGContext:
     """Context for RAG pipeline."""
 
     query: RAGQuery
-    
+
     # Retrieved content
     retrieved_chunks: list[RetrievedChunk] = field(default_factory=list)
-    
+
     # Conversation memory
     conversation_history: list[dict] = field(default_factory=list)
-    
+
     # Built context
     context_text: str = ""
     context_tokens: int = 0
-    
+
     # Budget
     available_tokens: int = 0
     used_tokens: int = 0
-    
+
     # Metadata
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 # =============================================================================
@@ -176,19 +176,19 @@ class RAGPrompt:
     system_prompt: str
     user_prompt: str
     context: str
-    
+
     # Token counts
     system_tokens: int = 0
     user_tokens: int = 0
     context_tokens: int = 0
     total_tokens: int = 0
-    
+
     # Configuration
     model: str = ""
     max_tokens: int = 4000
-    
+
     # Metadata
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 # =============================================================================
@@ -205,18 +205,18 @@ class Citation:
     chunk_id: str
     document_id: str
     title: str = ""
-    
+
     # Location
     start_char: int = 0
     end_char: int = 0
-    
+
     # Source
     source_type: str = ""
     source_uri: str = ""
     author: str = ""
     institution: str = ""
     published_date: str = ""
-    
+
     # Metadata
     relevance_score: float = 0.0
     page_number: str = ""
@@ -229,39 +229,39 @@ class RAGResponse:
 
     query_id: str
     response_id: str
-    
+
     # Content
     answer: str
     format: ResponseFormat = ResponseFormat.TEXT
-    
+
     # Quality
     confidence: ConfidenceLevel = ConfidenceLevel.UNKNOWN
     confidence_score: float = 0.0
-    
+
     # Citations
     citations: list[Citation] = field(default_factory=list)
-    
+
     # Sources used
     sources_used: list[str] = field(default_factory=list)
-    
+
     # Tokens
     prompt_tokens: int = 0
     completion_tokens: int = 0
     total_tokens: int = 0
-    
+
     # Model info
     model_used: str = ""
     provider_used: str = ""
-    
+
     # Timing
     retrieval_time_ms: int = 0
     generation_time_ms: int = 0
     total_time_ms: int = 0
-    
+
     # Metadata
     metadata: dict = field(default_factory=dict)
-    
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 # =============================================================================
@@ -275,20 +275,20 @@ class RAGResult:
 
     query: RAGQuery
     response: RAGResponse
-    
+
     # Pipeline stages
     retrieval_result: RetrievalResult | None = None
     context: RAGContext | None = None
     prompt: RAGPrompt | None = None
-    
+
     # Status
     success: bool = False
     error: str = ""
-    
+
     # Statistics
     total_time_ms: int = 0
-    
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
 # =============================================================================
@@ -303,16 +303,16 @@ class PipelineStatistics:
     queries_processed: int = 0
     successful_queries: int = 0
     failed_queries: int = 0
-    
+
     avg_retrieval_time_ms: float = 0.0
     avg_generation_time_ms: float = 0.0
     avg_total_time_ms: float = 0.0
-    
+
     total_chunks_retrieved: int = 0
     total_citations: int = 0
-    
+
     avg_chunks_per_query: float = 0.0
     avg_tokens_per_query: float = 0.0
-    
+
     by_retrieval_strategy: dict[str, int] = field(default_factory=dict)
     by_response_format: dict[str, int] = field(default_factory=dict)

@@ -7,7 +7,7 @@ state transitions, engine executions, and event publications.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 from uuid import uuid4
 
@@ -225,7 +225,7 @@ class RuntimeTraceCollector:
 
         entry = TraceEntry(
             entry_id=f"trace_{uuid4().hex[:16]}",
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             operation=operation,
             category=category,
             component=component,
@@ -269,7 +269,7 @@ class RuntimeTraceCollector:
 
         transition = TransitionTrace(
             transition_id=f"trans_{uuid4().hex[:16]}",
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             entity_type=entity_type,
             entity_id=entity_id,
             from_state=from_state,
@@ -311,13 +311,13 @@ class RuntimeTraceCollector:
 
         trace = EngineExecutionTrace(
             execution_id=f"exec_{uuid4().hex[:16]}",
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             engine_name=engine_name,
             session_id=session_id,
             correlation_id=correlation_id,
             cycle_id=cycle_id,
             operation=operation,
-            started_at=datetime.now(timezone.utc).isoformat(),
+            started_at=datetime.now(UTC).isoformat(),
             input_data=input_data or {},
         )
         self._engine_executions.append(trace)
@@ -345,10 +345,10 @@ class RuntimeTraceCollector:
 
         for trace in self._engine_executions:
             if trace.execution_id == execution_id:
-                trace.completed_at = datetime.now(timezone.utc).isoformat()
+                trace.completed_at = datetime.now(UTC).isoformat()
                 if trace.started_at:
                     started = datetime.fromisoformat(trace.started_at)
-                    completed = datetime.now(timezone.utc)
+                    completed = datetime.now(UTC)
                     trace.duration_ms = int((completed - started).total_seconds() * 1000)
                 trace.success = success
                 trace.error = error
@@ -382,7 +382,7 @@ class RuntimeTraceCollector:
 
         publication = EventPublicationTrace(
             publication_id=f"pub_{uuid4().hex[:16]}",
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             event_type=event_type,
             session_id=session_id,
             correlation_id=correlation_id,

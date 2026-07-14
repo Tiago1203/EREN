@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import threading
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -59,7 +59,7 @@ class ExecutionContext:
     previous_state: str = ""
 
     # Timing
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     started_at: datetime | None = None
     finished_at: datetime | None = None
 
@@ -102,13 +102,13 @@ class ExecutionContext:
     def start(self) -> None:
         """Mark execution as started."""
         with self._lock:
-            self.started_at = datetime.now(timezone.utc)
+            self.started_at = datetime.now(UTC)
             self.transition_to("initializing")
 
     def finish(self) -> None:
         """Mark execution as finished."""
         with self._lock:
-            self.finished_at = datetime.now(timezone.utc)
+            self.finished_at = datetime.now(UTC)
 
     # =========================================================================
     # Data Operations
@@ -193,7 +193,7 @@ class ExecutionContext:
             details: Operation details.
         """
         entry = {
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "operation": operation,
             "state": self.current_state,
             "details": details or {},
@@ -250,7 +250,7 @@ class ExecutionContext:
         with self._lock:
             if not self.started_at:
                 return 0
-            end = self.finished_at or datetime.now(timezone.utc)
+            end = self.finished_at or datetime.now(UTC)
             return int((end - self.started_at).total_seconds() * 1000)
 
     def get_routing_duration_ms(self) -> int:
@@ -310,7 +310,7 @@ class ExecutionContext:
                 "metadata": dict(self.metadata),
             }
 
-    def copy(self) -> "ExecutionContext":
+    def copy(self) -> ExecutionContext:
         """Create a deep copy.
 
         Returns:

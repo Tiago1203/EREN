@@ -5,14 +5,13 @@ Handles consensus building between agents.
 
 from __future__ import annotations
 
-import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from core.collaboration.types import (
+    ConsensusState,
     Proposal,
     VoteValue,
-    ConsensusState,
 )
 
 if TYPE_CHECKING:
@@ -183,7 +182,7 @@ class ConsensusManager:
             return False
 
         if proposal.deadline:
-            return datetime.now(timezone.utc).timestamp() > proposal.deadline.timestamp()
+            return datetime.now(UTC).timestamp() > proposal.deadline.timestamp()
 
         return False
 

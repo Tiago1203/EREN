@@ -9,27 +9,19 @@ Architecture only — no business logic, no AI.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from .memory_models import MemoryEntry, MemoryQuery, MemoryQueryResult
 from .memory_types import (
-    AccessPattern,
     ConsolidationPolicy,
-    ContentType,
     IndexingPolicy,
-    MemoryAccess,
-    MemoryFilter,
-    MemoryRelationship,
     MemoryStatus,
-    MemoryStrength,
     MemoryType,
-    RelationshipType,
-    RetrievalContext,
+    RetentionPolicy,
     RetrievalMode,
     RetrievalPolicy,
-    RetentionPolicy,
     SearchOptions,
 )
 
@@ -226,7 +218,7 @@ class WorkingMemoryStore(MemoryStore):
             memory_id=memory.memory_id,
             content=memory.summary or str(memory.content.data)[:50],
             created_at=memory.metadata.created_at,
-            last_accessed=datetime.now(timezone.utc).isoformat(),
+            last_accessed=datetime.now(UTC).isoformat(),
         )
         self._slots.append(slot)
         self._memories[memory.memory_id] = memory
@@ -238,7 +230,7 @@ class WorkingMemoryStore(MemoryStore):
             # Update slot access
             for slot in self._slots:
                 if slot.memory_id == memory_id:
-                    slot.last_accessed = datetime.now(timezone.utc).isoformat()
+                    slot.last_accessed = datetime.now(UTC).isoformat()
                     slot.access_count += 1
                     break
         return memory
@@ -776,7 +768,7 @@ class LongTermMemoryStore(MemoryStore):
 
         try:
             last = datetime.fromisoformat(memory.metadata.last_accessed_at)
-            now = datetime.now(timezone.utc)
+            now = datetime.now(UTC)
             hours_ago = (now - last).total_seconds() / 3600
 
             if hours_ago < 1:

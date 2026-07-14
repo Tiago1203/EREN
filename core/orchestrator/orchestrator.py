@@ -10,26 +10,24 @@ from __future__ import annotations
 
 import threading
 import uuid
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from .orchestration_events import OrchestrationEventPublisher
 from .orchestration_metrics import OrchestrationMetricsCollector
 from .orchestration_policies import OrchestrationPolicies
 from .orchestration_trace import OrchestrationTraceCollector
 from .orchestration_types import (
+    VALID_TRANSITIONS,
     CognitiveSession,
-    OrchestrationPolicy,
     OrchestrationState,
     SessionMetadata,
-    SessionMetrics,
     SessionType,
-    VALID_TRANSITIONS,
 )
 
 # EventBus integration (optional)
 try:
-    from core.events import get_global_bus, Event
+    from core.events import Event, get_global_bus
     _HAS_EVENT_BUS = True
 except ImportError:
     _HAS_EVENT_BUS = False
@@ -448,7 +446,7 @@ class CognitiveOrchestrator:
             return False
 
         started = datetime.fromisoformat(session.metadata.started_at)
-        elapsed = (datetime.now(timezone.utc) - started).total_seconds() * 1000
+        elapsed = (datetime.now(UTC) - started).total_seconds() * 1000
 
         return elapsed > self._policies.session_timeout_ms
 

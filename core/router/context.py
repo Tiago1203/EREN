@@ -62,7 +62,7 @@ class RouterContext:
         intent_type: str,
         intent_data: dict | None = None,
         **kwargs,
-    ) -> "RouterContext":
+    ) -> RouterContext:
         """Create context from intent.
 
         Args:
@@ -80,7 +80,7 @@ class RouterContext:
         )
 
     @classmethod
-    def from_routing_context(cls, context: RoutingContext) -> "RouterContext":
+    def from_routing_context(cls, context: RoutingContext) -> RouterContext:
         """Create from RoutingContext.
 
         Args:
@@ -297,7 +297,7 @@ class RouterContext:
                 "metadata": dict(self.metadata),
             }
 
-    def copy(self) -> "RouterContext":
+    def copy(self) -> RouterContext:
         """Create a deep copy.
 
         Returns:

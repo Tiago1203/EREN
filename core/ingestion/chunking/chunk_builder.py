@@ -9,9 +9,8 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 from core.ingestion.types import (
-    CleanedDocument,
     ChunkedDocument,
-    DocumentChunk,
+    CleanedDocument,
     IngestionMetadata,
 )
 

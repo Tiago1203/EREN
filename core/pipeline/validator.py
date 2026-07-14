@@ -8,9 +8,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from core.pipeline.exceptions import (
-    PipelineValidationError,
-    EmptyPipelineError,
     DuplicateStageError,
+    EmptyPipelineError,
     InvalidStageOrderError,
     MissingDependencyError,
 )
@@ -30,7 +29,7 @@ class PipelineValidator:
     - Contract existence
     """
 
-    def validate(self, pipeline: "CognitivePipeline") -> bool:
+    def validate(self, pipeline: CognitivePipeline) -> bool:
         """Validate a pipeline.
 
         Args:
@@ -57,7 +56,7 @@ class PipelineValidator:
 
         return True
 
-    def _validate_no_duplicates(self, pipeline: "CognitivePipeline") -> None:
+    def _validate_no_duplicates(self, pipeline: CognitivePipeline) -> None:
         """Validate no duplicate stages.
 
         Args:
@@ -74,7 +73,7 @@ class PipelineValidator:
                 raise DuplicateStageError(name)
             seen.add(name)
 
-    def _validate_stage_order(self, pipeline: "CognitivePipeline") -> None:
+    def _validate_stage_order(self, pipeline: CognitivePipeline) -> None:
         """Validate stage execution order.
 
         Args:
@@ -108,7 +107,7 @@ class PipelineValidator:
                     stage_name=stage_names[min(late_indices)],
                 )
 
-    def _validate_dependencies(self, pipeline: "CognitivePipeline") -> None:
+    def _validate_dependencies(self, pipeline: CognitivePipeline) -> None:
         """Validate stage dependencies.
 
         Args:

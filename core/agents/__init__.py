@@ -42,49 +42,33 @@ Responsibilities:
 
 from __future__ import annotations
 
-# Types
-from core.agents.types import (
-    # Enums
-    AgentType,
-    AgentStatus,
-    AgentHealthStatus,
-    TaskStatus,
-    # Classes
-    AgentCapability,
-    AgentManifest,
-    AgentHealth,
-    AgentTask,
-    AgentContext,
-    AgentMessage,
-    RuntimeState,
-    AgentMetrics,
-)
-
 # Components
 from core.agents.capabilities import (
     CapabilityRegistry,
     get_capability_registry,
     reset_capability_registry,
 )
-from core.agents.health import (
-    AgentHealthManager,
-    get_health_manager,
-    reset_health_manager,
+from core.agents.communicator import (
+    AgentCommunicator,
+    get_communicator,
+    reset_communicator,
 )
 from core.agents.context import (
     ContextManager,
     get_context_manager,
     reset_context_manager,
 )
-from core.agents.registry import (
-    AgentRegistry,
-    get_registry,
-    reset_registry,
+from core.agents.events import (
+    AgentEvent,
+    AgentEventBus,
+    AgentEventType,
+    get_event_bus,
+    reset_event_bus,
 )
-from core.agents.communicator import (
-    AgentCommunicator,
-    get_communicator,
-    reset_communicator,
+from core.agents.health import (
+    AgentHealthManager,
+    get_health_manager,
+    reset_health_manager,
 )
 from core.agents.lifecycle import (
     LifecycleManager,
@@ -92,22 +76,15 @@ from core.agents.lifecycle import (
     get_lifecycle_manager,
     reset_lifecycle_manager,
 )
-from core.agents.scheduler import (
-    AgentScheduler,
-    get_scheduler,
-    reset_scheduler,
-)
-from core.agents.events import (
-    AgentEventType,
-    AgentEvent,
-    AgentEventBus,
-    get_event_bus,
-    reset_event_bus,
-)
 from core.agents.metrics import (
     AgentMetricsCollector,
     get_metrics_collector,
     reset_metrics_collector,
+)
+from core.agents.registry import (
+    AgentRegistry,
+    get_registry,
+    reset_registry,
 )
 
 # Main runtime
@@ -115,6 +92,29 @@ from core.agents.runtime import (
     CognitiveAgentRuntime,
     get_agent_runtime,
     reset_agent_runtime,
+)
+from core.agents.scheduler import (
+    AgentScheduler,
+    get_scheduler,
+    reset_scheduler,
+)
+
+# Types
+from core.agents.types import (
+    # Classes
+    AgentCapability,
+    AgentContext,
+    AgentHealth,
+    AgentHealthStatus,
+    AgentManifest,
+    AgentMessage,
+    AgentMetrics,
+    AgentStatus,
+    AgentTask,
+    # Enums
+    AgentType,
+    RuntimeState,
+    TaskStatus,
 )
 
 __all__ = [

@@ -31,54 +31,55 @@ Architecture:
 
 from __future__ import annotations
 
-# Types
-from core.decision.types import (
-    # Enums
-    DecisionStrategy,
-    ExecutionPolicy,
-    RiskLevel,
-    TaskStatus,
-    TaskPriority,
-    DependencyType,
-    GoalType,
-    DecisionStatus,
-    # Classes
-    DecisionTask,
-    Goal,
-    GoalAnalysis,
-    DecisionPlan,
-    StrategySelection,
-    RiskAssessment,
-    ExecutionDecision,
-    ReplanningReason,
-    DecisionMetrics,
-)
-
-# Components
-from core.decision.goal_analyzer import GoalAnalyzer
-from core.decision.task_decomposer import TaskDecomposer
-from core.decision.dependency_resolver import DependencyResolver
-from core.decision.strategy_selector import StrategySelector
-from core.decision.risk_evaluator import RiskEvaluator
-from core.decision.execution_policy import ExecutionPolicyManager
-from core.decision.replanner import Replanner
 from core.decision.decision_builder import DecisionBuilder
-
-# Events and metrics
-from core.decision.events import (
-    DecisionEventType,
-    DecisionEvent,
-    DecisionEventBus,
-    get_event_bus,
-    reset_event_bus,
-)
-from core.decision.metrics import DecisionMetricsCollector
+from core.decision.dependency_resolver import DependencyResolver
 
 # Main engine
 from core.decision.engine import (
     CognitiveDecisionEngine,
     get_decision_engine,
     reset_decision_engine,
+)
+
+# Events and metrics
+from core.decision.events import (
+    DecisionEvent,
+    DecisionEventBus,
+    DecisionEventType,
+    get_event_bus,
+    reset_event_bus,
+)
+from core.decision.execution_policy import ExecutionPolicyManager
+
+# Components
+from core.decision.goal_analyzer import GoalAnalyzer
+from core.decision.metrics import DecisionMetricsCollector
+from core.decision.replanner import Replanner
+from core.decision.risk_evaluator import RiskEvaluator
+from core.decision.strategy_selector import StrategySelector
+from core.decision.task_decomposer import TaskDecomposer
+
+# Types
+from core.decision.types import (
+    DecisionMetrics,
+    DecisionPlan,
+    DecisionStatus,
+    # Enums
+    DecisionStrategy,
+    # Classes
+    DecisionTask,
+    DependencyType,
+    ExecutionDecision,
+    ExecutionPolicy,
+    Goal,
+    GoalAnalysis,
+    GoalType,
+    ReplanningReason,
+    RiskAssessment,
+    RiskLevel,
+    StrategySelection,
+    TaskPriority,
+    TaskStatus,
 )
 
 __all__ = [

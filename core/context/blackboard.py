@@ -17,15 +17,13 @@ from __future__ import annotations
 import threading
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from .context_types import (
     BlackboardEntry,
     BlackboardEntryType,
-    Confidence,
     Evidence,
-    EvidenceSource,
     EvidenceType,
     Hypothesis,
     Observation,
@@ -451,7 +449,7 @@ class CognitiveBlackboard:
         """Create a snapshot of the blackboard state."""
         with self._lock:
             return {
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "total_entries": len(self._state.entries),
                 "by_type": self.get_active_count(),
                 "by_engine": {

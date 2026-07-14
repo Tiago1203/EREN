@@ -33,17 +33,10 @@ Responsibilities:
 
 from __future__ import annotations
 
-# Types
-from core.learning.types import (
-    LearningType,
-    LearningStatus,
-    LearningMetrics,
-    Experience,
-    Feedback,
-    FeedbackType,
-    Pattern,
-    Knowledge,
-    KnowledgeType,
+from core.learning.consolidation import (
+    KnowledgeConsolidator,
+    get_knowledge_consolidator,
+    reset_knowledge_consolidator,
 )
 
 # Components
@@ -57,20 +50,15 @@ from core.learning.feedback import (
     get_feedback_analyzer,
     reset_feedback_analyzer,
 )
-from core.learning.patterns import (
-    PatternDiscovery,
-    get_pattern_discovery,
-    reset_pattern_discovery,
-)
-from core.learning.consolidation import (
-    KnowledgeConsolidator,
-    get_knowledge_consolidator,
-    reset_knowledge_consolidator,
-)
 from core.learning.optimizer import (
     StrategyOptimizer,
     get_strategy_optimizer,
     reset_strategy_optimizer,
+)
+from core.learning.patterns import (
+    PatternDiscovery,
+    get_pattern_discovery,
+    reset_pattern_discovery,
 )
 
 # Main platform
@@ -78,6 +66,19 @@ from core.learning.platform import (
     CognitiveLearningPlatform,
     get_learning_platform,
     reset_learning_platform,
+)
+
+# Types
+from core.learning.types import (
+    Experience,
+    Feedback,
+    FeedbackType,
+    Knowledge,
+    KnowledgeType,
+    LearningMetrics,
+    LearningStatus,
+    LearningType,
+    Pattern,
 )
 
 __all__ = [

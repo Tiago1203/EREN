@@ -347,6 +347,7 @@ EREN se rige por los principios establecidos en [VISION.md](./VISION.md) y [EREN
 - [docs/knowledge/](./docs/knowledge/) - Arquitectura del conocimiento
 
 **Gobernanza Arquitectónica**
+- [docs/architecture/ARCHITECTURE_HARDENING_REPORT.md](./docs/architecture/ARCHITECTURE_HARDENING_REPORT.md) - Reporte de hardening
 - [docs/architecture/ARCHITECTURE_CONSISTENCY_REPORT.md](./docs/architecture/ARCHITECTURE_CONSISTENCY_REPORT.md) - Reporte de consistencia
 - [docs/architecture/DEAD_CODE_REPORT.md](./docs/architecture/DEAD_CODE_REPORT.md) - Análisis de código muerto
 - [docs/architecture/CONTRACT_COVERAGE_REPORT.md](./docs/architecture/CONTRACT_COVERAGE_REPORT.md) - Cobertura de contratos

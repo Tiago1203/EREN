@@ -6,7 +6,7 @@ Types for the Knowledge Asset Registry (KAR).
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING
 
@@ -28,30 +28,30 @@ class AssetType(str, Enum):
 
     # Documents
     DOCUMENT = "document"
-    
+
     # Medical
     MEDICAL_GUIDELINE = "medical_guideline"
     CLINICAL_PROTOCOL = "clinical_protocol"
     FHIR_RESOURCE = "fhir_resource"
     HL7_MESSAGE = "hl7_message"
-    
+
     # Technical
     TECHNICAL_MANUAL = "technical_manual"
     DEVICE_CONFIGURATION = "device_configuration"
     FIRMWARE = "firmware"
     CALIBRATION_FILE = "calibration_file"
-    
+
     # Media
     DICOM_IMAGE = "dicom_image"
     VIDEO = "video"
     AUDIO = "audio"
-    
+
     # Research
     RESEARCH_PAPER = "research_paper"
     DATASET = "dataset"
     MODEL = "model"
     CAD_FILE = "cad_file"
-    
+
     # Custom
     CUSTOM = "custom"
 
@@ -145,8 +145,8 @@ class AssetMetadata:
     tags: list[str] = field(default_factory=list)
 
     # Timestamps
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     indexed_at: datetime | None = None
 
     # Quality
@@ -202,7 +202,7 @@ class AssetVersion:
     asset_id: str
     version: str
     changelog: str = ""
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     created_by: str = ""
     content_hash: str = ""
 
@@ -232,8 +232,8 @@ class AssetCollection:
     name: str
     description: str = ""
     owner: str = ""
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     asset_ids: list[str] = field(default_factory=list)
     tags: list[str] = field(default_factory=list)
     is_public: bool = False
@@ -275,7 +275,7 @@ class AuditLog:
     asset_id: str = ""
     user_id: str = ""
     details: dict = field(default_factory=dict)
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
     ip_address: str = ""
 
     def to_dict(self) -> dict:

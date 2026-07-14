@@ -6,16 +6,16 @@ Defines the model descriptor that contains all model metadata.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from core.models.types import (
-    ModelCategory,
-    ModelState,
-    ModelCapabilities,
-    ModelPricing,
     ModelAvailability,
+    ModelCapabilities,
+    ModelCategory,
     ModelMetrics,
+    ModelPricing,
+    ModelState,
 )
 
 if TYPE_CHECKING:
@@ -68,8 +68,8 @@ class ModelDescriptor:
     quality_score: float = 0.0
 
     # Timestamps
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     deprecated_at: datetime | None = None
 
     # Metadata
@@ -146,18 +146,18 @@ class ModelDescriptor:
     def deprecate(self) -> None:
         """Mark model as deprecated."""
         self.state = ModelState.DEPRECATED
-        self.deprecated_at = datetime.now(timezone.utc)
-        self.updated_at = datetime.now(timezone.utc)
+        self.deprecated_at = datetime.now(UTC)
+        self.updated_at = datetime.now(UTC)
 
     def enable(self) -> None:
         """Enable the model."""
         self.state = ModelState.AVAILABLE
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
 
     def disable(self) -> None:
         """Disable the model."""
         self.state = ModelState.DISABLED
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
 
     def update_metrics(self, metrics: ModelMetrics) -> None:
         """Update model metrics.
@@ -167,7 +167,7 @@ class ModelDescriptor:
         """
         self.latency_ms = int(metrics.average_latency_ms)
         self.quality_score = metrics.success_rate
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
 
     def to_dict(self) -> dict:
         """Convert to dictionary.

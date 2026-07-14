@@ -98,7 +98,7 @@ class RuntimeConfiguration:
     custom_config: dict[str, Any] = field(default_factory=dict)
 
     @classmethod
-    def create_default(cls) -> "RuntimeConfiguration":
+    def create_default(cls) -> RuntimeConfiguration:
         """Create a default runtime configuration.
 
         Returns:
@@ -107,7 +107,7 @@ class RuntimeConfiguration:
         return cls()
 
     @classmethod
-    def create_development(cls) -> "RuntimeConfiguration":
+    def create_development(cls) -> RuntimeConfiguration:
         """Create a configuration optimized for development.
 
         Returns:
@@ -122,7 +122,7 @@ class RuntimeConfiguration:
         )
 
     @classmethod
-    def create_production(cls) -> "RuntimeConfiguration":
+    def create_production(cls) -> RuntimeConfiguration:
         """Create a configuration optimized for production.
 
         Returns:
@@ -138,7 +138,7 @@ class RuntimeConfiguration:
         )
 
     @classmethod
-    def create_testing(cls) -> "RuntimeConfiguration":
+    def create_testing(cls) -> RuntimeConfiguration:
         """Create a configuration optimized for testing.
 
         Returns:
@@ -155,7 +155,7 @@ class RuntimeConfiguration:
             auto_validate=True,
         )
 
-    def merge(self, **overrides: Any) -> "RuntimeConfiguration":
+    def merge(self, **overrides: Any) -> RuntimeConfiguration:
         """Create a new configuration with overrides.
 
         Args:
@@ -192,32 +192,32 @@ class EngineConfiguration:
     custom_config: dict[str, Any] = field(default_factory=dict)
 
     @classmethod
-    def create_planner(cls) -> "EngineConfiguration":
+    def create_planner(cls) -> EngineConfiguration:
         """Create planner engine configuration."""
         return cls(engine_name="planner", timeout_ms=15000)
 
     @classmethod
-    def create_knowledge(cls) -> "EngineConfiguration":
+    def create_knowledge(cls) -> EngineConfiguration:
         """Create knowledge engine configuration."""
         return cls(engine_name="knowledge", timeout_ms=10000)
 
     @classmethod
-    def create_memory(cls) -> "EngineConfiguration":
+    def create_memory(cls) -> EngineConfiguration:
         """Create memory engine configuration."""
         return cls(engine_name="memory", timeout_ms=8000)
 
     @classmethod
-    def create_reasoning(cls) -> "EngineConfiguration":
+    def create_reasoning(cls) -> EngineConfiguration:
         """Create reasoning engine configuration."""
         return cls(engine_name="reasoning", timeout_ms=20000)
 
     @classmethod
-    def create_decision(cls) -> "EngineConfiguration":
+    def create_decision(cls) -> EngineConfiguration:
         """Create decision engine configuration."""
         return cls(engine_name="decision", timeout_ms=10000)
 
     @classmethod
-    def create_tools(cls) -> "EngineConfiguration":
+    def create_tools(cls) -> EngineConfiguration:
         """Create tools engine configuration."""
         return cls(engine_name="tools", timeout_ms=15000)
 
@@ -239,12 +239,12 @@ class SessionConfiguration:
     metadata: dict[str, Any] = field(default_factory=dict)
 
     @classmethod
-    def create_default(cls) -> "SessionConfiguration":
+    def create_default(cls) -> SessionConfiguration:
         """Create a default session configuration."""
         return cls()
 
     @classmethod
-    def create_diagnostic(cls, user_id: str = "") -> "SessionConfiguration":
+    def create_diagnostic(cls, user_id: str = "") -> SessionConfiguration:
         """Create a diagnostic session configuration."""
         return cls(
             session_type="diagnostic",

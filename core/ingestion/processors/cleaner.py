@@ -7,9 +7,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from core.ingestion.types import ExtractedDocument, CleanedDocument
-from core.ingestion.processors.normalizer import TextNormalizer
 from core.ingestion.processors.medical_processor import MedicalProcessor
+from core.ingestion.processors.normalizer import TextNormalizer
+from core.ingestion.types import CleanedDocument, ExtractedDocument
 
 if TYPE_CHECKING:
     pass

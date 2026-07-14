@@ -17,7 +17,7 @@ import threading
 import time
 from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -31,7 +31,7 @@ class PerformanceMetric:
     name: str
     value: float
     unit: str  # ms, bytes, count, etc.
-    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
     percentile_95: float = 0.0
     percentile_99: float = 0.0
     min_value: float = 0.0
@@ -57,7 +57,7 @@ class PerformanceReport:
 
     score: float
     metrics: list[PerformanceMetric]
-    analyzed_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    analyzed_at: datetime = field(default_factory=lambda: datetime.now(UTC))
     duration_ms: int = 0
 
     # Performance thresholds
@@ -125,7 +125,7 @@ class PerformanceProfiler:
     def start_profiling(self) -> None:
         """Start performance profiling session."""
         with self._lock:
-            self._start_time = datetime.now(timezone.utc)
+            self._start_time = datetime.now(UTC)
 
     def record_component_time(
         self,
@@ -150,7 +150,7 @@ class PerformanceProfiler:
         with self._lock:
             self._event_counts[event_type] += 1
             if self._start_time:
-                elapsed = (datetime.now(timezone.utc) - self._start_time).total_seconds()
+                elapsed = (datetime.now(UTC) - self._start_time).total_seconds()
                 self._event_times.append(elapsed)
 
     def record_metric(
@@ -175,7 +175,6 @@ class PerformanceProfiler:
         Returns:
             PerformanceReport with profiling results.
         """
-        import time
         start_time = time.time()
 
         metrics = []
@@ -212,7 +211,7 @@ class PerformanceProfiler:
 
             # Process event throughput
             if self._event_times and self._start_time:
-                elapsed = (datetime.now(timezone.utc) - self._start_time).total_seconds()
+                elapsed = (datetime.now(UTC) - self._start_time).total_seconds()
                 total_events = sum(self._event_counts.values())
                 events_per_second = total_events / elapsed if elapsed > 0 else 0
 

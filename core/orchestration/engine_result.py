@@ -8,7 +8,7 @@ Architecture only -- no implementations, no business logic.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any
 
@@ -84,7 +84,7 @@ class EngineResult:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            object.__setattr__(self, 'timestamp', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'timestamp', datetime.now(UTC).isoformat())
 
     @property
     def is_success(self) -> bool:

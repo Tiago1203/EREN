@@ -9,11 +9,11 @@ Architecture only -- no implementations, no business logic.
 from __future__ import annotations
 
 from core.orchestrator.exceptions import (
-    OrchestrationError,
-    SessionNotFoundError,
     InvalidStateTransitionError,
-    SessionTimeoutError,
+    OrchestrationError,
     SessionCancelledError,
+    SessionNotFoundError,
+    SessionTimeoutError,
 )
 from core.orchestrator.orchestration_events import (
     OrchestrationEventPublisher,
@@ -38,16 +38,15 @@ from core.orchestrator.orchestration_trace import (
     TraceAnalyzer,
 )
 from core.orchestrator.orchestration_types import (
+    VALID_TRANSITIONS,
     CognitiveSession,
-    OrchestrationState,
-    
     OrchestrationPolicy,
-    SessionMetrics,
+    OrchestrationState,
     SessionMetadata,
+    SessionMetrics,
     SessionType,
     StateTransition,
     TraceEntry,
-    VALID_TRANSITIONS,
 )
 from core.orchestrator.orchestrator import (
     CognitiveOrchestrator,

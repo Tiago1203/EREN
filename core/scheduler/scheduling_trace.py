@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import threading
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 @dataclass(frozen=True)
@@ -30,7 +30,7 @@ class SchedulingTraceEntry:
     def __post_init__(self) -> None:
         """Set timestamp if not provided."""
         if not self.timestamp:
-            object.__setattr__(self, 'timestamp', datetime.now(timezone.utc).isoformat())
+            object.__setattr__(self, 'timestamp', datetime.now(UTC).isoformat())
 
 
 class SchedulingTraceCollector:
@@ -66,7 +66,7 @@ class SchedulingTraceCollector:
             task_id=task_id,
             session_id=session_id,
             correlation_id=correlation_id,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             action=action,
             task_state=task_state,
             capability=capability,
