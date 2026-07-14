@@ -1,27 +1,32 @@
-"""Multi-Agent Collaboration Engine (MACE) for EREN OS.
+"""Coordination Engine for EREN Multi-Agent Collaboration Layer.
 
-Main engine for multi-agent collaboration.
+Main engine for coordinating multi-agent collaboration.
+Separated from communication - this handles coordination logic only.
 """
 
 from __future__ import annotations
 
-import uuid
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
 
 from core.collaboration.types import (
     CollaborationSession,
-    CollaborationStatus,
     CollaborationMessage,
     MessageType,
     CollaborationMetrics,
 )
 from core.collaboration.protocol import (
-    ProtocolHandler,
     MessageBuilder,
     CommunicationPattern,
 )
-from core.collaboration.messaging import AgentMessaging, get_messaging
+from core.collaboration.communication_bus import (
+    CommunicationBus,
+    get_communication_bus,
+)
+from core.collaboration.sessions import (
+    SessionManager,
+    get_session_manager,
+)
 from core.collaboration.shared_context import SharedContext, get_shared_context
 from core.collaboration.consensus import ConsensusManager, get_consensus_manager
 from core.collaboration.resolver import ConflictResolver, get_conflict_resolver
@@ -32,45 +37,49 @@ if TYPE_CHECKING:
     pass
 
 
-class CollaborationEngine:
-    """Multi-Agent Collaboration Engine.
+class CoordinationEngine:
+    """Coordination Engine for multi-agent collaboration.
 
-    The Collaboration Engine does NOT:
+    The Coordination Engine does NOT:
+    - Handle message transport
     - Execute tasks
     - Know about implementations
 
     It ONLY:
-    - Creates collaboration sessions
-    - Manages agents
-    - Coordinates communication
-    - Builds consensus
+    - Creates teams/sessions
+    - Assigns tasks
+    - Waits for results
+    - Coordinates execution
     - Resolves conflicts
-    - Aggregates results
+    - Builds final response
 
     Philosophy:
-        Agents don't work in isolation.
-        They collaborate.
-        They negotiate.
-        They share knowledge.
-        They build solutions together.
+        Communication and collaboration are distinct concepts.
+        Agents can communicate without collaborating.
+        Collaboration uses communication as infrastructure.
     """
 
     def __init__(self):
-        """Initialize collaboration engine."""
-        # Core components
-        self._messaging = get_messaging()
+        """Initialize coordination engine."""
+        # Communication layer (infrastructure)
+        self._bus = get_communication_bus()
+
+        # Session management
+        self._sessions = get_session_manager()
+
+        # Coordination components
         self._context = get_shared_context()
         self._consensus = get_consensus_manager()
         self._resolver = get_conflict_resolver()
         self._aggregator = get_result_aggregator()
         self._dispatcher = get_task_dispatcher()
-        self._protocol = ProtocolHandler()
-
-        # Sessions
-        self._sessions: dict[str, CollaborationSession] = {}
 
         # Metrics
         self._metrics = CollaborationMetrics()
+
+    # ========================================================================
+    # Session Management (delegates to SessionManager)
+    # ========================================================================
 
     def create_session(
         self,
@@ -94,31 +103,24 @@ class CollaborationEngine:
         Returns:
             Created session.
         """
-        session_id = str(uuid.uuid4())
-
-        session = CollaborationSession(
-            session_id=session_id,
+        session = self._sessions.create_session(
+            initiator_id=initiator_id,
             goal=goal,
             description=description,
-            initiator_id=initiator_id,
-            participant_ids=participant_ids or [],
-            status=CollaborationStatus.CREATED,
+            participant_ids=participant_ids,
             timeout_seconds=timeout_seconds,
             consensus_required=consensus_required,
         )
 
-        self._sessions[session_id] = session
-        self._context.create_session_context(session_id)
+        # Create shared context
+        self._context.create_session_context(session.session_id)
 
         # Update metrics
         self._metrics.sessions_created += 1
 
         return session
 
-    def start_session(
-        self,
-        session_id: str,
-    ) -> bool:
+    def start_session(self, session_id: str) -> bool:
         """Start a collaboration session.
 
         Args:
@@ -127,20 +129,9 @@ class CollaborationEngine:
         Returns:
             True if started.
         """
-        session = self._sessions.get(session_id)
-        if not session:
-            return False
+        return self._sessions.start_session(session_id)
 
-        session.status = CollaborationStatus.ACTIVE
-        session.started_at = datetime.now(timezone.utc)
-
-        return True
-
-    def join_session(
-        self,
-        session_id: str,
-        agent_id: str,
-    ) -> bool:
+    def join_session(self, session_id: str, agent_id: str) -> bool:
         """Join a collaboration session.
 
         Args:
@@ -150,18 +141,9 @@ class CollaborationEngine:
         Returns:
             True if joined.
         """
-        session = self._sessions.get(session_id)
-        if not session:
-            return False
+        return self._sessions.join_session(session_id, agent_id)
 
-        session.add_participant(agent_id)
-        return True
-
-    def leave_session(
-        self,
-        session_id: str,
-        agent_id: str,
-    ) -> bool:
+    def leave_session(self, session_id: str, agent_id: str) -> bool:
         """Leave a collaboration session.
 
         Args:
@@ -171,12 +153,61 @@ class CollaborationEngine:
         Returns:
             True if left.
         """
-        session = self._sessions.get(session_id)
-        if not session:
-            return False
+        return self._sessions.leave_session(session_id, agent_id)
 
-        session.remove_participant(agent_id)
-        return True
+    def complete_session(
+        self,
+        session_id: str,
+        final_result: Any = None,
+    ) -> bool:
+        """Complete a collaboration session.
+
+        Args:
+            session_id: Session ID.
+            final_result: Final aggregated result.
+
+        Returns:
+            True if completed.
+        """
+        if self._sessions.complete_session(session_id, final_result):
+            self._metrics.sessions_completed += 1
+            return True
+        return False
+
+    def cancel_session(self, session_id: str, reason: str = "") -> bool:
+        """Cancel a collaboration session.
+
+        Args:
+            session_id: Session ID.
+            reason: Cancellation reason.
+
+        Returns:
+            True if cancelled.
+        """
+        return self._sessions.cancel_session(session_id, reason)
+
+    def get_session(self, session_id: str) -> CollaborationSession | None:
+        """Get a session.
+
+        Args:
+            session_id: Session ID.
+
+        Returns:
+            Session or None.
+        """
+        return self._sessions.get_session(session_id)
+
+    def get_all_sessions(self) -> list[CollaborationSession]:
+        """Get all sessions.
+
+        Returns:
+            List of sessions.
+        """
+        return self._sessions.get_all_sessions()
+
+    # ========================================================================
+    # Communication (delegates to Communication Bus)
+    # ========================================================================
 
     def send_message(
         self,
@@ -198,11 +229,11 @@ class CollaborationEngine:
         Returns:
             Sent message or None.
         """
-        session = self._sessions.get(session_id)
+        session = self._sessions.get_session(session_id)
         if not session:
             return None
 
-        # Build message
+        # Determine receivers
         if message_type == MessageType.BROADCAST:
             receivers = CommunicationPattern.broadcast(
                 sender_id,
@@ -212,6 +243,7 @@ class CollaborationEngine:
         else:
             receivers = receiver_ids or session.participant_ids
 
+        # Build message
         message = MessageBuilder.request(
             session_id=session_id,
             sender_id=sender_id,
@@ -219,8 +251,8 @@ class CollaborationEngine:
             content=content,
         )
 
-        # Send via messaging
-        self._messaging.send(message)
+        # Send via bus
+        self._bus.send(message)
 
         # Add to session
         session.add_message(message)
@@ -253,10 +285,7 @@ class CollaborationEngine:
             content=content,
         )
 
-    def receive_message(
-        self,
-        agent_id: str,
-    ) -> CollaborationMessage | None:
+    def receive_message(self, agent_id: str) -> CollaborationMessage | None:
         """Receive a message for an agent.
 
         Args:
@@ -265,12 +294,9 @@ class CollaborationEngine:
         Returns:
             Message or None.
         """
-        return self._messaging.receive(agent_id)
+        return self._bus.receive(agent_id)
 
-    def receive_all_messages(
-        self,
-        agent_id: str,
-    ) -> list[CollaborationMessage]:
+    def receive_all_messages(self, agent_id: str) -> list[CollaborationMessage]:
         """Receive all messages for an agent.
 
         Args:
@@ -279,7 +305,11 @@ class CollaborationEngine:
         Returns:
             List of messages.
         """
-        return self._messaging.receive_all(agent_id)
+        return self._bus.receive_all(agent_id)
+
+    # ========================================================================
+    # Shared Context
+    # ========================================================================
 
     def put_context(
         self,
@@ -288,45 +318,20 @@ class CollaborationEngine:
         value: Any,
         agent_id: str = "",
     ) -> None:
-        """Put a value in shared context.
-
-        Args:
-            session_id: Session ID.
-            key: Key.
-            value: Value.
-            agent_id: Contributing agent ID.
-        """
+        """Put a value in shared context."""
         self._context.put(session_id, key, value, agent_id)
 
-    def get_context(
-        self,
-        session_id: str,
-        key: str,
-    ) -> Any | None:
-        """Get a value from shared context.
-
-        Args:
-            session_id: Session ID.
-            key: Key.
-
-        Returns:
-            Value or None.
-        """
+    def get_context(self, session_id: str, key: str) -> Any | None:
+        """Get a value from shared context."""
         return self._context.get(session_id, key)
 
-    def get_session_context(
-        self,
-        session_id: str,
-    ) -> dict[str, Any]:
-        """Get all shared context for a session.
-
-        Args:
-            session_id: Session ID.
-
-        Returns:
-            All context values.
-        """
+    def get_session_context(self, session_id: str) -> dict[str, Any]:
+        """Get all shared context for a session."""
         return self._context.get_all(session_id)
+
+    # ========================================================================
+    # Consensus
+    # ========================================================================
 
     def create_proposal(
         self,
@@ -337,20 +342,8 @@ class CollaborationEngine:
         content: Any,
         required_votes: int = 0,
     ):
-        """Create a proposal for consensus.
-
-        Args:
-            session_id: Session ID.
-            proposer_id: Proposer agent ID.
-            title: Proposal title.
-            description: Proposal description.
-            content: Proposal content.
-            required_votes: Required votes for consensus.
-
-        Returns:
-            Created proposal.
-        """
-        session = self._sessions.get(session_id)
+        """Create a proposal for consensus."""
+        session = self._sessions.get_session(session_id)
         if not session:
             return None
 
@@ -363,29 +356,17 @@ class CollaborationEngine:
             required_votes=required_votes or len(session.participant_ids) // 2 + 1,
         )
 
-        # Update metrics
         self._metrics.proposals_created += 1
-
         return proposal
 
-    def vote(
-        self,
-        proposal_id: str,
-        agent_id: str,
-        vote: str,
-    ) -> bool:
-        """Vote on a proposal.
-
-        Args:
-            proposal_id: Proposal ID.
-            agent_id: Voting agent ID.
-            vote: Vote value.
-
-        Returns:
-            True if vote recorded.
-        """
+    def vote(self, proposal_id: str, agent_id: str, vote: str) -> bool:
+        """Vote on a proposal."""
         from core.collaboration.types import VoteValue
         return self._consensus.vote(proposal_id, agent_id, VoteValue(vote))
+
+    # ========================================================================
+    # Results
+    # ========================================================================
 
     def add_result(
         self,
@@ -394,129 +375,42 @@ class CollaborationEngine:
         result: Any,
         priority: int = 5,
     ) -> None:
-        """Add a result from an agent.
-
-        Args:
-            session_id: Session ID.
-            agent_id: Agent ID.
-            result: Result value.
-            priority: Agent priority.
-        """
+        """Add a result from an agent."""
         self._aggregator.add_result(session_id, agent_id, result, priority)
+        self._sessions.add_result(session_id, agent_id, result)
 
     def aggregate_results(
         self,
         session_id: str,
         strategy: str = "priority",
     ) -> Any:
-        """Aggregate all results.
-
-        Args:
-            session_id: Session ID.
-            strategy: Aggregation strategy.
-
-        Returns:
-            Aggregated result.
-        """
+        """Aggregate all results."""
         return self._aggregator.aggregate(session_id, strategy)
 
-    def complete_session(
-        self,
-        session_id: str,
-        final_result: Any = None,
-    ) -> bool:
-        """Complete a collaboration session.
-
-        Args:
-            session_id: Session ID.
-            final_result: Final aggregated result.
-
-        Returns:
-            True if completed.
-        """
-        session = self._sessions.get(session_id)
-        if not session:
-            return False
-
-        session.status = CollaborationStatus.COMPLETED
-        session.completed_at = datetime.now(timezone.utc)
-        session.final_result = final_result
-
-        # Update metrics
-        self._metrics.sessions_completed += 1
-
-        return True
-
-    def cancel_session(
-        self,
-        session_id: str,
-        reason: str = "",
-    ) -> bool:
-        """Cancel a collaboration session.
-
-        Args:
-            session_id: Session ID.
-            reason: Cancellation reason.
-
-        Returns:
-            True if cancelled.
-        """
-        session = self._sessions.get(session_id)
-        if not session:
-            return False
-
-        session.status = CollaborationStatus.CANCELLED
-        session.completed_at = datetime.now(timezone.utc)
-        session.metadata["cancellation_reason"] = reason
-
-        return True
-
-    def get_session(
-        self,
-        session_id: str,
-    ) -> CollaborationSession | None:
-        """Get a session.
-
-        Args:
-            session_id: Session ID.
-
-        Returns:
-            Session or None.
-        """
-        return self._sessions.get(session_id)
-
-    def get_all_sessions(self) -> list[CollaborationSession]:
-        """Get all sessions.
-
-        Returns:
-            List of sessions.
-        """
-        return list(self._sessions.values())
+    # ========================================================================
+    # Metrics
+    # ========================================================================
 
     def get_metrics(self) -> CollaborationMetrics:
-        """Get collaboration metrics.
-
-        Returns:
-            Metrics.
-        """
+        """Get collaboration metrics."""
         return self._metrics
 
 
-# Global collaboration engine
-_global_engine: CollaborationEngine | None = None
+# Global coordination engine
+_global_engine: CoordinationEngine | None = None
 _engine_lock = __import__("threading").Lock()
 
 
-def get_collaboration_engine() -> CollaborationEngine:
-    """Get the global collaboration engine.
+def get_collaboration_engine() -> CoordinationEngine:
+    """Get the global collaboration/coordination engine.
 
     Returns:
-        Global CollaborationEngine instance.
+        Global CoordinationEngine instance.
     """
     global _global_engine
     with _engine_lock:
         if _global_engine is None:
-            _global_engine = CollaborationEngine()
+            _global_engine = CoordinationEngine()
         return _global_engine
 
 
@@ -525,3 +419,7 @@ def reset_collaboration_engine() -> None:
     global _global_engine
     with _engine_lock:
         _global_engine = None
+
+
+# Alias for backwards compatibility
+CollaborationEngine = CoordinationEngine

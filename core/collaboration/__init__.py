@@ -1,14 +1,12 @@
-"""EREN Multi-Agent Collaboration Engine (MACE).
+"""EREN Multi-Agent Collaboration Layer.
 
 The official system for multi-agent collaboration in EREN.
 Allows multiple specialized agents to work together on shared objectives.
 
 Philosophy:
-    Agents don't work in isolation.
-    They collaborate.
-    They negotiate.
-    They share knowledge.
-    They build solutions together.
+    Communication and collaboration are distinct concepts.
+    Agents can communicate without collaborating.
+    Collaboration uses communication as infrastructure.
 
 Architecture:
     Decision Engine
@@ -17,24 +15,15 @@ Architecture:
     Agent Platform
             │
             ▼
-    Collaboration Engine
+    Collaboration Layer
             │
-            ├── Task Distributor
+            ├── Communication Bus
+            ├── Coordination Engine
+            ├── Session Manager
             ├── Shared Context
-            ├── Agent Messaging
             ├── Consensus Manager
             ├── Conflict Resolver
             └── Result Aggregator
-
-Responsibilities:
-- Divide objectives among agents
-- Create dynamic teams
-- Share context
-- Send messages
-- Receive responses
-- Merge results
-- Resolve conflicts
-- Build final response
 """
 
 from __future__ import annotations
@@ -53,6 +42,20 @@ from core.collaboration.types import (
     TaskAssignment,
     Proposal,
     CollaborationMetrics,
+)
+
+# Communication Layer
+from core.collaboration.communication_bus import (
+    CommunicationBus,
+    get_communication_bus,
+    reset_communication_bus,
+)
+
+# Sessions
+from core.collaboration.sessions import (
+    SessionManager,
+    get_session_manager,
+    reset_session_manager,
 )
 
 # Components
@@ -102,9 +105,10 @@ from core.collaboration.events import (
     reset_event_bus,
 )
 
-# Main engine
+# Coordination Engine (main engine)
 from core.collaboration.engine import (
-    CollaborationEngine,
+    CoordinationEngine,
+    CollaborationEngine,  # Alias for backwards compatibility
     get_collaboration_engine,
     reset_collaboration_engine,
 )
@@ -121,6 +125,14 @@ __all__ = [
     "TaskAssignment",
     "Proposal",
     "CollaborationMetrics",
+    # Communication Layer
+    "CommunicationBus",
+    "get_communication_bus",
+    "reset_communication_bus",
+    # Sessions
+    "SessionManager",
+    "get_session_manager",
+    "reset_session_manager",
     # Components
     "ProtocolHandler",
     "CommunicationPattern",
@@ -151,7 +163,8 @@ __all__ = [
     "CollaborationEventBus",
     "get_event_bus",
     "reset_event_bus",
-    # Main engine
+    # Main Engine
+    "CoordinationEngine",
     "CollaborationEngine",
     "get_collaboration_engine",
     "reset_collaboration_engine",

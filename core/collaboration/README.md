@@ -1,4 +1,4 @@
-# Multi-Agent Collaboration Engine (MACE)
+# Multi-Agent Collaboration Layer
 
 ## Overview
 
@@ -6,20 +6,19 @@ The official system for multi-agent collaboration in EREN. Allows multiple speci
 
 ## Philosophy
 
-> **Agents don't work in isolation.**
-> **They collaborate.**
-> **They negotiate.**
-> **They share knowledge.**
-> **They build solutions together.**
+> **Communication and collaboration are distinct concepts.**
+> **Agents can communicate without collaborating.**
+> **Collaboration uses communication as infrastructure.**
 
-**The Engine NEVER:**
+**The Layer NEVER:**
 - Knows about OpenAI
 - Knows about models
 - Knows about retrieval
 - Knows about databases
 
 **It ONLY:**
-- Creates collaboration sessions
+- Handles message transport (Communication Bus)
+- Creates collaboration sessions (Coordination Engine)
 - Manages agents
 - Coordinates communication
 - Builds consensus
@@ -35,15 +34,36 @@ Decision Engine
 Agent Platform
         │
         ▼
-Collaboration Engine
+Collaboration Layer
         │
-        ├── Task Distributor
+        ├── Communication Bus
+        ├── Coordination Engine
+        ├── Session Manager
         ├── Shared Context
-        ├── Agent Messaging
         ├── Consensus Manager
         ├── Conflict Resolver
         └── Result Aggregator
 ```
+
+## Separation of Concerns
+
+### Communication Bus
+Handles message transport only:
+- Send messages
+- Receive messages
+- Broadcast
+- Routing
+- Pub/Sub
+- Event notifications
+
+### Coordination Engine
+Handles coordination logic only:
+- Create teams
+- Assign tasks
+- Wait for results
+- Coordinate execution
+- Resolve conflicts
+- Build final response
 
 ## Communication Patterns
 

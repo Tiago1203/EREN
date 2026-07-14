@@ -1,4 +1,4 @@
-"""Unit tests for EREN Multi-Agent Collaboration Engine."""
+"""Unit tests for EREN Multi-Agent Collaboration Layer."""
 
 import pytest
 
@@ -19,13 +19,15 @@ from core.collaboration.protocol import (
     CommunicationPattern,
     MessageBuilder,
 )
+from core.collaboration.communication_bus import CommunicationBus
+from core.collaboration.sessions import SessionManager
 from core.collaboration.messaging import AgentMessaging
 from core.collaboration.shared_context import SharedContext
 from core.collaboration.consensus import ConsensusManager
 from core.collaboration.resolver import ConflictResolver, ConflictType
 from core.collaboration.aggregator import ResultAggregator
 from core.collaboration.dispatcher import TaskDispatcher
-from core.collaboration.engine import CollaborationEngine
+from core.collaboration.engine import CoordinationEngine
 
 
 class TestCollaborationTypes:
@@ -110,6 +112,128 @@ class TestCommunicationPattern:
         """Test broadcast."""
         receivers = CommunicationPattern.broadcast("a1", ["a1", "a2", "a3"], {})
         assert receivers == ["a2", "a3"]
+
+
+class TestCommunicationBus:
+    """Tests for communication bus."""
+
+    def test_send(self):
+        """Test sending message."""
+        bus = CommunicationBus()
+        msg = CollaborationMessage.create(
+            session_id="s1",
+            sender_id="a1",
+            message_type=MessageType.REQUEST,
+            content="test",
+            receiver_ids=["a2"],
+        )
+        bus.send(msg)
+        assert len(bus._history) == 1
+
+    def test_receive(self):
+        """Test receiving message."""
+        bus = CommunicationBus()
+        msg = CollaborationMessage.create(
+            session_id="s1",
+            sender_id="a1",
+            message_type=MessageType.REQUEST,
+            content="test",
+            receiver_ids=["a2"],
+        )
+        bus.send(msg)
+
+        received = bus.receive("a2")
+        assert received is not None
+        assert received.content == "test"
+
+    def test_broadcast(self):
+        """Test broadcasting."""
+        bus = CommunicationBus()
+        msg = bus.broadcast(
+            sender_id="a1",
+            receiver_ids=["a2", "a3"],
+            content="broadcast",
+            session_id="s1",
+        )
+        assert msg.message_type == MessageType.BROADCAST
+
+    def test_subscribe(self):
+        """Test subscribing."""
+        bus = CommunicationBus()
+        received = []
+
+        def callback(msg):
+            received.append(msg)
+
+        bus.subscribe("session:s1", callback)
+        msg = CollaborationMessage.create(
+            session_id="s1",
+            sender_id="a1",
+            message_type=MessageType.REQUEST,
+            content="test",
+            receiver_ids=["a2"],
+        )
+        bus.send(msg)
+        assert len(received) == 1
+
+    def test_route(self):
+        """Test routing."""
+        bus = CommunicationBus()
+        msg = bus.route(
+            sender_id="a1",
+            receiver_id="a2",
+            content="direct",
+            session_id="s1",
+        )
+        assert msg.receiver_ids == ["a2"]
+
+
+class TestSessionManager:
+    """Tests for session manager."""
+
+    def test_create_session(self):
+        """Test creating session."""
+        manager = SessionManager()
+        session = manager.create_session(
+            initiator_id="a1",
+            goal="Test goal",
+            description="Test",
+            participant_ids=["a2"],
+        )
+        assert session.session_id
+        assert session.initiator_id == "a1"
+
+    def test_start_session(self):
+        """Test starting session."""
+        manager = SessionManager()
+        session = manager.create_session("a1", "Goal", "Desc")
+        manager.start_session(session.session_id)
+        assert session.status == CollaborationStatus.ACTIVE
+
+    def test_join_leave_session(self):
+        """Test joining and leaving."""
+        manager = SessionManager()
+        session = manager.create_session("a1", "Goal", "Desc")
+
+        manager.join_session(session.session_id, "a4")
+        assert "a4" in session.participant_ids
+
+        manager.leave_session(session.session_id, "a4")
+        assert "a4" not in session.participant_ids
+
+    def test_complete_session(self):
+        """Test completing session."""
+        manager = SessionManager()
+        session = manager.create_session("a1", "Goal", "Desc")
+        manager.complete_session(session.session_id, {"result": "done"})
+        assert session.status == CollaborationStatus.COMPLETED
+
+    def test_get_agent_sessions(self):
+        """Test getting agent sessions."""
+        manager = SessionManager()
+        session = manager.create_session("a1", "Goal", "Desc")
+        sessions = manager.get_agent_sessions("a1")
+        assert len(sessions) == 1
 
 
 class TestMessaging:
@@ -275,12 +399,12 @@ class TestTaskDispatcher:
         assert assignment.status == "completed"
 
 
-class TestCollaborationEngine:
-    """Tests for collaboration engine."""
+class TestCoordinationEngine:
+    """Tests for coordination engine."""
 
     def test_create_session(self):
         """Test creating session."""
-        engine = CollaborationEngine()
+        engine = CoordinationEngine()
         session = engine.create_session(
             initiator_id="a1",
             goal="Test goal",
@@ -293,14 +417,14 @@ class TestCollaborationEngine:
 
     def test_start_session(self):
         """Test starting session."""
-        engine = CollaborationEngine()
+        engine = CoordinationEngine()
         session = engine.create_session("a1", "Goal", "Desc")
         engine.start_session(session.session_id)
         assert session.status == CollaborationStatus.ACTIVE
 
     def test_join_leave_session(self):
         """Test joining and leaving session."""
-        engine = CollaborationEngine()
+        engine = CoordinationEngine()
         session = engine.create_session("a1", "Goal", "Desc")
 
         engine.join_session(session.session_id, "a4")
@@ -311,7 +435,7 @@ class TestCollaborationEngine:
 
     def test_send_message(self):
         """Test sending message."""
-        engine = CollaborationEngine()
+        engine = CoordinationEngine()
         session = engine.create_session("a1", "Goal", "Desc", ["a2"])
 
         msg = engine.send_message(
@@ -325,7 +449,7 @@ class TestCollaborationEngine:
 
     def test_broadcast(self):
         """Test broadcasting."""
-        engine = CollaborationEngine()
+        engine = CoordinationEngine()
         session = engine.create_session("a1", "Goal", "Desc", ["a2", "a3"])
 
         msg = engine.broadcast(
@@ -339,7 +463,7 @@ class TestCollaborationEngine:
 
     def test_context(self):
         """Test shared context."""
-        engine = CollaborationEngine()
+        engine = CoordinationEngine()
         session = engine.create_session("a1", "Goal", "Desc")
 
         engine.put_context(session.session_id, "key", "value", "a1")
@@ -349,7 +473,7 @@ class TestCollaborationEngine:
 
     def test_proposal(self):
         """Test creating proposal."""
-        engine = CollaborationEngine()
+        engine = CoordinationEngine()
         session = engine.create_session("a1", "Goal", "Desc", ["a2"])
 
         proposal = engine.create_proposal(
@@ -364,7 +488,7 @@ class TestCollaborationEngine:
 
     def test_add_result(self):
         """Test adding result."""
-        engine = CollaborationEngine()
+        engine = CoordinationEngine()
         session = engine.create_session("a1", "Goal", "Desc")
 
         engine.add_result(session.session_id, "a1", {"data": "test"})
@@ -374,7 +498,7 @@ class TestCollaborationEngine:
 
     def test_complete_session(self):
         """Test completing session."""
-        engine = CollaborationEngine()
+        engine = CoordinationEngine()
         session = engine.create_session("a1", "Goal", "Desc")
 
         engine.complete_session(session.session_id, {"final": "result"})
@@ -382,7 +506,7 @@ class TestCollaborationEngine:
 
     def test_cancel_session(self):
         """Test cancelling session."""
-        engine = CollaborationEngine()
+        engine = CoordinationEngine()
         session = engine.create_session("a1", "Goal", "Desc")
 
         engine.cancel_session(session.session_id, "User cancelled")
@@ -390,7 +514,7 @@ class TestCollaborationEngine:
 
     def test_get_metrics(self):
         """Test getting metrics."""
-        engine = CollaborationEngine()
+        engine = CoordinationEngine()
         engine.create_session("a1", "Goal", "Desc")
 
         metrics = engine.get_metrics()
