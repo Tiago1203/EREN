@@ -61,6 +61,7 @@ class EvidenceManager:
         relation: EvidenceRelation = EvidenceRelation.NEUTRAL,
         weight: float = 1.0,
         is_temporary: bool = False,
+        parent_evidence_id: str = "",
         metadata: dict | None = None,
     ) -> Evidence:
         """Add new evidence.
@@ -74,6 +75,7 @@ class EvidenceManager:
             relation: Relation to hypothesis.
             weight: Evidence weight.
             is_temporary: If evidence is temporary.
+            parent_evidence_id: Parent evidence ID for derived evidence.
             metadata: Optional metadata.
 
         Returns:
@@ -91,6 +93,7 @@ class EvidenceManager:
             relation=relation,
             weight=weight,
             is_temporary=is_temporary,
+            parent_evidence_id=parent_evidence_id,
             metadata=metadata or {},
         )
 
