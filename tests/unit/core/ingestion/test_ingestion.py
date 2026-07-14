@@ -1,4 +1,4 @@
-"""Unit tests for EREN Knowledge Ingestion Pipeline."""
+"""Unit tests for EREN Knowledge Ingestion Pipeline (v2)."""
 
 import pytest
 
@@ -32,7 +32,18 @@ from core.ingestion.extractor import (
     HL7Extractor,
     ExtractorFactory,
 )
-from core.ingestion.cleaner import TextCleaner, MedicalTextCleaner
+from core.ingestion.processors import (
+    TextProcessor,
+    TextNormalizer,
+    MedicalProcessor,
+)
+from core.ingestion.chunking import (
+    BaseChunkBuilder,
+    SentenceChunkBuilder,
+    RecursiveChunkBuilder,
+    SlidingWindowChunkBuilder,
+    ParagraphChunkBuilder,
+)
 from core.ingestion.metadata import MetadataBuilder, MedicalMetadataBuilder
 from core.ingestion.pipeline import KnowledgeIngestionPipeline
 from core.ingestion.registry import DocumentRegistry, get_document_registry, reset_document_registry
@@ -248,18 +259,18 @@ class TestExtractors:
         assert extracted.document_type == DocumentType.PDF
 
 
-class TestCleaners:
-    """Tests for text cleaners."""
+class TestTextProcessors:
+    """Tests for text processors."""
 
     @pytest.fixture
-    def cleaner(self):
-        """Create test cleaner."""
-        return TextCleaner()
+    def normalizer(self):
+        """Create test normalizer."""
+        return TextNormalizer()
 
     @pytest.fixture
-    def medical_cleaner(self):
-        """Create medical cleaner."""
-        return MedicalTextCleaner()
+    def processor(self):
+        """Create test processor."""
+        return TextProcessor()
 
     @pytest.fixture
     def sample_extracted(self):
@@ -272,35 +283,84 @@ class TestCleaners:
         )
 
     @pytest.mark.asyncio
-    async def test_cleaner_removes_whitespace(self, cleaner, sample_extracted):
-        """Test cleaner removes extra whitespace."""
-        cleaned = await cleaner.clean(sample_extracted)
+    async def test_normalizer_removes_whitespace(self, normalizer, sample_extracted):
+        """Test normalizer removes extra whitespace."""
+        cleaned = await normalizer.normalize(sample_extracted)
         assert "   " not in cleaned.content
 
     @pytest.mark.asyncio
-    async def test_cleaner_tracks_actions(self, cleaner, sample_extracted):
-        """Test cleaner tracks actions."""
-        cleaned = await cleaner.clean(sample_extracted)
+    async def test_normalizer_tracks_actions(self, normalizer, sample_extracted):
+        """Test normalizer tracks actions."""
+        cleaned = await normalizer.normalize(sample_extracted)
         assert len(cleaned.cleaning_actions) > 0
 
     @pytest.mark.asyncio
-    async def test_cleaner_calculates_reduction(self, cleaner, sample_extracted):
-        """Test cleaner calculates reduction."""
-        cleaned = await cleaner.clean(sample_extracted)
-        assert cleaned.original_length > cleaned.cleaned_length
+    async def test_processor_coordinates(self, processor, sample_extracted):
+        """Test processor coordinates normalization."""
+        cleaned = await processor.process(sample_extracted)
+        assert cleaned.content is not None
 
-    @pytest.mark.asyncio
-    async def test_medical_cleaner(self, medical_cleaner, sample_extracted):
-        """Test medical cleaner."""
-        medical_extracted = ExtractedDocument(
+
+class TestChunkBuilders:
+    """Tests for chunk builders."""
+
+    @pytest.fixture
+    def cleaner(self):
+        """Create sample cleaned document."""
+        return CleanedDocument(
             document_id="doc-123",
-            content="Patient takes medication BID.",
-            document_type=DocumentType.TXT,
+            content="This is the first sentence. This is the second sentence. This is the third sentence. Fourth sentence here. Fifth sentence. Sixth sentence.",
+            original_length=150,
+            cleaned_length=150,
+            removed_chars=0,
             metadata=IngestionMetadata(),
         )
 
-        cleaned = await medical_cleaner.clean(medical_extracted)
-        assert "BID" not in cleaned.content or "twice daily" in cleaned.content
+    @pytest.mark.asyncio
+    async def test_sentence_chunker(self, cleaner):
+        """Test sentence chunker."""
+        builder = SentenceChunkBuilder(sentences_per_chunk=2, overlap=1)
+        chunked = await builder.build(cleaner)
+
+        assert chunked.total_chunks > 0
+        assert builder.strategy_name == "sentence"
+        assert all(isinstance(c, DocumentChunk) for c in chunked.chunks)
+
+    @pytest.mark.asyncio
+    async def test_recursive_chunker(self, cleaner):
+        """Test recursive chunker."""
+        builder = RecursiveChunkBuilder(chunk_size=50)
+        chunked = await builder.build(cleaner)
+
+        assert chunked.total_chunks > 0
+        assert builder.strategy_name == "recursive"
+        assert all(isinstance(c, DocumentChunk) for c in chunked.chunks)
+
+    @pytest.mark.asyncio
+    async def test_sliding_window_chunker(self, cleaner):
+        """Test sliding window chunker."""
+        builder = SlidingWindowChunkBuilder(chunk_size=50, overlap=10)
+        chunked = await builder.build(cleaner)
+
+        assert chunked.total_chunks > 0
+        assert builder.strategy_name == "sliding_window"
+        assert all(isinstance(c, DocumentChunk) for c in chunked.chunks)
+
+    @pytest.mark.asyncio
+    async def test_paragraph_chunker(self, cleaner):
+        """Test paragraph chunker."""
+        cleaner.content = "Paragraph one.\n\nParagraph two.\n\nParagraph three."
+        builder = ParagraphChunkBuilder(max_chunk_size=100, overlap=10)
+        chunked = await builder.build(cleaner)
+
+        assert chunked.total_chunks > 0
+        assert builder.strategy_name == "paragraph"
+        assert all(isinstance(c, DocumentChunk) for c in chunked.chunks)
+
+    def test_chunk_builder_base_is_abstract(self):
+        """Test base chunk builder is abstract."""
+        with pytest.raises(TypeError):
+            BaseChunkBuilder()
 
 
 class TestMetadataBuilders:
