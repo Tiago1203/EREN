@@ -340,10 +340,24 @@ EREN se rige por los principios establecidos en [VISION.md](./VISION.md) y [EREN
 
 **Arquitectura (detalle)**
 - [docs/adr/](./docs/adr/) - Architecture Decision Records (índice por categorías)
+- [docs/architecture/](./docs/architecture/) - Documentación de arquitectura
 - [core/contracts/](./core/contracts/) - Capa de contratos SOLID de los motores
 - [docs/core/](./docs/core/) - EREN CORE: diseño de motores cognitivos
 - [docs/domain/](./docs/domain/) - Dominios de negocio (DDD)
 - [docs/knowledge/](./docs/knowledge/) - Arquitectura del conocimiento
+
+**Gobernanza Arquitectónica**
+- [docs/architecture/ARCHITECTURE_CONSISTENCY_REPORT.md](./docs/architecture/ARCHITECTURE_CONSISTENCY_REPORT.md) - Reporte de consistencia
+- [docs/architecture/DEAD_CODE_REPORT.md](./docs/architecture/DEAD_CODE_REPORT.md) - Análisis de código muerto
+- [docs/architecture/CONTRACT_COVERAGE_REPORT.md](./docs/architecture/CONTRACT_COVERAGE_REPORT.md) - Cobertura de contratos
+- [docs/architecture/DEPENDENCY_HEALTH_REPORT.md](./docs/architecture/DEPENDENCY_HEALTH_REPORT.md) - Salud de dependencias
+- [docs/architecture/MODULE_MAP.md](./docs/architecture/MODULE_MAP.md) - Mapa de módulos
+- [docs/architecture/SYSTEM_OVERVIEW.md](./docs/architecture/SYSTEM_OVERVIEW.md) - Vista general del sistema
+- [docs/architecture/CODING_CONVENTIONS.md](./docs/architecture/CODING_CONVENTIONS.md) - Convenciones de código
+- [docs/architecture/NAMING_CONVENTIONS.md](./docs/architecture/NAMING_CONVENTIONS.md) - Convenciones de nombres
+- [docs/architecture/MODULE_CREATION_GUIDE.md](./docs/architecture/MODULE_CREATION_GUIDE.md) - Guía para crear módulos
+- [docs/architecture/DEPENDENCY_RULES.md](./docs/architecture/DEPENDENCY_RULES.md) - Reglas de dependencias
+- [docs/architecture/ADR_GUIDELINES.md](./docs/architecture/ADR_GUIDELINES.md) - Directrices para ADRs
 
 **Políticas**
 - [docs/ai/responsible-ai-policy.md](./docs/ai/responsible-ai-policy.md) - Política de IA Responsable
