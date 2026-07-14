@@ -1,26 +1,12 @@
-"""EREN Knowledge Ingestion Pipeline (KIP).
+"""EREN Knowledge Ingestion Pipeline (KIP v2).
 
-This is where EREN really starts to "study".
-
-Pipeline:
-    PDF / DOCX / TXT / FHIR / HL7
-            │
-            ▼
-    Knowledge Ingestion Pipeline
-            │
-            ├── Extractor
-            ├── Cleaner
-            ├── Chunker
-            ├── Metadata Builder
-            ├── Embedding Generator
-            └── Vector Memory Writer
-            │
-            ▼
-    Knowledge indexed in Vector Memory
+Refactored with strict Single Responsibility Principle.
+Pipeline ONLY orchestrates - never implements logic.
 """
 
 from __future__ import annotations
 
+# Types
 from core.ingestion.types import (
     DocumentType,
     DocumentSource,
@@ -34,6 +20,8 @@ from core.ingestion.types import (
     IngestedDocument,
     IngestionStatistics,
 )
+
+# Exceptions
 from core.ingestion.exceptions import (
     IngestionError,
     ExtractionError,
@@ -47,6 +35,8 @@ from core.ingestion.exceptions import (
     ConfigurationError,
     RegistryError,
 )
+
+# Extractors
 from core.ingestion.extractor import (
     BaseExtractor,
     PDFExtractor,
@@ -57,15 +47,28 @@ from core.ingestion.extractor import (
     HL7Extractor,
     ExtractorFactory,
 )
-from core.ingestion.cleaner import (
-    TextCleaner,
-    MedicalTextCleaner,
+
+# Processors (NEW: separated by responsibility)
+from core.ingestion.processors import (
+    TextProcessor,
+    TextNormalizer,
+    MedicalProcessor,
+    MedicalTerminologyNormalizer,
 )
-from core.ingestion.metadata import (
-    MetadataBuilder,
-    MedicalMetadataBuilder,
+
+# Chunking (NEW: separated by strategy)
+from core.ingestion.chunking import (
+    BaseChunkBuilder,
+    SentenceChunkBuilder,
+    RecursiveChunkBuilder,
+    SlidingWindowChunkBuilder,
+    ParagraphChunkBuilder,
 )
+
+# Pipeline
 from core.ingestion.pipeline import KnowledgeIngestionPipeline
+
+# Registry
 from core.ingestion.registry import (
     DocumentRegistry,
     get_document_registry,
@@ -106,12 +109,17 @@ __all__ = [
     "FHIRExtractor",
     "HL7Extractor",
     "ExtractorFactory",
-    # Cleaners
-    "TextCleaner",
-    "MedicalTextCleaner",
-    # Metadata
-    "MetadataBuilder",
-    "MedicalMetadataBuilder",
+    # Processors
+    "TextProcessor",
+    "TextNormalizer",
+    "MedicalProcessor",
+    "MedicalTerminologyNormalizer",
+    # Chunking
+    "BaseChunkBuilder",
+    "SentenceChunkBuilder",
+    "RecursiveChunkBuilder",
+    "SlidingWindowChunkBuilder",
+    "ParagraphChunkBuilder",
     # Pipeline
     "KnowledgeIngestionPipeline",
     # Registry

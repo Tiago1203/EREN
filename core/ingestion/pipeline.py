@@ -1,6 +1,7 @@
 """Knowledge Ingestion Pipeline for EREN OS.
 
 Orchestrates the full document ingestion process.
+Pipeline ONLY orchestrates - never implements extraction, cleaning, chunking, or storage logic.
 """
 
 from __future__ import annotations
@@ -15,61 +16,53 @@ from core.ingestion.types import (
     ExtractedDocument,
     CleanedDocument,
     ChunkedDocument,
-    DocumentChunk,
     IngestedDocument,
     IngestionStatus,
     IngestionStatistics,
 )
-from core.ingestion.extractor import ExtractorFactory, BaseExtractor
-from core.ingestion.cleaner import TextCleaner
-from core.ingestion.metadata import MetadataBuilder
+from core.ingestion.extractor import ExtractorFactory
+from core.ingestion.processors import TextProcessor
+from core.ingestion.chunking import BaseChunkBuilder, SentenceChunkBuilder
 from core.ingestion.exceptions import (
     ExtractionError,
     UnsupportedFormatError,
     ChunkingError,
-    PipelineError,
 )
 
 if TYPE_CHECKING:
     from plugins.vector_memory import VectorMemoryPlugin
+    from core.memory import MemoryCoordinator
 
 
 class KnowledgeIngestionPipeline:
     """Knowledge Ingestion Pipeline.
 
-    Orchestrates the full document ingestion process:
-    1. Extract text from document
-    2. Clean and normalize text
-    3. Chunk text into manageable pieces
-    4. Generate embeddings
-    5. Store in vector memory
+    Philosophy: The Pipeline ONLY orchestrates.
+    It NEVER knows about:
+    - PDF, DOCX, TXT, FHIR, HL7 (Extractor knows)
+    - Embeddings (EmbeddingManager knows)
+    - Chroma, PostgreSQL (VectorMemory knows)
+
+    Pipeline ONLY coordinates the flow.
     """
 
     def __init__(
         self,
-        vector_memory_plugin: "VectorMemoryPlugin | None" = None,
-        extractor_factory: ExtractorFactory | None = None,
-        cleaner: TextCleaner | None = None,
-        metadata_builder: MetadataBuilder | None = None,
-        chunk_size: int = 500,
-        chunk_overlap: int = 50,
+        text_processor: TextProcessor | None = None,
+        chunk_builder: BaseChunkBuilder | None = None,
+        vector_plugin: "VectorMemoryPlugin | None" = None,
     ):
         """Initialize pipeline.
 
         Args:
-            vector_memory_plugin: Vector memory plugin for storage.
-            extractor_factory: Extractor factory.
-            cleaner: Text cleaner.
-            metadata_builder: Metadata builder.
-            chunk_size: Default chunk size.
-            chunk_overlap: Default chunk overlap.
+            text_processor: Text processor for cleaning/normalization.
+            chunk_builder: Chunk builder for splitting text.
+            vector_plugin: Vector memory plugin for storage.
         """
-        self._vector_plugin = vector_memory_plugin
-        self._extractor_factory = extractor_factory or ExtractorFactory()
-        self._cleaner = cleaner or TextCleaner()
-        self._metadata_builder = metadata_builder or MetadataBuilder()
-        self._chunk_size = chunk_size
-        self._chunk_overlap = chunk_overlap
+        # Pipeline NEVER creates processors - they must be injected
+        self._text_processor = text_processor or TextProcessor()
+        self._chunk_builder = chunk_builder or SentenceChunkBuilder()
+        self._vector_plugin = vector_plugin
 
         # Statistics
         self._statistics = IngestionStatistics()
@@ -77,27 +70,53 @@ class KnowledgeIngestionPipeline:
         # Register default extractors
         ExtractorFactory.register_defaults()
 
-    @property
-    def vector_plugin(self) -> "VectorMemoryPlugin | None":
-        """Get vector memory plugin."""
-        return self._vector_plugin
+    # =========================================================================
+    # Pipeline Configuration (Setter-based for dependency injection)
+    # =========================================================================
 
-    @vector_plugin.setter
-    def vector_plugin(self, plugin: "VectorMemoryPlugin | None") -> None:
-        """Set vector memory plugin."""
+    def set_text_processor(self, processor: TextProcessor) -> None:
+        """Set text processor.
+
+        Args:
+            processor: Text processor to use.
+        """
+        self._text_processor = processor
+
+    def set_chunk_builder(self, builder: BaseChunkBuilder) -> None:
+        """Set chunk builder.
+
+        Args:
+            builder: Chunk builder to use.
+        """
+        self._chunk_builder = builder
+
+    def set_vector_plugin(self, plugin: "VectorMemoryPlugin | None") -> None:
+        """Set vector memory plugin.
+
+        Args:
+            plugin: Vector memory plugin.
+        """
         self._vector_plugin = plugin
+
+    # =========================================================================
+    # Main Ingestion Methods
+    # =========================================================================
 
     async def ingest(
         self,
         raw: RawDocument,
-        generate_embeddings: bool = True,
         store_in_vector: bool = True,
     ) -> IngestedDocument:
         """Ingest a document.
 
+        Pipeline orchestrates:
+        1. Extraction (via ExtractorFactory)
+        2. Processing (via TextProcessor)
+        3. Chunking (via ChunkBuilder)
+        4. Storage (via VectorMemoryPlugin)
+
         Args:
             raw: Raw document.
-            generate_embeddings: Whether to generate embeddings.
             store_in_vector: Whether to store in vector memory.
 
         Returns:
@@ -107,36 +126,36 @@ class KnowledgeIngestionPipeline:
         stages = []
         errors = []
         warnings = []
-
         document_id = str(uuid.uuid4())
 
         try:
-            # Stage 1: Extract
+            # Stage 1: Extract (delegates to ExtractorFactory)
             stages.append({"stage": "extraction", "start": time.time()})
             extracted = await self._extract(raw)
             stages[-1]["end"] = time.time()
             stages[-1]["duration_ms"] = int((stages[-1]["end"] - stages[-1]["start"]) * 1000)
 
-            # Update document ID
             document_id = extracted.document_id
             extracted.metadata.document_id = document_id
+            warnings.extend(extracted.warnings)
 
-            # Stage 2: Clean
-            stages.append({"stage": "cleaning", "start": time.time()})
-            cleaned = await self._clean(extracted)
+            # Stage 2: Process (delegates to TextProcessor)
+            stages.append({"stage": "processing", "start": time.time()})
+            cleaned = await self._process(extracted)
             stages[-1]["end"] = time.time()
             stages[-1]["duration_ms"] = int((stages[-1]["end"] - stages[-1]["start"]) * 1000)
+            warnings.extend(cleaned.cleaning_actions)
 
-            # Stage 3: Chunk
+            # Stage 3: Chunk (delegates to ChunkBuilder)
             stages.append({"stage": "chunking", "start": time.time()})
             chunked = await self._chunk(cleaned)
             stages[-1]["end"] = time.time()
             stages[-1]["duration_ms"] = int((stages[-1]["end"] - stages[-1]["start"]) * 1000)
 
-            # Stage 4: Store
             chunks_created = len(chunked.chunks)
-            embeddings_generated = 0
 
+            # Stage 4: Store (delegates to VectorMemoryPlugin)
+            embeddings_generated = 0
             if store_in_vector and self._vector_plugin:
                 stages.append({"stage": "storage", "start": time.time()})
                 try:
@@ -152,8 +171,7 @@ class KnowledgeIngestionPipeline:
                     errors.append(f"Storage failed: {str(e)}")
                     stages[-1]["error"] = str(e)
                     stages[-1]["end"] = time.time()
-
-            stages[-1]["duration_ms"] = int((stages[-1]["end"] - stages[-1]["start"]) * 1000)
+                stages[-1]["duration_ms"] = int((stages[-1]["end"] - stages[-1]["start"]) * 1000)
 
             # Update statistics
             self._update_statistics(
@@ -175,7 +193,7 @@ class KnowledgeIngestionPipeline:
                 total_time_ms=total_time,
                 stages=stages,
                 errors=errors,
-                warnings=warnings + extracted.warnings + cleaned.cleaning_actions,
+                warnings=warnings,
             )
 
         except Exception as e:
@@ -205,14 +223,12 @@ class KnowledgeIngestionPipeline:
     async def ingest_batch(
         self,
         documents: list[RawDocument],
-        generate_embeddings: bool = True,
         store_in_vector: bool = True,
     ) -> list[IngestedDocument]:
         """Ingest multiple documents.
 
         Args:
             documents: List of raw documents.
-            generate_embeddings: Whether to generate embeddings.
             store_in_vector: Whether to store in vector memory.
 
         Returns:
@@ -220,12 +236,18 @@ class KnowledgeIngestionPipeline:
         """
         results = []
         for raw in documents:
-            result = await self.ingest(raw, generate_embeddings, store_in_vector)
+            result = await self.ingest(raw, store_in_vector)
             results.append(result)
         return results
 
+    # =========================================================================
+    # Pipeline Stages (Delegation Only)
+    # =========================================================================
+
     async def _extract(self, raw: RawDocument) -> ExtractedDocument:
         """Extract text from document.
+
+        Delegates to ExtractorFactory - Pipeline doesn't know document formats.
 
         Args:
             raw: Raw document.
@@ -246,8 +268,10 @@ class KnowledgeIngestionPipeline:
         except Exception as e:
             raise ExtractionError(raw.source, str(e))
 
-    async def _clean(self, extracted: ExtractedDocument) -> CleanedDocument:
-        """Clean extracted document.
+    async def _process(self, extracted: ExtractedDocument) -> CleanedDocument:
+        """Process extracted text.
+
+        Delegates to TextProcessor - Pipeline doesn't know cleaning logic.
 
         Args:
             extracted: Extracted document.
@@ -255,10 +279,12 @@ class KnowledgeIngestionPipeline:
         Returns:
             Cleaned document.
         """
-        return await self._cleaner.clean(extracted)
+        return await self._text_processor.process(extracted)
 
     async def _chunk(self, cleaned: CleanedDocument) -> ChunkedDocument:
-        """Chunk cleaned document.
+        """Chunk cleaned text.
+
+        Delegates to ChunkBuilder - Pipeline doesn't know chunking logic.
 
         Args:
             cleaned: Cleaned document.
@@ -270,110 +296,13 @@ class KnowledgeIngestionPipeline:
             ChunkingError: If chunking fails.
         """
         try:
-            # Try to import from vector_memory plugin
-            try:
-                from plugins.vector_memory import SentenceChunker
-                from plugins.vector_memory.types import VectorMetadata
-
-                # Use SentenceChunker from vector_memory plugin
-                chunker = SentenceChunker(chunk_size=3, overlap=1)
-
-                # Convert to vector_memory format
-                vector_meta = VectorMetadata(
-                    document_id=cleaned.document_id,
-                    source=cleaned.metadata.source_type.value,
-                    author=cleaned.metadata.author,
-                    medical_specialty=cleaned.metadata.medical_specialty,
-                    tags=cleaned.metadata.tags,
-                    language=cleaned.metadata.language,
-                )
-
-                # Chunk using vector_memory chunker
-                vector_chunks = chunker.chunk(
-                    document_id=cleaned.document_id,
-                    content=cleaned.content,
-                    metadata=vector_meta,
-                )
-
-                # Convert back to ingestion format
-                chunks = [
-                    DocumentChunk(
-                        chunk_id=c.chunk_id,
-                        document_id=c.document_id,
-                        content=c.content,
-                        index=c.index,
-                        total_chunks=c.metadata.total_chunks,
-                        metadata=cleaned.metadata,
-                        char_count=len(c.content),
-                        word_count=len(c.content.split()),
-                    )
-                    for c in vector_chunks
-                ]
-
-                return ChunkedDocument(
-                    document_id=cleaned.document_id,
-                    chunks=chunks,
-                    metadata=cleaned.metadata,
-                    chunking_time_ms=0,
-                    chunking_strategy="sentence",
-                )
-
-            except ImportError:
-                # Fallback: simple chunking without vector_memory
-                return self._simple_chunk(cleaned)
-
+            return await self._chunk_builder.build(cleaned)
         except Exception as e:
             raise ChunkingError(cleaned.document_id, str(e))
 
-    def _simple_chunk(self, cleaned: CleanedDocument) -> ChunkedDocument:
-        """Simple chunking without vector_memory plugin.
-
-        Args:
-            cleaned: Cleaned document.
-
-        Returns:
-            Chunked document.
-        """
-        import re
-
-        # Split by sentences
-        sentences = re.split(r"[.!?]+\s+", cleaned.content)
-        sentences = [s.strip() for s in sentences if s.strip()]
-
-        # Group into chunks
-        chunks = []
-        chunk_size = 3
-        for i in range(0, len(sentences), chunk_size):
-            chunk_sentences = sentences[i:i + chunk_size]
-            if not chunk_sentences:
-                continue
-
-            chunk_content = ". ".join(chunk_sentences) + "."
-            chunk_id = f"{cleaned.document_id}_chunk_{len(chunks)}"
-
-            chunk = DocumentChunk(
-                chunk_id=chunk_id,
-                document_id=cleaned.document_id,
-                content=chunk_content,
-                index=len(chunks),
-                total_chunks=0,  # Will be updated
-                metadata=cleaned.metadata,
-                char_count=len(chunk_content),
-                word_count=len(chunk_content.split()),
-            )
-            chunks.append(chunk)
-
-        # Update total_chunks
-        for chunk in chunks:
-            chunk.total_chunks = len(chunks)
-
-        return ChunkedDocument(
-            document_id=cleaned.document_id,
-            chunks=chunks,
-            metadata=cleaned.metadata,
-            chunking_time_ms=0,
-            chunking_strategy="simple",
-        )
+    # =========================================================================
+    # Statistics
+    # =========================================================================
 
     def _update_statistics(
         self,
