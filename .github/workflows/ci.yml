@@ -95,32 +95,13 @@ jobs:
           pip install -e "apps/api"
           
       - name: Verify domain imports
-        run: |
-          python -c "
-            from app.domain.patient import PatientService, SQLAlchemyPatientRepository
-            from app.infrastructure import EventBus
-            print('✅ Domain imports OK')
-          "
+        run: python -c "from app.domain.patient import PatientService, SQLAlchemyPatientRepository; from app.infrastructure import EventBus; print('Domain imports OK')"
           
       - name: Verify middleware imports
-        run: |
-          python -c "
-            from app.middleware import AuditMiddleware, AuthenticationMiddleware
-            print('✅ Middleware imports OK')
-          "
+        run: python -c "from app.middleware import AuditMiddleware, AuthenticationMiddleware; print('Middleware imports OK')"
           
       - name: Verify contracts
-        run: |
-          python -c "
-            from core.contracts.security.authentication import AuthenticationProvider
-            from core.contracts.security.audit import AuditProvider
-            print('✅ Contracts OK')
-          "
+        run: python -c "from core.contracts.security.authentication import AuthenticationProvider; from core.contracts.security.audit import AuditProvider; print('Contracts OK')"
           
       - name: Verify models
-        run: |
-          python -c "
-            from app.models import Patient
-            from app.models.patient import Patient
-            print('✅ Models OK')
-          "
+        run: python -c "from app.models import Patient; from app.models.patient import Patient; print('Models OK')"
