@@ -1,15 +1,18 @@
 """Shared pytest fixtures for the EREN API test suite."""
 
 from collections.abc import Iterator
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from fastapi.testclient import TestClient
-
-from app.main import create_app
 
 
 @pytest.fixture
-def client() -> Iterator[TestClient]:
-    """A synchronous test client backed by a fresh app instance."""
-    with TestClient(create_app()) as test_client:
-        yield test_client
+def mock_repository():
+    """Mock PatientRepository for unit tests."""
+    return AsyncMock()
+
+
+@pytest.fixture
+def mock_event_bus():
+    """Mock EventBus for unit tests."""
+    return AsyncMock()
