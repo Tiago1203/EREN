@@ -96,3 +96,4 @@ EngineerId = EntityId
 TenantId = EntityId
 OrganizationId = EntityId
 LocationId = EntityId
+RecommendationId = EntityId

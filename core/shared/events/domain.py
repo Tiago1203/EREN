@@ -261,6 +261,67 @@ class FeedbackReceived(DomainEvent):
         object.__setattr__(self, "event_type", "FeedbackReceived")
 
 
+@dataclass(frozen=True, slots=True)
+class RecommendationFeedbackReceived(DomainEvent):
+    """Fired when feedback is received on a recommendation."""
+
+    recommendation_id: str = field(kw_only=True)
+    engineer_id: str = field(kw_only=True)
+    feedback: str = field(kw_only=True)
+    current_status: str = field(kw_only=True)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "event_type", "RecommendationFeedbackReceived")
+
+
+# =============================================================================
+# Recommendation Context Events (specific to recommendation bounded context)
+# =============================================================================
+
+
+@dataclass(frozen=True, slots=True)
+class RecommendationCreated(DomainEvent):
+    """Fired when a new recommendation is created in the recommendation context."""
+
+    recommendation_id: str = field(kw_only=True)
+    incident_id: str = field(kw_only=True)
+    device_id: str = field(kw_only=True)
+    title: str = field(kw_only=True)
+    confidence: float = field(kw_only=True)
+    category: str = field(kw_only=True)
+    model_version: str = field(kw_only=True)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "event_type", "RecommendationCreated")
+
+
+@dataclass(frozen=True, slots=True)
+class RecommendationAcceptedV2(DomainEvent):
+    """Fired when an engineer accepts a recommendation."""
+
+    recommendation_id: str = field(kw_only=True)
+    engineer_id: str = field(kw_only=True)
+    modifications: str = field(kw_only=True)
+    note: str = field(kw_only=True)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "event_type", "RecommendationAcceptedV2")
+
+
+@dataclass(frozen=True, slots=True)
+class RecommendationRejectedV2(DomainEvent):
+    """Fired when an engineer rejects a recommendation."""
+
+    recommendation_id: str = field(kw_only=True)
+    engineer_id: str = field(kw_only=True)
+    reason_code: str = field(kw_only=True)
+    reason_description: str = field(kw_only=True)
+    feedback: str = field(kw_only=True)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "event_type", "RecommendationRejectedV2")
+
+
 # =============================================================================
 # Device Events
 # =============================================================================

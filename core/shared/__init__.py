@@ -73,6 +73,7 @@ from .primitives import (
     LocationId,
     MaintenanceId,
     OrganizationId,
+    RecommendationId,
     TenantId,
 )
 from .value_objects import (
@@ -95,6 +96,7 @@ __all__ = [
     "TenantId",
     "OrganizationId",
     "LocationId",
+    "RecommendationId",
     # Value Objects
     "ValueObject",
     "Priority",

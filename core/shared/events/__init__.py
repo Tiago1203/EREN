@@ -13,6 +13,10 @@ from .domain import (
     RecommendationGenerated,
     RecommendationAccepted,
     RecommendationRejected,
+    RecommendationFeedbackReceived,
+    RecommendationCreated,
+    RecommendationAcceptedV2,
+    RecommendationRejectedV2,
     FeedbackReceived,
     # Device events
     DeviceRegistered,
@@ -40,6 +44,10 @@ __all__ = [
     "RecommendationGenerated",
     "RecommendationAccepted",
     "RecommendationRejected",
+    "RecommendationFeedbackReceived",
+    "RecommendationCreated",
+    "RecommendationAcceptedV2",
+    "RecommendationRejectedV2",
     "FeedbackReceived",
     # Device
     "DeviceRegistered",

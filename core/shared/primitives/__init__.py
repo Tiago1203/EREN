@@ -9,6 +9,7 @@ from .entity_id import (
     LocationId,
     MaintenanceId,
     OrganizationId,
+    RecommendationId,
     TenantId,
 )
 
@@ -21,5 +22,6 @@ __all__ = [
     "LocationId",
     "MaintenanceId",
     "OrganizationId",
+    "RecommendationId",
     "TenantId",
 ]
