@@ -12,9 +12,14 @@ dependencies = [
     "sqlalchemy>=2.0,<3.0",
     "alembic>=1.13,<2.0",
     "aiosqlite>=0.20,<1.0",
+    "supabase>=2.0,<3.0",
+    "python-jose[cryptography]>=3.3,<4.0",
 ]
 
-# uv manages the environment only; the app itself is not built as a wheel.
+[tool.setuptools.packages.find]
+include = ["app*", "core*"]
+exclude = ["tests*", "migrations*"]
+
 [tool.uv]
 package = false
 

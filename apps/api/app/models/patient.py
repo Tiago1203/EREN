@@ -33,7 +33,7 @@ class Patient(Base):
     id: Mapped[str] = mapped_column(
         String(36),
         primary_key=True,
-        comment="UUID v7 for time-ordered IDs",
+        comment="UUID for entity identification",
     )
 
     # Tenant isolation (multi-tenancy)

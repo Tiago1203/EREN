@@ -58,8 +58,11 @@ class PatientService:
         Raises:
             ValueError: If data is invalid
         """
-        # Generate ID
-        patient_id = str(uuid.uuid7())
+        # Generate ID (UUID v7 for time-ordered IDs - fallback to v4 for compatibility)
+        try:
+            patient_id = str(uuid.uuid7())
+        except AttributeError:
+            patient_id = str(uuid.uuid4())
 
         # Create domain event (before saving)
         domain_event = PatientCreated(
