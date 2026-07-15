@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, feature/**]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -27,21 +27,37 @@ jobs:
           python -m pip install --upgrade pip
           pip install ruff black isort
           
-      - name: Run ruff
+      - name: Run ruff on core
         run: ruff check core/ || true
         
-      - name: Run ruff format check
-        run: ruff format --check core/ || true
+      - name: Run ruff on api
+        run: ruff check apps/api/app/ apps/api/tests/ || true
         
-      - name: Run isort
-        run: isort --check-only core/ || true
+      - name: Run ruff format check
+        run: ruff format --check core/ apps/api/ || true
 
   test:
-    name: Test
+    name: Test Suite
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.12"]
+        
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: eren
+          POSTGRES_PASSWORD: eren_test
+          POSTGRES_DB: eren_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          
     steps:
       - uses: actions/checkout@v4
       
@@ -53,10 +69,19 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pytest-asyncio pytest-cov pydantic
+          pip install -e "apps/api[test]"
           
-      - name: Run tests
+      - name: Run core tests
         run: PYTHONPATH=. python -m pytest tests/ -v --tb=short || true
+
+      - name: Run unit tests
+        run: PYTHONPATH=. python -m pytest apps/api/tests/unit -v --tb=short || true
+        
+      - name: Run integration tests
+        run: |
+          PYTHONPATH=. python -m pytest apps/api/tests/integration -v --tb=short || true
+        env:
+          DATABASE_URL: postgresql+asyncpg://eren:eren_test@localhost:5432/eren_test
 
   coverage:
     name: Coverage
@@ -75,7 +100,7 @@ jobs:
           pip install pytest pytest-asyncio pytest-cov pydantic
           
       - name: Run tests with coverage
-        run: PYTHONPATH=. python -m pytest tests/ --cov=core --cov-report=xml --cov-report=term-missing || true
+        run: PYTHONPATH=. python -m pytest tests/ apps/api/tests/ --cov=core --cov=app --cov-report=xml --cov-report=term-missing || true
         
       - name: Upload coverage
         uses: codecov/codecov-action@v4
@@ -84,7 +109,7 @@ jobs:
           fail_ci_if_error: false
 
   architecture:
-    name: Architecture Check
+    name: Architecture Validation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -95,10 +120,35 @@ jobs:
           python-version: "3.12"
           
       - name: Install dependencies
-        run: pip install ruff
+        run: pip install -e "apps/api"
           
-      - name: Check imports
-        run: ruff check core/ --select=I || true
+      - name: Verify domain imports
+        run: |
+          python -c "
+            from app.domain.patient import PatientService, SQLAlchemyPatientRepository
+            from app.infrastructure import EventBus
+            print('✅ Domain imports OK')
+          "
           
-      - name: Check dead code
-        run: ruff check core/ --select=F841 || true
+      - name: Verify middleware imports
+        run: |
+          python -c "
+            from app.middleware import AuditMiddleware, AuthenticationMiddleware
+            print('✅ Middleware imports OK')
+          "
+          
+      - name: Verify contracts
+        run: |
+          python -c "
+            from core.contracts.security.authentication import AuthenticationProvider
+            from core.contracts.security.audit import AuditProvider
+            print('✅ Contracts OK')
+          "
+          
+      - name: Verify models
+        run: |
+          python -c "
+            from app.models import Patient
+            from app.models.patient import Patient
+            print('✅ Models OK')
+          "

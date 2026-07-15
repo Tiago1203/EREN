@@ -50,7 +50,7 @@ class OutboxMessage(Base):
     id: Mapped[str] = mapped_column(
         String(36),
         primary_key=True,
-        default=lambda: str(uuid.uuid7()),
+        default=lambda: str(uuid.uuid4()),
     )
 
     # Event metadata
@@ -125,7 +125,7 @@ def create_outbox_message(
     import json
 
     return OutboxMessage(
-        id=str(uuid.uuid7()),
+        id=str(uuid.uuid4()),
         aggregate_type=aggregate_type,
         aggregate_id=aggregate_id,
         event_type=event_type,
