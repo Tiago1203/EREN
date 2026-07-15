@@ -207,13 +207,13 @@ class TestTenantIsolation:
         # Assert
         assert result is True
 
-        # Verify tenant-1's patient is soft-deleted
+        # Verify tenant-1's patient is soft-deleted (not visible in queries)
         patient_1 = await repository.get_by_id("patient-del-1", "tenant-1")
-        assert patient_1.is_active is False
+        assert patient_1 is None  # Deleted patients are excluded from queries
 
         # Verify tenant-2's patient is NOT affected
         patient_2 = await repository.get_by_id("patient-del-2", "tenant-2")
-        assert patient_2.is_active is True
+        assert patient_2 is not None  # Not affected
 
 
 class TestOutboxPattern:

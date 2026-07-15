@@ -129,10 +129,11 @@ class PatientService:
         self,
         patient_id: str,
         tenant_id: str,
+        expected_version: int,
         correlation_id: str | None = None,
         **updates,
     ) -> Patient | None:
-        """Update a patient."""
+        """Update a patient with optimistic locking."""
         patient = await self.repository.get_by_id(patient_id, tenant_id)
         if patient is None:
             return None
@@ -140,10 +141,10 @@ class PatientService:
         # Track changes for event
         changes = dict(updates)
 
-        # Update via repository
-        updated = await self.repository.update(patient, **updates)
+        # Update via repository with optimistic locking
+        updated = await self.repository.update(patient, expected_version, **updates)
         if updated is None:
-            return None
+            return None  # Concurrent modification detected
 
         # Publish event
         domain_event = PatientUpdated(
@@ -157,7 +158,7 @@ class PatientService:
             aggregate_type="Patient",
             aggregate_id=patient_id,
             event_type=domain_event.event_type,
-            payload={"changes": changes},
+            payload={"changes": changes, "version": expected_version + 1},
             tenant_id=tenant_id,
             correlation_id=correlation_id,
         )
@@ -169,16 +170,22 @@ class PatientService:
         patient_id: str,
         tenant_id: str,
         deleted_by: str | None = None,
+        delete_reason: str | None = None,
         correlation_id: str | None = None,
     ) -> bool:
-        """Soft-delete a patient."""
+        """Soft-delete a patient with metadata."""
         # Check exists first
         patient = await self.repository.get_by_id(patient_id, tenant_id)
         if patient is None:
             return False
 
-        # Delete via repository
-        success = await self.repository.soft_delete(patient_id, tenant_id)
+        # Delete via repository with metadata
+        success = await self.repository.soft_delete(
+            patient_id,
+            tenant_id,
+            deleted_by=deleted_by,
+            delete_reason=delete_reason,
+        )
         if not success:
             return False
 
@@ -194,7 +201,7 @@ class PatientService:
             aggregate_type="Patient",
             aggregate_id=patient_id,
             event_type=domain_event.event_type,
-            payload={"deleted_by": deleted_by},
+            payload={"deleted_by": deleted_by, "delete_reason": delete_reason},
             tenant_id=tenant_id,
             correlation_id=correlation_id,
         )
