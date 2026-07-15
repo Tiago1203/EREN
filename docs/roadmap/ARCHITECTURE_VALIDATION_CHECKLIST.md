@@ -3,114 +3,116 @@
 ## Purpose
 
 This document validates that Epic 0 architecture decisions work in practice.
-Each completed milestone demonstrates that part of Epic 0 is real, not just theoretical.
+Each check requires **objective evidence**, not just code existence.
+
+---
+
+## Epic 1 Progress: 35%
+
+### Status Legend
+- [ ] **Pending** - Not yet implemented
+- [~] **Code Exists** - Implementation exists but not validated
+- [x] **Validated** - Has passing tests and/or manual verification
 
 ---
 
 ## Vertical Slice: Create Patient
 
-### Authentication Contract ✅
-- [ ] `AuthenticationProvider.verify_token()` works with Supabase JWT
+### Authentication Contract [~]
+- [ ] `AuthenticationProvider.verify_token()` implemented
 - [ ] JWT validated on every request (except public paths)
 - [ ] Invalid/expired JWT returns 401
 - [ ] Principal extracted from token
+- [ ] **Evidence needed**: Integration test with real Supabase JWT
 
-### Authorization Contract ⚠️
+### Authorization Contract [ ]
 - [ ] RBAC not yet implemented (planned for next milestone)
 - [ ] Currently: all authenticated users can create patients
 
-### Tenant Resolution ✅
+### Tenant Resolution [~]
 - [ ] `tenant_id` extracted from JWT claims
 - [ ] `tenant_id` present in request context
 - [ ] All queries filter by `tenant_id`
 - [ ] Cross-tenant access prevented
+- [ ] **Evidence needed**: Cross-tenant test (see tests/integration)
 
-### Audit ✅
+### Audit [~]
 - [ ] Every request generates audit entry
 - [ ] PHI paths (`/patients`) are flagged
 - [ ] Audit includes: principal_id, action, timestamp, correlation_id
-- [ ] Audit is logged (table storage planned)
+- [ ] **Evidence needed**: Audit record persisted and queryable
 
-### Event Architecture ✅
+### Event Architecture [~]
 - [ ] `PatientCreated` event published via outbox
 - [ ] Event includes: aggregate_id, event_type, tenant_id, correlation_id
 - [ ] Outbox pattern ensures reliability
-- [ ] Events can be replayed
+- [ ] **Evidence needed**: Outbox query returning PatientCreated
 
-### Error Catalog ✅
+### Error Catalog [~]
 - [ ] Error codes follow catalog (PAT-*, AUTH-*)
 - [ ] HTTP status codes are appropriate
-- [ ] User messages are helpful
-- [ ] Internal errors don't leak to client
+- [ ] **Evidence needed**: Error handling test
 
-### Ubiquitous Language ✅
+### Ubiquitous Language [~]
 - [ ] `Patient` used correctly (not `PatientEntity`, `PatientRecord`)
 - [ ] `Principal` used for authenticated identity
 - [ ] `Tenant` used for hospital/organization
 
-### Architecture Principles ✅
+### Architecture Principles [~]
 - [ ] P1: Patient Safety - HIPAA audit trail present
 - [ ] P3: PHI Protected - tenant isolation working
 - [ ] P4: PHI Audited - every PHI access logged
 - [ ] P6: Services Own Data - Patient context owns Patient
 - [ ] P7: Fail Safely - graceful error handling
 
-### Data Classification ✅
-- [ ] Patient data classified as PHI
-- [ ] PHI encrypted at rest (PostgreSQL)
-- [ ] PHI encrypted in transit (TLS)
-- [ ] Tenant isolation required
+---
+
+## Test Coverage
+
+### Unit Tests [x]
+- [x] `test_create_patient_returns_patient`
+- [x] `test_create_patient_calls_repository`
+- [x] `test_create_patient_calls_event_bus`
+- [x] `test_get_patient_returns_patient`
+- [x] `test_get_patient_returns_none_when_not_found`
+- [x] `test_delete_patient_returns_true_on_success`
+- [x] `test_delete_patient_returns_false_when_not_found`
+- [x] `test_delete_patient_publishes_event`
+- [x] `test_list_patients_returns_tuple`
+
+### Integration Tests (require PostgreSQL) [ ]
+- [ ] `test_create_patient_persists_to_db`
+- [ ] `test_tenant_a_cannot_see_tenant_b_data`
+- [ ] `test_event_published_to_outbox`
+- [ ] `test_soft_delete_only_affects_tenant`
 
 ---
 
-## Validated Decisions
+## Honest Status
 
-| Decision | Status | Evidence |
-|----------|--------|----------|
-| Authentication contract works | ✅ | JWT validated successfully |
-| Multi-tenancy isolation | ✅ | Cross-tenant queries blocked |
-| Event architecture | ✅ | PatientCreated in outbox |
-| Audit logging | ✅ | Every request audited |
-| Error catalog | ✅ | Consistent error codes |
-
----
-
-## Decisions to Validate Later
-
-| Decision | When | What to Watch |
-|----------|-------|---------------|
-| Neo4j integration | Diagnosis Context | Graph queries performance |
-| Qdrant integration | Knowledge Context | Vector search accuracy |
-| Multi-agent | CDS Context | Reasoning quality |
-| Event sourcing | Production scale | Event replay performance |
+| Aspect | Status | Evidence Required |
+|--------|--------|-------------------|
+| Code exists | [x] | Yes |
+| Unit tests pass | [x] | 9/9 passing |
+| Integration tests | [ ] | Need PostgreSQL |
+| Manual demo | [ ] | Need running app |
+| CI passing | [ ] | GitHub Actions |
 
 ---
 
-## Next Validation Steps
+## Next Steps
 
-### M2: Diagnosis Context
-- [ ] Diagnosis contract validated
-- [ ] Links to Patient via patient_id
-- [ ] Events consumed from Patient context
+Before Diagnosis Context:
 
-### M3: Treatment Context
-- [ ] Treatment contract validated
-- [ ] Links to Diagnosis
-- [ ] Full clinical workflow
-
----
-
-## Criteria for "Epic 0 Validated"
-
-Epic 0 is fully validated when:
-1. ✅ Create Patient flow works end-to-end
-2. ⏳ Create Diagnosis flow works end-to-end (in progress)
-3. ⏳ Create Treatment flow works end-to-end (planned)
-4. ⏳ At least one event consumed by another context (planned)
-
-When all 4 are green, Epic 0 decisions are validated with evidence, not theory.
+1. [x] CI pipeline created
+2. [x] Unit tests created (9 passing)
+3. [ ] Integration tests (need PostgreSQL)
+4. [ ] Manual demo
+5. [ ] Cross-tenant isolation verified
+6. [ ] Outbox persistence verified
+7. [ ] PR #96 merged
 
 ---
 
 *Last updated: 2026-07-15*
-*Status: M1-M3 COMPLETE, Validating M4*
+*Status: Code exists, tests pass, validation in progress*
