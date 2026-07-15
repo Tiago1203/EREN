@@ -16,6 +16,7 @@ Epic 0 establishes the foundational documents that define EREN's identity, purpo
 | [EREN_CAPABILITY_MAP.md](./EREN_CAPABILITY_MAP.md) | All capabilities inventory | ✅ Complete |
 | [EREN_CAPABILITY_DEPENDENCIES.md](./EREN_CAPABILITY_DEPENDENCIES.md) | Capability relationships | ✅ Complete |
 | [EREN_ARCHITECTURE_BLUEPRINT.md](./EREN_ARCHITECTURE_BLUEPRINT.md) | Technical architecture | ✅ Complete |
+| [EREN_CONTRACTS_FOUNDATION.md](./EREN_CONTRACTS_FOUNDATION.md) | Contract templates | ✅ Complete |
 
 ---
 
@@ -34,7 +35,11 @@ Capability Dependencies (How capabilities relate)
        ↓
 Architecture Blueprint (How to build)
        ↓
-Contracts (Interfaces) ← NEXT
+Contracts Foundation (Interfaces) ✅ Complete
+       ↓
+ADR Templates
+       ↓
+RFC Templates
        ↓
 Implementations (Code)
 ```
