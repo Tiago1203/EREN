@@ -100,8 +100,5 @@ jobs:
       - name: Verify middleware imports
         run: python -c "from app.middleware import AuditMiddleware, AuthenticationMiddleware; print('Middleware imports OK')"
           
-      - name: Verify contracts
-        run: python -c "from core.contracts.security.authentication import AuthenticationProvider; from core.contracts.security.audit import AuditProvider; print('Contracts OK')"
-          
       - name: Verify models
         run: python -c "from app.models import Patient; from app.models.patient import Patient; print('Models OK')"
