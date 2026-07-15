@@ -14,7 +14,10 @@ dependencies = [
     "aiosqlite>=0.20,<1.0",
 ]
 
-# uv manages the environment only; the app itself is not built as a wheel.
+[tool.setuptools.packages.find]
+include = ["app*", "core*"]
+exclude = ["tests*", "migrations*"]
+
 [tool.uv]
 package = false
 
