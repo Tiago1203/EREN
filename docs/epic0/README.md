@@ -10,9 +10,11 @@ Epic 0 establishes the foundational documents that define EREN's identity, purpo
 
 | Document | Purpose | Status |
 |----------|---------|--------|
-| [EREN_PHILOSOPHY.md](./EREN_PHILOSOPHY.md) | Fundamental principles | Draft |
-| [EREN_THREE_DOMAINS.md](./EREN_THREE_DOMAINS.md) | Domain model (Clinical, Biomedical, Hospital) | Draft |
-| [EREN_COGNITIVE_MODEL.md](./EREN_COGNITIVE_MODEL.md) | How EREN thinks | Draft |
+| [EREN_PHILOSOPHY.md](./EREN_PHILOSOPHY.md) | Fundamental principles | ✅ Complete |
+| [EREN_THREE_DOMAINS.md](./EREN_THREE_DOMAINS.md) | Domain model (Clinical, Biomedical, Hospital) | ✅ Complete |
+| [EREN_COGNITIVE_MODEL.md](./EREN_COGNITIVE_MODEL.md) | How EREN thinks | ✅ Complete |
+| [EREN_CAPABILITY_MAP.md](./EREN_CAPABILITY_MAP.md) | All capabilities inventory | ✅ Complete |
+| [EREN_CAPABILITY_DEPENDENCIES.md](./EREN_CAPABILITY_DEPENDENCIES.md) | Capability relationships | ✅ Complete |
 
 ---
 
@@ -26,6 +28,8 @@ Three Domains (What problem spaces)
 Cognitive Model (How EREN thinks)
        ↓
 Capability Map (What capabilities needed)
+       ↓
+Capability Dependencies (How capabilities relate)
        ↓
 Architecture Blueprint (How to build)
        ↓
