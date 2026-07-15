@@ -169,6 +169,20 @@ NO es un bounded context:
 └── Notifications (probablemente es infraestructura)
 ```
 
+### Regla 9: No abstraer antes del tercer uso
+
+```
+Duplicar dos veces es aceptable.
+La tercera repetición justifica una abstracción.
+
+Evita crear prematuramente:
+├── BaseAggregate
+├── GenericRepository
+├── GenericService
+
+Este principio protege contra la abstracción prematura.
+```
+
 ---
 
 ## Lo que viene
@@ -219,24 +233,29 @@ RECOMENDACIÓN: Sesión de diseño ANTES de programar
 6. **Validación:** Clasificar diferencias (Domain vs Pattern)
 7. **Frozen:** Foundation no se toca
 8. **Justificación:** Cada contexto debe justificar por qué existe
+9. **Abstracción:** No abstraer antes del tercer uso
 
 ---
 
-## Valoración
+## Estado actual
 
-| Área | Valoración |
-|------|-----------|
-| Arquitectura | 9.8/10 |
-| Organización | 9.8/10 |
-| Consistencia | 9.5/10 |
-| Implementación | 8.5/10 |
-| Preparación para crecer | 9.5/10 |
+```
+Arquitectura:
+✓ Consistente
 
-**¿Por qué no 10?** El verdadero examen viene cuando Patient, Diagnosis, Treatment, Device conviven durante meses.
+Escalabilidad:
+✓ Validada en dos bounded contexts
+
+Madurez:
+✓ Suficiente para continuar
+
+Validación definitiva:
+⏳ Pendiente de convivencia entre múltiples contextos
+```
 
 ---
 
-## Estado final
+## Estado de los contextos
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -244,15 +263,19 @@ RECOMENDACIÓN: Sesión de diseño ANTES de programar
 │  ════════════════                                   │
 │                                                     │
 │  ✅ Patient Context        → Bounded Context #1     │
+│                             → Reference Implementation
+│                                                     │
 │  ✅ Diagnosis Context     → Bounded Context #2     │
+│                             → Reference Implementation
+│                                                     │
 │  ✅ Pattern Validated     → EREN Template         │
 │  ✅ 48 Tests              → All passing           │
-│  ✅ 8 Reglas              → Documentadas          │
+│  ✅ 9 Reglas              → Documentadas          │
 │                                                     │
 │  Estado: FROZEN 🧊                                 │
 │                                                     │
-│  "Dejáron de construir infraestructura              │
-│   y empezaron a construir software."               │
+│  "La arquitectura ya no necesita                     │
+│   reinventarse. Ahora importa el dominio."         │
 │                                                     │
 └─────────────────────────────────────────────────────┘
 ```
