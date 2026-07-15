@@ -10,10 +10,10 @@ from app.middleware.request_context import (
 )
 
 __all__ = [
-    "RequestContextMiddleware",
-    "AuthenticationMiddleware",
     "AuditMiddleware",
+    "AuthenticationMiddleware",
     "RequestContext",
+    "RequestContextMiddleware",
     "get_request_context",
     "set_request_context",
 ]

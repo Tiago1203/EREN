@@ -7,22 +7,21 @@ Implements AuthenticationProvider contract using Supabase Auth.
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
-from supabase import AsyncClient, create_client
-
-from app.config.settings import get_settings
 from core.contracts.security.authentication import (
     AuthenticationFactor,
     AuthenticationMethod,
-    AuthenticationProvider,
     AuthenticationResult,
     IdentityType,
     Principal,
     TokenInfo,
 )
+from supabase import AsyncClient, create_client
+
+from app.config.settings import get_settings
 
 if TYPE_CHECKING:
     pass

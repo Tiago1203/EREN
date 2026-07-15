@@ -1,7 +1,6 @@
 """Shared pytest fixtures for the EREN API test suite."""
 
-from collections.abc import Iterator
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock
 
 import pytest
 

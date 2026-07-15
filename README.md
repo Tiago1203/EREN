@@ -15,14 +15,91 @@ EREN es un **Cognitive Operating System (COS)** especializado en Ingeniería Cl�
 
 **Para la máxima autoridad del proyecto, ver [VISION.md](./VISION.md).**
 
-> **Estado actual:** el repositorio está en fase de **scaffolding de arquitectura**.
-> Existen el monorepo, el esqueleto del backend (FastAPI), los esqueletos de los
-> ocho motores cognitivos y la capa de contratos. **Aún no hay lógica de negocio,
-> IA ni agentes implementados.** Documentos canónicos:
+> **Estado actual:** Epic 1 (Patient Context) está en desarrollo.
+> Ya existe: autenticación, modelo de paciente, repository pattern, outbox pattern,
+> CI/CD, y tests unitarios. **Pendiente:** Diagnosis context.
+> Documentos canónicos:
 > [ARCHITECTURE_OVERVIEW.md](./ARCHITECTURE_OVERVIEW.md) ·
 > [SYSTEM_DESIGN.md](./SYSTEM_DESIGN.md) ·
 > [CORE_SPECIFICATION.md](./CORE_SPECIFICATION.md) ·
 > [MASTER_ROADMAP.md](./MASTER_ROADMAP.md).
+
+---
+
+## Quick Start
+
+### Prerequisites
+
+- Python 3.12+
+- Docker y Docker Compose
+- Supabase project (para auth)
+
+### Setup
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/Tiago1203/EREN.git
+cd EREN
+
+# 2. Instalar dependencias Python
+pip install -e .
+
+# 3. Configurar variables de entorno
+cp apps/api/.env.example apps/api/.env
+# Editar apps/api/.env con tus credenciales de Supabase
+
+# 4. Levantar con Docker Compose
+docker-compose up -d
+
+# 5. Verificar que está corriendo
+curl http://localhost:8000/health
+```
+
+### Desarrollo Local
+
+```bash
+cd apps/api
+
+# Instalar dependencias
+pip install -e ".[test]"
+
+# Correr tests
+PYTHONPATH=apps/api pytest apps/api/tests/unit -v
+
+# Correr con hot-reload
+uvicorn app.main:app --reload
+```
+
+### CI/CD
+
+El proyecto usa GitHub Actions. Verifica el estado en la pestaña "Actions" del repositorio.
+
+**Checks:**
+- ✅ Lint (Ruff)
+- ✅ Test Suite (21 tests)
+- ✅ Architecture Validation
+
+---
+
+## Estado de Implementación (Epic 1)
+
+### ✅ Completado
+
+| Componente | Estado | Cobertura |
+|------------|--------|-----------|
+| Authentication | ✅ | Tests unitarios |
+| Patient Model | ✅ | Tests unitarios |
+| Patient Service | ✅ | 70% |
+| Patient Repository | ✅ | 30% |
+| Outbox Pattern | ✅ | Integration tests |
+| Audit Middleware | ✅ | Tests unitarios |
+| CI/CD | ✅ | GitHub Actions |
+
+### 🎯 Siguiente
+
+- Diagnosis Context (Epic 1.2)
+- Tenant Isolation Tests
+- Rollback Scenarios
 
 ---
 

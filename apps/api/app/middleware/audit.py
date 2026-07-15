@@ -89,14 +89,12 @@ class AuditMiddleware(BaseHTTPMiddleware):
     PHI access is logged with additional details.
     """
 
-    def __init__(self, app, audit_provider: "AuditProvider | None" = None):
+    def __init__(self, app, audit_provider: AuditProvider | None = None):
         super().__init__(app)
         self._audit_provider = audit_provider
 
     async def dispatch(self, request: Request, call_next) -> Response:
         """Audit the request."""
-        started_at = datetime.now(UTC)
-
         # Extract context
         request_id = getattr(request.state, "request_id", None)
         principal = getattr(request.state, "principal", None)
@@ -104,7 +102,6 @@ class AuditMiddleware(BaseHTTPMiddleware):
 
         # Extract client info
         client_ip = request.client.host if request.client else None
-        user_agent = request.headers.get("User-Agent")
 
         # Build audit entry
         audit_entry = AuditEntry(
@@ -126,12 +123,10 @@ class AuditMiddleware(BaseHTTPMiddleware):
 
         # Process request
         response = None
-        error = None
         try:
             response = await call_next(request)
             audit_entry.outcome = "success"
         except Exception as e:
-            error = e
             audit_entry.outcome = "failure"
             audit_entry.details["error"] = str(e)
             raise

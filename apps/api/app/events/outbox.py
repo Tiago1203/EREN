@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import DateTime, Index, Integer, String, Text, func
@@ -24,7 +24,7 @@ if TYPE_CHECKING:
     pass
 
 
-class OutboxStatus(str, Enum):
+class OutboxStatus(StrEnum):
     """Status of outbox messages."""
 
     PENDING = "pending"
