@@ -1,67 +1,229 @@
-# EREN — Estado del Proyecto y Roadmap
+# EREN — Clinical Engineering Copilot
 
 **Fecha:** 2026-07-15
-**Versión:** 2.0
+**Versión:** 3.0
 
 ---
 
 ## Resumen Ejecutivo
 
 ```
-EREN Clinical Engineering Platform
-═════════════════════════════════
-
-EREN no pretende reemplazar un HIS o un CMMS.
-Su propósito es proporcionar inteligencia operativa 
-sobre la información existente.
-
-EREN puede conectarse a:
-├── Epic, Cerner, OpenMRS (HIS)
-├── Odoo, SAP (ERP)
-└── Sistemas propios
-
-Visión:
-"EREN es el cerebro que entiende el hospital completo,
-pero ayuda al ingeniero biomédico primero."
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│              CLINICAL ENGINEERING COPILOT                   │
+│                                                             │
+│  El primer copiloto de IA especializado en                  │
+│  ingeniería clínica.                                         │
+│                                                             │
+│  No reemplaza sistemas existentes.                           │
+│  Se conecta a ellos y los hace más inteligentes.           │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Arquitectura del Proyecto
+## ¿Qué es EREN?
 
 ```
-                        ┌──────────┐
-                        │   AI     │
-                        │   Core   │ ← El cerebro
-                        │ (Centro) │
-                        └────┬─────┘
-                             │
-        ┌────────────────────┼────────────────────┐
-        │                    │                    │
-┌───────┴───────┐    ┌───────┴───────┐    ┌───────┴───────┐
-│   Clinical    │    │  Engineering  │    │    Future     │
-│     Core      │    │     Core      │    │               │
-│               │    │               │    │               │
-│ • Patient     │    │ • Device      │    │ • Finance     │
-│ • Diagnosis   │    │ • Knowledge   │    │ • Inventory   │
-│ • Treatment   │    │ • Maintenance │    │ • Protocols   │
-│ • Observation  │    │ • Case       │    │ • Normativa   │
-│ • Encounter   │    │   Management │    │               │
-└───────────────┘    └───────────────┘    └───────────────┘
-        │                    │                    │
-        └────────────────────┼────────────────────┘
-                             │
-                    ┌────────┴────────┐
-                    │    Case         │ ← El corazón
-                    │   Management    │
-                    │                 │
-                    │ • Casos activos │
-                    │ • IA            │
-                    │ • Historial     │
-                    │ • Documentos    │
-                    │ • Repuestos     │
-                    │ • Órdenes       │
-                    └─────────────────┘
+EREN es un copiloto de IA que ayuda al ingeniero biomédico
+a resolver problemas de equipos médicos de forma más rápida
+y basada en evidencia.
+```
+
+**Ejemplo de conversación:**
+```
+Ingeniero: "EREN, el Servo-i de UCI 4 marca High Airway Pressure"
+
+EREN:
+├── "Caso creado."
+├── "Ya encontré 13 incidentes similares."
+│   ├── 8 fueron por obstrucción en circuito (62%)
+│   ├── 3 por falla de sensor de presión (23%)
+│   └── 2 por presión máxima mal configurada (15%)
+├── "Según el manual, sección 4.2 - Verificación de presión:"
+├── "Según el historial: último mantenimiento hace 45 días."
+├── "Te recomiendo hacer estas pruebas en este orden:"
+│   1. Verificar trampa de agua
+│   2. Inspeccionar sensor de presión
+│   3. Revisar configuración
+└── "Probabilidad de resolverlo: 86%."
+```
+
+---
+
+## Diferencia con otros sistemas
+
+| Sistema | Rol | EREN es diferente porque... |
+|---------|-----|---------------------------|
+| HIS (Epic, Cerner) | Gestiona pacientes | EREN no gestiona pacientes |
+| CMMS | Gestiona mantenimiento | EREN no es solo gestión |
+| ERP (SAP, Odoo) | Gestiona recursos | EREN no reemplaza ERP |
+| EREN | **Copiloto de IA** | Entiende, razona, recomienda |
+
+**EREN NO reemplaza. EREN se conecta y hace más inteligente.**
+
+---
+
+## Integraciones posibles
+
+```
+Epic ──────┐
+            │
+Cerner ────┼──► EREN ──► HCE (Hospital más inteligente)
+            │
+SAP/Odoo ───┤
+            │
+OpenMRS ────┘
+```
+
+EREN puede conectarse a cualquier sistema que tenga información relevante.
+
+---
+
+## Arquitectura del Sistema
+
+```
+                        ┌─────────────┐
+                        │     AI      │  ← Capa, no dominio
+                        │   Layer     │
+                        │             │
+                        │• Comprende  │
+                        │• Consulta   │
+                        │• Razonamiento│
+                        │• Recomienda │
+                        └──────┬──────┘
+                               │
+         ┌─────────────────────┼─────────────────────┐
+         │                     │                     │
+   ┌─────┴─────┐         ┌─────┴─────┐         ┌─────┴─────┐
+   │   Device   │         │ Engineering │         │ Knowledge  │
+   │            │         │  Incident   │         │            │
+   │• Especific.│         │    ♥        │         │• Manuales  │
+   │• Status    │         │• Problema   │         │• Normas   │
+   │• Ubicación │         │• Contexto   │         │• Boletines│
+   │• Historial │         │• Evidencia  │         │• Casos    │
+   └─────┬─────┘         └─────┬─────┘         └─────┬─────┘
+         │                     │                     │
+         └─────────────────────┼─────────────────────┘
+                               │
+                        ┌──────┴──────┐
+                        │ Maintenance  │
+                        │             │
+                        │• Historial  │
+                        │• Intervenc. │
+                        │• Calibrac.  │
+                        └─────────────┘
+```
+
+**Nota:** AI NO es un bounded context. AI es la capa que orquesta.
+
+---
+
+## Dominios del Sistema
+
+### 1. Device — Conoce el equipo
+
+```
+Responsabilidad: Mantener información técnica del equipo médico.
+
+Preguntas que responde:
+├── ¿Qué equipo es este?
+├── ¿Dónde está ubicado?
+├── ¿Cuál es su estado?
+├── ¿Cuándo fue el último mantenimiento?
+└── ¿Tiene incidencias previas?
+```
+
+### 2. Engineering Incident — Conoce el problema
+
+```
+Responsabilidad: Gestionar el ciclo de vida del problema reportado.
+
+Preguntas que responde:
+├── ¿Qué problema se está resolviendo?
+├── ¿Qué evidencia se ha recopilado?
+├── ¿Qué acciones se han tomado?
+├── ¿Qué otros casos similares existen?
+└── ¿Se resolvió?
+
+♥ Este es el corazón del sistema.
+```
+
+### 3. Knowledge — Conoce la evidencia técnica
+
+```
+Responsabilidad: Mantener conocimiento técnico searchable.
+
+Preguntas que responde:
+├── ¿Qué dice el manual sobre este problema?
+├── ¿Hay boletines del fabricante?
+├── ¿Existen recalls de FDA?
+├── ¿Hay normas IEC/ISO aplicables?
+├── ¿Qué casos similares existen?
+└── ¿Qué lecciones aprendimos?
+```
+
+### 4. Maintenance — Conoce el historial técnico
+
+```
+Responsabilidad: Rastrear intervenciones técnicas.
+
+Preguntas que responde:
+├── ¿Qué intervenciones se han hecho?
+├── ¿Cuándo fue la última calibración?
+├── ¿Qué repuestos se usaron?
+├── ¿Quién trabajó en el equipo?
+└── ¿Qué patrones emergen?
+```
+
+---
+
+## Roadmap por Fases
+
+### Phase 1: MVP — Engineering Core (AHORA)
+
+```
+Objetivo: Demostrar que EREN ayuda a resolver problemas reales.
+
+Componentes:
+├── Device Management
+├── Engineering Incident (el corazón)
+├── Knowledge Base
+├── Maintenance History
+└── AI Layer (orquesta)
+```
+
+### Phase 2: MVP Comercializable
+
+```
+Objetivo: Vender el producto.
+
+Un hospital puede usar EREN para apoyar a su 
+departamento de ingeniería clínica sin necesidad 
+de integraciones complejas.
+```
+
+### Phase 3: Clinical Integration
+
+```
+Objetivo: Enriquecer con contexto clínico.
+
+Disponible:
+├── Patient (existe en Foundation)
+├── Diagnosis (existe en Foundation)
+├── Treatment
+├── Observation
+└── Encounter
+```
+
+### Phase 4: Smart Hospital
+
+```
+Objetivo: EREN comprende el hospital completo.
+
+La IA correlaciona Clinical + Engineering
+convirtiéndose en un verdadero asistente hospitalario.
 ```
 
 ---
@@ -70,463 +232,54 @@ pero ayuda al ingeniero biomédico primero."
 
 ### ✅ Foundation — CONGELADO
 
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| Patrón arquitectónico | ✅ Listo | EREN Bounded Context Template |
-| Patient Context | ✅ Construido | Bounded Context #1 |
-| Diagnosis Context | ✅ Construido | Bounded Context #2 |
-| Tests | ✅ 48+ passing | Unit + Integration |
-| Documentación | ✅ Completa | Foundation Closure |
+| Componente | Estado |
+|------------|--------|
+| Patrón arquitectónico | ✅ Listo |
+| Patient Context | ✅ Reference Implementation |
+| Diagnosis Context | ✅ Reference Implementation |
+| Tests | ✅ 48+ passing |
 
----
+### 🔴 Por construir (Phase 1)
 
-## Lo que NO es EREN
-
-```
-❌ NO es un HIS tradicional
-❌ NO es un CMMS
-❌ NO reemplaza Epic, Cerner, OpenMRS
-❌ NO reemplaza Odoo, SAP
-
-EREN es inteligencia operativa.
-EREN se conecta a sistemas existentes y los hace más inteligentes.
-```
-
----
-
-## Lo que SÍ es EREN
-
-```
-✅ SI es un asistente de IA para ingenieros biomédicos
-✅ SI entiende el contexto clínico y de ingeniería
-✅ SI proporciona recomendaciones basadas en evidencia
-✅ SI acelera la resolución de problemas
-
-EREN es el cerebro del hospital.
-```
-
----
-
-## Roadmap por Fases
-
-```
-NOTA IMPORTANTE:
-El centro de EREN es la IA, no los bounded contexts.
-La IA necesita algo sobre qué pensar.
-Y ese algo es el Case Management.
-
-El orden correcto es:
-AI Core → Device → Knowledge → Maintenance → Case → MVP
-NO:
-Device → Maintenance → AI (esto es un CRUD, no EREN)
-```
-
----
-
-### Phase 1: MVP de Ingeniería Clínica (AHORA)
-
-```
-Objetivo: Demostrar que EREN ayuda a resolver problemas reales
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-El ingeniero dice:
-"EREN, el ventilador Servo-i de UCI 3 presenta High Airway Pressure."
-
-EREN responde:
-" Caso #245 creado."
-
-Y alrededor del caso:
-├── Equipo identificado
-├── Hospital identificado
-├── Síntoma registrado
-├── Probables causas (basado en Knowledge)
-├── Manual técnico (sección relevante)
-├── Historial del equipo
-├── Repuestos probables
-├── Acciones realizadas
-└── Resultado final
-
-Componentes en orden de construcción:
-┌──────────────────────────────────────────────────────┐
-│  1. AI Core                                          │
-│  ────────                                            │
-│  ├── Conversación natural                             │
-│  ├── Reasoning engine                                  │
-│  └── Decision support                                  │
-├──────────────────────────────────────────────────────┤
-│  2. Device Context                                   │
-│  ─────────────────                                    │
-│  ├── Registro de equipos                              │
-│  ├── Especificaciones técnicas                        │
-│  ├── Ubicación                                        │
-│  ├── Estado actual                                    │
-│  └── Historial                                        │
-├──────────────────────────────────────────────────────┤
-│  3. Equipment Knowledge                               │
-│  ──────────────────────                               │
-│  ├── Manuales técnicos                                │
-│  ├── Known issues                                     │
-│  └── Resolution patterns                              │
-├──────────────────────────────────────────────────────┤
-│  4. Maintenance Context                               │
-│  ──────────────────────                               │
-│  ├── Work orders                                       │
-│  ├── Incidentes                                       │
-│  └── Calibraciones                                    │
-├──────────────────────────────────────────────────────┤
-│  5. Case Management ← EL CORAZÓN                      │
-│  ─────────────────────                                 │
-│  ├── Casos activos                                    │
-│  ├── Conversaciones con IA                            │
-│  ├── Historial por caso                              │
-│  ├── Documentos adjuntos                             │
-│  ├── Repuestos utilizados                            │
-│  └── Órdenes de trabajo                              │
-└──────────────────────────────────────────────────────┘
-```
-
-**Conversación de ejemplo:**
-```
-Usuario: "EREN, el ventilador Servo-i de UCI 3 presenta 
-          alarma de presión alta."
-
-EREN:
-├── "Entendido. Caso #245 creado."
-│
-├── Equipo: Servo-i, Hospital Quito, UCI-3
-├── Síntoma: High Airway Pressure
-│
-├── Probables causas:
-│   ├── Obstrucción en circuito (60%)
-│   ├── Falla en sensor (25%)
-│   └── Presión máxima baja (15%)
-│
-├── Manual: Sección 4.2 - Verificación de presión
-├── Herramientas: Trampa de agua, manómetro
-├── Historial: Último mantenimiento hace 45 días
-├── Repuestos: Sensor de presión (ref: XYZ-123)
-│
-└── "¿Deseas que genere el reporte de mantenimiento?"
-```
-
----
-
-### Phase 2: MVP Comercializable
-
-```
-Objetivo: Ya puedes vender EREN
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Un hospital puede usar EREN para apoyar a su 
-departamento de ingeniería clínica SIN necesidad 
-de que exista todo el módulo clínico.
-
-Con esto ya tienes un producto vendible:
-├── Gestión de casos de ingeniería
-├── IA conversacional
-├── Base de conocimientos
-├── Historial de equipos
-└── Reportes automáticos
-```
-
----
-
-### Phase 3: Clinical Integration (POSTERIOR)
-
-```
-Objetivo: Enriquecer las respuestas de la IA con contexto clínico
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Ahora la IA puede responder:
-├── "¿Este ventilador está asignado a algún paciente?"
-├── "¿Qué diagnóstico tiene el paciente conectado?"
-├── "¿Existe una orden médica que impida apagar el equipo?"
-└── "¿Qué medicamentos está recibiendo?"
-
-Componentes clínicos disponibles:
-├── Patient (ya existe en Foundation)
-├── Diagnosis (ya existe en Foundation)
-├── Treatment
-├── Observation
-└── Encounter
-```
-
----
-
-### Phase 4: Smart Hospital (FUTURO)
-
-```
-Objetivo: EREN comprende el hospital completo
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-La IA correlaciona simultáneamente:
-├── Equipos médicos
-├── Pacientes
-├── Diagnósticos
-├── Tratamientos
-├── Mantenimiento
-├── Inventario
-├── Protocolos
-└── Normativa
-
-Convirtiéndose en un verdadero asistente hospitalario.
-```
-
----
-
-## Lo que EXISTE Ahora
-
-### Bounded Contexts Construidos
-
-| Contexto | Tipo | Estado | Tests |
-|----------|------|--------|-------|
-| Patient | Bounded Context | ✅ Reference Implementation | 29 |
-| Diagnosis | Bounded Context | ✅ Reference Implementation | 19 |
-
-### Componentes Técnicos
-
-| Componente | Estado | Descripción |
-|------------|--------|-------------|
-| API Layer | ✅ | FastAPI con routers |
-| Domain Layer | ✅ | Events, Services, Repositories |
-| Data Layer | ✅ | SQLAlchemy 2 ORM |
-| Event Bus | ✅ | Outbox pattern |
-| Multi-tenancy | ✅ | tenant_id en todas las entidades |
-| Soft Delete | ✅ | deleted_at, deleted_by, delete_reason |
-| Optimistic Locking | ✅ | version field |
-
-### Documentación
-
-| Documento | Estado |
-|-----------|--------|
-| FOUNDATION_CLOSURE.md | ✅ |
-| PATTERN_VALIDATION_REPORT.md | ✅ |
-| ARCHITECTURAL_FITNESS.md | ✅ |
-| PROJECT_ROADMAP.md | ✅ |
-
----
-
-## Lo que NO EXISTE Todavía
-
-### Phase 1 (MVP de Ingeniería Clínica)
-
-| Componente | Estado | Prioridad |
-|------------|--------|-----------|
-| AI Core | ❌ No existe | 🔴 Crítica |
-| Device Context | ❌ No existe | 🔴 Crítica |
-| Equipment Knowledge | ❌ No existe | 🔴 Crítica |
-| Maintenance Context | ❌ No existe | 🟡 Alta |
-| **Case Management** | ❌ No existe | 🔴 Crítica |
-
-### Phase 3 (Clinical Integration)
-
-| Contexto | Estado |
-|----------|--------|
-| Treatment | ❌ No existe |
-| Observation | ❌ No existe |
-| Encounter | ❌ No existe |
-
-### Phase 4 (Smart Hospital)
-
-| Capacidad | Estado |
-|-----------|--------|
-| Correlación cross-context | ❌ No existe |
-| Predicción de riesgos | ❌ No existe |
-| Recomendaciones inteligentes | ❌ No existe |
-
----
-
-## Diferencia con HIS Tradicional
-
-| HIS Tradicional | EREN |
-|----------------|------|
-| Almacena datos | Entiende el hospital |
-| Responde "¿Qué pacientes hay?" | Responde "¿Qué debería hacerse?" |
-| Entidades relacionadas | Dominios que se intersectan |
-| Procesos administrativos | Inteligencia en tiempo real |
-| "¿Qué pasó?" | "¿Qué debería pasar?" |
-| Reemplaza sistemas | Se integra con sistemas existentes |
+| Dominio | Estado | Prioridad |
+|---------|--------|-----------|
+| Device | ❌ No existe | 🔴 Crítica |
+| Engineering Incident | ❌ No existe | 🔴 Crítica |
+| Knowledge | ❌ No existe | 🔴 Crítica |
+| Maintenance | ❌ No existe | 🟡 Alta |
+| AI Layer | ❌ No existe | 🔴 Crítica |
 
 ---
 
 ## Métricas de Éxito
 
 ```
-Métricas de arquitectura (seguimos midiendo):
-├── ¿Cuántos días tarda crear un nuevo bounded context?
-├── ¿Cuántos archivos del patrón se modificaron?
-├── ¿Cuántas "Pattern Inconsistencies" aparecieron?
-└── ¿Cuántas veces se tocó Foundation para construir algo nuevo?
+Arquitectura:
+├── ¿Cuántos días tarda crear un dominio?
+├── ¿Cuántas inconsistencias de patrón aparecieron?
+└── ¿Se tocó Foundation?
 
-Métricas de producto (NUEVAS):
-├── ¿Cuánto tarda EREN en ayudar a resolver un problema real?
-├── ¿Cuántos casos se resuelven con asistencia de IA?
-├── ¿Cuánto tiempo ahorra el ingeniero biomédico?
-└── ¿Cuántas integraciones con sistemas externos funcionan?
+Producto:
+├── ¿Cuánto tarda EREN en proponer causas?
+├── ¿Cuántos incidentes se resuelven en primer contacto?
+├── ¿El ingeniero biomédico se siente ayudado?
+└── ¿Funciona la integración con sistemas externos?
 
-Porque el producto no son los bounded contexts.
-El producto es: ¿EREN resuelve problemas reales?
+Porque el producto no son los dominios.
+El producto es: ¿EREN resuelve problemas reales más rápido?
 ```
 
 ---
 
-## Reglas de Proyecto
+## Lenguaje Ubicuo
 
-### Reglas 1-9: Foundation (Ver FOUNDATION_CLOSURE.md)
-
-### Nueva Regla 10: Visión del Producto
-
-```
-EREN no pretende reemplazar un HIS o un CMMS.
-Su propósito es proporcionar inteligencia operativa 
-sobre la información existente.
-
-EREN puede conectarse a Epic, Cerner, OpenMRS, Odoo, SAP.
-```
-
-### Nueva Regla 11: Prioridad de Desarrollo
-
-```
-El centro de EREN es la IA, no los bounded contexts.
-
-Orden correcto:
-AI Core → Device → Knowledge → Maintenance → Case → MVP
-
-NO:
-Device → Maintenance → AI (esto es un CRUD, no EREN)
-```
-
-### Nueva Regla 12: Case Management es el corazón
-
-```
-Case Management NO es solo otro bounded context.
-
-Es el corazón de EREN porque:
-├── Alrededor de él gira todo
-├── Conversaciones con IA
-├── Historial de casos
-├── Documentos
-├── Repuestos
-├── Órdenes de trabajo
-
-Sin Case, EREN es un CRUD.
-Con Case, EREN es un asistente inteligente.
-```
-
----
-
-## Próximos Pasos Inmediatos
-
-```
-1. Foundation cerrado ✅
-2. Clinical Flow Integration cerrado ✅
-3. Diseñar AI Core → ¿Qué es? ¿Qué no es?
-4. Diseñar Device Context → ¿Qué eventos? ¿Qué reglas?
-5. Diseñar Case Management → El corazón de EREN
-6. NO construir Treatment todavía (posterior a Phase 3)
-```
-
----
-
-## Estructura de Directorios Actual
-
-```
-apps/api/
-├── app/
-│   ├── domain/
-│   │   ├── patient/           ✅ Bounded Context #1
-│   │   │   ├── events.py
-│   │   │   ├── repository.py
-│   │   │   ├── service.py
-│   │   │   └── __init__.py
-│   │   └── diagnosis/         ✅ Bounded Context #2
-│   │       ├── events.py
-│   │       ├── repository.py
-│   │       ├── service.py
-│   │       └── __init__.py
-│   ├── models/
-│   │   ├── patient.py         ✅
-│   │   └── diagnosis.py       ✅
-│   ├── schemas/
-│   │   ├── patient.py         ✅
-│   │   └── diagnosis.py       ✅
-│   ├── routers/
-│   │   ├── patient.py         ✅
-│   │   └── diagnosis.py       ✅
-│   ├── infrastructure/        ✅
-│   │   └── event_bus.py
-│   ├── events/                ✅
-│   │   └── outbox.py
-│   └── middleware/            ✅
-│       ├── audit.py
-│       └── auth.py
-├── tests/
-│   ├── unit/                  ✅ 48+ tests
-│   └── integration/           ✅
-│       ├── test_patient_flow.py
-│       └── test_clinical_flow.py
-docs/
-├── architecture/
-│   ├── FOUNDATION_CLOSURE.md          ✅
-│   ├── PATTERN_VALIDATION_REPORT.md   ✅
-│   ├── ARCHITECTURAL_FITNESS.md       ✅
-│   └── PROJECT_ROADMAP.md             ✅
-```
-
----
-
-## Resumen Visual
-
-```
-                    ┌──────────┐
-                    │   AI     │
-                    │   Core   │ ← El cerebro
-                    │ (Centro) │
-                    └────┬─────┘
-                         │
-        ┌────────────────┼────────────────┐
-        │                │                │
-┌───────┴───────┐  ┌─────┴─────┐  ┌──────┴──────┐
-│   Phase 1     │  │ Phase 3   │  │  Phase 4    │
-│   NOW 🔴      │  │ LATER 🟡  │  │  FUTURE ⚪   │
-│               │  │           │  │             │
-│• AI Core      │  │Clinical   │  │Smart        │
-│• Device       │  │Integration │  │Hospital      │
-│• Knowledge    │  │           │  │             │
-│• Maintenance  │  │• Treatment │  │            │
-│• Case Mgmt   │  │• Observe   │  │            │
-└───────────────┘  └───────────┘  └─────────────┘
-        │
-        │ ← El corazón
-        ▼
-┌─────────────────┐
-│   Case          │
-│   Management    │
-│                 │
-│• Casos activos  │
-│• IA             │
-│• Historial      │
-│• Documentos     │
-│• Repuestos      │
-│• Órdenes       │
-└─────────────────┘
-```
-
----
-
-## Valoración del Proyecto
-
-```
-Estado actual: 9.7/10
-
-No porque falte arquitectura.
-Sino porque el siguiente desafío ya no es arquitectónico.
-
-El siguiente desafío es demostrar que EREN resuelve 
-un problema real mejor que los procesos actuales.
-
-Esa es la verdadera métrica de éxito.
-```
+| Término | Definición |
+|---------|------------|
+| **Device** | Equipo médico bajo gestión de ingeniería clínica |
+| **Engineering Incident** | Problema reportado que requiere atención del ingeniero |
+| **Knowledge** | Información técnica searchable (manuales, normas, casos) |
+| **Maintenance** | Intervenciones técnicas realizadas |
+| **Copilot** | IA que asiste pero no reemplaza al ingeniero |
 
 ---
 
