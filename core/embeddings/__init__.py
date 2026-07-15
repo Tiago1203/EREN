@@ -14,10 +14,22 @@ Capabilities:
     - Health check
     - Cost estimation
     - Streaming (if applicable)
+    - Intelligent selection
+    - Caching and deduplication
 """
 
 from __future__ import annotations
 
+from core.embeddings.batch import (
+    BatchConfig,
+    BatchProcessor,
+    BatchResult,
+    EmbeddingCache,
+    EmbeddingDeduplicator,
+    compute_text_hash,
+    normalize_vector,
+    cosine_similarity,
+)
 from core.embeddings.configuration import (
     EmbeddingConfiguration,
     ProviderConfiguration,
@@ -71,20 +83,30 @@ from core.embeddings.trace import (
     reset_embedding_tracer,
 )
 from core.embeddings.types import (
+    BatchConfig,
+    BatchResult,
+    DeduplicationConfig,
+    DeduplicationResult,
     Embedding,
+    EmbeddingCacheEntry,
+    EmbeddingHealthStatus,
     EmbeddingMetrics,
     EmbeddingModelInfo,
     EmbeddingPolicy,
     EmbeddingProvider,
+    EmbeddingProviderType,
     EmbeddingRequest,
     EmbeddingResponse,
     EmbeddingTrace,
+    EmbeddingVersion,
+    NormalizationMethod,
     ProviderHealth,
 )
 
 __all__ = [
     # Types
     "EmbeddingProvider",
+    "EmbeddingProviderType",
     "EmbeddingPolicy",
     "Embedding",
     "EmbeddingRequest",
@@ -93,6 +115,14 @@ __all__ = [
     "ProviderHealth",
     "EmbeddingMetrics",
     "EmbeddingTrace",
+    "EmbeddingVersion",
+    "BatchConfig",
+    "BatchResult",
+    "DeduplicationConfig",
+    "DeduplicationResult",
+    "NormalizationMethod",
+    "EmbeddingCacheEntry",
+    "EmbeddingHealthStatus",
     # Exceptions
     "EmbeddingError",
     "ProviderNotFoundError",
@@ -136,4 +166,11 @@ __all__ = [
     "EmbeddingTracer",
     "get_embedding_tracer",
     "reset_embedding_tracer",
+    # Batch Processing
+    "BatchProcessor",
+    "EmbeddingCache",
+    "EmbeddingDeduplicator",
+    "compute_text_hash",
+    "normalize_vector",
+    "cosine_similarity",
 ]

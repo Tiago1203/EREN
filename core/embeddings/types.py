@@ -24,7 +24,24 @@ class EmbeddingProvider(str, Enum):
     OLLAMA = "ollama"
     SENTENCE_TRANSFORMERS = "sentence_transformers"
     AZURE_OPENAI = "azure_openai"
+    # New providers for PR-057
+    BGE = "bge"  # BAAI/bge models
+    E5 = "e5"  # Microsoft E5 models
+    NOMIC = "nomic"  # Nomic Embeddings
+    JINA = "jina"  # Jina AI
+    DEEPSEEK = "deepseek"
+    MISTRAL = "mistral"
+    COHERE = "cohere"
     CUSTOM = "custom"
+    MOCK = "mock"  # For testing
+
+
+class EmbeddingProviderType(str, Enum):
+    """Types of embedding providers."""
+
+    CLOUD = "cloud"  # API-based
+    LOCAL = "local"  # Self-hosted
+    HYBRID = "hybrid"  # Both options
 
 
 # =============================================================================
@@ -43,6 +60,8 @@ class EmbeddingPolicy(str, Enum):
     FAILOVER = "failover"
     ROUND_ROBIN = "round_robin"
     HEALTHY_FIRST = "healthy_first"
+    QUALITY_FIRST = "quality_first"
+    BALANCED = "balanced"
 
 
 # =============================================================================
@@ -58,6 +77,8 @@ class Embedding:
     model: str
     provider: EmbeddingProvider
     dimensions: int = 0
+    version: str = "1.0"
+    normalized: bool = True
     metadata: dict = field(default_factory=dict)
 
     def __post_init__(self):
@@ -81,6 +102,8 @@ class Embedding:
             "model": self.model,
             "provider": self.provider.value,
             "dimensions": self.dimensions,
+            "version": self.version,
+            "normalized": self.normalized,
             "metadata": self.metadata,
         }
 
@@ -300,4 +323,210 @@ class EmbeddingTrace:
             "model_used": self.model_used,
             "steps": self.steps,
             "errors": self.errors,
+        }
+
+
+# =============================================================================
+# Embedding Versioning
+# =============================================================================
+
+
+@dataclass
+class EmbeddingVersion:
+    """Version information for an embedding model."""
+
+    model: str
+    version: str
+    provider: EmbeddingProvider
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    dimensions: int = 0
+    description: str = ""
+    changelog: str = ""
+    deprecated: bool = False
+    replacement_model: str | None = None
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary."""
+        return {
+            "model": self.model,
+            "version": self.version,
+            "provider": self.provider.value,
+            "created_at": self.created_at.isoformat(),
+            "dimensions": self.dimensions,
+            "description": self.description,
+            "changelog": self.changelog,
+            "deprecated": self.deprecated,
+            "replacement_model": self.replacement_model,
+        }
+
+
+# =============================================================================
+# Batch Processing
+# =============================================================================
+
+
+@dataclass
+class BatchConfig:
+    """Configuration for batch processing."""
+
+    batch_size: int = 32
+    max_batch_size: int = 100
+    parallel_batches: int = 4
+    retry_on_failure: bool = True
+    max_retries: int = 3
+    retry_delay_seconds: float = 1.0
+
+
+@dataclass
+class BatchResult:
+    """Result of batch processing."""
+
+    batch_id: str
+    total_items: int
+    successful_items: int
+    failed_items: int
+    total_tokens: int = 0
+    total_cost: float = 0.0
+    duration_ms: int = 0
+    errors: list[str] = field(default_factory=list)
+    metadata: dict = field(default_factory=dict)
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary."""
+        return {
+            "batch_id": self.batch_id,
+            "total_items": self.total_items,
+            "successful_items": self.successful_items,
+            "failed_items": self.failed_items,
+            "total_tokens": self.total_tokens,
+            "total_cost": self.total_cost,
+            "duration_ms": self.duration_ms,
+            "errors": self.errors,
+            "metadata": self.metadata,
+        }
+
+
+# =============================================================================
+# Deduplication
+# =============================================================================
+
+
+@dataclass
+class DeduplicationConfig:
+    """Configuration for embedding deduplication."""
+
+    enabled: bool = True
+    similarity_threshold: float = 0.99  # Cosine similarity
+    hash_based: bool = True  # Use hash for fast comparison
+    min_text_length: int = 10  # Minimum text to consider
+
+
+@dataclass
+class DeduplicationResult:
+    """Result of deduplication."""
+
+    original_count: int
+    unique_count: int
+    duplicates_removed: int
+    duplicate_indices: list[tuple[int, int]] = field(default_factory=list)  # (original, duplicate)
+
+    @property
+    def deduplication_rate(self) -> float:
+        """Calculate deduplication rate."""
+        if self.original_count == 0:
+            return 0.0
+        return (self.duplicates_removed / self.original_count) * 100
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary."""
+        return {
+            "original_count": self.original_count,
+            "unique_count": self.unique_count,
+            "duplicates_removed": self.duplicates_removed,
+            "duplicate_indices": self.duplicate_indices,
+            "deduplication_rate": self.deduplication_rate,
+        }
+
+
+# =============================================================================
+# Normalization
+# =============================================================================
+
+
+class NormalizationMethod(str, Enum):
+    """Methods for vector normalization."""
+
+    L2 = "l2"  # Euclidean
+    L1 = "l1"  # Manhattan
+    MAX = "max"  # Max normalization
+    NONE = "none"
+
+
+# =============================================================================
+# Embedding Cache Entry
+# =============================================================================
+
+
+@dataclass
+class EmbeddingCacheEntry:
+    """Cache entry for embeddings."""
+
+    text_hash: str
+    embedding: Embedding
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    access_count: int = 0
+    last_accessed: datetime = field(default_factory=lambda: datetime.now(UTC))
+
+    def touch(self) -> None:
+        """Update last accessed time."""
+        self.access_count += 1
+        self.last_accessed = datetime.now(UTC)
+
+    def is_expired(self, ttl_seconds: float) -> bool:
+        """Check if entry is expired."""
+        if ttl_seconds <= 0:
+            return False
+        age = (datetime.now(UTC) - self.created_at).total_seconds()
+        return age >= ttl_seconds
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary."""
+        return {
+            "text_hash": self.text_hash,
+            "embedding": self.embedding.to_dict(),
+            "created_at": self.created_at.isoformat(),
+            "access_count": self.access_count,
+            "last_accessed": self.last_accessed.isoformat(),
+        }
+
+
+# =============================================================================
+# Embedding Health
+# =============================================================================
+
+
+@dataclass
+class EmbeddingHealthStatus:
+    """Health status for embedding providers."""
+
+    provider: EmbeddingProvider
+    is_healthy: bool = True
+    latency_ms: int = 0
+    error_count: int = 0
+    consecutive_failures: int = 0
+    last_success: datetime | None = None
+    last_failure: datetime | None = None
+    circuit_breaker_state: str = "closed"
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary."""
+        return {
+            "provider": self.provider.value,
+            "is_healthy": self.is_healthy,
+            "latency_ms": self.latency_ms,
+            "error_count": self.error_count,
+            "consecutive_failures": self.consecutive_failures,
+            "last_success": self.last_success.isoformat() if self.last_success else None,
+            "last_failure": self.last_failure.isoformat() if self.last_failure else None,
+            "circuit_breaker_state": self.circuit_breaker_state,
         }

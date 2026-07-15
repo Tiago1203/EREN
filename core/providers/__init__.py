@@ -72,6 +72,76 @@ from core.providers.types import (
     ProviderState,
     ProviderType,
     SelectionPolicy,
+    TaskType,
+    ProviderCapabilities,
+    ProviderMetadata,
+    SelectionCriteria,
+    CostEstimate,
+    StreamChunk,
+)
+
+# Health Monitoring
+from core.providers.health_monitor import (
+    HealthMonitor,
+    HealthStatus,
+    HealthCheckResult,
+    HealthMetrics,
+)
+
+# Resilience
+from core.providers.circuit_breaker import (
+    CircuitBreaker,
+    CircuitBreakerRegistry,
+    CircuitBreakerConfig,
+    CircuitBreakerStats,
+    CircuitState,
+)
+from core.providers.rate_limiter import (
+    RateLimiter,
+    RateLimitConfig,
+    RateLimitResult,
+    RateLimitStats,
+    RateLimitStrategy,
+)
+
+# Intelligence
+from core.providers.scoring_engine import (
+    ScoringEngine,
+    ScoringWeights,
+    ProviderScore,
+)
+from core.providers.policy_engine import (
+    PolicyEngine,
+    PolicyType,
+    PolicyPriority,
+    PolicyConfig,
+    PolicyRule,
+)
+
+# Infrastructure
+from core.providers.cache import (
+    Cache,
+    CacheStats,
+    CacheStrategy,
+    CacheEntry,
+    ProviderCache,
+)
+from core.providers.tracing import (
+    Tracer,
+    Span,
+    SpanStatus,
+    SpanKind,
+    TraceContext,
+    get_tracer,
+    reset_tracer,
+)
+from core.providers.events import (
+    EventBus,
+    Event,
+    EventType,
+    get_event_bus,
+    reset_event_bus,
+    emit_event,
 )
 
 __all__ = [
@@ -93,6 +163,56 @@ __all__ = [
     "ProviderConfig",
     "GenerationRequest",
     "GenerationResponse",
+    "TaskType",
+    "ProviderCapabilities",
+    "ProviderMetadata",
+    "SelectionCriteria",
+    "CostEstimate",
+    "StreamChunk",
+    # Health
+    "HealthMonitor",
+    "HealthStatus",
+    "HealthCheckResult",
+    "HealthMetrics",
+    # Resilience
+    "CircuitBreaker",
+    "CircuitBreakerRegistry",
+    "CircuitBreakerConfig",
+    "CircuitBreakerStats",
+    "CircuitState",
+    "RateLimiter",
+    "RateLimitConfig",
+    "RateLimitResult",
+    "RateLimitStats",
+    "RateLimitStrategy",
+    # Intelligence
+    "ScoringEngine",
+    "ScoringWeights",
+    "ProviderScore",
+    "PolicyEngine",
+    "PolicyType",
+    "PolicyPriority",
+    "PolicyConfig",
+    "PolicyRule",
+    # Infrastructure
+    "Cache",
+    "CacheStats",
+    "CacheStrategy",
+    "CacheEntry",
+    "ProviderCache",
+    "Tracer",
+    "Span",
+    "SpanStatus",
+    "SpanKind",
+    "TraceContext",
+    "get_tracer",
+    "reset_tracer",
+    "EventBus",
+    "Event",
+    "EventType",
+    "get_event_bus",
+    "reset_event_bus",
+    "emit_event",
     # Exceptions
     "ProviderException",
     "ProviderNotFoundError",

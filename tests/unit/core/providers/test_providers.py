@@ -21,9 +21,11 @@ class TestProviderType:
     def test_values(self):
         """Test enum values."""
         assert ProviderType.OPENAI.value == "openai"
-        assert ProviderType.CLAUDE.value == "claude"
+        assert ProviderType.ANTHROPIC.value == "anthropic"
         assert ProviderType.OLLAMA.value == "ollama"
         assert ProviderType.GEMINI.value == "gemini"
+        assert ProviderType.DEEPSEEK.value == "deepseek"
+        assert ProviderType.MISTRAL.value == "mistral"
 
     def test_is_local(self):
         """Test local provider check."""
@@ -33,7 +35,7 @@ class TestProviderType:
     def test_is_cloud(self):
         """Test cloud provider check."""
         assert ProviderType.is_cloud(ProviderType.OPENAI) is True
-        assert ProviderType.is_cloud(ProviderType.CLAUDE) is True
+        assert ProviderType.is_cloud(ProviderType.ANTHROPIC) is True
         assert ProviderType.is_cloud(ProviderType.OLLAMA) is False
 
 
