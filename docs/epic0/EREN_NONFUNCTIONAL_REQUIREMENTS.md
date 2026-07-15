@@ -1,0 +1,292 @@
+# EREN Non-Functional Requirements
+## Performance, Scalability, and Quality Objectives
+
+---
+
+## Version History
+
+| Version | Date | Author | Changes |
+|---------|------|--------|---------|
+| 1.0 | 2026-07-15 | Architecture Board | Initial |
+
+---
+
+## Purpose
+
+This document defines measurable performance, scalability, and quality objectives for EREN.
+
+**Note:** These are target objectives based on current understanding. They will be revised with real data from MVP and production deployments.
+
+---
+
+## Quality Attributes (Priority Order)
+
+```
+1. PATIENT SAFETY        ⭐⭐⭐⭐⭐
+2. HUMAN AUTHORITY       ⭐⭐⭐⭐⭐
+3. SECURITY & PRIVACY    ⭐⭐⭐⭐
+4. TRACEABILITY          ⭐⭐⭐⭐
+5. AVAILABILITY          ⭐⭐⭐⭐
+6. RELIABILITY           ⭐⭐⭐
+7. MAINTAINABILITY       ⭐⭐⭐
+8. PERFORMANCE           ⭐⭐⭐
+9. SCALABILITY           ⭐⭐
+```
+
+### Quality Attributes Definitions
+
+| Attribute | Definition | Why It Matters |
+|-----------|------------|---------------|
+| Patient Safety | System never harms patients | Core purpose |
+| Human Authority | Clinicians always decide | EREN philosophy |
+| Security & Privacy | PHI protected always | HIPAA compliance |
+| Traceability | Every action is auditable | Accountability |
+| Availability | System accessible when needed | Clinical workflow |
+| Reliability | Consistent, correct behavior | Trust |
+| Maintainability | Easy to evolve | Long-term viability |
+| Performance | Responsive system | Clinical efficiency |
+| Scalability | Grows with demand | Business growth |
+
+---
+
+## Availability
+
+### Targets by Service
+
+| Service | MVP Target | Production Target |
+|---------|------------|-------------------|
+| REST APIs | 99.5% | 99.95% |
+| Critical Alarms | 99.9% | 99.99% |
+| CDS Recommendations | 99.5% | 99.9% |
+| Dashboard | 99.0% | 99.9% |
+| Background Jobs | 99.0% | 99.5% |
+
+### What This Means
+
+```
+MVP 99.5%:   ~3.5 hours downtime/month
+Prod 99.95%: ~22 minutes downtime/month
+```
+
+### Critical Alarm SLA
+
+Critical alarms (severity 1-2) have higher SLA than normal APIs because patient safety depends on timely delivery.
+
+---
+
+## Latency (p95)
+
+### API Latency
+
+| Endpoint Type | MVP Target | Production Target |
+|---------------|------------|-----------------|
+| Simple read (GET) | < 200ms | < 150ms |
+| Complex query | < 500ms | < 300ms |
+| Write operations | < 300ms | < 200ms |
+| Auth endpoints | < 300ms | < 200ms |
+
+### CDS Latency
+
+| Request Type | MVP Target | Production Target |
+|-------------|------------|-----------------|
+| Simple recommendation | < 5s | < 3s |
+| Complex reasoning | < 10s | < 5s |
+| Evidence retrieval | < 2s | < 1s |
+
+### Alarm Latency
+
+| Stage | Target |
+|-------|--------|
+| Device alarm → EREN | < 500ms |
+| EREN processing | < 200ms |
+| Notification delivery | < 500ms |
+| **Total alarm pipeline** | **< 1.5s** |
+
+---
+
+## Scalability
+
+### Current Targets
+
+| Metric | MVP Target | Production Target |
+|--------|------------|-----------------|
+| Concurrent users | 1,000 | 50,000 |
+| Hospitals | 5 | 1,000 |
+| Devices connected | 5,000 | 100,000 |
+| Events/day | 100,000 | 10,000,000 |
+| CDS requests/day | 10,000 | 1,000,000 |
+
+### Note
+
+These are initial estimates. Actual scalability requirements will be measured during MVP and adjusted for production deployment.
+
+---
+
+## Recovery
+
+### Recovery Objectives
+
+| Metric | Target | Definition |
+|--------|--------|-----------|
+| RTO (Recovery Time Objective) | 15 min | Time to restore service |
+| RPO (Recovery Point Objective) | 0 | Maximum acceptable data loss |
+| Backup frequency | Every 4 hours | + continuous replication |
+
+### What This Means
+
+- **RTO 15 min**: System must be restorable within 15 minutes of failure
+- **RPO 0**: No data loss acceptable (HIPAA requirement)
+
+---
+
+## Security
+
+### Encryption
+
+| Data State | Standard | Notes |
+|------------|----------|-------|
+| At rest | AES-256 | All PHI, audit logs |
+| In transit | TLS 1.3 | All connections |
+| Backup | AES-256 | Encrypted backups |
+
+### Authentication
+
+| Requirement | Target |
+|------------|--------|
+| MFA required | Clinical staff |
+| Session timeout | 30 minutes idle |
+| Token lifetime | 1 hour |
+| Failed login lockout | 5 attempts |
+
+---
+
+## AI Governance
+
+### When AI Can Be Used
+
+| Use Case | AI Allowed? | Requirements |
+|----------|------------|-------------|
+| CDS Recommendations | ✅ Yes | Evidence required, human review |
+| Evidence retrieval | ✅ Yes | Traceability |
+| Risk assessment | ✅ Yes | Explainability required |
+| Administrative tasks | ✅ Yes | Audit trail |
+| Clinical decisions | ❌ No | Only recommendations |
+
+### AI Limitations
+
+```
+AI is FOR recommendations.
+AI is NOT FOR decisions.
+Human clinician always has final authority.
+```
+
+### CDS Requirements
+
+| Requirement | Target |
+|-------------|--------|
+| Evidence required | 100% of recommendations |
+| Confidence threshold | Explicit when < 50% |
+| Hallucination detection | Required before response |
+| Explanation required | Always |
+| Alternative options | When available |
+
+### AI Performance Targets
+
+| Metric | Target |
+|--------|--------|
+| CDS confidence accuracy | > 85% |
+| Hallucination rate | < 1% |
+| Evidence citation rate | 100% |
+| Recommendation acceptance rate | Monitor (no target) |
+
+---
+
+## Monitoring & Observability
+
+### Metrics Required
+
+Every capability must expose:
+
+```yaml
+- request_count_total
+- request_duration_seconds (histogram)
+- error_count_total
+- active_requests (gauge)
+
+Optional by service:
+- cache_hit_rate
+- database_query_duration
+- external_api_duration
+```
+
+### Alerts Required
+
+| Alert | Severity | Condition |
+|-------|----------|-----------|
+| API latency high | Warning | p95 > target |
+| Error rate high | Critical | > 1% errors |
+| CDS confidence low | Warning | Average < 70% |
+| Alarm delay | Critical | > 5s pipeline |
+| Service down | Critical | Health check failed |
+
+---
+
+## Compliance
+
+### Standards
+
+| Standard | Applicability |
+|----------|---------------|
+| HIPAA | All PHI data |
+| IEC 60601 | Medical devices |
+| ISO 14971 | Risk management |
+| ISO 13485 | Quality management |
+
+### Audit Requirements
+
+| Requirement | Target |
+|-------------|--------|
+| PHI access logged | 100% |
+| Log retention | 7 years (HIPAA) |
+| Audit log immutability | Required |
+| Access review | Quarterly |
+
+---
+
+## Trade-off Guidelines
+
+When quality attributes conflict, use this hierarchy:
+
+```
+Patient Safety > Human Authority > Security > Traceability > Availability > Reliability > Performance
+```
+
+**Examples:**
+
+| Conflict | Resolution |
+|----------|-----------|
+| Fast alarm vs. validated alarm | Validate first (safety) |
+| Cached PHI vs. up-to-date | Fetch fresh (accuracy) |
+| Performance vs. security | Security (HIPAA) |
+| Feature velocity vs. reliability | Reliability (trust) |
+
+---
+
+## Review Schedule
+
+NFRs are reviewed quarterly:
+- Q1: January-March
+- Q2: April-June
+- Q3: July-September
+- Q4: October-December
+
+Revisions based on:
+- MVP measurements
+- Production telemetry
+- User feedback
+- Regulatory changes
+
+---
+
+*EREN Non-Functional Requirements v1.0*
+*Architecture Board - 2026-07-15*
