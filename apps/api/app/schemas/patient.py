@@ -11,15 +11,23 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field
 class PatientBase(BaseModel):
     """Base patient schema."""
 
-    mrn: Annotated[str, Field(min_length=1, max_length=50, description="Medical Record Number")]
-    given_name: Annotated[str, Field(min_length=1, max_length=100, description="Patient given name")]
-    family_name: Annotated[str, Field(min_length=1, max_length=100, description="Patient family name")]
+    mrn: Annotated[
+        str, Field(min_length=1, max_length=50, description="Medical Record Number")
+    ]
+    given_name: Annotated[
+        str, Field(min_length=1, max_length=100, description="Patient given name")
+    ]
+    family_name: Annotated[
+        str, Field(min_length=1, max_length=100, description="Patient family name")
+    ]
     date_of_birth: datetime | None = Field(default=None, description="Date of birth")
     gender: str | None = Field(default=None, max_length=20, description="Gender")
     email: EmailStr | None = Field(default=None, description="Contact email")
     phone: str | None = Field(default=None, max_length=50, description="Contact phone")
     blood_type: str | None = Field(default=None, max_length=10, description="Blood type")
-    allergies: str | None = Field(default=None, max_length=500, description="Known allergies")
+    allergies: str | None = Field(
+        default=None, max_length=500, description="Known allergies"
+    )
 
 
 class PatientCreate(PatientBase):

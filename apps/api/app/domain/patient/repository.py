@@ -26,21 +26,21 @@ class PatientRepository(Protocol):
         family_name: str,
         created_by: str | None = None,
         **kwargs,
-    ) -> "Patient":
+    ) -> Patient:
         """Save a patient to the database."""
         ...
 
-    async def get_by_id(self, patient_id: str, tenant_id: str) -> "Patient | None":
+    async def get_by_id(self, patient_id: str, tenant_id: str) -> Patient | None:
         """Get a patient by ID within tenant."""
         ...
 
     async def list_by_tenant(
         self, tenant_id: str, page: int = 1, page_size: int = 50
-    ) -> tuple[list["Patient"], int]:
+    ) -> tuple[list[Patient], int]:
         """List patients for a tenant with pagination."""
         ...
 
-    async def update(self, patient: "Patient", **updates) -> "Patient | None":
+    async def update(self, patient: Patient, **updates) -> Patient | None:
         """Update an existing patient."""
         ...
 
@@ -53,7 +53,7 @@ class PatientRepository(Protocol):
 class SQLAlchemyPatientRepository:
     """SQLAlchemy implementation of PatientRepository."""
 
-    def __init__(self, db: "AsyncSession"):
+    def __init__(self, db: AsyncSession):
         self._db = db
 
     async def save(
@@ -65,7 +65,7 @@ class SQLAlchemyPatientRepository:
         family_name: str,
         created_by: str | None = None,
         **kwargs,
-    ) -> "Patient":
+    ) -> Patient:
         """Save a patient to the database using factory method."""
         from app.models.patient import Patient
 
@@ -82,9 +82,10 @@ class SQLAlchemyPatientRepository:
         await self._db.flush()
         return patient
 
-    async def get_by_id(self, patient_id: str, tenant_id: str) -> "Patient | None":
+    async def get_by_id(self, patient_id: str, tenant_id: str) -> Patient | None:
         """Get a patient by ID within tenant."""
         from sqlalchemy import select
+
         from app.models.patient import Patient
 
         result = await self._db.execute(
@@ -97,9 +98,10 @@ class SQLAlchemyPatientRepository:
 
     async def list_by_tenant(
         self, tenant_id: str, page: int = 1, page_size: int = 50
-    ) -> tuple[list["Patient"], int]:
+    ) -> tuple[list[Patient], int]:
         """List patients for a tenant with pagination."""
         from sqlalchemy import func, select
+
         from app.models.patient import Patient
 
         # Count total
@@ -121,7 +123,7 @@ class SQLAlchemyPatientRepository:
 
         return patients, total
 
-    async def update(self, patient: "Patient", **updates) -> "Patient | None":
+    async def update(self, patient: Patient, **updates) -> Patient | None:
         """Update an existing patient."""
         for field, value in updates.items():
             if value is not None and hasattr(patient, field):

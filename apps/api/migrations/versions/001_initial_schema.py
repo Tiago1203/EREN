@@ -33,8 +33,18 @@ def upgrade() -> None:
         sa.Column("blood_type", sa.String(10), nullable=True),
         sa.Column("allergies", sa.String(500), nullable=True),
         sa.Column("is_active", sa.Boolean(), server_default="1", nullable=False),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
-        sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column(
+            "created_at",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("now()"),
+            nullable=False,
+        ),
+        sa.Column(
+            "updated_at",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("now()"),
+            nullable=False,
+        ),
         sa.Column("created_by", sa.String(36), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -55,7 +65,12 @@ def upgrade() -> None:
         sa.Column("retry_count", sa.Integer(), nullable=False, server_default="0"),
         sa.Column("max_retries", sa.Integer(), nullable=False, server_default="3"),
         sa.Column("error_message", sa.Text(), nullable=True),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column(
+            "created_at",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("now()"),
+            nullable=False,
+        ),
         sa.Column("processed_at", sa.DateTime(timezone=True), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )

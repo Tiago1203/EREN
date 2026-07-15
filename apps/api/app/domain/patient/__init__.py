@@ -8,10 +8,10 @@ from app.domain.patient.repository import (
 from app.domain.patient.service import PatientService
 
 __all__ = [
-    "PatientService",
-    "PatientRepository",
-    "SQLAlchemyPatientRepository",
     "PatientCreated",
-    "PatientUpdated",
     "PatientDeleted",
+    "PatientRepository",
+    "PatientService",
+    "PatientUpdated",
+    "SQLAlchemyPatientRepository",
 ]

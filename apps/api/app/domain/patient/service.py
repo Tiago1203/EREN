@@ -6,7 +6,7 @@ Application service: orchestrates domain operations and infrastructure.
 from __future__ import annotations
 
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from app.domain.patient.events import PatientCreated, PatientDeleted, PatientUpdated
@@ -49,7 +49,7 @@ class PatientService:
         phone=None,
         blood_type=None,
         allergies=None,
-    ) -> "Patient":
+    ) -> Patient:
         """Create a new patient.
 
         Returns:
@@ -112,7 +112,7 @@ class PatientService:
         self,
         patient_id: str,
         tenant_id: str,
-    ) -> "Patient | None":
+    ) -> Patient | None:
         """Get a patient by ID."""
         return await self.repository.get_by_id(patient_id, tenant_id)
 
@@ -121,7 +121,7 @@ class PatientService:
         tenant_id: str,
         page: int = 1,
         page_size: int = 50,
-    ) -> tuple[list["Patient"], int]:
+    ) -> tuple[list[Patient], int]:
         """List patients for a tenant."""
         return await self.repository.list_by_tenant(tenant_id, page, page_size)
 
@@ -131,7 +131,7 @@ class PatientService:
         tenant_id: str,
         correlation_id: str | None = None,
         **updates,
-    ) -> "Patient | None":
+    ) -> Patient | None:
         """Update a patient."""
         patient = await self.repository.get_by_id(patient_id, tenant_id)
         if patient is None:

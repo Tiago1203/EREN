@@ -10,18 +10,19 @@ These tests verify:
 from __future__ import annotations
 
 import os
+
 import pytest
 import pytest_asyncio
-from sqlalchemy import select, text
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
-# Import models
-from app.models import Base, Patient
-from app.models.patient import Patient as PatientModel
 from app.domain.patient import SQLAlchemyPatientRepository
 from app.infrastructure import EventBus
 
+# Import models
+from app.models import Base
+from app.models.patient import Patient as PatientModel
 
 # Use test database URL from environment or default
 DATABASE_URL = os.environ.get(
@@ -70,7 +71,7 @@ class TestPatientPersistence:
         repository = SQLAlchemyPatientRepository(db_session)
 
         # Act
-        patient = await repository.save(
+        _ = await repository.save(
             tenant_id="tenant-test-1",
             patient_id="patient-001",
             mrn="MRN001",
@@ -261,7 +262,7 @@ class TestOutboxPattern:
         event_bus = EventBus(db_session)
 
         # Act - Create patient and event in same flow
-        patient = await repository.save(
+        _ = await repository.save(
             tenant_id="tenant-atomic",
             patient_id="patient-atomic",
             mrn="MRN-ATOMIC",

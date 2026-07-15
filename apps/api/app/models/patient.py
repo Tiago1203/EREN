@@ -136,7 +136,7 @@ class Patient(Base):
         phone=None,
         blood_type=None,
         allergies=None,
-    ) -> "Patient":
+    ) -> Patient:
         """Factory method to create a new patient.
 
         This is the preferred way to create patients,

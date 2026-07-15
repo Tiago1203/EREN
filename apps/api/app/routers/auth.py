@@ -5,7 +5,7 @@ Public endpoints for login/logout.
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, EmailStr
 
 from app.providers.security.supabase_auth import create_supabase_auth_provider

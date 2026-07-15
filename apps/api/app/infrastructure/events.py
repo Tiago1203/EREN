@@ -37,7 +37,7 @@ class EventBus:
         The event is written to the outbox table in the same transaction
         as the aggregate, ensuring atomicity.
         """
-        from app.events.outbox import OutboxMessage, OutboxStatus, create_outbox_message
+        from app.events.outbox import create_outbox_message
 
         outbox_message = create_outbox_message(
             aggregate_type=aggregate_type,
