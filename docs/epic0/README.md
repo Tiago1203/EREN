@@ -37,10 +37,22 @@ Epic 0 establishes the foundational documents that define EREN's identity, purpo
 
 | Document | Purpose | Status |
 |----------|---------|--------|
-| [EREN_EVENT_ARCHITECTURE.md](./EREN_EVENT_ARCHITECTURE.md) | Event delivery, idempotency, DLQ | ✅ NEW |
-| [EREN_CONSISTENCY_MODEL.md](./EREN_CONSISTENCY_MODEL.md) | Source of truth, sync strategy | ✅ NEW |
-| [EREN_FAILURE_MODEL.md](./EREN_FAILURE_MODEL.md) | Failure response, circuit breakers | ✅ NEW |
-| [EREN_BOUNDED_CONTEXT_MAP.md](./EREN_BOUNDED_CONTEXT_MAP.md) | Context relationships | ✅ NEW |
+| [EREN_EVENT_ARCHITECTURE.md](./EREN_EVENT_ARCHITECTURE.md) | Event delivery, idempotency, DLQ | ✅ |
+| [EREN_CONSISTENCY_MODEL.md](./EREN_CONSISTENCY_MODEL.md) | Source of truth, sync strategy | ✅ |
+| [EREN_FAILURE_MODEL.md](./EREN_FAILURE_MODEL.md) | Failure response, circuit breakers | ✅ |
+| [EREN_BOUNDED_CONTEXT_MAP.md](./EREN_BOUNDED_CONTEXT_MAP.md) | Context relationships | ✅ |
+
+### Epic 0.9 (Operational Documents)
+
+| Document | Purpose | Status |
+|----------|---------|--------|
+| [EREN_ADR_INDEX.md](./EREN_ADR_INDEX.md) | Architecture Decision Records | ✅ NEW |
+| [EREN_UBIQUITOUS_LANGUAGE.md](./EREN_UBIQUITOUS_LANGUAGE.md) | Standard terminology | ✅ NEW |
+| [EREN_DOMAIN_EVENTS_CATALOG.md](./EREN_DOMAIN_EVENTS_CATALOG.md) | Event registry | ✅ NEW |
+| [EREN_ERROR_CATALOG.md](./EREN_ERROR_CATALOG.md) | Standard error codes | ✅ NEW |
+| [EREN_NONFUNCTIONAL_REQUIREMENTS.md](./EREN_NONFUNCTIONAL_REQUIREMENTS.md) | NFR, Quality Attributes, AI Governance | ✅ NEW |
+| [EREN_DATA_CLASSIFICATION.md](./EREN_DATA_CLASSIFICATION.md) | Data protection levels | ✅ NEW |
+| [EREN_ARCHITECTURE_PRINCIPLES.md](./EREN_ARCHITECTURE_PRINCIPLES.md) | Design conflict resolution | ✅ NEW |
 
 ---
 
@@ -57,7 +69,7 @@ Epic 0 establishes the foundational documents that define EREN's identity, purpo
 
 ---
 
-## Final Evaluations (Post Epic 0.5)
+## Final Evaluations (Post Epic 0.9)
 
 | Category | Score |
 |----------|-------|
@@ -71,7 +83,8 @@ Epic 0 establishes the foundational documents that define EREN's identity, purpo
 | Event Architecture | 9.5/10 |
 | Failure Model | 9.5/10 |
 | Bounded Contexts | 9.5/10 |
-| **OVERALL** | **9.4/10** |
+| **Operational Docs** | **9.5/10** |
+| **OVERALL** | **9.6/10** |
 
 ⚠️ Cognitive Model marked as EXPERIMENTAL - will evolve during implementation.
 
@@ -95,8 +108,20 @@ All foundations in place:
 - ✅ Consistency Model
 - ✅ Failure Model
 - ✅ Bounded Context Map
+- ✅ ADR Index (20 ADRs)
+- ✅ Ubiquitous Language
+- ✅ Domain Events Catalog (27 events)
+- ✅ Error Catalog
+- ✅ Non-Functional Requirements
+- ✅ Data Classification
+- ✅ Architecture Principles
 
-**Score: 9.4/10**
+**Score: 9.6/10**
+
+**Epic 0.9 documents are LIVE documents:**
+- All are versioned
+- All are reviewed quarterly
+- All can be updated when evidence requires
 
 **Next:** Epic 1 - Foundation Implementation
 
