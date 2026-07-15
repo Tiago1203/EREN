@@ -31,11 +31,20 @@ Epic 0 establishes the foundational documents that define EREN's identity, purpo
 
 | Document | Purpose | Status |
 |----------|---------|--------|
-| [EREN_ARCHITECTURAL_GUARDRAILS.md](./EREN_ARCHITECTURAL_GUARDRAILS.md) | Engineering constitution | ✅ NEW |
+| [EREN_ARCHITECTURAL_GUARDRAILS.md](./EREN_ARCHITECTURAL_GUARDRAILS.md) | Engineering constitution | ✅ |
+
+### Epic 0.5 (Advanced Architecture)
+
+| Document | Purpose | Status |
+|----------|---------|--------|
+| [EREN_EVENT_ARCHITECTURE.md](./EREN_EVENT_ARCHITECTURE.md) | Event delivery, idempotency, DLQ | ✅ NEW |
+| [EREN_CONSISTENCY_MODEL.md](./EREN_CONSISTENCY_MODEL.md) | Source of truth, sync strategy | ✅ NEW |
+| [EREN_FAILURE_MODEL.md](./EREN_FAILURE_MODEL.md) | Failure response, circuit breakers | ✅ NEW |
+| [EREN_BOUNDED_CONTEXT_MAP.md](./EREN_BOUNDED_CONTEXT_MAP.md) | Context relationships | ✅ NEW |
 
 ---
 
-## Final Status: Ready for Review
+## Final Status: Ready for Epic 1
 
 ### Contracts (Epic 0.1)
 
@@ -48,18 +57,21 @@ Epic 0 establishes the foundational documents that define EREN's identity, purpo
 
 ---
 
-## Final Evaluations (Post Epic 0.2)
+## Final Evaluations (Post Epic 0.5)
 
 | Category | Score |
 |----------|-------|
 | Philosophy | 9.5/10 |
-| Domain Model | 9.2/10 |
+| Domain Model | 9.5/10 |
 | Capability Map | 9.0/10 |
 | Cognitive Model | 8.5/10 ⚠️ |
-| Architecture | 9.2/10 |
+| Architecture | 9.5/10 |
 | Contracts | 9.5/10 |
-| Scalability | 9.0/10 |
-| **OVERALL** | **9.2/10** |
+| Scalability | 9.5/10 |
+| Event Architecture | 9.5/10 |
+| Failure Model | 9.5/10 |
+| Bounded Contexts | 9.5/10 |
+| **OVERALL** | **9.4/10** |
 
 ⚠️ Cognitive Model marked as EXPERIMENTAL - will evolve during implementation.
 
@@ -69,14 +81,24 @@ Epic 0 establishes the foundational documents that define EREN's identity, purpo
 
 **Epic 0 Status:** COMPLETE ✅
 
-All guardrails in place:
-- ✅ Domain Ownership defined
-- ✅ Contracts split by responsibility
-- ✅ Audit immutability guaranteed
-- ✅ Multi-tenancy strategy decided
-- ✅ Engineering guardrails documented
+All foundations in place:
+- ✅ Philosophy (12 principles)
+- ✅ Three Domains (Clinical, Biomedical, Hospital)
+- ✅ Domain Ownership (entity matrix)
+- ✅ Capability Map (25 capabilities)
+- ✅ Cognitive Model (⚠️ EXPERIMENTAL)
+- ✅ Architecture Blueprint
+- ✅ Contracts (6 contracts, split by SRP)
+- ✅ Engineering Guardrails (20 rules)
+- ✅ Multi-Tenancy Strategy
+- ✅ Event Architecture
+- ✅ Consistency Model
+- ✅ Failure Model
+- ✅ Bounded Context Map
 
-**Next:** Expert review, then Epic 1 - Implementation
+**Score: 9.4/10**
+
+**Next:** Epic 1 - Foundation Implementation
 
 ---
 
