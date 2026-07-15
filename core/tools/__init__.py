@@ -72,6 +72,42 @@ from core.tools.tool_types import (
     ToolStatus,
 )
 
+# PR-059: Universal Tool Calling Engine
+from core.tools.sandbox import (
+    SandboxConfig,
+    SandboxManager,
+    SandboxState,
+    SandboxType,
+    SandboxMetrics,
+    ToolSandbox,
+    ProcessSandbox,
+    ThreadSandbox,
+)
+from core.tools.discovery import (
+    DiscoveryConfig,
+    DiscoveredTool,
+    ToolDiscovery,
+    tool as tool_decorator,
+    get_tool_metadata,
+    is_tool,
+)
+from core.tools.validation import (
+    ValidationConfig,
+    ValidationError,
+    ValidationErrorType,
+    ValidationLevel,
+    ValidationResult,
+    SchemaValidator,
+    ResultValidator,
+    ToolValidator,
+)
+from core.tools.execution import (
+    ExecutionConfig,
+    ExecutionEngineState,
+    ExecutionMetrics,
+    ToolExecutionRuntime,
+)
+
 __all__ = [
     # Legacy exports
     "ToolsEngine",
@@ -129,4 +165,31 @@ __all__ = [
     "ToolContract",
     "ToolCost",
     "ToolPerformance",
+    # PR-059: Universal Tool Calling Engine
+    "SandboxConfig",
+    "SandboxManager",
+    "SandboxState",
+    "SandboxType",
+    "SandboxMetrics",
+    "ToolSandbox",
+    "ProcessSandbox",
+    "ThreadSandbox",
+    "DiscoveryConfig",
+    "DiscoveredTool",
+    "ToolDiscovery",
+    "tool_decorator",
+    "get_tool_metadata",
+    "is_tool",
+    "ValidationConfig",
+    "ValidationError",
+    "ValidationErrorType",
+    "ValidationLevel",
+    "ValidationResult",
+    "SchemaValidator",
+    "ResultValidator",
+    "ToolValidator",
+    "ExecutionConfig",
+    "ExecutionEngineState",
+    "ExecutionMetrics",
+    "ToolExecutionRuntime",
 ]
