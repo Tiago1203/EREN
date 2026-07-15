@@ -59,7 +59,15 @@ This document maps all capabilities required by EREN, organized by domain and co
 
 ## 1. Cognitive Capabilities
 
-These capabilities define how EREN processes information.
+> **⚠️ EXPERIMENTAL: This section is subject to significant change during initial implementation.**
+
+Cognitive capabilities define how EREN processes information. They are likely to evolve substantially based on:
+- Implementation experience
+- Clinical validation
+- Performance requirements
+- Real-world testing
+
+**Do not freeze cognitive models prematurely.**
 
 | Capability | Description | Maturity F/C | Domain | Priority |
 |------------|-------------|-------------|--------|----------|
@@ -304,18 +312,28 @@ These capabilities optimize hospital operations.
 | **Scheduling** | Coordinate appointments/procedures | 2/1 | Hospital | Medium |
 | **Analytics** | Generate operational insights | 3/1 | Hospital | Medium |
 | **Reporting** | Produce regulatory reports | 3/2 | Hospital | High |
-| **HospitalTwin** | Digital representation of hospital | 3/1 | Hospital | High |
+| **HospitalTwin** | Digital representation of hospital | 3/1 | Hospital | Medium |
+
+> **NOTE:** HospitalTwin is a **HIGH-LEVEL PRODUCT** built from multiple capabilities, not a standalone capability.
+> It synthesizes: CapacityManagement, DeviceRegistry, PatientContext, etc.
 
 ### Hospital Capability Details
 
-#### HospitalTwin
+#### HospitalTwin (Product, not Capability)
 ```
-Purpose: Digital replica of hospital operations
-Inputs: Real-time data from all systems
-Outputs: Simulation, prediction, optimization
-Dependencies: All other hospital capabilities
-Clinical Validation: Required for decision support
-Maturity: ALPHA
+Status: PRODUCT (not standalone capability)
+Purpose: Unified digital representation of hospital
+
+Components:
+├── CapacityManagement (beds, rooms)
+├── DeviceRegistry (equipment tracking)
+├── PatientContext (clinical state)
+├── OccupancyAnalytics (predictions)
+└── RiskDashboard (hospital-wide risk)
+
+This is what EREN SHOWS to operators.
+Not a capability itself.
+Maturity: ALPHA (depends on component capabilities)
 ```
 
 #### CapacityManagement
