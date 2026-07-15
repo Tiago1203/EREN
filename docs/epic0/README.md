@@ -8,15 +8,56 @@ Epic 0 establishes the foundational documents that define EREN's identity, purpo
 
 ## Documents
 
+### Epic 0 v1.0 (Architecture Frozen)
+
 | Document | Purpose | Status |
 |----------|---------|--------|
-| [EREN_PHILOSOPHY.md](./EREN_PHILOSOPHY.md) | Fundamental principles | ✅ Complete |
-| [EREN_THREE_DOMAINS.md](./EREN_THREE_DOMAINS.md) | Domain model (Clinical, Biomedical, Hospital) | ✅ Complete |
-| [EREN_COGNITIVE_MODEL.md](./EREN_COGNITIVE_MODEL.md) | How EREN thinks | ✅ Complete |
-| [EREN_CAPABILITY_MAP.md](./EREN_CAPABILITY_MAP.md) | All capabilities inventory | ✅ Complete |
-| [EREN_CAPABILITY_DEPENDENCIES.md](./EREN_CAPABILITY_DEPENDENCIES.md) | Capability relationships | ✅ Complete |
-| [EREN_ARCHITECTURE_BLUEPRINT.md](./EREN_ARCHITECTURE_BLUEPRINT.md) | Technical architecture | ✅ Complete |
-| [EREN_CONTRACTS_FOUNDATION.md](./EREN_CONTRACTS_FOUNDATION.md) | Contract templates | ✅ Complete |
+| [EREN_PHILOSOPHY.md](./EREN_PHILOSOPHY.md) | Fundamental principles | ✅ |
+| [EREN_THREE_DOMAINS.md](./EREN_THREE_DOMAINS.md) | Domain model | ✅ |
+| [EREN_COGNITIVE_MODEL.md](./EREN_COGNITIVE_MODEL.md) | Cognitive model | ✅ |
+| [EREN_CAPABILITY_MAP.md](./EREN_CAPABILITY_MAP.md) | Capabilities inventory | ✅ |
+| [EREN_CAPABILITY_DEPENDENCIES.md](./EREN_CAPABILITY_DEPENDENCIES.md) | Dependencies | ✅ |
+| [EREN_ARCHITECTURE_BLUEPRINT.md](./EREN_ARCHITECTURE_BLUEPRINT.md) | Technical architecture | ✅ |
+| [EREN_CONTRACTS_FOUNDATION.md](./EREN_CONTRACTS_FOUNDATION.md) | Contract templates | ✅ |
+
+### Epic 0.1 (Correcciones)
+
+| Document | Purpose | Status |
+|----------|---------|--------|
+| [EREN_DOMAIN_OWNERSHIP.md](./EREN_DOMAIN_OWNERSHIP.md) | Entity ownership matrix | ✅ NEW |
+| [EREN_MULTITENANCY_STRATEGY.md](./EREN_MULTITENANCY_STRATEGY.md) | Multi-tenant decision | ✅ NEW |
+
+### Contracts (Epic 0.1)
+
+| Contract | Purpose | Status |
+|----------|---------|--------|
+| `core/contracts/security/authentication.py` | Auth (split) | ✅ NEW |
+| `core/contracts/security/session.py` | Sessions (split) | ✅ NEW |
+| `core/contracts/security/principal.py` | Principals (split) | ✅ NEW |
+| `core/contracts/security/identity.py` | Deprecated - use above 3 | ⬅️ |
+
+---
+
+## Epic 0.1 Changes (High Priority Fixes)
+
+### 1. Domain Ownership ✅
+- Every entity has single owner domain
+- Clear ownership matrix documented
+
+### 2. Identity Split ✅
+- AuthenticationProvider (auth only)
+- SessionProvider (sessions only)
+- PrincipalProvider (identity data only)
+
+### 3. Audit Immutability ✅
+- Added immutability guarantee to contract
+- Added verify_integrity() method
+- Added verify_chain_integrity() method
+
+### 4. Multi-Tenancy Strategy ✅
+- Decision: Shared database + tenant_id
+- RLS + application enforcement
+- Scalability considerations
 
 ---
 
@@ -31,15 +72,13 @@ Cognitive Model (How EREN thinks)
        ↓
 Capability Map (What capabilities needed)
        ↓
-Capability Dependencies (How capabilities relate)
+Domain Ownership (Which domain owns what) ← NEW
        ↓
 Architecture Blueprint (How to build)
        ↓
-Contracts Foundation (Interfaces) ✅ Complete
+Contracts (Split by responsibility) ← UPDATED
        ↓
-ADR Templates
-       ↓
-RFC Templates
+Multi-Tenancy Strategy ← NEW
        ↓
 Implementations (Code)
 ```

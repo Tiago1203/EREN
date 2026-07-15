@@ -197,16 +197,25 @@ class AuditRetention:
 
 
 class AuditProvider(Protocol):
-    """Contract for audit logging services.
+    """Contract for immutable audit logging services.
 
     Philosophy: All significant actions are logged.
-    Audit trail is immutable and tamper-proof.
+    Audit trail is IMMUTABLE and tamper-proof.
+
+    IMMUTABILITY GUARANTEE:
+    Once an event is logged, it CANNOT be:
+    - Modified
+    - Deleted
+    - Updated
+
+    This is a HIPAA and IEC 62304 requirement.
 
     HIPAA Requirements:
     - Log all PHI access
     - Log all authentication attempts
     - Log all authorization decisions
     - Retain for 7 years minimum
+    - Immutable audit trail
     """
 
     @property
@@ -220,13 +229,18 @@ class AuditProvider(Protocol):
     ) -> str:
         """Log an audit event.
 
-        This is the primary method for creating audit records.
+        Events are IMMUTABLE once logged.
+        This method should be idempotent - logging the same event twice
+        should return the same event_id.
 
         Args:
             event: The audit event to log
 
         Returns:
             Event ID of the logged event
+
+        Raises:
+            AuditImmutableError: If event modification is attempted (should never happen)
         """
         ...
 
@@ -419,12 +433,47 @@ class AuditProvider(Protocol):
         """Archive old audit events.
 
         Moves events older than threshold to archive storage.
+        Archived events remain immutable.
 
         Args:
             before: Archive events before this time
 
         Returns:
             Number of events archived
+        """
+        ...
+
+    async def verify_integrity(
+        self,
+        event_id: str,
+    ) -> bool:
+        """Verify an audit event hasn't been tampered with.
+
+        Uses cryptographic hashing to verify integrity.
+
+        Args:
+            event_id: Event to verify
+
+        Returns:
+            True if event is intact, False if tampered
+        """
+        ...
+
+    async def verify_chain_integrity(
+        self,
+        start_event_id: str,
+        end_event_id: str,
+    ) -> bool:
+        """Verify integrity of a range of events (chain verification).
+
+        Verifies that events form an unbroken, untampered chain.
+
+        Args:
+            start_event_id: First event in range
+            end_event_id: Last event in range
+
+        Returns:
+            True if chain is intact
         """
         ...
 
