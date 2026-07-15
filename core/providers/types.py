@@ -23,21 +23,55 @@ class ProviderType(str, Enum):
     """Types of LLM providers."""
 
     OPENAI = "openai"
-    CLAUDE = "claude"
+    ANTHROPIC = "anthropic"  # Claude
     OLLAMA = "ollama"
     GEMINI = "gemini"
     AZURE_OPENAI = "azure_openai"
+    DEEPSEEK = "deepseek"
+    MISTRAL = "mistral"
+    OPENROUTER = "openrouter"
+    VERTEX = "vertex"  # Google Vertex AI
     CUSTOM = "custom"
+    MOCK = "mock"  # For testing
+
+    # Aliases for backward compatibility
+    CLAUDE = ANTHROPIC
 
     @classmethod
     def is_local(cls, provider_type: ProviderType) -> bool:
         """Check if provider is local (runs on-premise)."""
-        return provider_type == cls.OLLAMA
+        return provider_type in (cls.OLLAMA, cls.VERTEX)
 
     @classmethod
     def is_cloud(cls, provider_type: ProviderType) -> bool:
         """Check if provider is cloud-based."""
-        return provider_type in (cls.OPENAI, cls.CLAUDE, cls.GEMINI, cls.AZURE_OPENAI)
+        return provider_type in (
+            cls.OPENAI, cls.ANTHROPIC, cls.GEMINI,
+            cls.AZURE_OPENAI, cls.DEEPSEEK, cls.MISTRAL, cls.OPENROUTER
+        )
+
+    @classmethod
+    def supports_embeddings(cls, provider_type: ProviderType) -> bool:
+        """Check if provider supports embeddings."""
+        return provider_type in (
+            cls.OPENAI, cls.ANTHROPIC, cls.GEMINI,
+            cls.AZURE_OPENAI, cls.OLLAMA, cls.DEEPSEEK, cls.MISTRAL
+        )
+
+    @classmethod
+    def supports_vision(cls, provider_type: ProviderType) -> bool:
+        """Check if provider supports vision/multimodal."""
+        return provider_type in (
+            cls.OPENAI, cls.ANTHROPIC, cls.GEMINI, cls.AZURE_OPENAI
+        )
+
+    @classmethod
+    def supports_streaming(cls, provider_type: ProviderType) -> bool:
+        """Check if provider supports streaming."""
+        return provider_type in (
+            cls.OPENAI, cls.ANTHROPIC, cls.GEMINI,
+            cls.AZURE_OPENAI, cls.OLLAMA, cls.DEEPSEEK, cls.MISTRAL, cls.OPENROUTER
+        )
 
 
 # =============================================================================
@@ -292,4 +326,210 @@ class GenerationResponse:
             "duration_ms": self.duration_ms,
             "cost": self.cost,
             "metadata": self.metadata,
+        }
+
+
+# =============================================================================
+# Task Types
+# =============================================================================
+
+
+class TaskType(str, Enum):
+    """Types of tasks for provider selection."""
+
+    GENERAL = "general"
+    CODE = "code"
+    REASONING = "reasoning"
+    CREATIVE = "creative"
+    ANALYSIS = "analysis"
+    SUMMARIZATION = "summarization"
+    TRANSLATION = "translation"
+    CLASSIFICATION = "classification"
+    EXTRACTION = "extraction"
+    QUESTION_ANSWERING = "question_answering"
+    EMBEDDING = "embedding"
+    VISION = "vision"
+    FUNCTION_CALLING = "function_calling"
+
+
+# =============================================================================
+# Provider Capabilities
+# =============================================================================
+
+
+@dataclass
+class ProviderCapabilities:
+    """Capabilities of a provider."""
+
+    provider_type: ProviderType
+    supports_streaming: bool = False
+    supports_embeddings: bool = False
+    supports_vision: bool = False
+    supports_function_calling: bool = False
+    supports_json_mode: bool = False
+    max_context_length: int = 0
+    max_output_tokens: int = 0
+    supported_task_types: list[TaskType] = field(default_factory=list)
+    supported_languages: list[str] = field(default_factory=list)
+    privacy_compliant: bool = True
+    data_residency: str = ""  # e.g., "us-east-1", "eu-west-1"
+    pricing_tier: str = "standard"  # budget, standard, premium
+
+    def supports_task(self, task_type: TaskType) -> bool:
+        """Check if provider supports a task type."""
+        return task_type in self.supported_task_types or task_type == TaskType.GENERAL
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary."""
+        return {
+            "provider_type": self.provider_type.value,
+            "supports_streaming": self.supports_streaming,
+            "supports_embeddings": self.supports_embeddings,
+            "supports_vision": self.supports_vision,
+            "supports_function_calling": self.supports_function_calling,
+            "supports_json_mode": self.supports_json_mode,
+            "max_context_length": self.max_context_length,
+            "max_output_tokens": self.max_output_tokens,
+            "supported_task_types": [t.value for t in self.supported_task_types],
+            "supported_languages": self.supported_languages,
+            "privacy_compliant": self.privacy_compliant,
+            "data_residency": self.data_residency,
+            "pricing_tier": self.pricing_tier,
+        }
+
+
+# =============================================================================
+# Provider Metadata
+# =============================================================================
+
+
+@dataclass
+class ProviderMetadata:
+    """Metadata about a provider."""
+
+    provider_id: str
+    provider_type: ProviderType
+    name: str
+    version: str = "1.0.0"
+    description: str = ""
+    documentation_url: str = ""
+    api_version: str = ""
+    status_url: str = ""
+    support_url: str = ""
+    pricing_url: str = ""
+    region: str = ""
+    datacenter: str = ""
+    tags: list[str] = field(default_factory=list)
+    capabilities: ProviderCapabilities | None = None
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary."""
+        return {
+            "provider_id": self.provider_id,
+            "provider_type": self.provider_type.value,
+            "name": self.name,
+            "version": self.version,
+            "description": self.description,
+            "documentation_url": self.documentation_url,
+            "api_version": self.api_version,
+            "status_url": self.status_url,
+            "support_url": self.support_url,
+            "pricing_url": self.pricing_url,
+            "region": self.region,
+            "datacenter": self.datacenter,
+            "tags": self.tags,
+            "capabilities": self.capabilities.to_dict() if self.capabilities else None,
+        }
+
+
+# =============================================================================
+# Streaming Types
+# =============================================================================
+
+
+@dataclass
+class StreamChunk:
+    """A chunk from a streaming response."""
+
+    content: str
+    delta: str = ""
+    is_final: bool = False
+    model: str = ""
+    provider_id: str = ""
+    index: int = 0
+    finish_reason: str = ""
+    usage: dict = field(default_factory=dict)
+
+
+# =============================================================================
+# Cost Estimation
+# =============================================================================
+
+
+@dataclass
+class CostEstimate:
+    """Cost estimation for a request."""
+
+    provider_id: str
+    model: str
+    input_tokens: int
+    output_tokens: int
+    estimated_cost: float
+    currency: str = "USD"
+    input_cost_per_1k: float = 0.0
+    output_cost_per_1k: float = 0.0
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary."""
+        return {
+            "provider_id": self.provider_id,
+            "model": self.model,
+            "input_tokens": self.input_tokens,
+            "output_tokens": self.output_tokens,
+            "estimated_cost": self.estimated_cost,
+            "currency": self.currency,
+            "input_cost_per_1k": self.input_cost_per_1k,
+            "output_cost_per_1k": self.output_cost_per_1k,
+        }
+
+
+# =============================================================================
+# Provider Selection Criteria
+# =============================================================================
+
+
+@dataclass
+class SelectionCriteria:
+    """Criteria for provider selection."""
+
+    task_type: TaskType = TaskType.GENERAL
+    required_capabilities: list[str] = field(default_factory=list)
+    preferred_providers: list[str] = field(default_factory=list)
+    excluded_providers: list[str] = field(default_factory=list)
+    max_cost: float = 0.0
+    max_latency_ms: int = 0
+    max_context_length: int = 0
+    privacy_required: bool = False
+    preferred_regions: list[str] = field(default_factory=list)
+    require_streaming: bool = False
+    require_embeddings: bool = False
+    require_vision: bool = False
+    require_function_calling: bool = False
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary."""
+        return {
+            "task_type": self.task_type.value,
+            "required_capabilities": self.required_capabilities,
+            "preferred_providers": self.preferred_providers,
+            "excluded_providers": self.excluded_providers,
+            "max_cost": self.max_cost,
+            "max_latency_ms": self.max_latency_ms,
+            "max_context_length": self.max_context_length,
+            "privacy_required": self.privacy_required,
+            "preferred_regions": self.preferred_regions,
+            "require_streaming": self.require_streaming,
+            "require_embeddings": self.require_embeddings,
+            "require_vision": self.require_vision,
+            "require_function_calling": self.require_function_calling,
         }

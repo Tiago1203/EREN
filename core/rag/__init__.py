@@ -79,21 +79,39 @@ from core.rag.planner import RetrievalPlan, RetrievalPlanner
 from core.rag.prompt_builder import PromptBuilder
 from core.rag.response_builder import ResponseBuilder
 from core.rag.token_budget import TokenBudget, get_default_budget, reset_default_budget
+from core.rag.reranker import Reranker
+from core.rag.hybrid_retrieval import HybridRetrieval, BM25Retriever
 
 # Types
 from core.rag.types import (
     Citation,
+    ChunkConfig,
+    CompressionConfig,
+    CompressedChunk,
     ConfidenceLevel,
+    DenseRetrievalResult,
+    DocumentMetadata,
+    DocumentType,
+    HallucinationCheck,
+    HallucinationReport,
+    HybridRetrievalConfig,
+    HybridRetrievalResult,
+    IngestionResult,
     PipelineStatistics,
     RAGContext,
     RAGPrompt,
     RAGQuery,
     RAGResponse,
     RAGResult,
+    RerankStrategy,
+    RerankedChunk,
+    RerankingConfig,
+    RerankingResult,
     ResponseFormat,
     RetrievalResult,
     RetrievalStrategy,
     RetrievedChunk,
+    SparseRetrievalResult,
 )
 
 __all__ = [
@@ -101,6 +119,8 @@ __all__ = [
     "RetrievalStrategy",
     "ResponseFormat",
     "ConfidenceLevel",
+    "RerankStrategy",
+    "DocumentType",
     "RAGQuery",
     "RetrievedChunk",
     "RetrievalResult",
@@ -110,6 +130,20 @@ __all__ = [
     "RAGResponse",
     "RAGResult",
     "PipelineStatistics",
+    "HybridRetrievalConfig",
+    "HybridRetrievalResult",
+    "DenseRetrievalResult",
+    "SparseRetrievalResult",
+    "RerankingConfig",
+    "RerankingResult",
+    "RerankedChunk",
+    "ChunkConfig",
+    "DocumentMetadata",
+    "IngestionResult",
+    "CompressionConfig",
+    "CompressedChunk",
+    "HallucinationCheck",
+    "HallucinationReport",
     # Exceptions
     "RAGError",
     "RetrievalError",
@@ -133,6 +167,9 @@ __all__ = [
     "TokenBudget",
     "get_default_budget",
     "reset_default_budget",
+    "Reranker",
+    "HybridRetrieval",
+    "BM25Retriever",
     # Pipeline
     "CognitiveRAGPipeline",
 ]

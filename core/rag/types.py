@@ -26,6 +26,11 @@ class RetrievalStrategy(str, Enum):
     KEYWORD = "keyword"
     HYBRID = "hybrid"
     GRAPH = "graph"
+    BM25 = "bm25"
+    DENSE = "dense"
+    SPARSE = "sparse"
+    METADATA = "metadata"
+    TEMPORAL = "temporal"
 
 
 class ResponseFormat(str, Enum):
@@ -44,6 +49,34 @@ class ConfidenceLevel(str, Enum):
     MEDIUM = "medium"
     LOW = "low"
     UNKNOWN = "unknown"
+
+
+class RerankStrategy(str, Enum):
+    """Reranking strategies for retrieved chunks."""
+
+    CROSS_ENCODER = "cross_encoder"
+    DIVERSITY = "diversity"
+    MMR = "mmr"  # Maximal Marginal Relevance
+    RRF = "rrf"  # Reciprocal Rank Fusion
+    WEIGHTED = "weighted"
+
+
+class DocumentType(str, Enum):
+    """Supported document types for ingestion."""
+
+    PDF = "pdf"
+    DOCX = "docx"
+    PPTX = "pptx"
+    EXCEL = "excel"
+    MARKDOWN = "markdown"
+    TXT = "txt"
+    HTML = "html"
+    FHIR = "fhir"
+    HL7 = "hl7"
+    DICOM = "dicom"
+    JSON = "json"
+    CSV = "csv"
+    XML = "xml"
 
 
 # =============================================================================
@@ -289,6 +322,194 @@ class RAGResult:
     total_time_ms: int = 0
 
     created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+
+
+# =============================================================================
+# Hybrid Retrieval Types
+# =============================================================================
+
+
+@dataclass
+class HybridRetrievalConfig:
+    """Configuration for hybrid retrieval."""
+
+    dense_weight: float = 0.5
+    sparse_weight: float = 0.3
+    keyword_weight: float = 0.2
+    fusion_method: str = "rrf"  # rrf, weighted, convex
+    top_k_dense: int = 20
+    top_k_sparse: int = 20
+    top_k_keyword: int = 10
+
+
+@dataclass
+class DenseRetrievalResult:
+    """Result from dense (semantic) retrieval."""
+
+    chunks: list[RetrievedChunk]
+    query_embedding: list[float]
+    provider: str = ""
+    latency_ms: int = 0
+
+
+@dataclass
+class SparseRetrievalResult:
+    """Result from sparse (keyword/BM25) retrieval."""
+
+    chunks: list[RetrievedChunk]
+    query_terms: list[str]
+    scores: list[float]
+    latency_ms: int = 0
+
+
+@dataclass
+class HybridRetrievalResult:
+    """Combined result from hybrid retrieval."""
+
+    dense_result: DenseRetrievalResult | None = None
+    sparse_result: SparseRetrievalResult | None = None
+    fused_chunks: list[RetrievedChunk] = field(default_factory=list)
+    fusion_method: str = ""
+    total_latency_ms: int = 0
+
+
+# =============================================================================
+# Reranking Types
+# =============================================================================
+
+
+@dataclass
+class RerankingConfig:
+    """Configuration for reranking."""
+
+    strategy: RerankStrategy = RerankStrategy.CROSS_ENCODER
+    top_k: int = 10
+    diversity_lambda: float = 0.5  # For MMR
+    cross_encoder_model: str = ""
+
+
+@dataclass
+class RerankedChunk:
+    """A chunk after reranking."""
+
+    chunk: RetrievedChunk
+    original_rank: int
+    new_rank: int
+    rerank_score: float
+    diversity_score: float = 0.0
+    final_score: float = 0.0
+
+
+@dataclass
+class RerankingResult:
+    """Result from reranking."""
+
+    original_chunks: list[RetrievedChunk]
+    reranked_chunks: list[RerankedChunk]
+    strategy: RerankStrategy
+    latency_ms: int = 0
+
+
+# =============================================================================
+# Document Ingestion Types
+# =============================================================================
+
+
+@dataclass
+class DocumentMetadata:
+    """Metadata for a document."""
+
+    title: str = ""
+    author: str = ""
+    institution: str = ""
+    hospital: str = ""
+    department: str = ""
+    document_type: DocumentType = DocumentType.TXT
+    language: str = "en"
+    specialty: str = ""
+    tags: list[str] = field(default_factory=list)
+    version: str = "1.0"
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    modified_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    source_uri: str = ""
+    asset_id: str = ""
+
+
+@dataclass
+class ChunkConfig:
+    """Configuration for text chunking."""
+
+    chunk_size: int = 512
+    chunk_overlap: int = 50
+    min_chunk_size: int = 100
+    max_chunk_size: int = 1024
+    split_by: str = "token"  # token, sentence, paragraph
+    preserve_structure: bool = True
+
+
+@dataclass
+class IngestionResult:
+    """Result of document ingestion."""
+
+    document_id: str
+    chunks_created: int
+    total_tokens: int
+    duration_ms: int
+    errors: list[str] = field(default_factory=list)
+    metadata: DocumentMetadata | None = None
+
+
+# =============================================================================
+# Context Compression Types
+# =============================================================================
+
+
+@dataclass
+class CompressionConfig:
+    """Configuration for context compression."""
+
+    enabled: bool = True
+    max_tokens: int = 4000
+    compression_ratio: float = 0.5
+    preserve_citations: bool = True
+    method: str = "extract"  # extract, abstract, hybrid
+
+
+@dataclass
+class CompressedChunk:
+    """A compressed chunk."""
+
+    original_chunk: RetrievedChunk
+    compressed_content: str
+    compression_ratio: float
+    key_points: list[str] = field(default_factory=list)
+
+
+# =============================================================================
+# Hallucination Guard Types
+# =============================================================================
+
+
+@dataclass
+class HallucinationCheck:
+    """Check for hallucination in response."""
+
+    claim: str
+    is_supported: bool
+    supporting_sources: list[str] = field(default_factory=list)
+    contradicting_sources: list[str] = field(default_factory=list)
+    confidence: float = 0.0
+
+
+@dataclass
+class HallucinationReport:
+    """Report on hallucination detection."""
+
+    total_claims: int = 0
+    supported_claims: int = 0
+    unsupported_claims: int = 0
+    hallucination_rate: float = 0.0
+    checks: list[HallucinationCheck] = field(default_factory=list)
 
 
 # =============================================================================
