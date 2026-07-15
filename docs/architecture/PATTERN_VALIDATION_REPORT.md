@@ -3,21 +3,42 @@
 > Patient vs Diagnosis — Validación del EREN Bounded Context Template
 
 **Fecha:** 2026-07-15
-**Objetivo:** Verificar que Diagnosis es una implementación consistente del patrón de Patient
+**Actualizado:** 2026-07-15
+
+---
+
+## Clasificación de Diferencias
+
+| Tipo | Significado | Acción |
+|------|------------|--------|
+| ✓ Domain Difference | Diferencia justificada por el dominio | Se mantiene |
+| ✓ Infrastructure Difference | Diferencia justificada por tecnología | Se evalúa |
+| ✗ Pattern Inconsistency | Diferencia no justificada | **Se corrige** |
 
 ---
 
 ## Resumen Ejecutivo
 
-| Aspecto | Estado | Notas |
-|---------|--------|-------|
+| Aspecto | Estado | Clasificación |
+|---------|--------|--------------|
 | Estructura de archivos | ✅ | Identical |
-| Eventos | ✅ | Estructura idéntica |
-| Repository | ✅ | Mismo patrón con método adicional por dominio |
-| Service | ⚠️ | Diferencia en nombres (¿inconsistencia?) |
-| Model | ✅ | Mismos campos de patrón + campos de dominio |
+| Eventos | ✅ | Domain Difference |
+| Repository | ✅ | Domain Difference |
+| Service | ✅ | Domain Difference |
+| Model | ✅ | Domain Difference |
 | API Endpoints | ✅ | Identical |
-| Tests | ✅ | Misma estructura |
+| Tests | ✅ | Identical |
+
+---
+
+## Veredicto
+
+| Pregunta | Respuesta |
+|----------|-----------|
+| ¿Diagnosis usa el mismo patrón que Patient? | ✅ Sí |
+| ¿Las diferencias son del dominio? | ✅ Sí |
+| ¿Hay inconsistencias del patrón? | ❌ No |
+| ¿Diagnosis puede usarse como template para Treatment? | ✅ Sí |
 
 ---
 
@@ -167,40 +188,53 @@ Diagnosis:
 
 ## Conclusiones
 
-### Inconsistencias encontradas
+### ✗ Pattern Inconsistencies
 
-**Ninguna que requiera corrección.**
+**Ninguna encontrada.**
 
-### Diferencias del dominio
+### ✓ Domain Differences
 
-| Diferencia | Justificación |
-|------------|---------------|
-| `record` vs `create` | Lenguaje clínico: diagnósticos se "registran" |
-| `amend` vs `update` | Lenguaje clínico: diagnósticos se "corrigen" |
-| `recorded_at` vs `created_at` | Lenguaje clínico: diagnóstico se "registra" |
-| `list_by_patient` | Diagnosis necesita filtrar por paciente |
-| `patient_id` en evento | Diagnosis referencia a Patient (identidad) |
+| Diferencia | Clasificación | Justificación |
+|------------|--------------|---------------|
+| `record` vs `create` | Domain Difference | Lenguaje clínico: diagnósticos se "registran" |
+| `amend` vs `update` | Domain Difference | Lenguaje clínico: diagnósticos se "corrigen" |
+| `recorded_at` vs `created_at` | Domain Difference | Clínico vs técnico (ver nota) |
+| `list_by_patient` | Domain Difference | Diagnosis necesita filtrar por paciente |
+| `patient_id` en evento | Domain Difference | Diagnosis referencia a Patient (identidad) |
+
+#### Nota sobre `created_at` vs `recorded_at`
+
+> "Una cosa es cuándo llegó el registro a la base. Otra distinta es cuándo ocurrió el acto clínico."
+
+**Recomendación futura:**
+
+```
+Diagnosis (y todos los contextos)
+├── created_at    → Metadato técnico (cuándo se persistió)
+├── updated_at    → Metadato técnico (cuándo se modificó)
+├── deleted_at    → Metadato técnico (cuándo se soft-deleteó)
+└── recorded_at   → Dato clínico (cuándo ocurrió el acto)
+```
+
+**No cambiar ahora.** Esto aplica para Treatment y contextos futuros.
 
 ---
 
-## Veredicto
+## Regla para Diferencias Futuras
 
-| Pregunta | Respuesta |
-|----------|-----------|
-| ¿Diagnosis usa el mismo patrón que Patient? | ✅ Sí |
-| ¿Las diferencias son del dominio? | ✅ Sí |
-| ¿Hay inconsistencias del patrón? | ❌ No |
-| ¿Diagnosis puede usarse como template para Treatment? | ✅ Sí |
+Cada nueva diferencia debe clasificarse:
+
+```
+✓ Domain Difference          → Se mantiene
+✓ Infrastructure Difference  → Se evalúa
+✗ Pattern Inconsistency      → Se corrige
+```
 
 ---
 
 ## Recomendación
 
 **El patrón está listo para Treatment.**
-
-El PR #101 (Diagnosis) valida que el EREN Bounded Context Template funciona para múltiples contextos.
-
-**Siguiente paso:** Construir Treatment siguiendo el mismo patrón.
 
 ---
 
@@ -210,11 +244,13 @@ El PR #101 (Diagnosis) valida que el EREN Bounded Context Template funciona para
 Treatment será el tercer bounded context.
 
 Regla:
-- Copiar Diagnosis como template
+- Usar Diagnosis como template
 - Adaptar solo los campos de dominio
 - NO modificar Patient ni Diagnosis
-- Si algo no encaja, documentar en retrospectiva
+- Si algo no encaja, clasificar en la retrospectiva
 ```
+
+**Primero:** Sesión de diseño (Treatment es más complejo)
 
 ---
 
