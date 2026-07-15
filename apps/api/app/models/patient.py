@@ -120,3 +120,39 @@ class Patient(Base):
         nullable=True,
         comment="Principal ID who created this record",
     )
+
+    @classmethod
+    def create(
+        cls,
+        patient_id: str,
+        tenant_id: str,
+        mrn: str,
+        given_name: str,
+        family_name: str,
+        created_by: str | None = None,
+        date_of_birth=None,
+        gender=None,
+        email=None,
+        phone=None,
+        blood_type=None,
+        allergies=None,
+    ) -> "Patient":
+        """Factory method to create a new patient.
+
+        This is the preferred way to create patients,
+        as it ensures all required fields are set.
+        """
+        return cls(
+            id=patient_id,
+            tenant_id=tenant_id,
+            mrn=mrn,
+            given_name=given_name,
+            family_name=family_name,
+            created_by=created_by,
+            date_of_birth=date_of_birth,
+            gender=gender,
+            email=email,
+            phone=phone,
+            blood_type=blood_type,
+            allergies=allergies,
+        )

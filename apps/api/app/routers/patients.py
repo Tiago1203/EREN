@@ -1,21 +1,19 @@
 """Patient endpoints.
 
 CRUD operations for patients.
+These endpoints delegate to PatientService for business logic.
 """
 
 from __future__ import annotations
 
-import uuid
-from datetime import UTC, datetime
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
-from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
-from app.events.publisher import EventPublisher
-from app.middleware.request_context import get_request_context
+from app.domain.patient import PatientService, SQLAlchemyPatientRepository
+from app.infrastructure.events import EventBus
 from app.models.patient import Patient
 from app.schemas.patient import (
     PatientCreate,
@@ -51,6 +49,13 @@ def get_correlation_id(request: Request) -> str | None:
     return getattr(request.state, "request_id", None)
 
 
+def create_patient_service(db: AsyncSession) -> PatientService:
+    """Factory to create PatientService with dependencies."""
+    repository = SQLAlchemyPatientRepository(db)
+    event_bus = EventBus(db)
+    return PatientService(repository=repository, event_bus=event_bus)
+
+
 @router.post("", response_model=PatientResponse, status_code=status.HTTP_201_CREATED)
 async def create_patient(
     patient_data: PatientCreate,
@@ -63,44 +68,23 @@ async def create_patient(
     Requires authentication and valid tenant context.
     Publishes PatientCreated event via outbox pattern.
     """
+    service = create_patient_service(db)
     created_by = get_current_user_id(request)
     correlation_id = get_correlation_id(request)
 
-    # Generate UUID v7 (time-ordered)
-    patient_id = str(uuid.uuid7())
-
-    # Create patient
-    patient = Patient(
-        id=patient_id,
+    patient = await service.create_patient(
         tenant_id=tenant_id,
         mrn=patient_data.mrn,
         given_name=patient_data.given_name,
         family_name=patient_data.family_name,
+        created_by=created_by,
+        correlation_id=correlation_id,
         date_of_birth=patient_data.date_of_birth,
         gender=patient_data.gender,
         email=patient_data.email,
         phone=patient_data.phone,
         blood_type=patient_data.blood_type,
         allergies=patient_data.allergies,
-        created_by=created_by,
-    )
-
-    db.add(patient)
-
-    # Publish PatientCreated event via outbox
-    event_publisher = EventPublisher(db)
-    await event_publisher.publish(
-        aggregate_type="Patient",
-        aggregate_id=patient_id,
-        event_type="PatientCreated",
-        payload={
-            "mrn": patient_data.mrn,
-            "given_name": patient_data.given_name,
-            "family_name": patient_data.family_name,
-            "created_by": created_by,
-        },
-        tenant_id=tenant_id,
-        correlation_id=correlation_id,
     )
 
     await db.commit()
@@ -119,13 +103,8 @@ async def get_patient(
 
     Requires authentication and valid tenant context.
     """
-    result = await db.execute(
-        select(Patient).where(
-            Patient.id == patient_id,
-            Patient.tenant_id == tenant_id,
-        )
-    )
-    patient = result.scalar_one_or_none()
+    service = create_patient_service(db)
+    patient = await service.get_patient(patient_id, tenant_id)
 
     if not patient:
         raise HTTPException(
@@ -147,23 +126,8 @@ async def list_patients(
 
     Requires authentication and valid tenant context.
     """
-    offset = (page - 1) * page_size
-
-    # Count total
-    count_result = await db.execute(
-        select(func.count(Patient.id)).where(Patient.tenant_id == tenant_id)
-    )
-    total = count_result.scalar() or 0
-
-    # Get patients
-    result = await db.execute(
-        select(Patient)
-        .where(Patient.tenant_id == tenant_id)
-        .order_by(Patient.created_at.desc())
-        .offset(offset)
-        .limit(page_size)
-    )
-    patients = list(result.scalars().all())
+    service = create_patient_service(db)
+    patients, total = await service.list_patients(tenant_id, page, page_size)
 
     return PatientListResponse(
         items=patients,
@@ -184,34 +148,19 @@ async def update_patient(
 
     Requires authentication and valid tenant context.
     """
-    result = await db.execute(
-        select(Patient).where(
-            Patient.id == patient_id,
-            Patient.tenant_id == tenant_id,
-        )
+    service = create_patient_service(db)
+    correlation_id = get_correlation_id(None)
+
+    update_data = patient_data.model_dump(exclude_unset=True)
+    patient = await service.update_patient(
+        patient_id, tenant_id, correlation_id=correlation_id, **update_data
     )
-    patient = result.scalar_one_or_none()
 
     if not patient:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Patient not found",
         )
-
-    # Update fields
-    update_data = patient_data.model_dump(exclude_unset=True)
-    for field, value in update_data.items():
-        setattr(patient, field, value)
-
-    # Publish PatientUpdated event
-    event_publisher = EventPublisher(db)
-    await event_publisher.publish(
-        aggregate_type="Patient",
-        aggregate_id=patient_id,
-        event_type="PatientUpdated",
-        payload={"changes": update_data},
-        tenant_id=tenant_id,
-    )
 
     await db.commit()
     await db.refresh(patient)
@@ -229,31 +178,18 @@ async def delete_patient(
 
     Requires authentication and valid tenant context.
     """
-    result = await db.execute(
-        select(Patient).where(
-            Patient.id == patient_id,
-            Patient.tenant_id == tenant_id,
-        )
-    )
-    patient = result.scalar_one_or_none()
+    service = create_patient_service(db)
+    deleted_by = get_current_user_id(None)
+    correlation_id = get_correlation_id(None)
 
-    if not patient:
+    success = await service.delete_patient(
+        patient_id, tenant_id, deleted_by=deleted_by, correlation_id=correlation_id
+    )
+
+    if not success:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Patient not found",
         )
-
-    # Soft delete
-    patient.is_active = False
-
-    # Publish PatientDeleted event
-    event_publisher = EventPublisher(db)
-    await event_publisher.publish(
-        aggregate_type="Patient",
-        aggregate_id=patient_id,
-        event_type="PatientDeleted",
-        payload={"deleted_by": get_current_user_id(None)},
-        tenant_id=tenant_id,
-    )
 
     await db.commit()
