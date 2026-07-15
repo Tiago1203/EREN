@@ -37,6 +37,16 @@ class Settings(BaseSettings):
         """Synchronous URL for tools that don't support async drivers (e.g. Alembic)."""
         return self.database_url.replace("+aiosqlite", "").replace("+asyncpg", "+psycopg")
 
+    # --- Supabase ---
+    supabase_url: str = "http://localhost:54321"
+    supabase_anon_key: str = "your-anon-key"
+    supabase_service_role_key: str | None = None
+
+    # --- Observability ---
+    # OpenTelemetry configuration
+    otlp_endpoint: str | None = None
+    service_name: str = "eren-api"
+
 
 @lru_cache
 def get_settings() -> Settings:

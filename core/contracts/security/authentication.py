@@ -271,8 +271,8 @@ class AuthenticationFailed(AuthenticationEvent):
 class TokenIssued(AuthenticationEvent):
     """Fired when a token is issued."""
 
-    token_type: str
-    expires_at: datetime | None
+    token_type: str = ""
+    expires_at: datetime | None = None
 
 
 @dataclass(frozen=True)
