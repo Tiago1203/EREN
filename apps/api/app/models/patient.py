@@ -8,7 +8,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import DateTime, Index, String, func
+from sqlalchemy import DateTime, Index, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models.base import Base
@@ -97,10 +97,29 @@ class Patient(Base):
         comment="Known allergies (comma-separated in MVP)",
     )
 
-    # Status
-    is_active: Mapped[bool] = mapped_column(
-        default=True,
-        comment="Is patient currently active",
+    # Optimistic locking
+    version: Mapped[int] = mapped_column(
+        Integer,
+        default=1,
+        nullable=False,
+        comment="Version for optimistic locking",
+    )
+
+    # Soft delete (replaces is_active)
+    deleted_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+        comment="Timestamp when patient was deleted",
+    )
+    deleted_by: Mapped[str | None] = mapped_column(
+        String(36),
+        nullable=True,
+        comment="Principal ID who deleted this record",
+    )
+    delete_reason: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+        comment="Reason for deletion",
     )
 
     # Metadata
@@ -120,6 +139,11 @@ class Patient(Base):
         nullable=True,
         comment="Principal ID who created this record",
     )
+
+    @property
+    def is_deleted(self) -> bool:
+        """Check if patient is soft-deleted."""
+        return self.deleted_at is not None
 
     @classmethod
     def create(
@@ -155,4 +179,5 @@ class Patient(Base):
             phone=phone,
             blood_type=blood_type,
             allergies=allergies,
+            version=1,
         )
