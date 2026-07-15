@@ -15,6 +15,7 @@ Epic 0 establishes the foundational documents that define EREN's identity, purpo
 | [EREN_COGNITIVE_MODEL.md](./EREN_COGNITIVE_MODEL.md) | How EREN thinks | ✅ Complete |
 | [EREN_CAPABILITY_MAP.md](./EREN_CAPABILITY_MAP.md) | All capabilities inventory | ✅ Complete |
 | [EREN_CAPABILITY_DEPENDENCIES.md](./EREN_CAPABILITY_DEPENDENCIES.md) | Capability relationships | ✅ Complete |
+| [EREN_ARCHITECTURE_BLUEPRINT.md](./EREN_ARCHITECTURE_BLUEPRINT.md) | Technical architecture | ✅ Complete |
 
 ---
 
@@ -33,10 +34,44 @@ Capability Dependencies (How capabilities relate)
        ↓
 Architecture Blueprint (How to build)
        ↓
-Contracts (Interfaces)
+Contracts (Interfaces) ← NEXT
        ↓
 Implementations (Code)
 ```
+
+---
+
+## Architecture Blueprint Summary
+
+### System Layers
+```
+┌─────────────────────────────────┐
+│   COGNITIVE RUNTIME              │  ← Orchestrates capabilities
+├─────────────────────────────────┤
+│   CAPABILITY LAYER               │  ← 25 capabilities
+├─────────────────────────────────┤
+│   INFRASTRUCTURE LAYER           │  ← Event bus, storage, metrics
+└─────────────────────────────────┘
+```
+
+### Directory Structure
+```
+eren/
+├── core/capabilities/      # 25 capabilities
+├── core/contracts/         # Contracts first
+├── core/runtime/           # Cognitive runtime
+├── core/events/            # Event bus
+└── integrations/           # External systems
+```
+
+### Technology Stack
+| Layer | Technology |
+|-------|------------|
+| Language | Python 3.12+ |
+| Data | PostgreSQL, Qdrant, Neo4j, Redis |
+| Infrastructure | Kubernetes, Docker |
+| Observability | Prometheus, Grafana, Jaeger |
+| Integration | FHIR, MQTT, HL7 |
 
 ---
 
