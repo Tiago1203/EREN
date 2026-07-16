@@ -15,9 +15,8 @@ EREN es un **Cognitive Operating System (COS)** especializado en Ingeniería Cl�
 
 **Para la máxima autoridad del proyecto, ver [VISION.md](./VISION.md).**
 
-> **Estado actual:** Epic 1 (Patient Context) está en desarrollo.
-> Ya existe: autenticación, modelo de paciente, repository pattern, outbox pattern,
-> CI/CD, y tests unitarios. **Pendiente:** Diagnosis context.
+> **Estado actual:** Epic 2 (Device Management & Lifecycle) completo.
+> Epic 1: Patient context ✅ · Epic 2: Device Management ✅
 > Documentos canónicos:
 > [ARCHITECTURE_OVERVIEW.md](./ARCHITECTURE_OVERVIEW.md) ·
 > [SYSTEM_DESIGN.md](./SYSTEM_DESIGN.md) ·
@@ -76,14 +75,16 @@ El proyecto usa GitHub Actions. Verifica el estado en la pestaña "Actions" del 
 
 **Checks:**
 - ✅ Lint (Ruff)
-- ✅ Test Suite (21 tests)
+- ✅ Typecheck (mypy)
+- ✅ Test Suite (83 tests)
+- ✅ Docker Build
 - ✅ Architecture Validation
 
 ---
 
-## Estado de Implementación (Epic 1)
+## Estado de Implementación
 
-### ✅ Completado
+### ✅ Epic 1 — Patient Context
 
 | Componente | Estado | Cobertura |
 |------------|--------|-----------|
@@ -95,11 +96,111 @@ El proyecto usa GitHub Actions. Verifica el estado en la pestaña "Actions" del 
 | Audit Middleware | ✅ | Tests unitarios |
 | CI/CD | ✅ | GitHub Actions |
 
-### 🎯 Siguiente
+### ✅ Epic 2 — Device Management & Lifecycle
 
-- Diagnosis Context (Epic 1.2)
-- Tenant Isolation Tests
-- Rollback Scenarios
+| Componente | Estado | Cobertura |
+|------------|--------|-----------|
+| DeviceService | ✅ | 92% |
+| DeviceRepository (SQLAlchemy) | ✅ | Tests unitarios |
+| Device Schemas (Pydantic) | ✅ | Tests unitarios |
+| REST API (12 endpoints) | ✅ | Tests unitarios |
+| DeviceCacheService | ✅ | — |
+| Domain Events (10 events) | ✅ | 100% |
+| Unit Tests | ✅ | 36 tests |
+| Integration Tests | ✅ | 10 tests |
+| Lint | ✅ | 0 errors |
+
+### 🎯 Próximo
+
+- Epic 3: Incident Context
+- Diagnosis Context
+
+---
+
+## Device API — Referencia Rápida
+
+Base URL: `http://localhost:8000/api/v1`
+
+Todos los endpoints requieren header `X-Tenant-ID`. La autenticación se configura via middleware.
+
+### Registro de dispositivo
+
+```bash
+POST /devices
+{
+  "serial_number": "SN-MRI-001",
+  "name": "MRI Scanner",
+  "device_type": "imaging",
+  "manufacturer_name": "Siemens",
+  "manufacturer_model": "MAGNETOM Vida",
+  "building": "Main Hospital",
+  "floor": "2",
+  "room": "201",
+  "department": "Radiology",
+  "is_critical": true,
+  "calibration_interval_days": 365
+}
+```
+
+### CRUD
+
+```bash
+GET    /devices                    # Lista con filtros y paginación
+GET    /devices/{id}               # Detalle por ID
+PATCH  /devices/{id}               # Actualizar (optimistic locking: version)
+DELETE /devices/{id}               # Eliminar
+```
+
+### Lifecycle
+
+```bash
+POST /devices/{id}/transfer        # Transferir a nueva ubicación
+POST /devices/{id}/maintenance      # Programar mantenimiento
+POST /devices/{id}/maintenance/start   # Iniciar mantenimiento
+POST /devices/{id}/maintenance/finish # Finalizar mantenimiento
+POST /devices/{id}/calibrate       # Registrar calibración
+POST /devices/{id}/out-of-service # Sacar de servicio
+POST /devices/{id}/return-service  # Reactivar
+POST /devices/{id}/decommission   # Dar de baja permanente
+```
+
+### Filtros de listado
+
+```
+?status=active|in_maintenance|decommissioned|...
+&device_type=imaging|diagnostic|therapeutic|...
+&building=Main+Hospital
+&department=Radiology
+&is_critical=true
+&search=palabra
+&sort_by=created_at&sort_order=desc
+&page=1&page_size=50
+```
+
+### Domain Events
+
+Los eventos se publican via **Outbox Pattern** (consistencia eventual):
+
+| Evento | Trigger |
+|--------|---------|
+| `DeviceRegistered` | Registro |
+| `DeviceUpdated` | Actualización |
+| `DeviceTransferred` | Transferencia |
+| `MaintenanceScheduled` | Programación |
+| `MaintenanceStarted` | Inicio de mantenimiento |
+| `MaintenanceCompleted` | Finalización |
+| `CalibrationCompleted` | Calibración |
+| `DeviceOutOfService` | Fuera de servicio |
+| `DeviceReturnedToService` | Reactivación |
+| `DeviceDecommissioned` | Baja |
+
+### Validaciones de negocio
+
+- No registrar serial duplicado (por tenant)
+- No operar equipo desincorporado
+- No iniciar mantenimiento ya en mantenimiento
+- No activar equipo sin calibración válida
+- Reactivación requiere calibración vigente
 
 ---
 
