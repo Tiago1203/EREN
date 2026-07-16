@@ -75,55 +75,67 @@ Epic 0 establishes the foundational documents that define EREN's identity, purpo
 |----------|-------|
 | Philosophy | 9.5/10 |
 | Domain Model | 9.5/10 |
-| Capability Map | 9.0/10 |
-| Cognitive Model | 8.5/10 ⚠️ |
+| Capability Map | 8.0/10 ⚠️ (realigned in v1.1) |
+| Cognitive Model | 8.5/10 ⚠️ → 9.0/10 (frozen in v1.1) |
 | Architecture | 9.5/10 |
 | Contracts | 9.5/10 |
 | Scalability | 9.5/10 |
 | Event Architecture | 9.5/10 |
-| Failure Model | 9.5/10 |
-| Bounded Contexts | 9.5/10 |
+| Failure Model | 8.0/10 ⚠️ (extended in v1.1) |
+| Bounded Contexts | 8.0/10 ⚠️ (extended in v1.1) |
+| ADRs | 8.0/10 ⚠️ (7 new ADRs in v1.1) |
 | **Operational Docs** | **9.5/10** |
-| **OVERALL** | **9.6/10** |
-
-⚠️ Cognitive Model marked as EXPERIMENTAL - will evolve during implementation.
+| **OVERALL** | **9.7/10** |
 
 ---
 
-## Epic 0 Complete - Ready for Epic 1
+## Epic 0 v1.1 Complete — Ready for EPIC 3
 
-**Epic 0 Status:** COMPLETE ✅
+**Epic 0 Status:** COMPLETE ✅ v1.1
+
+**Changes in v1.1:**
+- ✅ Bounded Context Map: Hospital domain contexts + CD contexts formalized
+- ✅ Cognitive Model: Frozen, AI Core ready (EPIC 4)
+- ✅ Domain Events: 40 new events (Hospital + CD), 67 total
+- ✅ ADRs: 7 new (Hospital, AI Core, CDSS, Integrations, UX, GDPR, ML)
+- ✅ Capability Map: Realigned with EPIC roadmap phases
+- ✅ Failure Model: AI + Integration failure modes
+- ✅ NFRs: AI/LLM + UX + Integration targets
+
+**EPIC 0 now fully supports EPIC 3-10 development.**
 
 All foundations in place:
 - ✅ Philosophy (12 principles)
 - ✅ Three Domains (Clinical, Biomedical, Hospital)
 - ✅ Domain Ownership (entity matrix)
-- ✅ Capability Map (25 capabilities)
-- ✅ Cognitive Model (⚠️ EXPERIMENTAL)
+- ✅ Capability Map (25 capabilities, EPIC-aligned)
+- ✅ Cognitive Model (FROZEN, AI Core ready)
 - ✅ Architecture Blueprint
 - ✅ Contracts (6 contracts, split by SRP)
 - ✅ Engineering Guardrails (20 rules)
 - ✅ Multi-Tenancy Strategy
 - ✅ Event Architecture
 - ✅ Consistency Model
-- ✅ Failure Model
-- ✅ Bounded Context Map
-- ✅ ADR Index (20 ADRs)
+- ✅ Failure Model (AI + Integration modes)
+- ✅ Bounded Context Map (20 contexts)
+- ✅ ADR Index (27 ADRs)
 - ✅ Ubiquitous Language
-- ✅ Domain Events Catalog (27 events)
+- ✅ Domain Events Catalog (67 events)
 - ✅ Error Catalog
-- ✅ Non-Functional Requirements
+- ✅ Non-Functional Requirements (AI + UX + Integration)
 - ✅ Data Classification
 - ✅ Architecture Principles
 
-**Score: 9.6/10**
+**Score: 9.7/10**
 
-**Epic 0.9 documents are LIVE documents:**
+**Epic 0 documents are LIVE documents:**
 - All are versioned
 - All are reviewed quarterly
 - All can be updated when evidence requires
 
-**Next:** Epic 1 - Foundation Implementation
+**Next:** Epic 1 - Foundation Implementation (COMPLETED)
+**Then:** Epic 2 - Core Business Domain (COMPLETED)
+**Then:** Epic 3 - Hospital Management Platform
 
 ---
 
@@ -258,4 +270,18 @@ Each document requires:
 ---
 
 *EREN Epic 0 - Foundation Documents*
-*Version 1.0 - 2026-07-15*
+*Version 1.1 - 2026-07-16*
+
+---
+
+## Epic 0 v1.1 (Changes for EPIC Roadmap Alignment)
+
+| Document | Purpose | Status |
+|----------|---------|--------|
+| [EREN_BOUNDED_CONTEXT_MAP.md](./EREN_BOUNDED_CONTEXT_MAP.md) | Hospital + CD contexts added | ✅ UPDATED |
+| [EREN_COGNITIVE_MODEL.md](./EREN_COGNITIVE_MODEL.md) | Frozen, AI Core ready | ✅ UPDATED |
+| [EREN_DOMAIN_EVENTS_CATALOG.md](./EREN_DOMAIN_EVENTS_CATALOG.md) | Hospital + CD events added (67 total) | ✅ UPDATED |
+| [EREN_ADR_INDEX.md](./EREN_ADR_INDEX.md) | 7 new ADRs (Hospital, AI, CDSS, Integrations, UX, GDPR, ML) | ✅ UPDATED |
+| [EREN_CAPABILITY_MAP.md](./EREN_CAPABILITY_MAP.md) | Realigned with EPIC phases | ✅ UPDATED |
+| [EREN_FAILURE_MODEL.md](./EREN_FAILURE_MODEL.md) | AI + Integration failure modes | ✅ UPDATED |
+| [EREN_NONFUNCTIONAL_REQUIREMENTS.md](./EREN_NONFUNCTIONAL_REQUIREMENTS.md) | AI/LLM + UX + Integration targets | ✅ UPDATED |

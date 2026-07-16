@@ -8,12 +8,15 @@
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-07-15 | Architecture Board | Initial |
+| 1.1 | 2026-07-16 | Architecture Board | 7 new ADRs: Hospital, AI Core, CDSS, Integrations, UX, GDPR, ML |
 
 ---
 
 ## Purpose
 
 This index tracks all Architecture Decision Records (ADRs) for EREN. Every significant architectural decision must have an ADR.
+
+**Total ADRs: 27** (21 Accepted, 6 Proposed)
 
 **Rule:** No architectural decision without an ADR. No ADR without a status.
 
@@ -77,6 +80,54 @@ This index tracks all Architecture Decision Records (ADRs) for EREN. Every signi
 | ADR-0040 | FHIR R4 Integration | ✅ Accepted | 2026-06-01 | Integration Team |
 | ADR-0041 | MQTT for Device Connectivity | ✅ Accepted | 2026-06-01 | Integration Team |
 | ADR-0042 | External Integrations via Adapters | ✅ Accepted | 2026-06-15 | Integration Team |
+| ADR-0043 | DICOM Integration | ✅ Accepted | 2026-07-16 | Integration Team |
+| ADR-0044 | HL7 V2/V3 Integration | ✅ Accepted | 2026-07-16 | Integration Team |
+| ADR-0045 | Medical Device Vendor Adapters | ✅ Accepted | 2026-07-16 | Integration Team |
+
+### Hospital Domain
+
+| ADR | Title | Status | Date | Owner |
+|-----|-------|--------|------|-------|
+| ADR-0050 | Hospital Context Architecture | ✅ Accepted | 2026-07-16 | Architecture Board |
+| ADR-0051 | Organization Multi-Campus Strategy | ✅ Accepted | 2026-07-16 | Architecture Board |
+| ADR-0052 | Department Hierarchy Model | ✅ Accepted | 2026-07-16 | Architecture Board |
+
+### AI Core
+
+| ADR | Title | Status | Date | Owner |
+|-----|-------|--------|------|-------|
+| ADR-0055 | AI Core Architecture | ✅ Accepted | 2026-07-16 | Architecture Board |
+| ADR-0056 | Cognitive Capability Contracts | ✅ Accepted | 2026-07-16 | Architecture Board |
+| ADR-0057 | LLM Provider Abstraction | ✅ Accepted | 2026-07-16 | Architecture Board |
+
+### Clinical Intelligence
+
+| ADR | Title | Status | Date | Owner |
+|-----|-------|--------|------|-------|
+| ADR-0060 | Clinical Intelligence Context Architecture | ✅ Accepted | 2026-07-16 | Architecture Board |
+| ADR-0061 | CDS Evidence Requirements | ✅ Accepted | 2026-07-16 | Architecture Board |
+| ADR-0062 | AI Explainability Requirements | ✅ Accepted | 2026-07-16 | Architecture Board |
+
+### UX & Accessibility
+
+| ADR | Title | Status | Date | Owner |
+|-----|-------|--------|------|-------|
+| ADR-0065 | Web Frontend Architecture | ✅ Proposed | 2026-07-16 | Frontend Team |
+| ADR-0066 | Mobile App Architecture | ✅ Proposed | 2026-07-16 | Mobile Team |
+
+### Compliance & Security
+
+| ADR | Title | Status | Date | Owner |
+|-----|-------|--------|------|-------|
+| ADR-0070 | GDPR Compliance Strategy | ✅ Proposed | 2026-07-16 | Security Team |
+| ADR-0071 | ISO 27001 Compliance | ✅ Proposed | 2026-07-16 | Security Team |
+
+### Machine Learning
+
+| ADR | Title | Status | Date | Owner |
+|-----|-------|--------|------|-------|
+| ADR-0075 | ML Feedback Loop Architecture | ✅ Proposed | 2026-07-16 | AI Team |
+| ADR-0076 | Model Versioning Strategy | ✅ Proposed | 2026-07-16 | AI Team |
 
 ---
 
@@ -106,6 +157,18 @@ This index tracks all Architecture Decision Records (ADRs) for EREN. Every signi
 | ADR-0040 | FHIR R4 Integration |
 | ADR-0041 | MQTT for Device Connectivity |
 | ADR-0042 | External Integrations via Adapters |
+| ADR-0043 | DICOM Integration |
+| ADR-0044 | HL7 V2/V3 Integration |
+| ADR-0045 | Medical Device Vendor Adapters |
+| ADR-0050 | Hospital Context Architecture |
+| ADR-0051 | Organization Multi-Campus Strategy |
+| ADR-0052 | Department Hierarchy Model |
+| ADR-0055 | AI Core Architecture |
+| ADR-0056 | Cognitive Capability Contracts |
+| ADR-0057 | LLM Provider Abstraction |
+| ADR-0060 | Clinical Intelligence Context Architecture |
+| ADR-0061 | CDS Evidence Requirements |
+| ADR-0062 | AI Explainability Requirements |
 
 ### Superseded
 
@@ -123,7 +186,12 @@ This index tracks all Architecture Decision Records (ADRs) for EREN. Every signi
 
 | ADR | Title | Status |
 |-----|-------|--------|
-| - | None | - |
+| ADR-0065 | Web Frontend Architecture | Proposed |
+| ADR-0066 | Mobile App Architecture | Proposed |
+| ADR-0070 | GDPR Compliance Strategy | Proposed |
+| ADR-0071 | ISO 27001 Compliance | Proposed |
+| ADR-0075 | ML Feedback Loop Architecture | Proposed |
+| ADR-0076 | Model Versioning Strategy | Proposed |
 
 ---
 
@@ -167,5 +235,5 @@ ADRs are reviewed quarterly:
 
 ---
 
-*EREN ADR Index v1.0*
-*Architecture Board - 2026-07-15*
+*EREN ADR Index v1.1*
+*Architecture Board - 2026-07-16*

@@ -8,6 +8,7 @@
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-07-15 | Architecture Board | Initial |
+| 1.1 | 2026-07-16 | Architecture Board | Hospital + Clinical Intelligence events added |
 
 ---
 
@@ -354,6 +355,313 @@ BedOccupied (v1.0):
 
 ---
 
+## Hospital Domain Events (Extended)
+
+### Organization Events
+
+| Event | Purpose |
+|-------|---------|
+| OrganizationRegistered | New hospital organization created |
+| OrganizationUpdated | Organization details changed |
+| OrganizationSuspended | Organization temporarily suspended |
+
+#### OrganizationRegistered
+
+```yaml
+OrganizationRegistered (v1.0):
+  aggregate: Organization
+  idempotent: Yes
+  ordering: organization_id
+  payload:
+    - organization_id: UUID (required)
+    - tenant_id: UUID (required)
+    - name: string (required)
+    - registered_at: timestamp (required)
+  pii: No
+  hipaa: Yes (linked to hospital)
+  retention_days: 2555
+  published_by: Organization Context
+  consumed_by: [All contexts]
+  retry_policy: EXACTLY_ONCE
+  dlq: hospital-organization-dlq
+```
+
+---
+
+### Department Events
+
+| Event | Purpose |
+|-------|---------|
+| DepartmentCreated | New department added to organization |
+| DepartmentUpdated | Department details changed |
+| DepartmentClosed | Department permanently closed |
+| DepartmentStaffChanged | Staff composition changed |
+
+---
+
+### Campus Events
+
+| Event | Purpose |
+|-------|---------|
+| CampusRegistered | New campus added to organization |
+| CampusConfigured | Campus settings updated |
+| CampusDeactivated | Campus temporarily deactivated |
+
+---
+
+### Building Events
+
+| Event | Purpose |
+|-------|---------|
+| BuildingRegistered | New building added to campus |
+| BuildingConfigured | Building settings updated |
+| BuildingDeactivated | Building temporarily closed |
+
+---
+
+### Floor Events
+
+| Event | Purpose |
+|-------|---------|
+| FloorConfigured | Floor configured in building |
+| FloorCapacityUpdated | Floor bed capacity changed |
+
+---
+
+### Room Events
+
+| Event | Purpose |
+|-------|---------|
+| RoomConfigured | Room configured in floor |
+| RoomStatusChanged | Room status updated (operational, maintenance, etc.) |
+
+#### RoomConfigured
+
+```yaml
+RoomConfigured (v1.0):
+  aggregate: Room
+  idempotent: Yes
+  ordering: room_id
+  payload:
+    - room_id: UUID (required)
+    - tenant_id: UUID (required)
+    - floor_id: UUID (required)
+    - room_number: string (required)
+    - room_type: string (required)
+    - bed_count: integer (required)
+    - configured_at: timestamp (required)
+  pii: No
+  hipaa: No
+  retention_days: 2555
+  published_by: Room Context
+  consumed_by: [Capacity, Scheduling, Audit]
+  retry_policy: EXACTLY_ONCE
+  dlq: hospital-room-dlq
+```
+
+---
+
+### Biomedical Engineering Events
+
+| Event | Purpose |
+|-------|---------|
+| BiomedicalTeamAssigned | BMET team assigned to campus |
+| EngineeringProjectCreated | New engineering project started |
+| EngineeringProjectCompleted | Engineering project finished |
+
+---
+
+### Asset Management Events
+
+| Event | Purpose |
+|-------|---------|
+| AssetAssigned | Asset assigned to location/person |
+| AssetTransferred | Asset moved to new location |
+| AssetRetired | Asset permanently removed from inventory |
+
+---
+
+### Inventory Events
+
+| Event | Purpose |
+|-------|---------|
+| SparePartAdded | Spare part added to inventory |
+| SparePartConsumed | Spare part used in maintenance |
+| SparePartLowStock | Spare part below minimum threshold |
+| InventoryAdjusted | Manual inventory adjustment made |
+
+#### SparePartLowStock
+
+```yaml
+SparePartLowStock (v1.0):
+  aggregate: SparePart
+  idempotent: Yes
+  ordering: spare_part_id
+  payload:
+    - spare_part_id: UUID (required)
+    - tenant_id: UUID (required)
+    - part_number: string (required)
+    - current_quantity: integer (required)
+    - minimum_quantity: integer (required)
+    - warehouse_id: UUID (required)
+    - alert_at: timestamp (required)
+  pii: No
+  hipaa: No
+  retention_days: 365
+  published_by: Inventory Context
+  consumed_by: [PurchaseOrder, BiomedicalEngineering, Audit]
+  retry_policy: AT_LEAST_ONCE
+  dlq: hospital-inventory-dlq
+```
+
+---
+
+### Purchase Order Events
+
+| Event | Purpose |
+|-------|---------|
+| PurchaseOrderCreated | New PO created for spare parts |
+| PurchaseOrderApproved | PO approved for procurement |
+| PurchaseOrderReceived | PO items received at warehouse |
+| PurchaseOrderCancelled | PO cancelled before fulfillment |
+
+---
+
+## Clinical Intelligence Domain Events
+
+### Root Cause Analysis Events
+
+| Event | Purpose |
+|-------|---------|
+| RootCauseAnalysisRequested | New RCA initiated |
+| RootCauseIdentified | Root cause found |
+| CausalChainGenerated | Causal chain generated |
+| FailurePatternDetected | Recurring failure pattern detected |
+
+#### RootCauseIdentified
+
+```yaml
+RootCauseIdentified (v1.0):
+  aggregate: RootCauseAnalysis
+  idempotent: Yes
+  ordering: analysis_id
+  payload:
+    - analysis_id: UUID (required)
+    - tenant_id: UUID (required)
+    - incident_id: UUID (required)
+    - device_id: UUID (required)
+    - root_cause: string (required)
+    - confidence: float (0.0-1.0) (required)
+    - evidence: array (required)
+    - identified_at: timestamp (required)
+  pii: No
+  hipaa: No
+  retention_days: 2555
+  published_by: RootCauseAnalysis Context
+  consumed_by: [Troubleshooting, Maintenance, Audit]
+  retry_policy: EXACTLY_ONCE
+  dlq: ai-rootcause-dlq
+```
+
+---
+
+### Differential Diagnosis Events
+
+| Event | Purpose |
+|-------|---------|
+| DifferentialDiagnosisRequested | New differential diagnosis requested |
+| DiagnosisRanked | Diagnosis candidates ranked by likelihood |
+| DiagnosisConfidenceUpdated | Diagnosis confidence recalculated |
+
+---
+
+### Failure Prediction Events
+
+| Event | Purpose |
+|-------|---------|
+| FailurePredictionRequested | Failure prediction triggered |
+| DeviceFailureRiskUpdated | Device failure risk score updated |
+| PreventiveMaintenanceRecommended | Preventive maintenance suggested |
+
+#### DeviceFailureRiskUpdated
+
+```yaml
+DeviceFailureRiskUpdated (v1.0):
+  aggregate: FailurePrediction
+  idempotent: Yes
+  ordering: device_id
+  payload:
+    - prediction_id: UUID (required)
+    - tenant_id: UUID (required)
+    - device_id: UUID (required)
+    - risk_level: string (required)  # critical/high/medium/low
+    - failure_probability: float (required)
+    - prediction_window_hours: integer (required)
+    - contributing_factors: array (required)
+    - updated_at: timestamp (required)
+  pii: No
+  hipaa: No
+  retention_days: 2555
+  published_by: FailurePrediction Context
+  consumed_by: [Maintenance, Capacity, Alarm, Audit]
+  retry_policy: AT_LEAST_ONCE
+  dlq: ai-failure-prediction-dlq
+```
+
+---
+
+### Risk Assessment Events
+
+| Event | Purpose |
+|-------|---------|
+| RiskAssessmentRequested | New risk assessment requested |
+| RiskLevelChanged | Risk level updated |
+| RiskMitigationRecommended | Mitigation actions suggested |
+
+---
+
+### Calibration Advisor Events
+
+| Event | Purpose |
+|-------|---------|
+| CalibrationRecommended | Calibration schedule recommended |
+| CalibrationUrgencyChanged | Calibration urgency level changed |
+| CalibrationWindowIdentified | Optimal calibration window found |
+
+---
+
+### Compliance Advisor Events
+
+| Event | Purpose |
+|-------|---------|
+| ComplianceViolationDetected | Regulatory violation identified |
+| ComplianceCheckCompleted | Compliance check finished |
+| ComplianceRemediationRecommended | Remediation actions suggested |
+
+---
+
+### Troubleshooting Events
+
+| Event | Purpose |
+|-------|---------|
+| TroubleshootingSessionStarted | New troubleshooting session initiated |
+| DiagnosticStepExecuted | Diagnostic step completed |
+| TroubleshootingCompleted | Troubleshooting session concluded |
+| ResolutionRecommended | Resolution action recommended |
+
+---
+
+### Maintenance Suggestions Events
+
+| Event | Purpose |
+|-------|---------|
+| MaintenanceSuggestionGenerated | AI-generated maintenance recommendation |
+| MaintenancePriorityUpdated | Maintenance priority recalculated |
+| MaintenanceSuggestionAccepted | Staff accepted maintenance suggestion |
+| MaintenanceSuggestionRejected | Staff rejected maintenance suggestion |
+
+---
+
 ## System Events
 
 ### Audit Events
@@ -363,6 +671,18 @@ BedOccupied (v1.0):
 | PHIAccessed | Protected health information accessed |
 | DataExported | Patient data exported |
 | PolicyViolated | Security policy violated |
+| CrossTenantAccessAttempted | Cross-tenant data access attempted (blocked) |
+
+### AI System Events
+
+| Event | Purpose |
+|-------|---------|
+| CDSRecommendationGenerated | Clinical decision support recommendation produced |
+| CDSHallucinationDetected | AI hallucination detected in response |
+| CDSConfidenceLow | CDS recommendation below confidence threshold |
+| ReasoningChainGenerated | AI reasoning chain generated |
+| ExplanationGenerated | AI explanation generated for recommendation |
+| FeedbackReceived | User feedback on AI recommendation received |
 
 #### PHIAccessed
 
@@ -396,9 +716,10 @@ PHIAccessed (v1.0):
 |----------|-------|
 | Clinical Events | 10 |
 | Biomedical Events | 8 |
-| Hospital Events | 5 |
-| System Events | 4 |
-| **Total** | **27** |
+| Hospital Events | 27 |
+| Clinical Intelligence Events | 14 |
+| System Events | 8 |
+| **Total** | **67** |
 
 ---
 
@@ -412,5 +733,5 @@ PHIAccessed (v1.0):
 
 ---
 
-*EREN Domain Events Catalog v1.0*
-*Architecture Board - 2026-07-15*
+*EREN Domain Events Catalog v1.1*
+*Architecture Board - 2026-07-16*

@@ -8,6 +8,7 @@
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-07-15 | Architecture Board | Initial |
+| 1.1 | 2026-07-16 | Architecture Board | AI/ML + Integration failure modes added for EPIC 4-6 |
 
 ---
 
@@ -15,8 +16,8 @@
 
 This document defines:
 1. How EREN responds when **infrastructure fails**
-2. How EREN responds when **integrations fail**
-3. How EREN responds when **AI models fail**
+2. How EREN responds when **integrations fail** (EPIC 6)
+3. How EREN responds when **AI models fail** (EPIC 4-5)
 4. **Recovery procedures** for each failure mode
 
 ---
@@ -28,8 +29,8 @@ This document defines:
 | Severity | Impact | Response Time | Examples |
 |-----------|--------|---------------|----------|
 | **P0 - Critical** | System unusable | Immediate | PostgreSQL down, Auth down |
-| **P1 - High** | Major feature broken | < 5 min | Neo4j down, FHIR sync failing |
-| **P2 - Medium** | Degraded experience | < 30 min | Redis down, search slow |
+| **P1 - High** | Major feature broken | < 5 min | Neo4j down, FHIR sync failing, LLM down |
+| **P2 - Medium** | Degraded experience | < 30 min | Redis down, search slow, hallucination detected |
 | **P3 - Low** | Minor issue | < 4 hours | Metrics delayed, logs missing |
 
 ### By Domain
@@ -42,16 +43,18 @@ INFRASTRUCTURE FAILURES
 ├── Vector Store (Qdrant)
 └── Storage (S3)
 
-INTEGRATION FAILURES
+INTEGRATION FAILURES (EPIC 6)
 ├── FHIR Server
 ├── HL7 Interface
 ├── MQTT Broker
 ├── DICOM PACS
-└── External APIs
+└── External APIs (Philips, GE, Dräger, Mindray, SAP, ServiceNow, Maximo)
 
-AI/ML FAILURES
+AI/ML FAILURES (EPIC 4-5)
 ├── LLM Timeout
 ├── LLM Error
+├── LLM Rate Limited
+├── LLM Context Window Exceeded
 ├── Embedding Service Down
 ├── Model Unavailable
 └── Hallucination Detected
@@ -563,21 +566,234 @@ EREN RESPONSE:
 │                         FAILURE RESPONSE MATRIX                         │
 ├────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
-│  COMPONENT          │ SEVERITY │ BEHAVIOR          │ RECOVERY         │
-│ ───────────────────┼──────────┼───────────────────┼─────────────────── │
-│  PostgreSQL         │ P0      │ Full outage       │ Failover/restore │
-│  Redis              │ P1      │ Degraded          │ Auto-reconnect    │
-│  Neo4j              │ P1      │ Degraded          │ Resync            │
-│  Qdrant             │ P2      │ Degraded          │ Auto-reconnect    │
-│  FHIR Server        │ P1      │ Local fallback     │ Auto-retry       │
-│  HL7 Interface      │ P2      │ Buffered          │ Auto-retry       │
-│  MQTT Broker        │ P1      │ Safety alerts     │ Reconnect        │
-│  DICOM PACS         │ P2      │ Cached fallback   │ Auto-retry       │
-│  LLM Provider       │ P1      │ Fallback chain    │ Retry + fallback  │
-│  Embedding Service  │ P2      │ Queued           │ Auto-retry       │
-│  Auth Provider      │ P0      │ Cached sessions   │ Emergency access │
+│  COMPONENT            │ SEVERITY │ BEHAVIOR          │ RECOVERY         │
+│ ─────────────────────┼──────────┼───────────────────┼───────────────────│
+│  INFRASTRUCTURE                                                        │
+│  PostgreSQL           │ P0      │ Full outage       │ Failover/restore │
+│  Redis                │ P1      │ Degraded          │ Auto-reconnect    │
+│  Neo4j                │ P1      │ Degraded          │ Resync            │
+│  Qdrant               │ P2      │ Degraded          │ Auto-reconnect    │
+│  S3                   │ P2      │ Degraded          │ Failover          │
+│                                                                         │
+│  INTEGRATIONS (EPIC 6)                                                │
+│  FHIR Server          │ P1      │ Local fallback     │ Auto-retry       │
+│  HL7 Interface        │ P2      │ Buffered          │ Auto-retry       │
+│  MQTT Broker          │ P1      │ Safety alerts     │ Reconnect        │
+│  DICOM PACS           │ P2      │ Cached fallback   │ Auto-retry       │
+│  Philips API          │ P1      │ Degraded          │ Auto-retry       │
+│  GE API               │ P1      │ Degraded          │ Auto-retry       │
+│  Dräger API           │ P1      │ Degraded          │ Auto-retry       │
+│  Mindray API          │ P1      │ Degraded          │ Auto-retry       │
+│  SAP API              │ P2      │ Degraded          │ Auto-retry       │
+│  ServiceNow API        │ P2      │ Degraded          │ Auto-retry       │
+│  Maximo API           │ P2      │ Degraded          │ Auto-retry       │
+│  Azure AD             │ P0      │ Cached sessions   │ Emergency access │
+│                                                                         │
+│  AI/ML (EPIC 4-5)                                                      │
+│  LLM Provider          │ P1      │ Fallback chain    │ Retry + fallback  │
+│  LLM Rate Limit       │ P2      │ Queued           │ Backoff + retry   │
+│  LLM Context Window   │ P1      │ Truncate + warn  │ Chunk + retry     │
+│  Hallucination        │ P1      │ Block + flag     │ Validate output   │
+│  Embedding Service     │ P2      │ Queued           │ Auto-retry       │
+│  Model Unavailable    │ P1      │ Fallback model   │ Switch model     │
+│                                                                         │
+│  SECURITY                                                             │
+│  Auth Provider         │ P0      │ Cached sessions   │ Emergency access │
 │                                                                         │
 └────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## AI/ML Failure Modes (EPIC 4-5)
+
+### LLM Provider Failure
+
+```
+Severity: P1 - HIGH
+Impact: Clinical Decision Support unavailable
+
+WHAT HAPPENS:
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  LLM request FAILS                                         │
+│  CDS recommendations STOP                                   │
+│  Fallback to rule-based responses                          │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+EREN RESPONSE:
+1. Alert fires: "LLM provider unavailable"
+2. Circuit breaker OPENS after 3 failures
+3. Fallback chain: GPT-4 → GPT-3.5 → Claude → Rule-based
+4. All CDS responses marked: confidence = LOW (rule-based)
+5. Audit: LLMFallbackActivated
+
+GRACEFUL DEGRADATION:
+✅ CDS continues with rule-based responses (slower, lower quality)
+✅ All responses clearly marked as rule-based
+✅ No patient safety issues
+❌ AI-powered reasoning unavailable
+
+RECOVERY:
+1. LLM provider recovers
+2. Circuit breaker enters HALF_OPEN
+3. Test requests pass → CLOSED
+4. AI CDS resumes
+```
+
+### LLM Rate Limit Exceeded
+
+```
+Severity: P2 - MEDIUM
+Impact: CDS requests queued or delayed
+
+WHAT HAPPENS:
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  API rate limit REACHED                                     │
+│  New requests queued or rejected                            │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+EREN RESPONSE:
+1. Request queued with priority
+2. Exponential backoff: 1s, 2s, 4s, 8s, 16s
+3. Low-priority requests dropped (logged)
+4. High-priority CDS requests always processed
+```
+
+### LLM Context Window Exceeded
+
+```
+Severity: P1 - HIGH
+Impact: CDS request too large
+
+WHAT HAPPENS:
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  Context window LIMIT REACHED                               │
+│  Request cannot fit in LLM context                          │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+EREN RESPONSE:
+1. Truncate context (oldest memories removed)
+2. Retry with truncated context
+3. Log: "ContextWindowExceeded, truncated X tokens"
+4. Response marked: confidence REDUCED
+```
+
+### Hallucination Detected
+
+```
+Severity: P1 - HIGH
+Impact: AI fabricated information
+
+WHAT HAPPENS:
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  Hallucination DETECTED in LLM response                      │
+│  Self-validation failed                                     │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+EREN RESPONSE (Guardrail G5.1 violation):
+1. Response BLOCKED immediately
+2. Alert fires: "CDS Hallucination Detected"
+3. Fallback to rule-based response
+4. CDSHallucinationDetected event published
+5. Response marked: "AI response blocked — insufficient evidence"
+6. Audit: Every hallucination logged
+```
+
+---
+
+## Integration Failure Modes (EPIC 6)
+
+### Philips/GE/Dräger/Mindray Device API Failure
+
+```
+Severity: P1 - HIGH
+Impact: Device data from vendor unavailable
+
+WHAT HAPPENS:
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  Vendor API UNREACHABLE                                     │
+│  Device data STOPS updating                                  │
+│  Local cache serves stale data                              │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+EREN RESPONSE:
+1. Alert fires: "{Vendor} API unavailable"
+2. Local device data continues (PostgreSQL source)
+3. Stale data warning displayed in UI
+4. Circuit breaker protects downstream calls
+5. Retry with exponential backoff
+
+GRACEFUL DEGRADATION:
+✅ Device management continues
+✅ Clinical operations continue
+❌ Latest vendor data unavailable
+❌ Vendor-specific features disabled
+```
+
+### SAP/ServiceNow/Maximo API Failure
+
+```
+Severity: P2 - MEDIUM
+Impact: Enterprise integration degraded
+
+WHAT HAPPERS:
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  Enterprise API UNREACHABLE                                 │
+│  Work orders queue locally                                  │
+│  Sync paused                                                │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+EREN RESPONSE:
+1. Work orders stored locally
+2. Sync queued for retry
+3. UI shows: "Enterprise sync paused"
+4. No clinical impact
+
+RECOVERY:
+1. API recovers
+2. Queued items sync automatically
+3. Conflicts resolved (EREN wins)
+```
+
+### MQTT Broker Failure
+
+```
+Severity: P1 - HIGH
+Impact: Real-time device data unavailable
+
+WHAT HAPPENS:
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  MQTT Broker UNREACHABLE                                     │
+│  Real-time device telemetry STOPS                          │
+│  Alarms may be delayed                                     │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+EREN RESPONSE:
+1. Alert fires: "MQTT Broker unavailable — CRITICAL"
+2. Safety-critical alarms escalate via SMS/pager
+3. Historical data continues (DB)
+4. Device status updates via polling (fallback)
+5. PagerDuty/SMS for CRITICAL alarms
+
+GRACEFUL DEGRADATION:
+✅ Safety-critical alarms always delivered (SMS backup)
+✅ Historical data available
+❌ Real-time telemetry delayed
+❌ Device monitoring degraded
 ```
 
 ---
@@ -588,7 +804,7 @@ EREN RESPONSE:
 
 ```
 Circuit Breaker is used for:
-✅ External API calls (FHIR, LLM)
+✅ External API calls (FHIR, LLM, Vendor APIs)
 ✅ Integration calls (MQTT, HL7)
 ✅ Third-party services
 
@@ -603,14 +819,14 @@ Circuit Breaker is NOT used for:
 ```python
 class CircuitBreakerConfig:
     """Circuit breaker for external integrations."""
-    
+
     # FHIR
     FHIR: CircuitBreaker = CircuitBreaker(
         failure_threshold=5,      # Open after 5 failures
         recovery_timeout=30,      # Try again after 30s
         half_open_max_calls=3,   # Allow 3 test calls
     )
-    
+
     # LLM
     LLM: CircuitBreaker = CircuitBreaker(
         failure_threshold=3,     # Open after 3 failures
@@ -829,5 +1045,5 @@ alerts:
 
 ---
 
-*EREN Failure Model v1.0*
-*Architecture Board - 2026-07-15*
+*EREN Failure Model v1.1*
+*Architecture Board - 2026-07-16*
