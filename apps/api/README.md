@@ -1,11 +1,7 @@
 # @eren/api (FastAPI)
 
 The **programmatic gateway** into EREN — an HTTP API built with FastAPI,
-following a clean, layered architecture.
-
-> **Status:** professional skeleton. Wiring is in place (config, logging,
-> middleware, error handling, DB layer, migrations, tests). The only endpoint is
-> a `/health` liveness probe — **no business endpoints, AI, or agents yet.**
+following a clean, layered architecture with full infrastructure support.
 
 ## Stack
 
@@ -13,35 +9,71 @@ following a clean, layered architecture.
 | --- | --- |
 | Language | Python 3.12 |
 | Web framework | FastAPI |
-| Packaging / envs | uv |
 | Validation / settings | Pydantic v2 + pydantic-settings |
 | ORM | SQLAlchemy 2 (async) |
 | Migrations | Alembic |
-| Lint / format | Ruff |
-| Tests | Pytest |
+| Database | PostgreSQL (asyncpg) |
+| Cache | Redis |
+| Messaging | RabbitMQ (aio-pika) |
+| Observability | OpenTelemetry |
+| Logging | Structured JSON (python-json-logger) |
+| Secrets | HashiCorp Vault (hvac) |
+| Lint / format | Ruff, Black, MyPy |
+| Tests | Pytest + pytest-asyncio |
 
-## Layout (clean architecture)
+## Architecture
 
 ```
 apps/api/
 ├── app/
-│   ├── config/       # Typed settings (env-driven)
-│   ├── core/         # Infra: database, logging, exceptions
-│   ├── middleware/   # ASGI/HTTP middleware
-│   ├── models/       # SQLAlchemy ORM entities + declarative Base
-│   ├── routers/      # HTTP presentation layer (FastAPI routers)
-│   ├── schemas/      # Pydantic v2 request/response DTOs
-│   ├── services/     # Application/use-case layer (business logic)
-│   └── main.py       # App factory (create_app)
-├── migrations/       # Alembic environment + versions
-├── tests/            # Pytest suite
+│   ├── config/           # Typed settings (env-driven)
+│   ├── core/             # Core infra: database, logging, exceptions
+│   ├── infrastructure/    # Domain implementations:
+│   │   ├── models/       #   SQLAlchemy ORM models (incident, device, recommendation, knowledge)
+│   │   ├── repositories/ #   Repository implementations (satisfy domain interfaces)
+│   │   ├── messaging/    #   Redis cache + RabbitMQ event bus
+│   │   └── observability/#   OpenTelemetry tracing + structured logging
+│   ├── middleware/       # ASGI/HTTP middleware
+│   ├── models/           # API-level ORM entities
+│   ├── routers/          # HTTP presentation layer (FastAPI routers)
+│   ├── schemas/          # Pydantic v2 request/response DTOs
+│   ├── services/         # Application/use-case layer
+│   └── main.py           # App factory (create_app)
+├── migrations/           # Alembic environment + versions
+├── tests/               # Pytest suite
 ├── alembic.ini
 └── pyproject.toml
 ```
 
-**Dependency direction:** `routers → services → models`, with `schemas` as the
-data contract and `core`/`config` as shared infrastructure. Inner layers never
-import outer layers (e.g. `services` must not import `routers`).
+**Dependency direction:** `routers → services → repositories → models`, with
+`schemas` as the data contract and `core`/`infrastructure` as shared
+infrastructure. The domain layer (`core/`) remains pure and free of
+infrastructure concerns.
+
+## Infrastructure
+
+### Database (PostgreSQL)
+- **Connection:** `EREN_API_DATABASE_URL` (default: `postgresql+asyncpg://eren:eren@localhost:5432/eren`)
+- **Schemas:** `incident`, `device`, `recommendation`, `knowledge`
+- **ORM:** SQLAlchemy 2 async with `asyncpg` driver
+- **Migrations:** Alembic
+
+### Cache (Redis)
+- **Connection:** `EREN_API_REDIS_URL` (default: `redis://localhost:6379/0`)
+- **TTL:** `EREN_API_CACHE_TTL_SECONDS` (default: 300)
+
+### Messaging (RabbitMQ)
+- **Connection:** `EREN_API_RABBITMQ_URL` (default: `amqp://eren:eren@localhost:5672/`)
+- **Exchange:** `eren.events` (topic exchange)
+
+### Observability (OpenTelemetry)
+- **Endpoint:** `EREN_API_OTEL_ENDPOINT` (e.g., `http://localhost:4317`)
+- **Exports:** Jaeger-compatible OTLP
+
+### Secrets (Vault)
+- **Enabled:** `EREN_VAULT_ENABLED`
+- **URL:** `EREN_VAULT_URL`
+- **Auth:** Kubernetes service account or token
 
 ## Develop
 
@@ -52,22 +84,50 @@ uv sync                                   # create venv + install deps (incl. de
 uv run uvicorn app.main:app --reload      # run the API (http://localhost:8000)
 uv run ruff check .                        # lint
 uv run ruff format .                       # format
-uv run pytest                              # tests
+uv run mypy app/                          # type check
+uv run pytest                             # tests
 ```
 
-Health check: `GET /api/v1/health` → `{"status":"ok", ...}`.
+### Health Checks
 
-## Migrations (Alembic)
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /api/v1/health` | Simple liveness |
+| `GET /api/v1/health/live` | Kubernetes liveness probe |
+| `GET /api/v1/health/ready` | Kubernetes readiness probe |
+| `GET /api/v1/health/full` | Full health with dependency checks |
 
-The DB URL is taken from app settings (`EREN_API_DATABASE_URL`); Alembic derives
-a synchronous URL automatically.
+### Docker
 
 ```bash
-uv run alembic revision --autogenerate -m "create initial tables"
-uv run alembic upgrade head
+# From project root
+docker compose up                  # start all services
+docker compose up -d               # detached
+docker compose down                # stop all services
+
+# Just the API
+docker build -f apps/api/Dockerfile -t eren-api:test apps/
+docker run -p 8000:8000 eren-api:test
 ```
 
 ## Configuration
 
-Copy `.env.example` → `.env`. All variables use the `EREN_API_` prefix (see
-`app/config/settings.py`).
+All settings are env-driven with the `EREN_API_` prefix (see `app/config/settings.py`).
+
+```bash
+EREN_API_ENVIRONMENT=development
+EREN_API_DEBUG=false
+EREN_API_DATABASE_URL=postgresql+asyncpg://eren:eren@localhost:5432/eren
+EREN_API_REDIS_URL=redis://localhost:6379/0
+EREN_API_RABBITMQ_URL=amqp://eren:eren@localhost:5672/
+EREN_API_OTEL_ENDPOINT=http://localhost:4317
+EREN_API_CORS_ORIGINS=["http://localhost:3000"]
+```
+
+## Migrations (Alembic)
+
+```bash
+uv run alembic revision --autogenerate -m "create incident/device tables"
+uv run alembic upgrade head
+uv run alembic downgrade -1
+```

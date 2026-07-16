@@ -16,30 +16,52 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install ruff black isort
-          
+
       - name: Run ruff on core
         run: ruff check core/ || true
-        
+
       - name: Run ruff on api
         run: ruff check apps/api/app/ apps/api/tests/ || true
-        
+
       - name: Run ruff format check
         run: ruff format --check core/ apps/api/ || true
+
+  typecheck:
+    name: Type Check (MyPy)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install mypy types-python-dateutil
+
+      - name: Run mypy on core
+        run: mypy core/ --ignore-missing-imports || true
+
+      - name: Run mypy on api infrastructure
+        run: mypy apps/api/app/infrastructure/ --ignore-missing-imports || true
 
   test:
     name: Test Suite
     runs-on: ubuntu-latest
-        
+
     services:
       postgres:
         image: postgres:16
@@ -54,51 +76,85 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e "apps/api"
           pip install pytest pytest-asyncio pytest-cov httpx asyncpg
-          
-      - name: Run unit tests
+
+      - name: Run unit tests (API)
         run: |
           PYTHONPATH=apps/api python -m pytest apps/api/tests/unit -v --tb=short
         env:
           DATABASE_URL: postgresql+asyncpg://eren:eren_test@localhost:5432/eren_test
-        
-      - name: Run core tests
+
+      - name: Run core domain tests
         run: PYTHONPATH=. python -m pytest tests/ -v --tb=short || true
+
+  build-docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build API Docker image
+        run: |
+          docker build -f apps/api/Dockerfile -t eren-api:test apps/
 
   architecture:
     name: Architecture Validation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -e "apps/api"
-          
-      - name: Verify domain imports
-        run: python -c "from app.domain.patient import PatientService, SQLAlchemyPatientRepository; from app.infrastructure import EventBus; print('Domain imports OK')"
-          
+
+      - name: Verify infrastructure imports
+        run: python -c "
+from app.infrastructure import (
+    IncidentRepositoryImpl,
+    DeviceRepositoryImpl,
+    RecommendationRepositoryImpl,
+    KnowledgeRepositoryImpl,
+    CacheService,
+    EventBus as MessagingEventBus,
+    configure_logging,
+    setup_tracing,
+)
+print('Infrastructure imports OK')
+"
+
+      - name: Verify domain repository interfaces
+        run: python -c "
+from core.incident.domain.repositories import IncidentRepository
+from core.device.domain.repositories import DeviceRepository
+from core.recommendation.domain.repositories import RecommendationRepository
+from core.knowledge.domain.repositories import KnowledgeRepository
+print('Domain interfaces OK')
+"
+
       - name: Verify middleware imports
         run: python -c "from app.middleware import AuditMiddleware, AuthenticationMiddleware; print('Middleware imports OK')"
-          
+
       - name: Verify models
         run: python -c "from app.models import Patient; from app.models.patient import Patient; print('Models OK')"

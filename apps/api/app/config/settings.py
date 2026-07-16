@@ -6,6 +6,7 @@ All settings can be overridden with environment variables prefixed with
 
 from functools import lru_cache
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -30,12 +31,31 @@ class Settings(BaseSettings):
 
     # --- Persistence ---
     # Async driver URL used by the app (SQLAlchemy async engine).
-    database_url: str = "sqlite+aiosqlite:///./eren_api.db"
+    database_url: str = Field(
+        default="postgresql+asyncpg://eren:eren@localhost:5432/eren",
+        description="Async PostgreSQL connection string (use sqlite+aiosqlite for local dev)",
+    )
 
     @property
     def database_url_sync(self) -> str:
         """Synchronous URL for tools that don't support async drivers (e.g. Alembic)."""
-        return self.database_url.replace("+aiosqlite", "").replace("+asyncpg", "+psycopg")
+        return self.database_url.replace("+asyncpg", "+psycopg2").replace("+aiosqlite", "")
+
+    # --- Redis ---
+    redis_url: str = Field(
+        default="redis://localhost:6379/0",
+        description="Redis connection string for caching",
+    )
+    cache_ttl_seconds: int = Field(
+        default=300,
+        description="Default cache TTL in seconds",
+    )
+
+    # --- RabbitMQ ---
+    rabbitmq_url: str = Field(
+        default="amqp://eren:eren@localhost:5672/",
+        description="RabbitMQ AMQP URL for event messaging",
+    )
 
     # --- Supabase ---
     supabase_url: str = "http://localhost:54321"
@@ -43,8 +63,10 @@ class Settings(BaseSettings):
     supabase_service_role_key: str | None = None
 
     # --- Observability ---
-    # OpenTelemetry configuration
-    otlp_endpoint: str | None = None
+    otel_endpoint: str | None = Field(
+        default=None,
+        description="OpenTelemetry Collector endpoint (e.g. http://localhost:4317)",
+    )
     service_name: str = "eren-api"
 
 

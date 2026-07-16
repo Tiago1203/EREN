@@ -1,33 +1,13 @@
 version: "3.9"
 
 services:
-  api:
-    build:
-      context: .
-      dockerfile: apps/api/Dockerfile
-    ports:
-      - "8000:8000"
-    environment:
-      - DATABASE_URL=postgresql+asyncpg://eren:eren@postgres:5432/eren
-      - SUPABASE_URL=${SUPABASE_URL:-}
-      - SUPABASE_KEY=${SUPABASE_KEY:-}
-      - DEBUG=false
-    depends_on:
-      postgres:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
+  # ── Core Infrastructure ────────────────────────────────────────────────────
   postgres:
     image: postgres:16-alpine
     environment:
-      - POSTGRES_USER=eren
-      - POSTGRES_PASSWORD=eren
-      - POSTGRES_DB=eren
+      POSTGRES_DB: eren
+      POSTGRES_USER: eren
+      POSTGRES_PASSWORD: eren
     ports:
       - "5432:5432"
     volumes:
@@ -37,6 +17,83 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── Message Queue ───────────────────────────────────────────────────────────
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: eren
+      RABBITMQ_DEFAULT_PASS: eren
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── Observability ─────────────────────────────────────────────────────────
+  jaeger:
+    image: jaegertracing/all-in-one:1.57
+    environment:
+      COLLECTOR_OTLP_ENABLED: true
+    ports:
+      - "16686:16686"  # UI
+      - "4317:4317"    # OTLP gRPC
+      - "14268:14268"  # OTLP HTTP
+    restart: unless-stopped
+
+  # ── API Service ────────────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      EREN_API_ENVIRONMENT: production
+      EREN_API_DEBUG: "false"
+      EREN_API_DATABASE_URL: postgresql+asyncpg://eren:eren@postgres:5432/eren
+      EREN_API_REDIS_URL: redis://redis:6379/0
+      EREN_API_RABBITMQ_URL: amqp://eren:eren@rabbitmq:5672/
+      EREN_API_OTEL_ENDPOINT: http://jaeger:4317
+      EREN_API_CORS_ORIGINS: '["http://localhost:3000"]'
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_KEY: ${SUPABASE_KEY:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
 
 volumes:
   postgres_data:
+  redis_data:
+  rabbitmq_data:

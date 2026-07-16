@@ -7,6 +7,7 @@ production (e.g. ``postgresql+asyncpg://...``).
 
 from collections.abc import AsyncGenerator
 
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -25,7 +26,12 @@ def get_engine() -> AsyncEngine:
     global _engine
     if _engine is None:
         settings = get_settings()
-        _engine = create_async_engine(settings.database_url, echo=settings.debug, future=True)
+        _engine = create_async_engine(
+            settings.database_url,
+            echo=settings.debug,
+            future=True,
+            pool_pre_ping=True,
+        )
     return _engine
 
 
@@ -37,6 +43,8 @@ def get_session_factory() -> async_sessionmaker[AsyncSession]:
             bind=get_engine(),
             expire_on_commit=False,
             class_=AsyncSession,
+            autoflush=False,
+            autocommit=False,
         )
     return _session_factory
 
@@ -45,4 +53,43 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """FastAPI dependency that yields a database session and closes it afterwards."""
     factory = get_session_factory()
     async with factory() as session:
-        yield session
+        try:
+            yield session
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            raise
+
+
+async def init_db() -> None:
+    """Create database schemas for all bounded contexts (development only)."""
+    engine = get_engine()
+    async with engine.begin() as conn:
+        # Create schemas
+        for schema in ["incident", "device", "recommendation", "knowledge"]:
+            await conn.execute(text(f'CREATE SCHEMA IF NOT EXISTS "{schema}"'))
+
+        # Create all tables
+        from app.infrastructure.models import (
+            ActionModel,
+            ConversationMessageModel,
+            DeviceModel,
+            DomainEventModel,
+            EvidenceModel,
+            IncidentModel,
+            InvestigationModel,
+            KnowledgeArticleModel,
+            RecommendationModel,
+        )
+        from app.models.base import Base
+
+        Base.metadata.create_all(conn)
+
+
+async def close_db() -> None:
+    """Close database connections gracefully."""
+    global _engine, _session_factory
+    if _engine is not None:
+        await _engine.dispose()
+        _engine = None
+        _session_factory = None
