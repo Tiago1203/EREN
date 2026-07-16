@@ -47,7 +47,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd apps/api
-          uv sync --locked --python-version 3.12 --no-install-project --group dev
+          uv sync --locked --python 3.12 --no-install-project --group dev
 
       - name: Run mypy on domain
         run: |
@@ -89,7 +89,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd apps/api
-          uv sync --locked --python-version 3.12 --group dev
+          uv sync --locked --python 3.12 --group dev
 
       - name: Create PostgreSQL schemas
         run: |
@@ -133,7 +133,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd apps/api
-          uv sync --locked --python-version 3.12 --group dev
+          uv sync --locked --python 3.12 --group dev
 
       - name: Verify infrastructure imports
         run: |
