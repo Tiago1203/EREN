@@ -1,8 +1,9 @@
 """Alembic migration environment.
 
 Uses the application's settings and ORM metadata so migrations stay in sync with
-``app.models``. A synchronous database URL is derived from the app config so
-Alembic works even though the app itself uses an async driver.
+``app.models`` and ``app.infrastructure.models``. A synchronous database URL is
+derived from the app config so Alembic works even though the app itself uses an
+async driver.
 """
 
 from logging.config import fileConfig
@@ -12,6 +13,7 @@ from sqlalchemy import engine_from_config, pool
 
 # Import models so every table is registered on Base.metadata for autogenerate.
 import app.models  # noqa: F401
+import app.infrastructure.models  # noqa: F401
 from app.config.settings import get_settings
 from app.models.base import Base
 

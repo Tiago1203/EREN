@@ -92,6 +92,9 @@ class IncidentModel(Base):
         onupdate=func.now(),
     )
 
+    # SQLAlchemy optimistic locking — auto-increments version on UPDATE
+    __mapper_args__ = {"version_id_col": version}
+
     # Relationships
     investigations: Mapped[list["InvestigationModel"]] = relationship(
         back_populates="incident",
