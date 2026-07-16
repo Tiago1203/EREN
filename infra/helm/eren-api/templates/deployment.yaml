@@ -1,0 +1,121 @@
+{{- /*
+EREN API Helm Chart — Deployment template
+*/ -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "eren-api.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ include "eren-api.name" . }}
+    app.kubernetes.io/name: {{ include "eren-api.name" . }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: {{ include "eren-api.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "eren-api.name" . }}
+        app.kubernetes.io/name: {{ include "eren-api.name" . }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: {{ .Values.service.metricsPort | quote }}
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: {{ include "eren-api.serviceAccountName" . }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: api
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8000
+              name: http
+          env:
+            {{- range $key, $value := .Values.secrets }}
+            - name: EREN_API_{{ $key | upper | replace "-" "_" }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "eren-api.fullname" . }}-secrets
+                  key: {{ $key }}
+            {{- end }}
+            {{- range $key, $value := .Values.env }}
+            - name: EREN_API_{{ $key | upper | replace "-" "_" }}
+              value: {{ $value | quote }}
+            {{- end }}
+            - name: PYTHONPATH
+              value: "/app:/app/core"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "eren-api.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ include "eren-api.name" . }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "eren-api.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ include "eren-api.name" . }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 8000
+      name: http
+  selector:
+    app: {{ include "eren-api.name" . }}
+{{- if .Values.autoscaling.enabled }}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "eren-api.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "eren-api.fullname" . }}
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+{{- end }}

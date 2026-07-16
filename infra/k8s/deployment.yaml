@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eren-api
+  namespace: eren
+  labels:
+    app: eren-api
+    app.kubernetes.io/name: eren-api
+    app.kubernetes.io/version: "0.1.0"
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: eren-api
+  template:
+    metadata:
+      labels:
+        app: eren-api
+        app.kubernetes.io/name: eren-api
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: eren-api
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: api
+          image: eren-api:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+              name: http
+          env:
+            - name: EREN_API_DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: eren-secrets
+                  key: database-url
+            - name: EREN_API_REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: eren-secrets
+                  key: redis-url
+            - name: EREN_API_RABBITMQ_URL
+              valueFrom:
+                secretKeyRef:
+                  name: eren-secrets
+                  key: rabbitmq-url
+            - name: EREN_API_SUPABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: eren-secrets
+                  key: supabase-url
+            - name: EREN_API_SUPABASE_ANON_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: eren-secrets
+                  key: supabase-anon-key
+            - name: EREN_API_SUPABASE_SERVICE_ROLE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: eren-secrets
+                  key: supabase-service-role-key
+            - name: PYTHONPATH
+              value: "/app:/app/core"
+          envFrom:
+            - configMapRef:
+                name: eren-api-config
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health/live
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health/ready
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 30
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: eren-api
+                topologyKey: kubernetes.io/hostname
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: eren-api
+  namespace: eren

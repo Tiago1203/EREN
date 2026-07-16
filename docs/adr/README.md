@@ -32,8 +32,9 @@ docs/adr/
 |------|----------|----------|------------|--------|
 | Epic 0 | 24 | 6 | 2 | 32 |
 | Epic 0-Infra | 7 | 3 | 0 | 10 |
-| Epic 1-10 | 0 | 0 | 0 | 0 |
-| **Total** | **31** | **9** | **2** | **42** |
+| **Epic 1** | **11** | **0** | **0** | **11** |
+| Epic 2-10 | 0 | 0 | 0 | 0 |
+| **Total** | **42** | **9** | **2** | **53** |
 
 ---
 
@@ -136,7 +137,7 @@ ADR-1000 to ADR-1099  →  Epic 10 (Enterprise Release)
 
 | EPIC | Status |
 |------|--------|
-| Epic 1 (Infrastructure Platform) | Pending |
+| Epic 1 (Infrastructure Platform) | **COMPLETE ✅** |
 | Epic 2 (Core Business Domain) | Pending |
 | Epic 3 (Hospital Management) | Pending |
 | Epic 4 (AI Core) | Pending |

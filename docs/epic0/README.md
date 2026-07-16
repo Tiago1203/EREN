@@ -133,11 +133,42 @@ All foundations in place:
 - All are reviewed quarterly
 - All can be updated when evidence requires
 
-**Next:** Epic 1 - Foundation Implementation (COMPLETED)
-**Then:** Epic 2 - Core Business Domain (COMPLETED)
+**Next:** Epic 1 - Infrastructure Platform ✅
+**Then:** Epic 2 - Core Business Domain
 **Then:** Epic 3 - Hospital Management Platform
 
 **Infrastructure Extension:** See [Epic 0-Infra](../epic0-infra/) for detailed infrastructure design documents that fill the gaps identified in Epic 0 (Kubernetes, Kafka, S3/MinIO, Outbox Pattern, RLS in Alembic, Observability Stack, Backup/DR Strategy).
+
+---
+
+## Epic Dependencies
+
+```
+EPIC 0 ────────────────────────────────────────────────────────────→ EPIC 3
+  │                                                                         │
+  ├── Domain Ownership ────────────────→ Hospital Domain owns entities       │
+  ├── Bounded Context Map ────────────→ Hospital + CD contexts defined     │
+  ├── Domain Events Catalog ────────────→ 67 domain events catalogued       │
+  ├── Error Catalog ───────────────────→ CDS, Hospital, Integration errors   │
+  ├── Data Classification ──────────────→ PHI, Regulatory, Operational       │
+  └── ADR Index ───────────────────────→ ADRs for Hospital, AI, CDSS        │
+
+EPIC 0 ────────────────────────────────────────────────────────────→ EPIC 4
+  │                                                                         │
+  ├── Cognitive Model ──────────────────→ Frozen, AI Core ready             │
+  ├── Cognitive Capabilities ────────────→ 11 capabilities formal contracts │
+  └── Guardrails G5 ────────────────────→ AI outputs require evidence      │
+
+EPIC 0 ────────────────────────────────────────────────────────────→ EPIC 5
+  │                                                                         │
+  ├── CD Contexts ─────────────────────→ Root Cause, Differential, etc.    │
+  └── Reasoning capabilities ─────────────→ Trust, Reason, Decide, Explain   │
+
+EPIC 0 ────────────────────────────────────────────────────────────→ EPIC 6
+  │                                                                         │
+  ├── Integration ADRs ─────────────────→ FHIR, MQTT, HL7, DICOM           │
+  └── Failure Model ────────────────────→ Vendor API, LLM failure modes   │
+```
 
 ---
 

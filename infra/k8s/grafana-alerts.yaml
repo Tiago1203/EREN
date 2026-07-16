@@ -1,0 +1,244 @@
+# Grafana Alerting Rules for EREN API
+# Apply with: kubectl apply -f infra/k8s/grafana-alerts.yaml
+# Or import as a Grafana provisioning file.
+
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: eren-api
+    folder: EREN
+    interval: 1m
+    rules:
+      # ── API Availability ──────────────────────────────────────────────────
+      - uid: eren-api-down
+        title: EREN API Down
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: up{job="eren-api"} == 0
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - B
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: B
+              type: reduce
+          - refId: C
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: B
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        noDataState: Alerting
+        execErrState: Alerting
+        for: 1m
+        annotations:
+          summary: "EREN API is down"
+          description: "No EREN API pods are responding for more than 1 minute."
+        labels:
+          severity: critical
+          team: platform
+
+      # ── High Error Rate ──────────────────────────────────────────────────
+      - uid: eren-api-high-errors
+        title: EREN API High Error Rate
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: |
+                sum(rate(http_requests_total{job="eren-api", status=~"5.."}[5m]))
+                /
+                sum(rate(http_requests_total{job="eren-api"}[5m])) * 100 > 5
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              expression: A
+              type: reduce
+              refId: B
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              expression: B
+              type: threshold
+              refId: C
+        noDataState: OK
+        execErrState: Alerting
+        for: 5m
+        annotations:
+          summary: "EREN API error rate above 5%"
+          description: "API is returning more than 5% 5xx errors over the last 5 minutes."
+        labels:
+          severity: warning
+          team: platform
+
+      # ── High Latency ───────────────────────────────────────────────────
+      - uid: eren-api-high-latency
+        title: EREN API High Latency
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job="eren-api"}[5m])) by (le)) > 2
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              expression: A
+              type: reduce
+              refId: B
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              expression: B
+              type: threshold
+              refId: C
+        noDataState: OK
+        execErrState: Alerting
+        for: 5m
+        annotations:
+          summary: "EREN API p95 latency above 2s"
+          description: "API p95 response time exceeds 2 seconds."
+        labels:
+          severity: warning
+          team: platform
+
+      # ── Database Connection Pool Exhausted ────────────────────────────────
+      - uid: eren-db-pool-exhausted
+        title: EREN Database Connection Pool Exhausted
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: |
+                sqlalchemy_pool_connections_in_use{job="eren-api"} /
+                sqlalchemy_pool_connections_max{job="eren-api"} > 0.9
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              expression: A
+              type: reduce
+              refId: B
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              expression: B
+              type: threshold
+              refId: C
+        noDataState: OK
+        execErrState: Alerting
+        for: 2m
+        annotations:
+          summary: "EREN database connection pool above 90%"
+          description: "PostgreSQL connection pool utilization is above 90%."
+        labels:
+          severity: critical
+          team: platform
+
+      # ── Outbox Worker Lagging ───────────────────────────────────────────
+      - uid: eren-outbox-lag
+        title: EREN Outbox Worker Lagging
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: |
+                count(outbox_events{status="pending", job="outbox-worker"}) > 1000
+              intervalMs: 1000
+              maxDataPoints: 43200
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              expression: A
+              type: reduce
+              refId: B
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              expression: B
+              type: threshold
+              refId: C
+        noDataState: OK
+        execErrState: Alerting
+        for: 10m
+        annotations:
+          summary: "EREN outbox has more than 1000 pending events"
+          description: "OutboxWorker is lagging and there are more than 1000 pending events. Check if the worker is running."
+        labels:
+          severity: warning
+          team: platform
