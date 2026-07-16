@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from core.shared import EngineerId, KnowledgeId, Result, TenantId
+from core.shared import EngineerId, Err, Ok, KnowledgeId, TenantId
 
 from ..entities import KnowledgeArticle
 from ..repositories.knowledge_repository import KnowledgeRepository
@@ -42,7 +42,7 @@ class KnowledgeService:
         # Check for duplicate article ID
         existing = await self._repository.get_by_article_id(article_id)
         if existing.is_ok() and existing.unwrap() is not None:
-            return Result.Err(f"Article with ID {article_id} already exists")
+            return Err(f"Article with ID {article_id} already exists")
 
         # Create content
         content = ArticleContent(
@@ -81,7 +81,7 @@ class KnowledgeService:
 
         article = result.unwrap()
         if article is None:
-            return Result.Err(f"Article {article_id} not found")
+            return Err(f"Article {article_id} not found")
 
         try:
             # Submit for review then approve
@@ -91,7 +91,7 @@ class KnowledgeService:
                 expected_version=article.version,
             )
         except Exception as e:
-            return Result.Err(str(e))
+            return Err(str(e))
 
         return await self._repository.save(article)
 
@@ -107,12 +107,12 @@ class KnowledgeService:
 
         article = result.unwrap()
         if article is None:
-            return Result.Err(f"Article {article_id} not found")
+            return Err(f"Article {article_id} not found")
 
         try:
             article.archive(reason=reason, expected_version=article.version)
         except Exception as e:
-            return Result.Err(str(e))
+            return Err(str(e))
 
         return await self._repository.save(article)
 
@@ -133,7 +133,7 @@ class KnowledgeService:
         if category:
             articles = [a for a in articles if str(a.category) == category]
 
-        return Result.Ok(articles)
+        return Ok(articles)
 
     async def get_device_knowledge(
         self,
@@ -158,7 +158,7 @@ class KnowledgeService:
         articles = result.unwrap()
         # Sort by view count
         articles.sort(key=lambda a: a.statistics.view_count, reverse=True)
-        return Result.Ok(articles[:limit])
+        return Ok(articles[:limit])
 
     async def link_article_to_device(
         self,
@@ -172,12 +172,12 @@ class KnowledgeService:
 
         article = result.unwrap()
         if article is None:
-            return Result.Err(f"Article {article_id} not found")
+            return Err(f"Article {article_id} not found")
 
         try:
             article.add_device_link(device_id, expected_version=article.version)
         except Exception as e:
-            return Result.Err(str(e))
+            return Err(str(e))
 
         return await self._repository.save(article)
 
@@ -194,13 +194,13 @@ class KnowledgeService:
 
         article = result.unwrap()
         if article is None:
-            return Result.Err(f"Article {source_article_id} not found")
+            return Err(f"Article {source_article_id} not found")
 
         reference = KnowledgeReference.internal(target_article_id, description)
 
         try:
             article.add_reference(reference, expected_version=article.version)
         except Exception as e:
-            return Result.Err(str(e))
+            return Err(str(e))
 
         return await self._repository.save(article)

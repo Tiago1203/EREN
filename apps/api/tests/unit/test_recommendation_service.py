@@ -14,7 +14,7 @@ from core.recommendation.domain.value_objects import (
     RecommendationStatus,
     RecommendationUrgency,
 )
-from core.shared import DeviceId, EngineerId, IncidentId, Ok, Result, TenantId, RecommendationId
+from core.shared import DeviceId, EngineerId, IncidentId, Ok, Err, TenantId, RecommendationId
 
 
 @pytest.fixture
@@ -43,8 +43,8 @@ class TestCreateRecommendation:
             title="Replace filter",
             description="Replace the HEPA filter every 6 months",
             rationale="Filter lifespan exceeded based on usage hours",
-            category=RecommendationCategory.maintenance,
-            confidence=RecommendationConfidence(high=0.85, medium=0.10, low=0.05),
+            category=RecommendationCategory(value="preventive_maintenance"),
+            confidence=RecommendationConfidence(score=0.85, evidence_count=5, model_version="v1.0"),
             model_version="v1.0",
         )
 
@@ -61,11 +61,11 @@ class TestCreateRecommendation:
             title="Calibrate sensor",
             description="Perform sensor calibration",
             rationale="Recalibration recommended by manufacturer",
-            category=RecommendationCategory.calibration,
-            confidence=RecommendationConfidence(high=0.90, medium=0.08, low=0.02),
+            category=RecommendationCategory(value="calibration"),
+            confidence=RecommendationConfidence(score=0.90, evidence_count=3, model_version="v1.0"),
             model_version="v1.0",
             incident_id=IncidentId(value="incident-1"),
-            urgency=RecommendationUrgency.urgent(),
+            urgency=RecommendationUrgency.immediate(),
         )
 
         assert result.is_ok()
@@ -119,8 +119,8 @@ class TestRejectRecommendation:
         result = await service.reject_recommendation(
             recommendation_id=RecommendationId.generate(),
             engineer_id=EngineerId(value="eng-1"),
-            reason_code="NOT_RELEVANT",
-            reason_description="This device does not need this",
+            reason_code="already_done",
+            reason_description="This was already completed",
         )
 
         assert result.is_ok()
@@ -133,7 +133,7 @@ class TestRejectRecommendation:
         result = await service.reject_recommendation(
             recommendation_id=RecommendationId.generate(),
             engineer_id=EngineerId(value="eng-1"),
-            reason_code="NOT_RELEVANT",
+            reason_code="already_done",
             reason_description="Description",
         )
 

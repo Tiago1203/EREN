@@ -4,12 +4,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from core.shared import (
-    DeviceId,
+from core.shared import Err, Ok, 
     EngineerId,
     IncidentId,
     RecommendationId,
-    Result,
     TenantId,
 )
 
@@ -78,7 +76,7 @@ class RecommendationService:
 
         recommendation = result.unwrap()
         if recommendation is None:
-            return Result.Err(f"Recommendation {recommendation_id} not found")
+            return Err(f"Recommendation {recommendation_id} not found")
 
         acceptance_note = None
         if note:
@@ -92,7 +90,7 @@ class RecommendationService:
                 expected_version=recommendation.version,
             )
         except Exception as e:
-            return Result.Err(str(e))
+            return Err(str(e))
 
         return await self._repository.save(recommendation)
 
@@ -111,7 +109,7 @@ class RecommendationService:
 
         recommendation = result.unwrap()
         if recommendation is None:
-            return Result.Err(f"Recommendation {recommendation_id} not found")
+            return Err(f"Recommendation {recommendation_id} not found")
 
         reason = RejectionReason(reason_code=reason_code, description=reason_description)
 
@@ -123,7 +121,7 @@ class RecommendationService:
                 expected_version=recommendation.version,
             )
         except Exception as e:
-            return Result.Err(str(e))
+            return Err(str(e))
 
         return await self._repository.save(recommendation)
 
@@ -140,7 +138,7 @@ class RecommendationService:
 
         recommendation = result.unwrap()
         if recommendation is None:
-            return Result.Err(f"Recommendation {recommendation_id} not found")
+            return Err(f"Recommendation {recommendation_id} not found")
 
         try:
             recommendation.provide_feedback(
@@ -149,7 +147,7 @@ class RecommendationService:
                 expected_version=recommendation.version,
             )
         except Exception as e:
-            return Result.Err(str(e))
+            return Err(str(e))
 
         return await self._repository.save(recommendation)
 
@@ -174,7 +172,7 @@ class RecommendationService:
 
         recommendations = result.unwrap()
         pending = [r for r in recommendations if r.status == RecommendationStatus.pending_review()]
-        return Result.Ok(pending[:limit])
+        return Ok(pending[:limit])
 
     async def get_high_confidence_recommendations(
         self,

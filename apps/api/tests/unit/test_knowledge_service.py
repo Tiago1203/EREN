@@ -8,7 +8,7 @@ import pytest
 
 from core.knowledge.domain.services.knowledge_service import KnowledgeService
 from core.knowledge.domain.entities import KnowledgeArticle
-from core.shared import EngineerId, Ok, Result, TenantId
+from core.shared import EngineerId, Ok, Err, TenantId
 
 
 @pytest.fixture
@@ -37,7 +37,7 @@ class TestCreateArticle:
             title="How to calibrate device X",
             summary="Step-by-step guide",
             body="Detailed calibration steps...",
-            category="calibration",
+            category="maintenance_procedure",
             author_id=EngineerId(value="eng-1"),
             author_name="John Doe",
         )
@@ -45,7 +45,7 @@ class TestCreateArticle:
         assert result.is_ok()
         article = result.unwrap()
         assert article.title == "How to calibrate device X"
-        assert article.category.value == "calibration"
+        assert article.category.value == "maintenance_procedure"
         mock_repository.save.assert_called_once()
 
     async def test_create_article_duplicate_id(self, service, mock_repository):
@@ -58,7 +58,7 @@ class TestCreateArticle:
             title="Duplicate",
             summary="Summary",
             body="Body",
-            category="calibration",
+            category="troubleshooting",
             author_id=EngineerId(value="eng-1"),
             author_name="John Doe",
         )
@@ -68,31 +68,37 @@ class TestCreateArticle:
 
 
 @pytest.mark.asyncio
-class TestUpdateArticle:
-    """Test KnowledgeService.update_article()."""
+class TestSearchKnowledgeBase:
+    """Test KnowledgeService.search_knowledge_base()."""
 
-    async def test_update_article_success(self, service, mock_repository):
-        """Article is updated successfully."""
-        mock_repository.get_by_id.return_value = Ok(None)
+    async def test_search_knowledge_base_returns_results(self, service, mock_repository):
+        """Search returns matching articles."""
+        mock_article = MagicMock(spec=KnowledgeArticle)
+        mock_repository.search.return_value = Ok([mock_article])
 
-        result = await service.update_article(
+        result = await service.search_knowledge_base(
             tenant_id=TenantId(value="tenant-1"),
-            article_id="KB-001",
-            title="Updated Title",
-            tags=["tag1", "tag2"],
+            query="calibration",
         )
 
         assert result.is_ok()
-        mock_repository.save.assert_called_once()
+        articles = result.unwrap()
+        assert len(articles) == 1
+        mock_repository.search.assert_called_once()
 
-    async def test_update_article_not_found(self, service, mock_repository):
-        """Article update fails when article not found."""
+
+@pytest.mark.asyncio
+class TestPublishArticle:
+    """Test KnowledgeService.publish_article()."""
+
+    async def test_publish_article_not_found(self, service, mock_repository):
+        """Publish fails when article not found."""
         mock_repository.get_by_id.return_value = Ok(None)
 
-        result = await service.update_article(
+        result = await service.publish_article(
             tenant_id=TenantId(value="tenant-1"),
             article_id="KB-NONEXISTENT",
-            title="Updated Title",
+            published_by=EngineerId(value="eng-1"),
         )
 
         assert result.is_err()
