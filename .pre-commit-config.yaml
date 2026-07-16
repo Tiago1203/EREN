@@ -27,6 +27,7 @@ repos:
       - id: mypy
         additional_dependencies: [types-all]
         args: [--ignore-missing-imports]
+        files: ^(core|apps/api/app/infrastructure)/
 
   # Trailing whitespace
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -45,7 +46,7 @@ repos:
     rev: 1.7.6
     hooks:
       - id: bandit
-        args: [-r, core/]
+        args: [-r, core/, apps/api/app/infrastructure/]
 
 ci:
   autoupdate_commit_msg: "chore: update pre-commit hooks"
