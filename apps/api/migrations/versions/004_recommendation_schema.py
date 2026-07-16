@@ -47,6 +47,7 @@ def upgrade() -> None:
         sa.Column("version", sa.Integer(), nullable=False, server_default="1"),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
+        sa.PrimaryKeyConstraint("id"),
         schema="recommendation",
     )
     op.create_index("ix_recommendations_tenant_id", "recommendations", ["tenant_id"], schema="recommendation")

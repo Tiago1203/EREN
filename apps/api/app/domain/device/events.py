@@ -58,7 +58,7 @@ class DeviceTransferred(DeviceEvent):
     new_building: str = ""
     new_floor: str | None = None
     new_room: str | None = None
-    new_department: str = ""
+    new_department: str | None = None
     transfer_reason: str = ""
 
 

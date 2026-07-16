@@ -29,32 +29,29 @@ EREN es un **Cognitive Operating System (COS)** especializado en Ingeniería Cl�
 
 ### Prerequisites
 
-- Python 3.12+
 - Docker y Docker Compose
-- Supabase project (para auth)
+- Python 3.12+ (solo para desarrollo local)
+- Supabase project (para auth, opcional para desarrollo)
 
-### Setup
+### Setup — Producción (Docker Compose)
 
 ```bash
 # 1. Clonar el repositorio
 git clone https://github.com/Tiago1203/EREN.git
 cd EREN
 
-# 2. Instalar dependencias Python
-pip install -e .
-
-# 3. Configurar variables de entorno
+# 2. Configurar variables de entorno
 cp apps/api/.env.example apps/api/.env
 # Editar apps/api/.env con tus credenciales de Supabase
 
-# 4. Levantar con Docker Compose
+# 3. Levantar con Docker Compose
 docker-compose up -d
 
-# 5. Verificar que está corriendo
-curl http://localhost:8000/health
+# 4. Verificar que está corriendo
+curl http://localhost:8000/api/v1/health
 ```
 
-### Desarrollo Local
+### Setup — Desarrollo Local (sin Docker)
 
 ```bash
 cd apps/api
@@ -63,21 +60,35 @@ cd apps/api
 pip install -e ".[test]"
 
 # Correr tests
-PYTHONPATH=apps/api pytest apps/api/tests/unit -v
+pytest tests/ -v
 
 # Correr con hot-reload
-uvicorn app.main:app --reload
+uvicorn app.main:app --reload --port 8000
 ```
+
+### Stack de Servicios
+
+```
+docker-compose up -d
+```
+Levanta todos los servicios:
+- **API**: http://localhost:8000 (FastAPI + Uvicorn)
+- **RabbitMQ**: http://localhost:15672 (Management UI, user: eren / pass: eren)
+- **Jaeger**: http://localhost:16686 (Distributed tracing)
+- **Grafana**: http://localhost:3001 (Metrics dashboard, admin / admin)
+- **Prometheus**: http://localhost:9091 (Metrics)
+- **PostgreSQL**: localhost:5432 (user: eren / pass: eren / db: eren)
+- **Redis**: localhost:6379
 
 ### CI/CD
 
 El proyecto usa GitHub Actions. Verifica el estado en la pestaña "Actions" del repositorio.
 
 **Checks:**
-- ✅ Lint (Ruff)
+- ✅ Lint (Ruff + Black)
 - ✅ Typecheck (mypy)
-- ✅ Test Suite (83 tests)
-- ✅ Docker Build
+- ✅ Test Suite (136+ tests)
+- ✅ Docker Build & Push
 - ✅ Architecture Validation
 
 ---

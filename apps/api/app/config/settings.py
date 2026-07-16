@@ -69,6 +69,28 @@ class Settings(BaseSettings):
     )
     service_name: str = "eren-api"
 
+    # --- Vault (HashiCorp) ---
+    vault_enabled: bool = Field(
+        default=False,
+        description="Enable HashiCorp Vault for secret management",
+    )
+    vault_url: str = Field(
+        default="http://vault:8200",
+        description="HashiCorp Vault server URL",
+    )
+    vault_token: str | None = Field(
+        default=None,
+        description="Vault token (or use VAULT_TOKEN env var)",
+    )
+    vault_mount: str = Field(
+        default="eren",
+        description="Vault secrets mount path",
+    )
+    vault_secret_path: str = Field(
+        default="api",
+        description="Path within the mount for API secrets",
+    )
+
 
 @lru_cache
 def get_settings() -> Settings:

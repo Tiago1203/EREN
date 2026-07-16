@@ -54,6 +54,7 @@ def upgrade() -> None:
         sa.Column("version", sa.Integer(), nullable=False, server_default="1"),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
+        sa.PrimaryKeyConstraint("id"),
         schema="incident",
     )
     op.create_index("ix_incidents_tenant_id", "incidents", ["tenant_id"], schema="incident")
@@ -78,6 +79,7 @@ def upgrade() -> None:
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
         sa.ForeignKeyConstraint(["incident_id"], ["incident.incidents.id"], ondelete="CASCADE"),
+        sa.PrimaryKeyConstraint("id"),
         schema="incident",
     )
     op.create_index("ix_investigations_incident_id", "investigations", ["incident_id"], schema="incident")
@@ -98,6 +100,7 @@ def upgrade() -> None:
         sa.Column("version", sa.Integer(), nullable=False, server_default="1"),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
         sa.ForeignKeyConstraint(["investigation_id"], ["incident.investigations.id"], ondelete="CASCADE"),
+        sa.PrimaryKeyConstraint("id"),
         schema="incident",
     )
     op.create_index("ix_evidence_investigation_id", "evidence", ["investigation_id"], schema="incident")
@@ -118,6 +121,7 @@ def upgrade() -> None:
         sa.Column("version", sa.Integer(), nullable=False, server_default="1"),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
         sa.ForeignKeyConstraint(["investigation_id"], ["incident.investigations.id"], ondelete="CASCADE"),
+        sa.PrimaryKeyConstraint("id"),
         schema="incident",
     )
     op.create_index("ix_actions_investigation_id", "actions", ["investigation_id"], schema="incident")
@@ -136,6 +140,7 @@ def upgrade() -> None:
         sa.Column("version", sa.Integer(), nullable=False, server_default="1"),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
         sa.ForeignKeyConstraint(["investigation_id"], ["incident.investigations.id"], ondelete="CASCADE"),
+        sa.PrimaryKeyConstraint("id"),
         schema="incident",
     )
     op.create_index("ix_conv_investigation_id", "conversation_messages", ["investigation_id"], schema="incident")

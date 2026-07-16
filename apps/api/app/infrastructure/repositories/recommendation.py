@@ -1,13 +1,8 @@
 """SQLAlchemy implementation of RecommendationRepository."""
 from __future__ import annotations
 
-from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.infrastructure.models.recommendation import RecommendationModel
 from core.recommendation.domain.entities import AIRecommendation
 from core.recommendation.domain.repositories import (
     RecommendationRepository as AbstractRecommendationRepository,
@@ -28,6 +23,10 @@ from core.shared import (
     Result,
     TenantId,
 )
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.infrastructure.models.recommendation import RecommendationModel
 
 if TYPE_CHECKING:
     pass

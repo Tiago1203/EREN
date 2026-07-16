@@ -20,10 +20,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
 from app.config.settings import get_settings
-from app.core.exceptions import install_exception_handlers
-from app.infrastructure.observability import configure_logging, setup_instrumentation
-from app.infrastructure.messaging import close_connection, close_redis
 from app.core.database import close_db
+from app.core.exceptions import install_exception_handlers
+from app.infrastructure.messaging import close_connection, close_redis
+from app.infrastructure.observability import configure_logging, setup_instrumentation
 from app.middleware import RequestContextMiddleware
 from app.routers import api_router
 

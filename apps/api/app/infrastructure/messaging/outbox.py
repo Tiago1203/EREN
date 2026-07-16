@@ -20,7 +20,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from sqlalchemy import JSON, DateTime, Index, Integer, String, text
@@ -218,7 +218,7 @@ class OutboxWorker:
                 correlation_id=event.correlation_id,
             )
             event.status = "published"
-            event.processed_at = datetime.now(timezone.utc)
+            event.processed_at = datetime.now(UTC)
             logger.debug("Outbox published: %s", topic)
         except Exception as e:
             event.retry_count += 1

@@ -6,28 +6,14 @@ Uses mocked repository and outbox.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from unittest.mock import AsyncMock, MagicMock
+from datetime import UTC, datetime
+from unittest.mock import AsyncMock
 from uuid import uuid4
 
 import pytest
 
 from app.domain.device import (
     DeviceService,
-    SQLAlchemyDeviceRepository,
-)
-from app.domain.device.events import (
-    CalibrationCompleted,
-    DeviceDecommissioned,
-    DeviceEvent,
-    DeviceOutOfService,
-    DeviceRegistered,
-    DeviceReturnedToService,
-    DeviceTransferred,
-    DeviceUpdated,
-    MaintenanceCompleted,
-    MaintenanceScheduled,
-    MaintenanceStarted,
 )
 from app.domain.device.repository import DeviceRepository
 
@@ -109,12 +95,12 @@ def make_device(
         calibration_interval_days=None,
         maintenance_interval_days=None,
         notes=None,
-        registered_at=datetime.now(timezone.utc),
+        registered_at=datetime.now(UTC),
         registered_by="engineer-1",
-        last_status_change=datetime.now(timezone.utc),
+        last_status_change=datetime.now(UTC),
         version=version,
-        created_at=datetime.now(timezone.utc),
-        updated_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
     defaults.update(overrides)
     return FakeDevice(**defaults)
@@ -360,7 +346,7 @@ class TestMaintenance:
         mock_repository.get_by_id.return_value = device
         mock_repository.update.return_value = make_device(status="active", version=2)
 
-        next_cal = datetime(2027, 1, 1, tzinfo=timezone.utc)
+        next_cal = datetime(2027, 1, 1, tzinfo=UTC)
         updated = await device_service.finish_maintenance(
             device_id=str(device.id),
             tenant_id="tenant-1",
@@ -396,8 +382,8 @@ class TestCalibrateDevice:
         mock_repository.get_by_id.return_value = device
         mock_repository.update.return_value = make_device(status="active", version=2)
 
-        last_cal = datetime(2026, 7, 1, tzinfo=timezone.utc)
-        next_cal = datetime(2027, 7, 1, tzinfo=timezone.utc)
+        last_cal = datetime(2026, 7, 1, tzinfo=UTC)
+        next_cal = datetime(2027, 7, 1, tzinfo=UTC)
 
         updated = await device_service.calibrate_device(
             device_id=str(device.id),
@@ -422,8 +408,8 @@ class TestCalibrateDevice:
                 device_id=str(device.id),
                 tenant_id="tenant-1",
                 expected_version=1,
-                calibration_last=datetime.now(timezone.utc),
-                calibration_next=datetime(2027, 1, 1, tzinfo=timezone.utc),
+                calibration_last=datetime.now(UTC),
+                calibration_next=datetime(2027, 1, 1, tzinfo=UTC),
                 calibration_interval_days=365,
                 calibrated_by="engineer-1",
             )
@@ -471,7 +457,7 @@ class TestOutOfService:
 class TestReturnToService:
     @pytest.mark.asyncio
     async def test_return_to_service_success(self, device_service, mock_repository, fake_outbox):
-        future = datetime(2030, 1, 1, tzinfo=timezone.utc)
+        future = datetime(2030, 1, 1, tzinfo=UTC)
         device = make_device(status="out_of_service", calibration_next=future)
         mock_repository.get_by_id.return_value = device
         mock_repository.update.return_value = make_device(status="active", version=2)
@@ -652,8 +638,8 @@ class TestCalibrationEdgeCases:
                 device_id=str(device.id),
                 tenant_id="tenant-1",
                 expected_version=1,
-                calibration_last=datetime.now(timezone.utc),
-                calibration_next=datetime(2027, 1, 1, tzinfo=timezone.utc),
+                calibration_last=datetime.now(UTC),
+                calibration_next=datetime(2027, 1, 1, tzinfo=UTC),
                 calibration_interval_days=365,
                 calibrated_by="engineer-1",
             )
