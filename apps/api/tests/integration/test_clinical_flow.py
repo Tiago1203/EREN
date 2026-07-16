@@ -1,38 +1,17 @@
-"""Integration test: Complete Clinical Flow Patient → Diagnosis.
+"""Integration tests for cross-context clinical flows.
 
-This test validates the full clinical workflow:
+Tests the full Patient -> Diagnosis workflow using real SQLAlchemy repositories
+and PostgreSQL database.
 
-    Crear paciente
-        ↓
-    Registrar diagnóstico
-        ↓
-    Consultar historial del paciente
-        ↓
-    Ver diagnóstico
-        ↓
-    Modificar diagnóstico
-        ↓
-    Ver auditoría (versiones)
-        ↓
-    Eliminar (soft delete)
-        ↓
-    Ver que desaparece de la consulta pero permanece en auditoría
-
-Success criteria:
-- Un desarrollador nuevo puede entender el flujo
-- No hay que modificar Foundation para que funcione
-- Los contextos se integran sin romper reglas
+Uses fixtures from conftest.py (db_engine, db_session).
 """
 
 from __future__ import annotations
 
-import os
-
 import pytest
 import pytest_asyncio
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.domain.diagnosis import DiagnosisService
 from app.domain.diagnosis.repository import SQLAlchemyDiagnosisRepository
@@ -40,41 +19,10 @@ from app.domain.patient import PatientService
 from app.domain.patient.repository import SQLAlchemyPatientRepository
 from app.events.outbox import OutboxMessage
 from app.infrastructure import EventBus
-from app.models import Base
-from app.models.diagnosis import Diagnosis as DiagnosisModel
 
-DATABASE_URL = os.environ.get(
-    "DATABASE_URL",
-    "postgresql+asyncpg://eren:eren_test@localhost:5432/eren_test"
-)
-
-
-@pytest_asyncio.fixture
-async def db_engine():
-    """Create async engine for tests."""
-    engine = create_async_engine(DATABASE_URL, echo=False)
-
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
-    yield engine
-
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-
-    await engine.dispose()
-
-
-@pytest_asyncio.fixture
-async def db_session(db_engine):
-    """Create async session for tests."""
-    async_session_factory = sessionmaker(
-        db_engine, class_=AsyncSession, expire_on_commit=False
-    )
-
-    async with async_session_factory() as session:
-        yield session
-        await session.rollback()
+# Import models to register them with Base.metadata
+from app.models.diagnosis import Diagnosis as DiagnosisModel  # noqa: F401
+from app.models.patient import Patient as PatientModel  # noqa: F401
 
 
 class TestClinicalFlowPatientDiagnosis:
@@ -172,10 +120,11 @@ class TestClinicalFlowPatientDiagnosis:
         # ========================================
         # PASO 5: Modificar diagnóstico
         # ========================================
+        expected_version = diagnosis.version
         amended_diagnosis = await diagnosis_service.amend_diagnosis(
             diagnosis_id=diagnosis.id,
             tenant_id="hospital-001",
-            expected_version=diagnosis.version,
+            expected_version=expected_version,
             diagnosis_name="Hipertensión esencial (confirmada)",
             description="Paciente en seguimiento",
             correlation_id="flow-001",
@@ -185,7 +134,9 @@ class TestClinicalFlowPatientDiagnosis:
         # Verificar que cambió
         assert amended_diagnosis is not None
         assert amended_diagnosis.diagnosis_name == "Hipertensión esencial (confirmada)"
-        assert amended_diagnosis.version == diagnosis.version + 1
+        # Note: amended_diagnosis IS the same object as diagnosis (in-place update),
+        # so version is already incremented. Verify it is the expected new version.
+        assert amended_diagnosis.version == expected_version + 1
 
         # ========================================
         # PASO 6: Ver auditoría (versiones)

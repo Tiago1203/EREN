@@ -2,53 +2,25 @@
 
 Tests the full CRUD + lifecycle operations with the real SQLAlchemy repository
 and PostgreSQL database.
+
+Uses fixtures from conftest.py (db_engine, db_session).
 """
 
 from __future__ import annotations
 
-import os
+from datetime import UTC
 from uuid import uuid4
 
 import pytest
 import pytest_asyncio
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.domain.device import DeviceService, SQLAlchemyDeviceRepository
 from app.infrastructure.messaging.outbox import TransactionalOutbox
 
-DATABASE_URL = os.environ.get(
-    "DATABASE_URL",
-    "postgresql+asyncpg://eren:eren_test@localhost:5432/eren_test",
-)
-
-# Import models
-from datetime import UTC
-
-from app.infrastructure.models.device import DeviceModel
-from app.models import Base
-
-
-@pytest_asyncio.fixture
-async def db_engine():
-    engine = create_async_engine(DATABASE_URL, echo=False)
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    yield engine
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-    await engine.dispose()
-
-
-@pytest_asyncio.fixture
-async def db_session(db_engine):
-    async_session_factory = sessionmaker(
-        db_engine, class_=AsyncSession, expire_on_commit=False
-    )
-    async with async_session_factory() as session:
-        yield session
-        await session.rollback()
+# Import models to register them with Base.metadata
+from app.infrastructure.models.device import DeviceModel  # noqa: F401
 
 
 # ─── Repository Tests ──────────────────────────────────────────────────────

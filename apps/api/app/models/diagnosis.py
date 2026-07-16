@@ -25,8 +25,8 @@ class Diagnosis(Base):
 
     __tablename__ = "diagnoses"
     __table_args__ = (
-        Index("ix_diagnoses_tenant_id", "tenant_id"),
-        Index("ix_diagnoses_patient_id", "patient_id"),
+        # ix_diagnoses_tenant_id and ix_diagnoses_patient_id are created by
+        # mapped_column(index=True) on those columns — do NOT duplicate here.
         Index(
             "ix_diagnoses_patient_code",
             "patient_id",

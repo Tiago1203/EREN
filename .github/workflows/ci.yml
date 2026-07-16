@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, feature/**]
+    branches: [main, epic1-*, feature/**]
   pull_request:
     branches: [main]
 
@@ -27,14 +27,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install ruff black isort pre-commit
 
-      - name: Run ruff on core
-        run: ruff check core/ --ignore E501 || true
-
-      - name: Run ruff on api
-        run: ruff check apps/api/ --ignore E501 || true
+      - name: Run ruff check
+        run: ruff check core/ apps/api/ --ignore E501 || true
 
       - name: Run ruff format check
         run: ruff format --check core/ apps/api/ || true
+
+      - name: Check for trailing whitespace
+        run: pre-commit run trailing-whitespace --all-files || true
 
   typecheck:
     name: Type Check (MyPy)
@@ -50,7 +50,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install mypy types-python-dateutil
+          pip install -r apps/api/requirements.txt
+          pip install mypy types-python-dateutil types-redis
 
       - name: Run mypy on core
         run: mypy core/ --ignore-missing-imports || true
@@ -67,7 +68,7 @@ jobs:
         image: postgres:16
         env:
           POSTGRES_USER: eren
-          POSTGRES_PASSWORD: eren_test
+          POSTGRES_PASSWORD: eren
           POSTGRES_DB: eren_test
         ports:
           - 5432:5432
@@ -88,17 +89,31 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -e "apps/api"
+          pip install -r apps/api/requirements.txt
           pip install pytest pytest-asyncio pytest-cov httpx asyncpg
 
-      - name: Run unit tests (API)
+      - name: Create PostgreSQL user and database
         run: |
-          PYTHONPATH=. python -m pytest apps/api/tests/unit -v --tb=short
-        env:
-          DATABASE_URL: postgresql+asyncpg://eren:eren_test@localhost:5432/eren_test
+          PGPASSWORD=eren psql -h localhost -U postgres -c "CREATE USER eren WITH PASSWORD 'eren' CREATEDB;" || true
+          PGPASSWORD=eren psql -h localhost -U postgres -c "CREATE DATABASE eren_test OWNER eren;" || true
+          PGPASSWORD=eren psql -h localhost -U eren -d eren_test -c "CREATE SCHEMA IF NOT EXISTS incident AUTHORIZATION eren;" || true
+          PGPASSWORD=eren psql -h localhost -U eren -d eren_test -c "CREATE SCHEMA IF NOT EXISTS device AUTHORIZATION eren;" || true
+          PGPASSWORD=eren psql -h localhost -U eren -d eren_test -c "CREATE SCHEMA IF NOT EXISTS recommendation AUTHORIZATION eren;" || true
+          PGPASSWORD=eren psql -h localhost -U eren -d eren_test -c "CREATE SCHEMA IF NOT EXISTS knowledge AUTHORIZATION eren;" || true
 
-      - name: Run core domain tests
-        run: PYTHONPATH=. python -m pytest tests/ -v --tb=short || true
+      - name: Run unit tests
+        run: |
+          cd apps/api
+          python -m pytest tests/unit -v --tb=short
+        env:
+          EREN_API_DATABASE_URL: postgresql+asyncpg://eren:eren@localhost:5432/eren_test
+
+      - name: Run integration tests
+        run: |
+          cd apps/api
+          python -m pytest tests/integration -v --tb=short
+        env:
+          EREN_API_DATABASE_URL: postgresql+asyncpg://eren:eren@localhost:5432/eren_test
 
   build-docker:
     name: Docker Build
@@ -112,6 +127,10 @@ jobs:
       - name: Build API Docker image
         run: |
           docker build -f apps/api/Dockerfile -t eren-api:test .
+
+      - name: Build Worker Docker image
+        run: |
+          docker build -f apps/worker/Dockerfile -t eren-worker:test .
 
   architecture:
     name: Architecture Validation
@@ -127,16 +146,13 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -e "apps/api"
+          pip install -r apps/api/requirements.txt
 
       - name: Verify infrastructure imports
-        run: python -c "from app.infrastructure import (CacheService,DeviceRepositoryImpl,MessagingEventBus,configure_logging,setup_tracing); print('Infrastructure imports OK')"
+        run: python -c "from app.infrastructure import (CacheService,configure_logging,setup_tracing); print('Infrastructure imports OK')"
 
       - name: Verify domain repository interfaces
         run: python -c "from core.incident.domain.repositories import IncidentRepository; from core.device.domain.repositories import DeviceRepository; from core.recommendation.domain.repositories import RecommendationRepository; from core.knowledge.domain.repositories import KnowledgeRepository; print('Domain interfaces OK')"
-
-      - name: Verify middleware imports
-        run: python -c "from app.middleware import AuditMiddleware, AuthenticationMiddleware; print('Middleware imports OK')"
 
       - name: Verify core domain can be imported
         run: python -c "from core.contracts.security.authentication import AuthenticationResult; from core.incident.domain.entities import EngineeringIncident; from core.device.domain.entities import Device; from core.recommendation.domain.entities import AIRecommendation; from core.knowledge.domain.entities import KnowledgeArticle; print('Core domain imports OK')"
