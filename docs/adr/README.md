@@ -1,272 +1,224 @@
-# Architecture Decision Records (ADR)
-
-Este directorio contiene los Architecture Decision Records de EREN. Los ADRs documentan decisiones arquitectónicas importantes, su contexto, consecuencias y alternativas consideradas.
-
-> **Documentos canónicos relacionados:**
-> [ARCHITECTURE_OVERVIEW.md](../../ARCHITECTURE_OVERVIEW.md) ·
-> [SYSTEM_DESIGN.md](../../SYSTEM_DESIGN.md) ·
-> [CORE_SPECIFICATION.md](../../CORE_SPECIFICATION.md) ·
-> [MASTER_ROADMAP.md](../../MASTER_ROADMAP.md)
-
-## ADRs escritos (archivos existentes)
-
-Estos son los únicos ADRs que existen como archivo en este directorio hoy:
-
-- [ADR-0001: EREN es un Cognitive Operating System, no un chatbot](./ADR-0001-cognitive-operating-system.md) — **Accepted**
-- [ADR-0001: Arquitectura General de EREN](./ADR-0001-general-architecture.md) — **Accepted**
-- [ADR-0002: Arquitectura General de EREN CORE](./ADR-0002-eren-core-architecture.md) — **Accepted**
-- [ADR-0003: Objeto de Contexto Cognitivo (`core/context`)](./ADR-0003-cognitive-context.md) — **Accepted**
-- [ADR-0004: Sistema de Eventos Interno (`core/events`)](./ADR-0004-event-system.md) — **Accepted**
-- [ADR-0005: Registro Dinámico de Motores (`core/registry`)](./ADR-0005-engine-registry.md) — **Accepted**
-- [ADR-0006: Intent Engine (`core/intent`) — primer motor cognitivo, sin IA](./ADR-0006-intent-engine.md) — **Accepted**
-
-> **Colisión de número resuelta:** el índice planificado por categorías (más
-> abajo) reservaba `ADR-0003` para "Arquitectura de Tres Capas", una entrada
-> **sin archivo**. El número `ADR-0003` queda asignado al ADR **escrito** de
-> Cognitive Context; la entrada planificada de tres capas se renumerará cuando
-> se redacte. Del mismo modo, `ADR-0004` queda asignado al ADR escrito del
-> sistema de eventos; la entrada planificada "Estrategia de Escalabilidad
-> Horizontal" (antes 0004) se renumerará cuando se redacte. Igualmente,
-> `ADR-0005` queda asignado al ADR escrito del registro de motores; la entrada
-> planificada "Microservicios vs Monolito Modular" (antes 0005) se renumerará
-> cuando se redacte.
-
-> **⚠️ Numeración duplicada:** existen dos archivos con el prefijo `ADR-0001`
-> (`-cognitive-operating-system` y `-general-architecture`). Se conservan ambos
-> por historial y no se renombran para no romper enlaces. El primero define la
-> **identidad** del producto (COS); el segundo, la **arquitectura general**. Una
-> futura re-numeración deberá tratarse en su propio ADR.
-
-## Índice planificado por categorías
-
-> **Nota:** el índice siguiente es un **catálogo planificado**. Salvo los ADRs
-> escritos listados arriba, estas entradas **aún no tienen archivo**: son decisiones
-> previstas, no ADRs escritos ni aceptados. Se conservan como hoja de ruta de
-> documentación.
-
-### Arquitectura
-
-- **ADR-0001**: ¿Por qué EREN es un Cognitive Operating System y no un chatbot?
-- **ADR-0002**: Arquitectura General de EREN CORE
-- **ADR-0003**: Objeto de Contexto Cognitivo (`core/context`) — **escrito/Accepted**
-- **ADR-0004**: Sistema de Eventos Interno (`core/events`) — **escrito/Accepted**
-- **ADR-00xx**: Arquitectura de Tres Capas (CORE, Dominios, Interfaces) *(planificado; número por reasignar — antes 0003)*
-- **ADR-00xx**: Estrategia de Escalabilidad Horizontal *(planificado; número por reasignar — antes 0004)*
-- **ADR-0005**: Registro Dinámico de Motores (`core/registry`) — **escrito/Accepted**
-- **ADR-00xx**: Arquitectura de Microservicios vs Monolito Modular *(planificado; número por reasignar — antes 0005)*
-
-### Backend
-
-- **ADR-0010**: Selección de FastAPI como Framework Backend
-- **ADR-0011**: Arquitectura Limpia en Python
-- **ADR-0012**: Estrategia de Async/Await en Backend
-- **ADR-0013**: Gestión de Dependencias con uv
-- **ADR-0014**: Estrategia de API REST vs GraphQL
-- **ADR-0015**: Versionado de APIs
-
-### Frontend
-
-- **ADR-0020**: Selección de Next.js (App Router) como Framework Frontend
-- **ADR-0021**: Estrategia de TypeScript Strict Mode
-- **ADR-0022**: Arquitectura de Componentes con shadcn/ui
-- **ADR-0023**: Gestión de Estado con Zustand
-- **ADR-0024**: Estrategia de Server Components vs Client Components
-- **ADR-0025**: Optimización de Performance y Bundle Size
-
-### IA / Motores Cognitivos
-
-> Los ocho motores canónicos actuales son: orchestrator, planner, reasoning,
-> memory, knowledge, diagnostic, workflow, tools (ver
-> [CORE_SPECIFICATION.md](../../CORE_SPECIFICATION.md)). Learning, Permission y
-> Audit se planifican como capacidades transversales/futuras.
-
-- **ADR-0030**: Arquitectura de Motores Cognitivos
-- **ADR-0031**: Orchestrator Engine Design
-- **ADR-0032**: Planner Engine Design
-- **ADR-0033**: Reasoning Engine Design
-- **ADR-0034**: Memory Engine Design
-- **ADR-0035**: Knowledge Engine Design
-- **ADR-0036**: Diagnostic Engine Design
-- **ADR-0037**: Workflow Engine Design
-- **ADR-0038**: Tool Engine Design
-- **ADR-0039**: Capa de Contratos de Motores (SOLID / `core/contracts`)
-- **ADR-0040**: Estrategia de Multi-LLM Abstraction
-- **ADR-0041**: Estrategia de Embeddings y Búsqueda Vectorial
-- **ADR-0042**: Learning Engine Design (futuro / transversal)
-- **ADR-0043**: Permission Engine Design (futuro / transversal)
-- **ADR-0044**: Audit Engine Design (futuro / transversal)
-
-### Seguridad
-
-- **ADR-0050**: Estrategia de Security by Design
-- **ADR-0051**: Estrategia de Autenticación Multi-Hospital
-- **ADR-0052**: Row Level Security (RLS) Strategy
-- **ADR-0053**: Estrategia de Encryption (at rest, in transit, field-level)
-- **ADR-0054**: Estrategia de Key Management (KMS)
-- **ADR-0055**: Estrategia de Rate Limiting
-- **ADR-0056**: Estrategia de Auditoría de Seguridad
-- **ADR-0057**: Estrategia de Compliance (HIPAA, GDPR)
-
-### Datos
-
-- **ADR-0060**: Estrategia de Base de Datos (Supabase + PostgreSQL)
-- **ADR-0061**: Estrategia de Vector Database (Qdrant)
-- **ADR-0062**: Knowledge Base Architecture
-- **ADR-0063**: Case Base Architecture
-- **ADR-0064**: Memory Base Architecture
-- **ADR-0065**: Document Base Architecture
-- **ADR-0066**: Estrategia de Data Retention
-- **ADR-0067**: Estrategia de Data Archival
-- **ADR-0068**: Estrategia de Backup y Disaster Recovery
-
-### Infraestructura
-
-- **ADR-0070**: Estrategia de Contenedores (Docker)
-- **ADR-0071**: Estrategia de Orquestación (Docker Compose → Kubernetes)
-- **ADR-0072**: Estrategia de Multi-Layer Caching
-- **ADR-0073**: Estrategia de Message Queues (RabbitMQ/Kafka)
-- **ADR-0074**: Estrategia de Service Mesh (Istio)
-- **ADR-0075**: Estrategia de CDN
-
-### Cloud
-
-- **ADR-0080**: Estrategia de Multi-Cloud vs Single Cloud
-- **ADR-0081**: Estrategia de Multi-Region Deployment
-- **ADR-0082**: Estrategia de Auto-Scaling
-- **ADR-0083**: Estrategia de Cost Optimization
-- **ADR-0084**: Estrategia de Data Residency
-
-### Normativas
-
-- **ADR-0090**: Política de IA Responsable (IEC 62304, ISO 14971, ISO 13485)
-- **ADR-0091**: Estrategia de Explicabilidad Obligatoria
-- **ADR-0092**: Estrategia de Trazabilidad de Decisiones
-- **ADR-0093**: Estrategia de Control Humano en el Circuito
-- **ADR-0094**: Estrategia de Versionado de Modelos
-- **ADR-0095**: Estrategia de Clasificación de Riesgo
-
-### DevOps
-
-- **ADR-0100**: Estrategia de CI/CD (GitHub Actions)
-- **ADR-0101**: Estrategia de Git Branching
-- **ADR-0102**: Estrategia de Code Review
-- **ADR-0103**: Estrategia de Testing (Unit, Integration, E2E)
-- **ADR-0104**: Estrategia de Feature Flags
-- **ADR-0105**: Estrategia de Observability (Logging, Tracing, Metrics)
-- **ADR-0106**: Estrategia de Error Tracking (Sentry)
-- **ADR-0107**: Estrategia de Chaos Engineering
-
-### Hospitales
-
-- **ADR-0110**: Estrategia de Multi-Tenancy
-- **ADR-0111**: Estrategia de Isolation de Datos por Hospital
-- **ADR-0112**: Estrategia de Configuración por Hospital
-- **ADR-0113**: Estrategia de Onboarding de Hospitales
-- **ADR-0114**: Estrategia de Compartición de Conocimiento (Opcional)
-- **ADR-0115**: Estrategia de Benchmarking Anónimo
-
-### Integraciones
-
-- **ADR-0120**: Integración con Supabase Auth
-- **ADR-0121**: Integración con Qdrant
-- **ADR-0122**: Integración con OpenAI API
-- **ADR-0123**: Integración con HL7 (Futuro)
-- **ADR-0124**: Integración con DICOM (Futuro)
-- **ADR-0125**: Integración con FHIR (Futuro)
-- **ADR-0126**: Integración con EMR/EHR (Futuro)
-- **ADR-0127**: Integración con CMMS (Futuro)
-
-### Dominios (DDD)
-
-- **ADR-0130**: Equipment Domain Design
-- **ADR-0131**: Maintenance Domain Design
-- **ADR-0132**: Case Domain Design
-- **ADR-0133**: Knowledge Domain Design
-- **ADR-0134**: User Domain Design
-- **ADR-0135**: Hospital Domain Design
-- **ADR-0136**: Bounded Contexts y Context Maps
+# EREN Architecture Decision Records (ADR)
 
 ---
 
-## Formato Oficial de ADR
+## Overview
 
-Cada ADR sigue el formato estándar de Architecture Decision Records:
+This is the **master index** for all Architecture Decision Records in EREN. ADRs are organized by **EPIC** — each EPIC gets its own folder.
 
-```markdown
-# ADR-XXXX: [Título]
-
-## Status
-[Proposed | Accepted | Deprecated | Superseded by ADR-YYYY]
-
-## Context
-[Descripción del contexto y problema]
-
-## Decision
-[La decisión tomada]
-
-## Consequences
-[Impacto positivo y negativo]
-
-## Benefits
-[Beneficios de la decisión]
-
-## Risks
-[Riesgos identificados]
-
-## Alternatives Considered
-[Otras opciones evaluadas y por qué no fueron seleccionadas]
-
-## Future Work
-[Trabajo futuro relacionado]
-
-## References
-[Links a recursos relevantes]
+```
+docs/adr/
+├── README.md                        ← This file (master index)
+├── epic0/                          ← Foundation decisions
+├── epic0-infra/                    ← Infrastructure decisions
+├── epic1/                          ← EPIC 1 decisions (Infrastructure Platform)
+├── epic2/                          ← EPIC 2 decisions (Core Business Domain)
+├── epic3/                          ← EPIC 3 decisions (Hospital Management)
+├── epic4/                          ← EPIC 4 decisions (AI Core)
+├── epic5/                          ← EPIC 5 decisions (Clinical Intelligence)
+├── epic6/                          ← EPIC 6 decisions (Integrations)
+├── epic7/                          ← EPIC 7 decisions (User Experience)
+├── epic8/                          ← EPIC 8 decisions (Production Readiness)
+├── epic9/                          ← EPIC 9 decisions (Machine Learning)
+├── epic10/                         ← EPIC 10 decisions (Enterprise Release)
+└── _archive/                       ← Old/outdated ADRs (historical reference)
 ```
 
-## Proceso para Crear un ADR
+---
 
-1. **Identificar la necesidad**: Una decisión arquitectónica significativa requiere un ADR
-2. **Asignar número**: Usar el siguiente número disponible en la categoría apropiada
-3. **Crear archivo**: Crear `ADR-XXXX-titulo.md` en este directorio
-4. **Seguir formato**: Usar el formato oficial de ADR
-5. **Documentar contexto**: Explicar claramente el problema y contexto
-6. **Documentar decisión**: Describir la decisión tomada
-7. **Documentar consecuencias**: Beneficios, riesgos y trade-offs
-8. **Incluir alternativas**: Documentar alternativas consideradas y por qué fueron rechazadas
-9. **Actualizar índice**: Agregar el ADR al índice apropiado
-10. **Crear PR**: Solicitar revisión del equipo
-11. **Aprobar**: El ADR debe ser aprobado antes de ser implementado
+## ADR Count by EPIC
 
-## ADRs Activos
-
-Los siguientes ADRs están escritos y aceptados (Accepted):
-
-- [ADR-0001: EREN es un Cognitive Operating System, no un chatbot](./ADR-0001-cognitive-operating-system.md)
-- [ADR-0001: Arquitectura General de EREN](./ADR-0001-general-architecture.md)
-- [ADR-0002: Arquitectura General de EREN CORE](./ADR-0002-eren-core-architecture.md)
-- [ADR-0003: Objeto de Contexto Cognitivo (`core/context`)](./ADR-0003-cognitive-context.md)
-- [ADR-0004: Sistema de Eventos Interno (`core/events`)](./ADR-0004-event-system.md)
-- [ADR-0005: Registro Dinámico de Motores (`core/registry`)](./ADR-0005-engine-registry.md)
-- [ADR-0006: Intent Engine (`core/intent`)](./ADR-0006-intent-engine.md)
-
-## ADRs Propuestos
-
-El resto de entradas del índice por categorías son decisiones **planificadas** que
-aún no tienen archivo. Se documentarán con el formato oficial cuando se aborden.
-
-## ADRs Deprecados
-
-Los siguientes ADRs han sido deprecados:
-
-- (Ninguno actualmente)
-
-## ADRs Superseded
-
-Los siguientes ADRs han sido reemplazados por versiones más recientes:
-
-- (Ninguno actualmente)
+| EPIC | Accepted | Proposed | Deprecated | Total |
+|------|----------|----------|------------|--------|
+| Epic 0 | 24 | 6 | 2 | 32 |
+| Epic 0-Infra | 7 | 3 | 0 | 10 |
+| Epic 1-10 | 0 | 0 | 0 | 0 |
+| **Total** | **31** | **9** | **2** | **42** |
 
 ---
 
-**Última actualización**: 2026-07-13  
-**Alineado con**: VISION.md, ARCHITECTURE_OVERVIEW.md, CORE_SPECIFICATION.md, MASTER_ROADMAP.md
+## ADR Status Definitions
+
+| Status | Meaning |
+|--------|---------|
+| **Proposed** | Under review, not yet accepted |
+| **Accepted** | Approved and in effect |
+| **Superseded** | Replaced by a newer ADR |
+| **Deprecated** | No longer relevant |
+
+**Rule:** No architectural decision without an ADR. No ADR without a status.
+
+---
+
+## ADR Numbering Conventions
+
+```
+ADR-0001 to ADR-0099  →  Epic 0 (Foundation)
+ADR-0100 to ADR-0199  →  Epic 1 (Infrastructure Platform)
+ADR-0200 to ADR-0299  →  Epic 2 (Core Business Domain)
+ADR-0300 to ADR-0399  →  Epic 3 (Hospital Management)
+ADR-0400 to ADR-0499  →  Epic 4 (AI Core)
+ADR-0500 to ADR-0599  →  Epic 5 (Clinical Intelligence)
+ADR-0600 to ADR-0699  →  Epic 6 (Integrations)
+ADR-0700 to ADR-0799  →  Epic 7 (User Experience)
+ADR-0800 to ADR-0899  →  Epic 8 (Production Readiness)
+ADR-0900 to ADR-0999  →  Epic 9 (Machine Learning)
+ADR-1000 to ADR-1099  →  Epic 10 (Enterprise Release)
+```
+
+**Note:** Epic 0 ADRs use the original numbering from the legacy ADR index (ADR-0001 to ADR-0076) to preserve history. Epic 0-Infra ADRs start at ADR-0080.
+
+---
+
+## Quick Reference
+
+### Epic 0 — Foundation
+
+| ADR | Title | Status |
+|-----|-------|--------|
+| ADR-0001 | Hexagonal Architecture | Accepted |
+| ADR-0002 | PostgreSQL as Primary Database | Accepted |
+| ADR-0003 | Event-Driven Architecture | Accepted |
+| ADR-0004 | Redis Cache-Aside Pattern | Accepted |
+| ADR-0005 | Neo4j for Knowledge Graph | Accepted |
+| ADR-0006 | Qdrant for Semantic Search | Accepted |
+| ADR-0007 | Contract-First Development | Accepted |
+| ADR-0008 | Multi-Tenancy Strategy | Accepted |
+| ADR-0010 | Authentication/Authorization/Session Split | Accepted |
+| ADR-0011 | Audit Events Immutable | Accepted |
+| ADR-0012 | No Raw SQL Outside Repositories | Accepted |
+| ADR-0020 | Clinical Decision Support as Supporting Domain | Accepted |
+| ADR-0021 | Evidence Required for CDS | Accepted |
+| ADR-0022 | Trust as Cross-Cutting Service | Accepted |
+| ADR-0030 | Kubernetes Deployment | Accepted |
+| ADR-0031 | Prometheus + Grafana Observability | Accepted |
+| ADR-0032 | Circuit Breaker Pattern | Deprecated |
+| ADR-0040 | FHIR R4 Integration | Accepted |
+| ADR-0041 | MQTT for Device Connectivity | Accepted |
+| ADR-0042 | External Integrations via Adapters | Deprecated |
+| ADR-0043 | DICOM Integration | Accepted |
+| ADR-0044 | HL7 V2/V3 Integration | Accepted |
+| ADR-0045 | Medical Device Vendor Adapters | Accepted |
+| ADR-0050 | Hospital Context Architecture | Accepted |
+| ADR-0051 | Organization Multi-Campus Strategy | Accepted |
+| ADR-0052 | Department Hierarchy Model | Accepted |
+| ADR-0055 | AI Core Architecture | Accepted |
+| ADR-0056 | Cognitive Capability Contracts | Accepted |
+| ADR-0057 | LLM Provider Abstraction | Accepted |
+| ADR-0060 | Clinical Intelligence Context Architecture | Accepted |
+| ADR-0061 | CDS Evidence Requirements | Accepted |
+| ADR-0062 | AI Explainability Requirements | Accepted |
+| ADR-0065 | Web Frontend Architecture | Proposed |
+| ADR-0066 | Mobile App Architecture | Proposed |
+| ADR-0070 | GDPR Compliance Strategy | Proposed |
+| ADR-0071 | ISO 27001 Compliance | Proposed |
+| ADR-0075 | ML Feedback Loop Architecture | Proposed |
+| ADR-0076 | Model Versioning Strategy | Proposed |
+
+### Epic 0-Infra — Infrastructure
+
+| ADR | Title | Status |
+|-----|-------|--------|
+| ADR-0080 | Kubernetes as Deployment Platform | Accepted |
+| ADR-0081 | Kafka as Primary Message Broker | Accepted |
+| ADR-0082 | S3/MinIO Object Storage Strategy | Accepted |
+| ADR-0083 | Outbox Pattern for Event Publishing | Accepted |
+| ADR-0084 | Row-Level Security in Alembic Migrations | Accepted |
+| ADR-0085 | Observability Stack | Accepted |
+| ADR-0086 | Backup and Disaster Recovery Strategy | Accepted |
+| ADR-0090 | GitOps with ArgoCD | Proposed |
+| ADR-0091 | Service Mesh (Istio vs Linkerd) | Proposed |
+| ADR-0092 | API Gateway Strategy | Proposed |
+| ADR-0093 | Celery as Task Queue | Proposed |
+| ADR-0094 | Schema Registry Strategy | Proposed |
+
+### Epic 1-10 — Pending
+
+| EPIC | Status |
+|------|--------|
+| Epic 1 (Infrastructure Platform) | Pending |
+| Epic 2 (Core Business Domain) | Pending |
+| Epic 3 (Hospital Management) | Pending |
+| Epic 4 (AI Core) | Pending |
+| Epic 5 (Clinical Intelligence) | Pending |
+| Epic 6 (Integrations) | Pending |
+| Epic 7 (User Experience) | Pending |
+| Epic 8 (Production Readiness) | Pending |
+| Epic 9 (Machine Learning) | Pending |
+| Epic 10 (Enterprise Release) | Pending |
+
+---
+
+## How to Add an ADR
+
+1. Create file: `docs/adr/epic{N}/ADR-XXXX_TITLE.md`
+2. Use the standard template
+3. Submit for Architecture Board review
+4. Update this index
+
+### ADR Template
+
+```markdown
+# ADR-XXXX: Title
+
+**Status:** Proposed | Accepted | Superseded | Deprecated
+
+**Date:** YYYY-MM-DD
+
+**Deciders:** Team
+
+---
+
+## Context
+(What problem are we solving?)
+
+## Decision
+(What we decided to do?)
+
+## Reasons
+(Why this decision?)
+
+## Consequences
+### Positive
+### Negative
+
+---
+
+*ADR-XXXX - YYYY-MM-DD*
+```
+
+---
+
+## ADR Lifecycle
+
+```
+Proposed → Accepted → Superseded/Deprecated
+    ↓
+Any ADR can be updated or replaced.
+All changes are versioned.
+No ADR is permanent if evidence shows it should change.
+```
+
+---
+
+## Review Schedule
+
+ADRs are reviewed quarterly:
+- Q1: January-March
+- Q2: April-June
+- Q3: July-September
+- Q4: October-December
+
+---
+
+## Deprecations
+
+| ADR | Deprecated By | Reason |
+|-----|-------------|--------|
+| ADR-0032 (Circuit Breaker Pattern) | — | Standard pattern, not a specific architectural decision — lives in Failure Model |
+| ADR-0042 (External Integrations via Adapters) | — | Redundant with ADR-0040, ADR-0041, ADR-0043, ADR-0044, ADR-0045 |
+
+---
+
+*EREN ADR Master Index v1.0*
+*Architecture Board - 2026-07-16*
