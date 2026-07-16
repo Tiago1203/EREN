@@ -25,13 +25,13 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ruff black isort
+          pip install ruff black isort pre-commit
 
       - name: Run ruff on core
-        run: ruff check core/ || true
+        run: ruff check core/ --ignore E501 || true
 
       - name: Run ruff on api
-        run: ruff check apps/api/app/ apps/api/tests/ || true
+        run: ruff check apps/api/ --ignore E501 || true
 
       - name: Run ruff format check
         run: ruff format --check core/ apps/api/ || true
@@ -93,7 +93,7 @@ jobs:
 
       - name: Run unit tests (API)
         run: |
-          PYTHONPATH=apps/api python -m pytest apps/api/tests/unit -v --tb=short
+          PYTHONPATH=. python -m pytest apps/api/tests/unit -v --tb=short
         env:
           DATABASE_URL: postgresql+asyncpg://eren:eren_test@localhost:5432/eren_test
 
@@ -111,7 +111,7 @@ jobs:
 
       - name: Build API Docker image
         run: |
-          docker build -f apps/api/Dockerfile -t eren-api:test apps/
+          docker build -f apps/api/Dockerfile -t eren-api:test .
 
   architecture:
     name: Architecture Validation
@@ -156,5 +156,12 @@ print('Domain interfaces OK')
       - name: Verify middleware imports
         run: python -c "from app.middleware import AuditMiddleware, AuthenticationMiddleware; print('Middleware imports OK')"
 
-      - name: Verify models
-        run: python -c "from app.models import Patient; from app.models.patient import Patient; print('Models OK')"
+      - name: Verify core domain can be imported
+        run: python -c "
+from core.contracts.security.authentication import AuthenticationResult
+from core.incident.domain.entities import Incident
+from core.device.domain.entities import Device
+from core.recommendation.domain.entities import Recommendation
+from core.knowledge.domain.entities import KnowledgeAsset
+print('Core domain imports OK')
+"

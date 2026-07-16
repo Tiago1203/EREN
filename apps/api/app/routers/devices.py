@@ -10,7 +10,8 @@ import logging
 from math import ceil
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, Field, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from pydantic import Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
@@ -42,7 +43,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_tenant_id(request: Request) -> str:
-    tenant_id = getattr(request.state, "tenant_id", None)
+    tenant_id: str | None = getattr(request.state, "tenant_id", None)
     if not tenant_id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Tenant not resolved")
     return tenant_id
@@ -50,13 +51,17 @@ def get_tenant_id(request: Request) -> str:
 
 def get_current_user_id(request: Request) -> str | None:
     principal = getattr(request.state, "principal", None)
-    if principal:
-        return getattr(principal, "principal_id", None)
-    return None
+    if principal is not None:
+        pid = getattr(principal, "principal_id", None)
+        return str(pid) if pid is not None else None
+    result: str | None = None
+    return result
 
 
 def get_correlation_id(request: Request) -> str | None:
-    return getattr(request.state, "request_id", None)
+    rid = getattr(request.state, "request_id", None)
+    result: str | None = str(rid) if rid is not None else None
+    return result
 
 
 async def get_device_cache() -> DeviceCacheService:
@@ -160,7 +165,7 @@ async def list_devices(
     tenant_id: Annotated[str, Depends(get_tenant_id)],
     service: Annotated[DeviceService, Depends(get_device_service)],
     page: int = 1,
-    page_size: int = Field(default=50, ge=1, le=200),
+    page_size: int = Query(default=50, ge=1, le=200),
     status: str | None = None,
     device_type: str | None = None,
     building: str | None = None,

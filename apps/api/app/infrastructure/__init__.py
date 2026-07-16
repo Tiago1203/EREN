@@ -1,16 +1,15 @@
 """Infrastructure package.
 
 Provides implementations of domain interfaces:
-- SQLAlchemy repositories (incident, device, recommendation, knowledge)
+- SQLAlchemy repositories (device)
 - Redis caching service
 - RabbitMQ event bus
 - Transactional Outbox pattern for reliable event publishing
 - OpenTelemetry tracing and instrumentation
 - Structured JSON logging with correlation IDs
-- Unit of Work for transactional consistency
 - Health check endpoints
 
-The domain layer (core/) remains pure and free of infrastructure concerns.
+The domain layer remains pure and free of infrastructure concerns.
 """
 from app.infrastructure.events import EventBus
 from app.infrastructure.messaging import (
@@ -26,15 +25,8 @@ from app.infrastructure.messaging import (
     get_redis,
 )
 from app.infrastructure.models import (
-    ActionModel,
-    ConversationMessageModel,
     DeviceModel,
     DomainEventModel,
-    EvidenceModel,
-    IncidentModel,
-    InvestigationModel,
-    KnowledgeArticleModel,
-    RecommendationModel,
 )
 from app.infrastructure.observability import (
     configure_logging,
@@ -43,11 +35,7 @@ from app.infrastructure.observability import (
 )
 from app.infrastructure.repositories import (
     DeviceRepositoryImpl,
-    IncidentRepositoryImpl,
-    KnowledgeRepositoryImpl,
-    RecommendationRepositoryImpl,
 )
-from app.infrastructure.unit_of_work import UnitOfWork, unit_of_work
 
 __all__ = [
     # Events (from existing)
@@ -68,21 +56,8 @@ __all__ = [
     "setup_instrumentation",
     "setup_tracing",
     # Models
-    "IncidentModel",
-    "InvestigationModel",
-    "EvidenceModel",
-    "ActionModel",
-    "ConversationMessageModel",
     "DeviceModel",
-    "RecommendationModel",
-    "KnowledgeArticleModel",
     "DomainEventModel",
     # Repositories
-    "IncidentRepositoryImpl",
     "DeviceRepositoryImpl",
-    "RecommendationRepositoryImpl",
-    "KnowledgeRepositoryImpl",
-    # Unit of Work
-    "UnitOfWork",
-    "unit_of_work",
 ]

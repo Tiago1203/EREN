@@ -78,6 +78,7 @@ services:
       EREN_API_CORS_ORIGINS: '["http://localhost:3000"]'
       SUPABASE_URL: ${SUPABASE_URL:-}
       SUPABASE_KEY: ${SUPABASE_KEY:-}
+      PYTHONPATH: /app:/app/core
     depends_on:
       postgres:
         condition: service_healthy
