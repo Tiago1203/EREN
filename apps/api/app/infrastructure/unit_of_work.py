@@ -14,6 +14,7 @@ Usage::
 On exit (success): commit + flush outbox
 On exit (exception): rollback + discard outbox
 """
+
 from __future__ import annotations
 
 import logging

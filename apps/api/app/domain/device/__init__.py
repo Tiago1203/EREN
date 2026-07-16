@@ -1,4 +1,5 @@
 """Device domain package."""
+
 from app.domain.device.events import (
     CalibrationCompleted,
     DeviceDecommissioned,

@@ -27,6 +27,7 @@ class TestDiagnosisService:
     def service(self, mock_repository, mock_event_bus):
         """Create service with mocks."""
         from app.domain.diagnosis import DiagnosisService
+
         return DiagnosisService(repository=mock_repository, event_bus=mock_event_bus)
 
     @pytest.mark.asyncio
@@ -44,7 +45,7 @@ class TestDiagnosisService:
         )
 
         assert result is not None
-        assert hasattr(result, 'id')
+        assert hasattr(result, "id")
 
     @pytest.mark.asyncio
     async def test_record_diagnosis_calls_repository(
@@ -63,9 +64,7 @@ class TestDiagnosisService:
         mock_repository.save.assert_called_once()
 
     @pytest.mark.asyncio
-    async def test_record_diagnosis_calls_event_bus(
-        self, service, mock_repository, mock_event_bus
-    ):
+    async def test_record_diagnosis_calls_event_bus(self, service, mock_repository, mock_event_bus):
         """Test that record_diagnosis publishes an event."""
         mock_repository.save = AsyncMock(return_value=MagicMock(id="test-id"))
 
@@ -82,9 +81,7 @@ class TestDiagnosisService:
         assert call_args.kwargs["aggregate_type"] == "Diagnosis"
 
     @pytest.mark.asyncio
-    async def test_get_diagnosis_returns_diagnosis(
-        self, service, mock_repository
-    ):
+    async def test_get_diagnosis_returns_diagnosis(self, service, mock_repository):
         """Test that get_diagnosis returns the diagnosis."""
         expected_diagnosis = MagicMock(id="diagnosis-1")
         mock_repository.get_by_id = AsyncMock(return_value=expected_diagnosis)
@@ -97,9 +94,7 @@ class TestDiagnosisService:
         assert result == expected_diagnosis
 
     @pytest.mark.asyncio
-    async def test_get_diagnosis_returns_none_when_not_found(
-        self, service, mock_repository
-    ):
+    async def test_get_diagnosis_returns_none_when_not_found(self, service, mock_repository):
         """Test that get_diagnosis returns None when diagnosis doesn't exist."""
         mock_repository.get_by_id = AsyncMock(return_value=None)
 
@@ -115,7 +110,9 @@ class TestDiagnosisService:
         self, service, mock_repository, mock_event_bus
     ):
         """Test that delete_diagnosis returns True on success."""
-        mock_repository.get_by_id = AsyncMock(return_value=MagicMock(id="diagnosis-1", patient_id="patient-1"))
+        mock_repository.get_by_id = AsyncMock(
+            return_value=MagicMock(id="diagnosis-1", patient_id="patient-1")
+        )
         mock_repository.soft_delete = AsyncMock(return_value=True)
 
         result = await service.delete_diagnosis(
@@ -126,9 +123,7 @@ class TestDiagnosisService:
         assert result is True
 
     @pytest.mark.asyncio
-    async def test_delete_diagnosis_returns_false_when_not_found(
-        self, service, mock_repository
-    ):
+    async def test_delete_diagnosis_returns_false_when_not_found(self, service, mock_repository):
         """Test that delete_diagnosis returns False when diagnosis doesn't exist."""
         mock_repository.get_by_id = AsyncMock(return_value=None)
 
@@ -140,11 +135,11 @@ class TestDiagnosisService:
         assert result is False
 
     @pytest.mark.asyncio
-    async def test_delete_diagnosis_publishes_event(
-        self, service, mock_repository, mock_event_bus
-    ):
+    async def test_delete_diagnosis_publishes_event(self, service, mock_repository, mock_event_bus):
         """Test that delete_diagnosis publishes DiagnosisDeleted event."""
-        mock_repository.get_by_id = AsyncMock(return_value=MagicMock(id="diagnosis-1", patient_id="patient-1"))
+        mock_repository.get_by_id = AsyncMock(
+            return_value=MagicMock(id="diagnosis-1", patient_id="patient-1")
+        )
         mock_repository.soft_delete = AsyncMock(return_value=True)
 
         await service.delete_diagnosis(
@@ -157,9 +152,7 @@ class TestDiagnosisService:
         assert call_args.kwargs["event_type"] == "DiagnosisDeleted"
 
     @pytest.mark.asyncio
-    async def test_list_diagnoses_by_patient_returns_tuple(
-        self, service, mock_repository
-    ):
+    async def test_list_diagnoses_by_patient_returns_tuple(self, service, mock_repository):
         """Test that list_diagnoses_by_patient returns (diagnoses, total)."""
         mock_diagnoses = [MagicMock(id="d1"), MagicMock(id="d2")]
         mock_repository.list_by_patient = AsyncMock(return_value=(mock_diagnoses, 2))
@@ -177,9 +170,7 @@ class TestDiagnosisService:
         assert result[1] == 2
 
     @pytest.mark.asyncio
-    async def test_list_diagnoses_by_tenant_returns_tuple(
-        self, service, mock_repository
-    ):
+    async def test_list_diagnoses_by_tenant_returns_tuple(self, service, mock_repository):
         """Test that list_diagnoses_by_tenant returns (diagnoses, total)."""
         mock_diagnoses = [MagicMock(id="d1"), MagicMock(id="d2")]
         mock_repository.list_by_tenant = AsyncMock(return_value=(mock_diagnoses, 2))

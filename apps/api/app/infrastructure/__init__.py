@@ -11,6 +11,7 @@ Provides implementations of domain interfaces:
 
 The domain layer remains pure and free of infrastructure concerns.
 """
+
 from app.infrastructure.events import EventBus
 from app.infrastructure.messaging import (
     CacheService,

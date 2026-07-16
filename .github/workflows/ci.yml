@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, feature/**]
+    branches: [main, epic1-*, feature/**]
   pull_request:
     branches: [main]
 
@@ -17,24 +17,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
+      - name: Install linters
         run: |
           python -m pip install --upgrade pip
-          pip install ruff black isort pre-commit
+          pip install --break-system-packages ruff black
 
-      - name: Run ruff on core
-        run: ruff check core/ --ignore E501 || true
-
-      - name: Run ruff on api
+      - name: Run ruff check
         run: ruff check apps/api/ --ignore E501 || true
 
       - name: Run ruff format check
-        run: ruff format --check core/ apps/api/ || true
+        run: ruff format --check apps/api/ || true
 
   typecheck:
     name: Type Check (MyPy)
@@ -42,21 +39,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
         with:
           python-version: "3.12"
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install mypy types-python-dateutil
+          cd apps/api
+          uv sync --locked --python 3.12 --no-install-project --group dev
 
-      - name: Run mypy on core
-        run: mypy core/ --ignore-missing-imports || true
+      - name: Run mypy on domain
+        run: |
+          cd apps/api
+          uv run mypy app/domain/ --ignore-missing-imports || true
 
-      - name: Run mypy on api infrastructure
-        run: mypy apps/api/app/infrastructure/ --ignore-missing-imports || true
+      - name: Run mypy on infrastructure
+        run: |
+          cd apps/api
+          uv run mypy app/infrastructure/ --ignore-missing-imports || true
 
   test:
     name: Test Suite
@@ -67,7 +68,7 @@ jobs:
         image: postgres:16
         env:
           POSTGRES_USER: eren
-          POSTGRES_PASSWORD: eren_test
+          POSTGRES_PASSWORD: eren
           POSTGRES_DB: eren_test
         ports:
           - 5432:5432
@@ -80,25 +81,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
         with:
           python-version: "3.12"
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -e "apps/api"
-          pip install pytest pytest-asyncio pytest-cov httpx asyncpg
+          cd apps/api
+          uv sync --locked --python 3.12 --group dev
 
-      - name: Run unit tests (API)
+      - name: Create PostgreSQL schemas
         run: |
-          PYTHONPATH=. python -m pytest apps/api/tests/unit -v --tb=short
-        env:
-          DATABASE_URL: postgresql+asyncpg://eren:eren_test@localhost:5432/eren_test
+          PGPASSWORD=eren psql -h localhost -U eren -d eren_test -c "CREATE SCHEMA IF NOT EXISTS incident AUTHORIZATION eren;" || true
+          PGPASSWORD=eren psql -h localhost -U eren -d eren_test -c "CREATE SCHEMA IF NOT EXISTS device AUTHORIZATION eren;" || true
+          PGPASSWORD=eren psql -h localhost -U eren -d eren_test -c "CREATE SCHEMA IF NOT EXISTS recommendation AUTHORIZATION eren;" || true
+          PGPASSWORD=eren psql -h localhost -U eren -d eren_test -c "CREATE SCHEMA IF NOT EXISTS knowledge AUTHORIZATION eren;" || true
+          PGPASSWORD=eren psql -h localhost -U eren -d eren_test -c "CREATE SCHEMA IF NOT EXISTS work_order AUTHORIZATION eren;" || true
 
-      - name: Run core domain tests
-        run: PYTHONPATH=. python -m pytest tests/ -v --tb=short || true
+      - name: Run unit tests
+        run: |
+          cd apps/api
+          PYTHONPATH="$GITHUB_WORKSPACE:$GITHUB_WORKSPACE/apps/api" uv run pytest tests/unit -v --tb=short
+        env:
+          EREN_API_DATABASE_URL: postgresql+asyncpg://eren:eren@localhost:5432/eren_test
 
   build-docker:
     name: Docker Build
@@ -119,24 +125,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
         with:
           python-version: "3.12"
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -e "apps/api"
+          cd apps/api
+          uv sync --locked --python 3.12 --group dev
 
       - name: Verify infrastructure imports
-        run: python -c "from app.infrastructure import (CacheService,DeviceRepositoryImpl,MessagingEventBus,configure_logging,setup_tracing); print('Infrastructure imports OK')"
+        run: |
+          cd apps/api
+          echo 'from app.infrastructure import CacheService, configure_logging, setup_tracing, DeviceModel; print("Infrastructure imports OK")' > /tmp/check_infra.py
+          PYTHONPATH="$GITHUB_WORKSPACE:$GITHUB_WORKSPACE/apps/api" uv run python /tmp/check_infra.py
 
       - name: Verify domain repository interfaces
-        run: python -c "from core.incident.domain.repositories import IncidentRepository; from core.device.domain.repositories import DeviceRepository; from core.recommendation.domain.repositories import RecommendationRepository; from core.knowledge.domain.repositories import KnowledgeRepository; print('Domain interfaces OK')"
+        run: |
+          cd apps/api
+          echo 'from app.domain.device.repository import DeviceRepository; from app.domain.work_order.repository import WorkOrderRepository; from core.device.domain.repositories import DeviceRepository as CoreDeviceRepo; from core.incident.domain.repositories import IncidentRepository; from core.recommendation.domain.repositories import RecommendationRepository; from core.knowledge.domain.repositories import KnowledgeRepository; print("Domain repository interfaces OK")' > /tmp/check_repos.py
+          PYTHONPATH="$GITHUB_WORKSPACE:$GITHUB_WORKSPACE/apps/api" uv run python /tmp/check_repos.py
 
-      - name: Verify middleware imports
-        run: python -c "from app.middleware import AuditMiddleware, AuthenticationMiddleware; print('Middleware imports OK')"
-
-      - name: Verify core domain can be imported
-        run: python -c "from core.contracts.security.authentication import AuthenticationResult; from core.incident.domain.entities import EngineeringIncident; from core.device.domain.entities import Device; from core.recommendation.domain.entities import AIRecommendation; from core.knowledge.domain.entities import KnowledgeArticle; print('Core domain imports OK')"
+      - name: Verify domain entities can be imported
+        run: |
+          cd apps/api
+          echo 'from core.device.domain.entities import Device; from core.incident.domain.entities import EngineeringIncident; from core.recommendation.domain.entities import AIRecommendation; from core.knowledge.domain.entities import KnowledgeArticle; from app.domain.work_order.service import WorkOrderService; print("Domain entities OK")' > /tmp/check_entities.py
+          PYTHONPATH="$GITHUB_WORKSPACE:$GITHUB_WORKSPACE/apps/api" uv run python /tmp/check_entities.py

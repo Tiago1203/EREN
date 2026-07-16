@@ -25,7 +25,8 @@ class Patient(Base):
 
     __tablename__ = "patients"
     __table_args__ = (
-        Index("ix_patients_tenant_id", "tenant_id"),
+        # ix_patients_tenant_id is created by mapped_column(index=True) on tenant_id
+        # — do NOT duplicate here.
         Index("ix_patients_mrn", "tenant_id", "mrn", unique=True),
     )
 

@@ -37,30 +37,22 @@ class DeviceCacheService:
     def __init__(self, cache: CacheService) -> None:
         self._cache = cache
 
-    async def get_by_id(
-        self, tenant_id: str, device_id: str
-    ) -> dict | None:
+    async def get_by_id(self, tenant_id: str, device_id: str) -> dict | None:
         """Get cached device by ID."""
         key = _device_cache_key(tenant_id, device_id)
         return await self._cache.get(key)
 
-    async def set_by_id(
-        self, tenant_id: str, device_id: str, data: dict
-    ) -> None:
+    async def set_by_id(self, tenant_id: str, device_id: str, data: dict) -> None:
         """Cache device by ID."""
         key = _device_cache_key(tenant_id, device_id)
         await self._cache.set(key, data, ttl=DEVICE_CACHE_TTL)
 
-    async def get_by_serial(
-        self, tenant_id: str, serial: str
-    ) -> dict | None:
+    async def get_by_serial(self, tenant_id: str, serial: str) -> dict | None:
         """Get cached device by serial number."""
         key = _serial_cache_key(tenant_id, serial)
         return await self._cache.get(key)
 
-    async def set_by_serial(
-        self, tenant_id: str, serial: str, data: dict
-    ) -> None:
+    async def set_by_serial(self, tenant_id: str, serial: str, data: dict) -> None:
         """Cache device by serial number."""
         key = _serial_cache_key(tenant_id, serial)
         await self._cache.set(key, data, ttl=DEVICE_CACHE_TTL)

@@ -1,4 +1,5 @@
 """RabbitMQ event bus for domain events."""
+
 from __future__ import annotations
 
 import json
@@ -37,7 +38,7 @@ async def get_channel() -> AbstractChannel:
     if _channel is None or _channel.is_closed:
         conn = await get_connection()
         _channel = await conn.channel()
-        _channel.set_qos(prefetch_count=10)
+        await _channel.set_qos(prefetch_count=10)
     return _channel
 
 

@@ -1,4 +1,5 @@
 """SQLAlchemy implementation of KnowledgeRepository."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
@@ -44,9 +45,7 @@ def _model_to_entity(model: KnowledgeArticleModel) -> KnowledgeArticle:
     article.device_ids = ()
     article.incident_type_tags = ()
     article.references = ()
-    article.related_articles = tuple(
-        m for m in (model.to_dict().get("related_articles") or [])
-    )
+    article.related_articles = tuple(m for m in (model.to_dict().get("related_articles") or []))
     article.published_at = model.published_at
     article.review_info = None
     article.statistics = UsageStatistics(
@@ -106,18 +105,14 @@ class KnowledgeRepositoryImpl(AbstractKnowledgeRepository):
         except Exception as e:
             return Ok(str(e))
 
-    async def get_by_id(
-        self, article_id: KnowledgeId
-    ) -> Result[KnowledgeArticle | None, str]:
+    async def get_by_id(self, article_id: KnowledgeId) -> Result[KnowledgeArticle | None, str]:
         try:
             model = await self._session.get(KnowledgeArticleModel, article_id)
             return Ok(_model_to_entity(model) if model else None)
         except Exception:
             return Ok(None)
 
-    async def get_by_article_id(
-        self, article_id: str
-    ) -> Result[KnowledgeArticle | None, str]:
+    async def get_by_article_id(self, article_id: str) -> Result[KnowledgeArticle | None, str]:
         try:
             stmt = select(KnowledgeArticleModel).where(
                 KnowledgeArticleModel.article_id == article_id
@@ -254,9 +249,7 @@ class KnowledgeRepositoryImpl(AbstractKnowledgeRepository):
         except Exception:
             return Ok([])
 
-    async def get_needing_review(
-        self, tenant_id: TenantId
-    ) -> Result[list[KnowledgeArticle], str]:
+    async def get_needing_review(self, tenant_id: TenantId) -> Result[list[KnowledgeArticle], str]:
         try:
             stmt = select(KnowledgeArticleModel).where(
                 KnowledgeArticleModel.tenant_id == str(tenant_id),

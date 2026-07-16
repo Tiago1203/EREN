@@ -1,38 +1,16 @@
-"""Integration test: Complete Clinical Flow Patient → Diagnosis.
+"""Integration tests for cross-context clinical flows.
 
-This test validates the full clinical workflow:
+Tests the full Patient -> Diagnosis workflow using real SQLAlchemy repositories
+and PostgreSQL database.
 
-    Crear paciente
-        ↓
-    Registrar diagnóstico
-        ↓
-    Consultar historial del paciente
-        ↓
-    Ver diagnóstico
-        ↓
-    Modificar diagnóstico
-        ↓
-    Ver auditoría (versiones)
-        ↓
-    Eliminar (soft delete)
-        ↓
-    Ver que desaparece de la consulta pero permanece en auditoría
-
-Success criteria:
-- Un desarrollador nuevo puede entender el flujo
-- No hay que modificar Foundation para que funcione
-- Los contextos se integran sin romper reglas
+Uses fixtures from conftest.py (db_engine, db_session).
 """
 
 from __future__ import annotations
 
-import os
-
 import pytest
-import pytest_asyncio
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.domain.diagnosis import DiagnosisService
 from app.domain.diagnosis.repository import SQLAlchemyDiagnosisRepository
@@ -40,53 +18,20 @@ from app.domain.patient import PatientService
 from app.domain.patient.repository import SQLAlchemyPatientRepository
 from app.events.outbox import OutboxMessage
 from app.infrastructure import EventBus
-from app.models import Base
+
+# Import models to register them with Base.metadata
 from app.models.diagnosis import Diagnosis as DiagnosisModel
-
-DATABASE_URL = os.environ.get(
-    "DATABASE_URL",
-    "postgresql+asyncpg://eren:eren_test@localhost:5432/eren_test"
-)
-
-
-@pytest_asyncio.fixture
-async def db_engine():
-    """Create async engine for tests."""
-    engine = create_async_engine(DATABASE_URL, echo=False)
-
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
-    yield engine
-
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-
-    await engine.dispose()
-
-
-@pytest_asyncio.fixture
-async def db_session(db_engine):
-    """Create async session for tests."""
-    async_session_factory = sessionmaker(
-        db_engine, class_=AsyncSession, expire_on_commit=False
-    )
-
-    async with async_session_factory() as session:
-        yield session
-        await session.rollback()
+from app.models.patient import Patient as PatientModel  # noqa: F401
 
 
 class TestClinicalFlowPatientDiagnosis:
     """Test complete clinical workflow: Patient → Diagnosis."""
 
     @pytest.mark.asyncio
-    async def test_complete_clinical_flow(
-        self, db_session: AsyncSession
-    ):
+    async def test_complete_clinical_flow(self, db_session: AsyncSession):
         """
         Complete clinical flow test.
-        
+
         Este test demuestra que Patient y Diagnosis funcionan juntos
         sin modificar Foundation.
         """
@@ -94,15 +39,9 @@ class TestClinicalFlowPatientDiagnosis:
         patient_repo = SQLAlchemyPatientRepository(db_session)
         diagnosis_repo = SQLAlchemyDiagnosisRepository(db_session)
         event_bus = EventBus(db_session)
-        
-        patient_service = PatientService(
-            repository=patient_repo,
-            event_bus=event_bus
-        )
-        diagnosis_service = DiagnosisService(
-            repository=diagnosis_repo,
-            event_bus=event_bus
-        )
+
+        patient_service = PatientService(repository=patient_repo, event_bus=event_bus)
+        diagnosis_service = DiagnosisService(repository=diagnosis_repo, event_bus=event_bus)
 
         # ========================================
         # PASO 1: Crear paciente
@@ -172,10 +111,11 @@ class TestClinicalFlowPatientDiagnosis:
         # ========================================
         # PASO 5: Modificar diagnóstico
         # ========================================
+        expected_version = diagnosis.version
         amended_diagnosis = await diagnosis_service.amend_diagnosis(
             diagnosis_id=diagnosis.id,
             tenant_id="hospital-001",
-            expected_version=diagnosis.version,
+            expected_version=expected_version,
             diagnosis_name="Hipertensión esencial (confirmada)",
             description="Paciente en seguimiento",
             correlation_id="flow-001",
@@ -185,7 +125,9 @@ class TestClinicalFlowPatientDiagnosis:
         # Verificar que cambió
         assert amended_diagnosis is not None
         assert amended_diagnosis.diagnosis_name == "Hipertensión esencial (confirmada)"
-        assert amended_diagnosis.version == diagnosis.version + 1
+        # Note: amended_diagnosis IS the same object as diagnosis (in-place update),
+        # so version is already incremented. Verify it is the expected new version.
+        assert amended_diagnosis.version == expected_version + 1
 
         # ========================================
         # PASO 6: Ver auditoría (versiones)
@@ -202,9 +144,7 @@ class TestClinicalFlowPatientDiagnosis:
 
         # Verificar eventos en outbox
         result = await db_session.execute(
-            select(OutboxMessage).where(
-                OutboxMessage.aggregate_id == diagnosis.id
-            )
+            select(OutboxMessage).where(OutboxMessage.aggregate_id == diagnosis.id)
         )
         events = result.scalars().all()
 
@@ -253,9 +193,7 @@ class TestClinicalFlowPatientDiagnosis:
         # ========================================
         # Consultar directamente en la base de datos
         result = await db_session.execute(
-            select(DiagnosisModel).where(
-                DiagnosisModel.id == diagnosis.id
-            )
+            select(DiagnosisModel).where(DiagnosisModel.id == diagnosis.id)
         )
         audit_record = result.scalar_one_or_none()
 
@@ -268,11 +206,11 @@ class TestClinicalFlowPatientDiagnosis:
         result = await db_session.execute(
             select(OutboxMessage).where(
                 OutboxMessage.aggregate_id == diagnosis.id,
-                OutboxMessage.event_type == "DiagnosisDeleted"
+                OutboxMessage.event_type == "DiagnosisDeleted",
             )
         )
         delete_event = result.scalar_one_or_none()
-        
+
         assert delete_event is not None
 
         # ========================================
@@ -286,26 +224,18 @@ class TestClinicalFlowPatientDiagnosis:
         assert patient_still_exists is not None
 
     @pytest.mark.asyncio
-    async def test_contexts_are_isolated(
-        self, db_session: AsyncSession
-    ):
+    async def test_contexts_are_isolated(self, db_session: AsyncSession):
         """
         Verify that Patient and Diagnosis are truly isolated.
-        
+
         Diagnosis solo conoce patient_id, no la entidad Patient.
         """
         patient_repo = SQLAlchemyPatientRepository(db_session)
         diagnosis_repo = SQLAlchemyDiagnosisRepository(db_session)
         event_bus = EventBus(db_session)
-        
-        patient_service = PatientService(
-            repository=patient_repo,
-            event_bus=event_bus
-        )
-        diagnosis_service = DiagnosisService(
-            repository=diagnosis_repo,
-            event_bus=event_bus
-        )
+
+        patient_service = PatientService(repository=patient_repo, event_bus=event_bus)
+        diagnosis_service = DiagnosisService(repository=diagnosis_repo, event_bus=event_bus)
 
         # Crear paciente
         patient = await patient_service.create_patient(
@@ -339,31 +269,23 @@ class TestClinicalFlowPatientDiagnosis:
         # Verificar que NO tiene columna de relación
         # (no debe tener ForeignKey hacia Patient)
         assert db_diagnosis.patient_id == patient.id
-        
+
         # Verificar que no existe relación ORM
-        assert not hasattr(db_diagnosis, 'patient')
+        assert not hasattr(db_diagnosis, "patient")
 
     @pytest.mark.asyncio
-    async def test_tenant_isolation_between_contexts(
-        self, db_session: AsyncSession
-    ):
+    async def test_tenant_isolation_between_contexts(self, db_session: AsyncSession):
         """
         Verify that tenant isolation works across contexts.
-        
+
         Tenant A no puede ver datos de Tenant B.
         """
         patient_repo = SQLAlchemyPatientRepository(db_session)
         diagnosis_repo = SQLAlchemyDiagnosisRepository(db_session)
         event_bus = EventBus(db_session)
-        
-        patient_service = PatientService(
-            repository=patient_repo,
-            event_bus=event_bus
-        )
-        diagnosis_service = DiagnosisService(
-            repository=diagnosis_repo,
-            event_bus=event_bus
-        )
+
+        patient_service = PatientService(repository=patient_repo, event_bus=event_bus)
+        diagnosis_service = DiagnosisService(repository=diagnosis_repo, event_bus=event_bus)
 
         # Crear pacientes para dos tenants
         patient_a = await patient_service.create_patient(
@@ -428,17 +350,15 @@ class TestClinicalFlowPatientDiagnosis:
 class TestFoundationValidation:
     """
     Validate that Foundation patterns were not broken.
-    
+
     Este test verifica que el flujo funciona SIN modificar Foundation.
     """
-    
+
     @pytest.mark.asyncio
-    async def test_no_foundation_was_modified(
-        self, db_session: AsyncSession
-    ):
+    async def test_no_foundation_was_modified(self, db_session: AsyncSession):
         """
         Verify that the flow works with existing patterns only.
-        
+
         Si este test pasa, significa:
         - No se necesitó modificar Patient
         - No se necesitó modificar Diagnosis
@@ -450,23 +370,23 @@ class TestFoundationValidation:
         from app.domain.patient import PatientService
         from app.domain.patient.repository import SQLAlchemyPatientRepository
         from app.infrastructure import EventBus
-        
+
         # Verificar que todos los componentes existen
         assert PatientService is not None
         assert SQLAlchemyPatientRepository is not None
         assert DiagnosisService is not None
         assert SQLAlchemyDiagnosisRepository is not None
         assert EventBus is not None
-        
+
         # Verificar que tienen la estructura correcta
         repo = SQLAlchemyPatientRepository(db_session)
-        assert hasattr(repo, 'save')
-        assert hasattr(repo, 'get_by_id')
-        assert hasattr(repo, 'list_by_tenant')
-        assert hasattr(repo, 'soft_delete')
-        
+        assert hasattr(repo, "save")
+        assert hasattr(repo, "get_by_id")
+        assert hasattr(repo, "list_by_tenant")
+        assert hasattr(repo, "soft_delete")
+
         diag_repo = SQLAlchemyDiagnosisRepository(db_session)
-        assert hasattr(diag_repo, 'save')
-        assert hasattr(diag_repo, 'get_by_id')
-        assert hasattr(diag_repo, 'list_by_patient')
-        assert hasattr(diag_repo, 'soft_delete')
+        assert hasattr(diag_repo, "save")
+        assert hasattr(diag_repo, "get_by_id")
+        assert hasattr(diag_repo, "list_by_patient")
+        assert hasattr(diag_repo, "soft_delete")

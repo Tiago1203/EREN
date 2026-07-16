@@ -72,6 +72,7 @@ async def get_device_cache() -> DeviceCacheService:
 async def get_device_service(db: Annotated[AsyncSession, Depends(get_db)]) -> DeviceService:
     repository = SQLAlchemyDeviceRepository(db)
     from app.infrastructure.messaging.outbox import TransactionalOutbox
+
     outbox = TransactionalOutbox(db)
     return DeviceService(repository=repository, outbox=outbox)
 
@@ -111,7 +112,9 @@ def _to_response(device: Any) -> DeviceResponse:
 
 
 @router.post(
-    "", response_model=DeviceResponse, status_code=status.HTTP_201_CREATED,
+    "",
+    response_model=DeviceResponse,
+    status_code=status.HTTP_201_CREATED,
     responses={400: {"model": ErrorResponse}, 403: {"model": ErrorResponse}},
 )
 async def register_device(
@@ -157,7 +160,8 @@ async def register_device(
 
 
 @router.get(
-    "", response_model=DeviceListResponse,
+    "",
+    response_model=DeviceListResponse,
     responses={403: {"model": ErrorResponse}},
 )
 async def list_devices(
@@ -175,14 +179,24 @@ async def list_devices(
     sort_order: SortOrder = SortOrder.DESC,
 ) -> DeviceListResponse:
     devices, total = await service.list_devices(
-        tenant_id=tenant_id, page=page, page_size=page_size,
-        status=status, device_type=device_type, building=building,
-        department=department, is_critical=is_critical, search=search,
-        sort_by=sort_by, sort_order=sort_order.value,
+        tenant_id=tenant_id,
+        page=page,
+        page_size=page_size,
+        status=status,
+        device_type=device_type,
+        building=building,
+        department=department,
+        is_critical=is_critical,
+        search=search,
+        sort_by=sort_by,
+        sort_order=sort_order.value,
     )
     return DeviceListResponse(
-        items=[_to_response(d) for d in devices], total=total,
-        page=page, page_size=page_size, pages=ceil(total / page_size) if total > 0 else 0,
+        items=[_to_response(d) for d in devices],
+        total=total,
+        page=page,
+        page_size=page_size,
+        pages=ceil(total / page_size) if total > 0 else 0,
     )
 
 
@@ -190,7 +204,8 @@ async def list_devices(
 
 
 @router.get(
-    "/{device_id}", response_model=DeviceResponse,
+    "/{device_id}",
+    response_model=DeviceResponse,
     responses={403: {"model": ErrorResponse}, 404: {"model": ErrorResponse}},
 )
 async def get_device(
@@ -217,7 +232,8 @@ async def get_device(
 
 
 @router.patch(
-    "/{device_id}", response_model=DeviceResponse,
+    "/{device_id}",
+    response_model=DeviceResponse,
     responses={
         400: {"model": ErrorResponse},
         403: {"model": ErrorResponse},
@@ -238,7 +254,8 @@ async def update_device(
     fields = data.model_dump(exclude_unset=True, exclude={"version"})
     try:
         device = await service.update_device(
-            device_id=device_id, tenant_id=tenant_id,
+            device_id=device_id,
+            tenant_id=tenant_id,
             expected_version=version,
             correlation_id=get_correlation_id(request),
             updated_by=get_current_user_id(request),
@@ -262,7 +279,9 @@ async def update_device(
 
 
 @router.delete(
-    "/{device_id}", response_model=DeviceDeleteResponse, status_code=status.HTTP_200_OK,
+    "/{device_id}",
+    response_model=DeviceDeleteResponse,
+    status_code=status.HTTP_200_OK,
     responses={403: {"model": ErrorResponse}, 404: {"model": ErrorResponse}},
 )
 async def delete_device(
@@ -293,7 +312,8 @@ async def delete_device(
 
 
 @router.post(
-    "/{device_id}/transfer", response_model=DeviceResponse,
+    "/{device_id}/transfer",
+    response_model=DeviceResponse,
     responses={
         400: {"model": ErrorResponse},
         403: {"model": ErrorResponse},
@@ -312,10 +332,13 @@ async def transfer_device(
 ) -> DeviceResponse:
     try:
         device = await service.transfer_device(
-            device_id=device_id, tenant_id=tenant_id,
+            device_id=device_id,
+            tenant_id=tenant_id,
             expected_version=data.version,
-            new_building=data.building, new_floor=data.floor,
-            new_room=data.room, new_department=data.department,
+            new_building=data.building,
+            new_floor=data.floor,
+            new_room=data.room,
+            new_department=data.department,
             transfer_reason=data.reason,
             transferred_by=get_current_user_id(request),
             correlation_id=get_correlation_id(request),
@@ -340,7 +363,8 @@ async def transfer_device(
 
 
 @router.post(
-    "/{device_id}/maintenance", response_model=DeviceResponse,
+    "/{device_id}/maintenance",
+    response_model=DeviceResponse,
     responses={
         400: {"model": ErrorResponse},
         403: {"model": ErrorResponse},
@@ -359,7 +383,8 @@ async def schedule_maintenance(
 ) -> DeviceResponse:
     try:
         device = await service.schedule_maintenance(
-            device_id=device_id, tenant_id=tenant_id,
+            device_id=device_id,
+            tenant_id=tenant_id,
             expected_version=data.version,
             maintenance_type=data.maintenance_type,
             scheduled_date=data.scheduled_date,
@@ -386,7 +411,8 @@ async def schedule_maintenance(
 
 
 @router.post(
-    "/{device_id}/maintenance/start", response_model=DeviceResponse,
+    "/{device_id}/maintenance/start",
+    response_model=DeviceResponse,
     responses={
         400: {"model": ErrorResponse},
         403: {"model": ErrorResponse},
@@ -405,7 +431,8 @@ async def start_maintenance(
 ) -> DeviceResponse:
     try:
         device = await service.start_maintenance(
-            device_id=device_id, tenant_id=tenant_id,
+            device_id=device_id,
+            tenant_id=tenant_id,
             expected_version=data.version,
             maintenance_type=data.maintenance_type,
             technician_id=data.technician_id,
@@ -431,7 +458,8 @@ async def start_maintenance(
 
 
 @router.post(
-    "/{device_id}/maintenance/finish", response_model=DeviceResponse,
+    "/{device_id}/maintenance/finish",
+    response_model=DeviceResponse,
     responses={
         400: {"model": ErrorResponse},
         403: {"model": ErrorResponse},
@@ -451,7 +479,8 @@ async def finish_maintenance(
     completed_by = get_current_user_id(request) or "system"
     try:
         device = await service.finish_maintenance(
-            device_id=device_id, tenant_id=tenant_id,
+            device_id=device_id,
+            tenant_id=tenant_id,
             expected_version=data.version,
             completed_by=completed_by,
             next_calibration_date=data.next_calibration_date,
@@ -477,7 +506,8 @@ async def finish_maintenance(
 
 
 @router.post(
-    "/{device_id}/calibrate", response_model=DeviceResponse,
+    "/{device_id}/calibrate",
+    response_model=DeviceResponse,
     responses={
         400: {"model": ErrorResponse},
         403: {"model": ErrorResponse},
@@ -497,7 +527,8 @@ async def calibrate_device(
     calibrated_by = get_current_user_id(request) or "system"
     try:
         device = await service.calibrate_device(
-            device_id=device_id, tenant_id=tenant_id,
+            device_id=device_id,
+            tenant_id=tenant_id,
             expected_version=data.version,
             calibration_last=data.calibration_last,
             calibration_next=data.calibration_next,
@@ -526,7 +557,8 @@ async def calibrate_device(
 
 
 @router.post(
-    "/{device_id}/out-of-service", response_model=DeviceResponse,
+    "/{device_id}/out-of-service",
+    response_model=DeviceResponse,
     responses={
         400: {"model": ErrorResponse},
         403: {"model": ErrorResponse},
@@ -546,7 +578,8 @@ async def take_out_of_service(
     taken_by = get_current_user_id(request) or "system"
     try:
         device = await service.take_out_of_service(
-            device_id=device_id, tenant_id=tenant_id,
+            device_id=device_id,
+            tenant_id=tenant_id,
             expected_version=data.version,
             reason=data.reason,
             taken_by=taken_by,
@@ -572,7 +605,8 @@ async def take_out_of_service(
 
 
 @router.post(
-    "/{device_id}/return-service", response_model=DeviceResponse,
+    "/{device_id}/return-service",
+    response_model=DeviceResponse,
     responses={
         400: {"model": ErrorResponse},
         403: {"model": ErrorResponse},
@@ -592,7 +626,8 @@ async def return_to_service(
     returned_by = get_current_user_id(request) or "system"
     try:
         device = await service.return_to_service(
-            device_id=device_id, tenant_id=tenant_id,
+            device_id=device_id,
+            tenant_id=tenant_id,
             expected_version=data.version,
             returned_by=returned_by,
             correlation_id=get_correlation_id(request),
@@ -619,7 +654,8 @@ async def return_to_service(
 
 
 @router.post(
-    "/{device_id}/decommission", response_model=DeviceResponse,
+    "/{device_id}/decommission",
+    response_model=DeviceResponse,
     responses={
         400: {"model": ErrorResponse},
         403: {"model": ErrorResponse},
@@ -639,7 +675,8 @@ async def decommission_device(
     decommissioned_by = get_current_user_id(request) or "system"
     try:
         device = await service.decommission_device(
-            device_id=device_id, tenant_id=tenant_id,
+            device_id=device_id,
+            tenant_id=tenant_id,
             expected_version=data.version,
             reason=data.reason,
             decommissioned_by=decommissioned_by,

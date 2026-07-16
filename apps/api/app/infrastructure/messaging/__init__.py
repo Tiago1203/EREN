@@ -1,4 +1,5 @@
 """Messaging infrastructure (caching, event bus & transactional outbox)."""
+
 from app.infrastructure.messaging.cache import (
     CacheService,
     cache_key,
@@ -18,18 +19,15 @@ from app.infrastructure.messaging.rabbitmq import (
 )
 
 __all__ = [
-    # Caching
     "CacheService",
-    "cache_key",
-    "close_redis",
-    "get_redis",
-    # Event bus
     "EventBus",
-    "close_connection",
-    "get_event_bus",
-    "get_exchange",
-    # Outbox
-    "TransactionalOutbox",
     "OutboxEventModel",
     "OutboxWorker",
+    "TransactionalOutbox",
+    "cache_key",
+    "close_connection",
+    "close_redis",
+    "get_event_bus",
+    "get_exchange",
+    "get_redis",
 ]

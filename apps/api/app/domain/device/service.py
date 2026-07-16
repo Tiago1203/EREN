@@ -178,30 +178,30 @@ class DeviceService:
 
         # Check for duplicate serial if being updated
         if "serial_number" in fields:
-            existing = await self.repository.get_by_serial(
-                fields["serial_number"], tenant_id
-            )
+            existing = await self.repository.get_by_serial(fields["serial_number"], tenant_id)
             if existing is not None and str(existing.id) != device_id:
-                raise ValueError(
-                    f"Serial number '{fields['serial_number']}' already in use."
-                )
+                raise ValueError(f"Serial number '{fields['serial_number']}' already in use.")
 
         # Filter allowed update fields
         allowed = {
-            "name", "description", "is_critical",
-            "location_building", "location_floor", "location_room",
+            "name",
+            "description",
+            "is_critical",
+            "location_building",
+            "location_floor",
+            "location_room",
             "location_department",
-            "calibration_last", "calibration_next",
-            "calibration_interval_days", "maintenance_interval_days",
+            "calibration_last",
+            "calibration_next",
+            "calibration_interval_days",
+            "maintenance_interval_days",
             "serial_number",
         }
         updates = {k: v for k, v in fields.items() if k in allowed and v is not None}
 
         updated = await self.repository.update(device, expected_version, **updates)
         if updated is None:
-            raise ValueError(
-                f"Device '{device_id}' concurrent modification detected."
-            )
+            raise ValueError(f"Device '{device_id}' concurrent modification detected.")
 
         event = DeviceUpdated(
             device_id=device_id,
@@ -245,9 +245,7 @@ class DeviceService:
             raise ValueError(f"Device '{device_id}' not found.")
 
         if device.status == "decommissioned":
-            raise ValueError(
-                f"Cannot transfer decommissioned device '{device_id}'."
-            )
+            raise ValueError(f"Cannot transfer decommissioned device '{device_id}'.")
 
         previous = {
             "building": device.location_building,
@@ -473,9 +471,7 @@ class DeviceService:
             raise ValueError(f"Device '{device_id}' not found.")
 
         if device.status == "decommissioned":
-            raise ValueError(
-                f"Cannot calibrate decommissioned device '{device_id}'."
-            )
+            raise ValueError(f"Cannot calibrate decommissioned device '{device_id}'.")
 
         updates = {
             "calibration_last": calibration_last,
@@ -674,15 +670,11 @@ class DeviceService:
 
     # ─── Queries ─────────────────────────────────────────────────────────────
 
-    async def get_device(
-        self, device_id: str, tenant_id: str
-    ) -> DeviceModel | None:
+    async def get_device(self, device_id: str, tenant_id: str) -> DeviceModel | None:
         """Get a device by ID within tenant scope."""
         return await self.repository.get_by_id(device_id, tenant_id)
 
-    async def get_device_by_serial(
-        self, serial_number: str, tenant_id: str
-    ) -> DeviceModel | None:
+    async def get_device_by_serial(self, serial_number: str, tenant_id: str) -> DeviceModel | None:
         """Get a device by serial number within tenant scope."""
         return await self.repository.get_by_serial(serial_number, tenant_id)
 
@@ -717,9 +709,7 @@ class DeviceService:
 
     # ─── Delete ──────────────────────────────────────────────────────────────
 
-    async def delete_device(
-        self, device_id: str, tenant_id: str
-    ) -> bool:
+    async def delete_device(self, device_id: str, tenant_id: str) -> bool:
         """Delete a device (hard delete — use decommission for normal lifecycle)."""
         device = await self.repository.get_by_id(device_id, tenant_id)
         if device is None:
@@ -737,7 +727,9 @@ class DeviceService:
         """Publish a domain event to the transactional outbox."""
         self.outbox.append(
             event_type=event.event_type,
-            payload=event.to_dict() if hasattr(event, "to_dict") else {
+            payload=event.to_dict()
+            if hasattr(event, "to_dict")
+            else {
                 "device_id": event.device_id,
                 "tenant_id": event.tenant_id,
                 "event_type": event.event_type,

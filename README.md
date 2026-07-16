@@ -15,8 +15,8 @@ EREN es un **Cognitive Operating System (COS)** especializado en Ingeniería Cl�
 
 **Para la máxima autoridad del proyecto, ver [VISION.md](./VISION.md).**
 
-> **Estado actual:** Epic 2 (Device Management & Lifecycle) completo.
-> Epic 1: Patient context ✅ · Epic 2: Device Management ✅
+> **Estado actual:** EPIC-1 (Fundamentos de Infraestructura) completo.
+> Épica 0: Documentación ✅ · Infraestructura ✅ · Bounded Contexts ✅
 > Documentos canónicos:
 > [ARCHITECTURE_OVERVIEW.md](./ARCHITECTURE_OVERVIEW.md) ·
 > [SYSTEM_DESIGN.md](./SYSTEM_DESIGN.md) ·
@@ -87,44 +87,63 @@ El proyecto usa GitHub Actions. Verifica el estado en la pestaña "Actions" del 
 **Checks:**
 - ✅ Lint (Ruff + Black)
 - ✅ Typecheck (mypy)
-- ✅ Test Suite (136+ tests)
-- ✅ Docker Build & Push
+- ✅ Test Suite (108 tests + integration)
+- ✅ Docker Build
 - ✅ Architecture Validation
 
 ---
 
 ## Estado de Implementación
 
-### ✅ Epic 1 — Patient Context
+### ✅ Épica 0 — Documentación y Planificación
 
-| Componente | Estado | Cobertura |
-|------------|--------|-----------|
-| Authentication | ✅ | Tests unitarios |
-| Patient Model | ✅ | Tests unitarios |
-| Patient Service | ✅ | 70% |
-| Patient Repository | ✅ | 30% |
-| Outbox Pattern | ✅ | Integration tests |
-| Audit Middleware | ✅ | Tests unitarios |
-| CI/CD | ✅ | GitHub Actions |
+| Componente | Estado |
+|------------|--------|
+| VISION.md | ✅ |
+| ARCHITECTURE_OVERVIEW.md | ✅ |
+| SYSTEM_DESIGN.md | ✅ |
+| CORE_SPECIFICATION.md | ✅ |
+| MASTER_ROADMAP.md | ✅ |
+| Tech Bible | ✅ |
 
-### ✅ Epic 2 — Device Management & Lifecycle
+### ✅ Infraestructura (Épica 1)
 
-| Componente | Estado | Cobertura |
-|------------|--------|-----------|
-| DeviceService | ✅ | 92% |
-| DeviceRepository (SQLAlchemy) | ✅ | Tests unitarios |
-| Device Schemas (Pydantic) | ✅ | Tests unitarios |
-| REST API (12 endpoints) | ✅ | Tests unitarios |
-| DeviceCacheService | ✅ | — |
-| Domain Events (10 events) | ✅ | 100% |
-| Unit Tests | ✅ | 36 tests |
-| Integration Tests | ✅ | 10 tests |
-| Lint | ✅ | 0 errors |
+| Componente | Estado | Notas |
+|------------|--------|-------|
+| Docker & Docker Compose | ✅ | API + Worker + Postgres + Redis + RabbitMQ |
+| PostgreSQL + Alembic | ✅ | Multi-schema, async |
+| SQLAlchemy Models | ✅ | Patient, Diagnosis, Device, Incident, Recommendation, Knowledge |
+| Repository Implementations | ✅ | SQLAlchemy async |
+| Unit of Work | ✅ | Async session management |
+| Redis Cache | ✅ | CacheService con TTL |
+| RabbitMQ Event Bus | ✅ | Transactional Outbox |
+| Pydantic Settings | ✅ | Vault-ready |
+| Structured Logging | ✅ | JSON + correlation IDs |
+| OpenTelemetry | ✅ | Tracing + instrumentation |
+| Health Checks | ✅ | /health, /health/live, /health/ready, /health/full |
+| CI/CD (GitHub Actions) | ✅ | Lint + Typecheck + Tests + Docker Build |
+| Pre-commit Hooks | ✅ | Ruff + Black + isort + MyPy + Bandit |
 
-### 🎯 Próximo
+### ✅ Bounded Contexts
 
-- Epic 3: Incident Context
-- Diagnosis Context
+| Context | Estado | Tests |
+|---------|--------|-------|
+| Shared Kernel | ✅ | 61 tests |
+| Patient Context | ✅ | 23 tests |
+| Device Context | ✅ | 17 tests |
+| Incident Context | ✅ | 16 tests |
+| Recommendation Context | ✅ | 19 tests |
+| Knowledge Context | ✅ | Integration tests |
+
+**Total: 108+ tests passing (unit + integration)**
+
+### 🎯 Próximo (Épica 6+)
+
+- Épica 6: Observabilidad
+- Épica 7: Performance & Scale
+- Épica 8: Security Hardening
+- Épica 9: Conversational UI
+- Épica 10: Mobile & Accessibility
 
 ---
 

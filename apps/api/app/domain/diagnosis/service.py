@@ -118,9 +118,7 @@ class DiagnosisService:
         page_size: int = 50,
     ) -> tuple[list[Diagnosis], int]:
         """List diagnoses for a patient."""
-        return await self.repository.list_by_patient(
-            patient_id, tenant_id, page, page_size
-        )
+        return await self.repository.list_by_patient(patient_id, tenant_id, page, page_size)
 
     async def list_diagnoses_by_tenant(
         self,
@@ -146,9 +144,7 @@ class DiagnosisService:
 
         changes = dict(updates)
 
-        updated = await self.repository.update(
-            diagnosis, expected_version, **updates
-        )
+        updated = await self.repository.update(diagnosis, expected_version, **updates)
         if updated is None:
             return None
 

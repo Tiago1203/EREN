@@ -14,6 +14,7 @@ from app.infrastructure.models.incident import (
 )
 from app.infrastructure.models.knowledge import DomainEventModel, KnowledgeArticleModel
 from app.infrastructure.models.recommendation import RecommendationModel
+from app.infrastructure.models.work_order import WorkOrderModel
 
 __all__ = [
     "ActionModel",
@@ -25,4 +26,5 @@ __all__ = [
     "InvestigationModel",
     "KnowledgeArticleModel",
     "RecommendationModel",
+    "WorkOrderModel",
 ]

@@ -39,12 +39,14 @@ class FakeOutbox:
         aggregate_type: str,
         correlation_id: str | None = None,
     ) -> None:
-        self.appended.append({
-            "event_type": event_type,
-            "payload": payload,
-            "aggregate_type": aggregate_type,
-            "correlation_id": correlation_id,
-        })
+        self.appended.append(
+            {
+                "event_type": event_type,
+                "payload": payload,
+                "aggregate_type": aggregate_type,
+                "correlation_id": correlation_id,
+            }
+        )
 
 
 # ─── Fixtures ──────────────────────────────────────────────────────────────────
@@ -150,7 +152,9 @@ class TestRegisterDevice:
             )
 
     @pytest.mark.asyncio
-    async def test_register_device_publishes_event(self, device_service, mock_repository, fake_outbox):
+    async def test_register_device_publishes_event(
+        self, device_service, mock_repository, fake_outbox
+    ):
         mock_repository.get_by_serial.return_value = None
         mock_repository.save.return_value = make_device()
 
@@ -282,7 +286,9 @@ class TestMaintenance:
         assert any(e["event_type"] == "MaintenanceScheduled" for e in fake_outbox.appended)
 
     @pytest.mark.asyncio
-    async def test_schedule_maintenance_on_decommissioned_raises(self, device_service, mock_repository):
+    async def test_schedule_maintenance_on_decommissioned_raises(
+        self, device_service, mock_repository
+    ):
         device = make_device(status="decommissioned")
         mock_repository.get_by_id.return_value = device
 
@@ -296,7 +302,9 @@ class TestMaintenance:
             )
 
     @pytest.mark.asyncio
-    async def test_schedule_maintenance_while_in_maintenance_raises(self, device_service, mock_repository):
+    async def test_schedule_maintenance_while_in_maintenance_raises(
+        self, device_service, mock_repository
+    ):
         device = make_device(status="in_maintenance")
         mock_repository.get_by_id.return_value = device
 
@@ -327,7 +335,9 @@ class TestMaintenance:
         assert any(e["event_type"] == "MaintenanceStarted" for e in fake_outbox.appended)
 
     @pytest.mark.asyncio
-    async def test_start_maintenance_on_decommissioned_raises(self, device_service, mock_repository):
+    async def test_start_maintenance_on_decommissioned_raises(
+        self, device_service, mock_repository
+    ):
         device = make_device(status="decommissioned")
         mock_repository.get_by_id.return_value = device
 
@@ -359,7 +369,9 @@ class TestMaintenance:
         assert any(e["event_type"] == "MaintenanceCompleted" for e in fake_outbox.appended)
 
     @pytest.mark.asyncio
-    async def test_finish_maintenance_not_in_maintenance_raises(self, device_service, mock_repository):
+    async def test_finish_maintenance_not_in_maintenance_raises(
+        self, device_service, mock_repository
+    ):
         device = make_device(status="active")
         mock_repository.get_by_id.return_value = device
 
@@ -508,7 +520,9 @@ class TestDecommission:
         assert any(e["event_type"] == "DeviceDecommissioned" for e in fake_outbox.appended)
 
     @pytest.mark.asyncio
-    async def test_decommission_already_decommissioned_raises(self, device_service, mock_repository):
+    async def test_decommission_already_decommissioned_raises(
+        self, device_service, mock_repository
+    ):
         device = make_device(status="decommissioned")
         mock_repository.get_by_id.return_value = device
 
@@ -561,7 +575,8 @@ class TestDeviceQueries:
 
         result, total = await device_service.list_devices(
             tenant_id="tenant-1",
-            page=1, page_size=10,
+            page=1,
+            page_size=10,
             device_type="imaging",
             building="Main",
             department="Radiology",
@@ -670,7 +685,9 @@ class TestStartMaintenanceEdgeCases:
 
 class TestFinishMaintenanceEdgeCases:
     @pytest.mark.asyncio
-    async def test_finish_maintenance_concurrent_modification(self, device_service, mock_repository):
+    async def test_finish_maintenance_concurrent_modification(
+        self, device_service, mock_repository
+    ):
         device = make_device(status="in_maintenance")
         mock_repository.get_by_id.return_value = device
         mock_repository.update.return_value = None
@@ -719,4 +736,358 @@ class TestUpdateDeviceEdgeCases:
                 expected_version=1,
                 serial_number="SN-NEW",
             )
+
+    @pytest.mark.asyncio
+    async def test_update_concurrent_modification_raises(
+        self, device_service, mock_repository
+    ):
+        device = make_device(version=1)
+        mock_repository.get_by_id.return_value = device
+        mock_repository.get_by_serial.return_value = None
+        mock_repository.update.return_value = None  # concurrent modification at DB level
+
+        with pytest.raises(ValueError, match="concurrent"):
+            await device_service.update_device(
+                device_id=str(device.id),
+                tenant_id="tenant-1",
+                expected_version=1,
+                name="Stale Update",
+            )
+
+    @pytest.mark.asyncio
+    async def test_update_device_not_found_raises(self, device_service, mock_repository):
+        mock_repository.get_by_id.return_value = None
+
+        with pytest.raises(ValueError, match="not found"):
+            await device_service.update_device(
+                device_id="nonexistent",
+                tenant_id="tenant-1",
+                expected_version=1,
+                name="New Name",
+            )
+
+
+# ─── Maintenance Edge Cases ────────────────────────────────────────────────────
+
+
+class TestMaintenanceEdgeCases:
+    @pytest.mark.asyncio
+    async def test_schedule_maintenance_device_not_found(self, device_service, mock_repository):
+        mock_repository.get_by_id.return_value = None
+
+        with pytest.raises(ValueError, match="not found"):
+            await device_service.schedule_maintenance(
+                device_id="nonexistent",
+                tenant_id="tenant-1",
+                expected_version=1,
+                maintenance_type="preventive",
+                scheduled_date="2026-08-01",
+            )
+
+    @pytest.mark.asyncio
+    async def test_start_maintenance_device_not_found(self, device_service, mock_repository):
+        mock_repository.get_by_id.return_value = None
+
+        with pytest.raises(ValueError, match="not found"):
+            await device_service.start_maintenance(
+                device_id="nonexistent",
+                tenant_id="tenant-1",
+                expected_version=1,
+                maintenance_type="corrective",
+                technician_id="tech-1",
+            )
+
+    @pytest.mark.asyncio
+    async def test_start_maintenance_already_in_maintenance_raises(
+        self, device_service, mock_repository
+    ):
+        device = make_device(status="in_maintenance")
+        mock_repository.get_by_id.return_value = device
+
+        with pytest.raises(ValueError, match="already in maintenance"):
+            await device_service.start_maintenance(
+                device_id=str(device.id),
+                tenant_id="tenant-1",
+                expected_version=1,
+                maintenance_type="corrective",
+                technician_id="tech-1",
+            )
+
+    @pytest.mark.asyncio
+    async def test_finish_maintenance_device_not_found(self, device_service, mock_repository):
+        mock_repository.get_by_id.return_value = None
+
+        with pytest.raises(ValueError, match="not found"):
+            await device_service.finish_maintenance(
+                device_id="nonexistent",
+                tenant_id="tenant-1",
+                expected_version=1,
+                completed_by="tech-1",
+            )
+
+    @pytest.mark.asyncio
+    async def test_finish_maintenance_with_calibration_date(
+        self, device_service, mock_repository, fake_outbox
+    ):
+        device = make_device(status="in_maintenance", version=1)
+        mock_repository.get_by_id.return_value = device
+        mock_repository.update.return_value = make_device(
+            status="active", version=2
+        )
+
+        next_cal = datetime(2027, 1, 1, tzinfo=UTC)
+        updated = await device_service.finish_maintenance(
+            device_id=str(device.id),
+            tenant_id="tenant-1",
+            expected_version=1,
+            completed_by="tech-1",
+            next_calibration_date=next_cal,
+        )
+
+        assert updated is not None
+        assert any(
+            e["event_type"] == "MaintenanceCompleted" for e in fake_outbox.appended
+        )
+        # Verify update was called with calibration_next
+        call_kwargs = mock_repository.update.call_args.kwargs
+        assert call_kwargs.get("status") == "active"
+
+
+# ─── Calibration Edge Cases ────────────────────────────────────────────────────
+
+
+class TestCalibrationEdgeCases2:
+    @pytest.mark.asyncio
+    async def test_calibrate_device_not_found(self, device_service, mock_repository):
+        mock_repository.get_by_id.return_value = None
+
+        with pytest.raises(ValueError, match="not found"):
+            await device_service.calibrate_device(
+                device_id="nonexistent",
+                tenant_id="tenant-1",
+                expected_version=1,
+                calibration_last=datetime.now(UTC),
+                calibration_next=datetime(2027, 7, 16, tzinfo=UTC),
+                calibration_interval_days=365,
+                calibrated_by="engineer-1",
+            )
+
+
+# ─── Out of Service Edge Cases ────────────────────────────────────────────────
+
+
+class TestOutOfServiceEdgeCases:
+    @pytest.mark.asyncio
+    async def test_take_out_of_service_device_not_found(self, device_service, mock_repository):
+        mock_repository.get_by_id.return_value = None
+
+        with pytest.raises(ValueError, match="not found"):
+            await device_service.take_out_of_service(
+                device_id="nonexistent",
+                tenant_id="tenant-1",
+                expected_version=1,
+                reason="Inspection",
+                taken_by="manager-1",
+            )
+
+    @pytest.mark.asyncio
+    async def test_take_out_of_service_already_out_of_service_raises(
+        self, device_service, mock_repository
+    ):
+        device = make_device(status="out_of_service")
+        mock_repository.get_by_id.return_value = device
+
+        with pytest.raises(ValueError, match="already"):
+            await device_service.take_out_of_service(
+                device_id=str(device.id),
+                tenant_id="tenant-1",
+                expected_version=1,
+                reason="Inspection",
+                taken_by="manager-1",
+            )
+
+    @pytest.mark.asyncio
+    async def test_take_out_of_service_decommissioned_raises(
+        self, device_service, mock_repository
+    ):
+        device = make_device(status="decommissioned")
+        mock_repository.get_by_id.return_value = device
+
+        with pytest.raises(ValueError, match="decommissioned"):
+            await device_service.take_out_of_service(
+                device_id=str(device.id),
+                tenant_id="tenant-1",
+                expected_version=1,
+                reason="Inspection",
+                taken_by="manager-1",
+            )
+
+    @pytest.mark.asyncio
+    async def test_take_out_of_service_concurrent_modification_raises(
+        self, device_service, mock_repository
+    ):
+        device = make_device(version=1)
+        mock_repository.get_by_id.return_value = device
+        mock_repository.update.return_value = None
+
+        with pytest.raises(ValueError, match="[Cc]oncurrent"):
+            await device_service.take_out_of_service(
+                device_id=str(device.id),
+                tenant_id="tenant-1",
+                expected_version=1,
+                reason="Inspection",
+                taken_by="manager-1",
+            )
+
+
+# ─── ReturnToService Edge Cases ────────────────────────────────────────────────
+
+
+class TestReturnToServiceEdgeCases2:
+    @pytest.mark.asyncio
+    async def test_return_to_service_not_out_of_service_raises(
+        self, device_service, mock_repository
+    ):
+        device = make_device(status="active")
+        mock_repository.get_by_id.return_value = device
+
+        with pytest.raises(ValueError, match="not out of service"):
+            await device_service.return_to_service(
+                device_id=str(device.id),
+                tenant_id="tenant-1",
+                expected_version=1,
+                returned_by="engineer-1",
+            )
+
+    @pytest.mark.asyncio
+    async def test_return_to_service_calibration_overdue_raises(
+        self, device_service, mock_repository
+    ):
+        from datetime import timedelta
+
+        device = make_device(status="out_of_service")
+        device.calibration_next = datetime.now(UTC) - timedelta(days=1)
+        mock_repository.get_by_id.return_value = device
+
+        with pytest.raises(ValueError, match="calibration is overdue"):
+            await device_service.return_to_service(
+                device_id=str(device.id),
+                tenant_id="tenant-1",
+                expected_version=1,
+                returned_by="engineer-1",
+            )
+
+    @pytest.mark.asyncio
+    async def test_return_to_service_concurrent_modification_raises(
+        self, device_service, mock_repository
+    ):
+        from datetime import timedelta
+
+        device = make_device(status="out_of_service")
+        device.calibration_next = datetime.now(UTC) + timedelta(days=365)
+        mock_repository.get_by_id.return_value = device
+        mock_repository.update.return_value = None
+
+        with pytest.raises(ValueError, match="[Cc]oncurrent"):
+            await device_service.return_to_service(
+                device_id=str(device.id),
+                tenant_id="tenant-1",
+                expected_version=1,
+                returned_by="engineer-1",
+            )
+
+
+# ─── Decommission Edge Cases ──────────────────────────────────────────────────
+
+
+class TestDecommissionEdgeCases:
+    @pytest.mark.asyncio
+    async def test_decommission_concurrent_modification_raises(
+        self, device_service, mock_repository
+    ):
+        device = make_device(version=1)
+        mock_repository.get_by_id.return_value = device
+        mock_repository.update.return_value = None  # DB-level concurrent modification
+
+        with pytest.raises(ValueError, match="[Cc]oncurrent"):
+            await device_service.decommission_device(
+                device_id=str(device.id),
+                tenant_id="tenant-1",
+                expected_version=1,
+                reason="End of life",
+                decommissioned_by="manager-1",
+            )
+
+    @pytest.mark.asyncio
+    async def test_decommission_device_not_found(self, device_service, mock_repository):
+        mock_repository.get_by_id.return_value = None
+
+        with pytest.raises(ValueError, match="not found"):
+            await device_service.decommission_device(
+                device_id="nonexistent",
+                tenant_id="tenant-1",
+                expected_version=1,
+                reason="End of life",
+                decommissioned_by="manager-1",
+            )
+
+
+# ─── Device Queries Edge Cases ────────────────────────────────────────────────
+
+
+class TestDeviceQueriesEdgeCases:
+    @pytest.mark.asyncio
+    async def test_get_device_by_serial_returns_device(
+        self, device_service, mock_repository
+    ):
+        device = make_device(serial="SN-SERIAL-001")
+        mock_repository.get_by_serial.return_value = device
+
+        result = await device_service.get_device_by_serial(
+            serial_number="SN-SERIAL-001", tenant_id="tenant-1"
+        )
+
+        assert result is not None
+        assert result.serial_number == "SN-SERIAL-001"
+        mock_repository.get_by_serial.assert_awaited_once_with(
+            "SN-SERIAL-001", "tenant-1"
+        )
+
+    @pytest.mark.asyncio
+    async def test_get_device_by_serial_returns_none(
+        self, device_service, mock_repository
+    ):
+        mock_repository.get_by_serial.return_value = None
+
+        result = await device_service.get_device_by_serial(
+            serial_number="NONEXISTENT", tenant_id="tenant-1"
+        )
+
+        assert result is None
+
+    @pytest.mark.asyncio
+    async def test_list_devices_returns_empty(self, device_service, mock_repository):
+        mock_repository.list_by_tenant.return_value = ([], 0)
+
+        devices, total = await device_service.list_devices(
+            tenant_id="tenant-1", page=1, page_size=20
+        )
+
+        assert devices == []
+        assert total == 0
+
+    @pytest.mark.asyncio
+    async def test_list_devices_with_search(self, device_service, mock_repository):
+        device = make_device(name="MRI Scanner")
+        mock_repository.list_by_tenant.return_value = ([device], 1)
+
+        devices, total = await device_service.list_devices(
+            tenant_id="tenant-1",
+            page=1,
+            page_size=20,
+            search="MRI",
+        )
+
+        assert len(devices) == 1
+        assert devices[0].name == "MRI Scanner"
 

@@ -21,7 +21,7 @@ import os
 from dataclasses import dataclass
 from typing import Any
 
-logger = __import__("app.core.logging").app.core.logging.get_logger(__name__)
+logger = __import__("logging").getLogger(__name__)
 
 
 @dataclass

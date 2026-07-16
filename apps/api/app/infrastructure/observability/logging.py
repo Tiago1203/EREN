@@ -1,4 +1,5 @@
 """Structured JSON logging with correlation IDs (trace_id, request_id, correlation_id)."""
+
 from __future__ import annotations
 
 import logging
@@ -82,4 +83,3 @@ def configure_logging() -> None:
     logging.getLogger(__name__).info(
         "Logging configured (level=%s, env=%s)", level, settings.environment
     )
-

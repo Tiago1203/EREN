@@ -15,6 +15,7 @@ Usage::
     await session.commit()   # event is persisted with the incident
     # Background worker publishes to RabbitMQ and marks as processed
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -46,9 +47,7 @@ class OutboxEventModel(Base):
         {"schema": "incident"},
     )
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     aggregate_type: Mapped[str] = mapped_column(String(255), nullable=False)
     event_type: Mapped[str] = mapped_column(String(255), nullable=False)
     payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
@@ -59,9 +58,7 @@ class OutboxEventModel(Base):
         nullable=False,
         server_default=text("NOW()"),
     )
-    processed_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
+    processed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     retry_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     last_error: Mapped[str | None] = mapped_column(String(1000), nullable=True)
 
@@ -85,12 +82,14 @@ class TransactionalOutbox:
         correlation_id: str | None = None,
     ) -> None:
         """Register an event to be published when the transaction commits."""
-        self._pending.append({
-            "aggregate_type": aggregate_type,
-            "event_type": event_type,
-            "payload": payload,
-            "correlation_id": correlation_id,
-        })
+        self._pending.append(
+            {
+                "aggregate_type": aggregate_type,
+                "event_type": event_type,
+                "payload": payload,
+                "correlation_id": correlation_id,
+            }
+        )
 
     async def flush(self) -> None:
         """Write all pending events to the outbox table.
@@ -161,12 +160,9 @@ class OutboxWorker:
 
             await asyncio.sleep(self.poll_interval)
 
-    async def _fetch_pending(
-        self, session: AsyncSession
-    ) -> list[OutboxEventModel]:
+    async def _fetch_pending(self, session: AsyncSession) -> list[OutboxEventModel]:
         """Fetch the next batch of pending outbox events."""
-        stmt = (
-            text("""
+        stmt = text("""
                 SELECT id, aggregate_type, event_type, payload,
                        correlation_id, retry_count
                 FROM incident.outbox_events
@@ -175,7 +171,6 @@ class OutboxWorker:
                 LIMIT :batch_size
                 FOR UPDATE SKIP LOCKED
             """)
-        )
         result = await session.execute(
             stmt, {"max_retries": self.max_retries, "batch_size": self.batch_size}
         )
