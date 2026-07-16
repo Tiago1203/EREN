@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eren-api-config
+  namespace: eren
+data:
+  EREN_API_ENVIRONMENT: "production"
+  EREN_API_DEBUG: "false"
+  EREN_API_APP_NAME: "EREN API"
+  EREN_API_SERVICE_NAME: "eren-api"
+  EREN_API_API_V1_PREFIX: "/api/v1"
+  EREN_API_OTEL_ENDPOINT: "http://jaeger-collector.observability:4317"
+  EREN_API_CACHE_TTL_SECONDS: "300"
+  EREN_API_CORS_ORIGINS: '["https://app.eren.dev"]'

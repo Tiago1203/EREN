@@ -1,0 +1,16 @@
+apiVersion: v2
+name: eren-api
+description: EREN Cognitive Operating System — API Platform
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - eren
+  - clinical-decision-support
+  - medical-device
+  - hospital
+maintainers:
+  - name: Architecture Board
+    email: architecture@eren.dev
+sources:
+  - https://github.com/Tiago1203/EREN

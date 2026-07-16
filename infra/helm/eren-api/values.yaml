@@ -1,0 +1,93 @@
+# Default values for eren-api.
+
+replicaCount: 3
+
+image:
+  repository: eren-api
+  tag: latest
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+  metricsPort: 9090
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+  hosts:
+    - host: api.eren.dev
+      paths:
+        - path: /api
+          pathType: Prefix
+  tls:
+    - secretName: eren-api-tls
+      hosts:
+        - api.eren.dev
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 250m
+    memory: 512Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+env:
+  EREN_API_ENVIRONMENT: production
+  EREN_API_DEBUG: "false"
+  EREN_API_OTEL_ENDPOINT: "http://jaeger-collector.observability:4317"
+
+secrets:
+  database-url: ""
+  redis-url: ""
+  rabbitmq-url: ""
+  supabase-url: ""
+  supabase-anon-key: ""
+  supabase-service-role-key: ""
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app: eren-api
+          topologyKey: kubernetes.io/hostname
+
+livenessProbe:
+  httpGet:
+    path: /api/v1/health/live
+    port: 8000
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /api/v1/health/ready
+    port: 8000
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 3

@@ -13,7 +13,9 @@ These documents are extensions of **Epic 0.5 (Advanced Architecture)** and must 
 - `EREN_CONSISTENCY_MODEL.md` (Epic 0)
 - `EREN_MULTITENANCY_STRATEGY.md` (Epic 0)
 - `EREN_ARCHITECTURAL_GUARDRAILS.md` (Epic 0.2)
-- `EREN_ADR_INDEX.md` (Epic 0.9)
+- `EREN_ADR_INDEX.md` (Epic 0.9 — REDIRECT)
+
+They are **implemented by Epic 1 (Infrastructure Platform)** and **referenced by Epic 2-10**.
 
 ---
 
@@ -135,7 +137,26 @@ All infrastructure design decisions are now documented and ready for Epic 1 impl
 
 **Score:** Pre-implementation (will be evaluated after Epic 1)
 
-**Next:** Epic 1 - Infrastructure Platform
+**Epic Dependencies:**
+
+```
+Epic 0-Infra ────────────────────────────────────────────→ Epic 1
+  │                                                              │
+  ├── Kubernetes ADR ────────────────────────→ K8s manifests + Helm │
+  ├── Kafka ADR ──────────────────────────→ RabbitMQ messaging    │
+  ├── S3/MinIO ADR ────────────────────→ Object storage          │
+  ├── Outbox ADR ────────────────────────→ Outbox worker script   │
+  ├── RLS ADR ────────────────────────────→ Alembic RLS migration│
+  ├── Observability ADR ─────────────────→ OTel + Grafana alerts │
+  ├── Celery ADR ────────────────────────→ Celery task queue    │
+  └── Backup/DR ADR ────────────────────→ K8s PVC + CronJob      │
+
+Epic 1 ────────────────────────────────────────────────→ Epic 2
+  │                                                              │
+  └── PostgreSQL, Alembic, RLS ──────────→ Domain data storage    │
+```
+
+**Next:** Epic 1 - Infrastructure Platform ✅ (implemented)
 
 **These are LIVE documents:**
 - All are versioned

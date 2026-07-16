@@ -94,6 +94,55 @@ services:
       start_period: 10s
     restart: unless-stopped
 
+  # ── Outbox Worker ────────────────────────────────────────────────────────
+  outbox-worker:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    command: ["python", "scripts/run_outbox_worker.py"]
+    environment:
+      EREN_API_DATABASE_URL: postgresql+asyncpg://eren:eren@postgres:5432/eren
+      EREN_API_RABBITMQ_URL: amqp://eren:eren@rabbitmq:5672/
+      PYTHONPATH: /app:/app/core
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── Celery Worker ─────────────────────────────────────────────────────────
+  celery-worker:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    command: ["celery", "-A", "app.tasks.celery_app", "worker", "--loglevel=INFO"]
+    environment:
+      EREN_API_DATABASE_URL: postgresql+asyncpg://eren:eren@postgres:5432/eren
+      EREN_API_REDIS_URL: redis://redis:6379/0
+      PYTHONPATH: /app:/app/core
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── Celery Beat (Scheduler) ──────────────────────────────────────────────
+  celery-beat:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    command: ["celery", "-A", "app.tasks.celery_app", "beat", "--loglevel=INFO"]
+    environment:
+      PYTHONPATH: /app:/app/core
+    depends_on:
+      - redis
+      - rabbitmq
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   redis_data:
