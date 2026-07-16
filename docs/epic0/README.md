@@ -137,6 +137,8 @@ All foundations in place:
 **Then:** Epic 2 - Core Business Domain (COMPLETED)
 **Then:** Epic 3 - Hospital Management Platform
 
+**Infrastructure Extension:** See [Epic 0-Infra](../epic0-infra/) for detailed infrastructure design documents that fill the gaps identified in Epic 0 (Kubernetes, Kafka, S3/MinIO, Outbox Pattern, RLS in Alembic, Observability Stack, Backup/DR Strategy).
+
 ---
 
 ## Document Relationships
