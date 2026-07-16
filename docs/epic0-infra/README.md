@@ -35,14 +35,19 @@ Epic 0 (Foundation)
 
 Epic 0-Infra (NEW — Extension of Epic 0.5)
 ├── EREN_INFRASTRUCTURE_BLUEPRINT.md
-├── EREN_INFRASTRUCTURE_ADR_INDEX.md
-├── ADR-0080: Kubernetes as Deployment Platform
-├── ADR-0081: Kafka vs RabbitMQ
-├── ADR-0082: S3/MinIO Object Storage
-├── ADR-0083: Outbox Pattern
-├── ADR-0084: RLS in Alembic
-├── ADR-0085: Observability Stack
-├── ADR-0086: Backup and DR Strategy
+├── EREN_INFRASTRUCTURE_ADR_INDEX.md  ← REDIRECT to ../adr/
+├── ../adr/epic0-infra/ADR-0080.md: Kubernetes
+├── ../adr/epic0-infra/ADR-0081.md: Kafka
+├── ../adr/epic0-infra/ADR-0082.md: S3/MinIO
+├── ../adr/epic0-infra/ADR-0083.md: Outbox Pattern
+├── ../adr/epic0-infra/ADR-0084.md: RLS in Alembic
+├── ../adr/epic0-infra/ADR-0085.md: Observability Stack
+├── ../adr/epic0-infra/ADR-0086.md: Backup/DR
+├── ../adr/epic0-infra/ADR-0090.md: GitOps (Proposed)
+├── ../adr/epic0-infra/ADR-0091.md: Service Mesh (Proposed)
+├── ../adr/epic0-infra/ADR-0092.md: API Gateway (Proposed)
+├── ../adr/epic0-infra/ADR-0093.md: Celery (Proposed)
+├── ../adr/epic0-infra/ADR-0094.md: Schema Registry (Proposed)
 ├── EREN_LOCAL_DEV_SETUP.md
 ├── EREN_OBSERVABILITY_SETUP.md
 ├── EREN_SETTINGS_MODEL.md
@@ -56,14 +61,19 @@ Epic 0-Infra (NEW — Extension of Epic 0.5)
 | Document | Purpose | Status |
 |----------|---------|--------|
 | [EREN_INFRASTRUCTURE_BLUEPRINT.md](./EREN_INFRASTRUCTURE_BLUEPRINT.md) | Complete infrastructure stack definition | READY |
-| [EREN_INFRASTRUCTURE_ADR_INDEX.md](./EREN_INFRASTRUCTURE_ADR_INDEX.md) | Index of all infrastructure ADRs | READY |
-| [ADR-0080_KUBERNETES.md](./ADR-0080_KUBERNETES.md) | K8s as deployment platform decision | ACCEPTED |
-| [ADR-0081_MESSAGE_QUEUE.md](./ADR-0081_MESSAGE_QUEUE.md) | Kafka vs RabbitMQ decision | ACCEPTED |
-| [ADR-0082_OBJECT_STORAGE.md](./ADR-0082_OBJECT_STORAGE.md) | S3/MinIO strategy | ACCEPTED |
-| [ADR-0083_OUTBOX_PATTERN.md](./ADR-0083_OUTBOX_PATTERN.md) | Outbox pattern specification | ACCEPTED |
-| [ADR-0084_RLS_ALEMBIC.md](./ADR-0084_RLS_ALEMBIC.md) | Row-Level Security in Alembic | ACCEPTED |
-| [ADR-0085_OBSERVABILITY.md](./ADR-0085_OBSERVABILITY.md) | Prometheus/Grafana/Jaeger/Loki | ACCEPTED |
-| [ADR-0086_BACKUP_DR.md](./ADR-0086_BACKUP_DR.md) | Backup and DR strategy | ACCEPTED |
+| [EREN_INFRASTRUCTURE_ADR_INDEX.md](./EREN_INFRASTRUCTURE_ADR_INDEX.md) | REDIRECT to [`../adr/epic0-infra/`](../adr/epic0-infra/) | REDIRECT |
+| [ADR-0080.md](../adr/epic0-infra/ADR-0080.md) | K8s as deployment platform decision | ACCEPTED |
+| [ADR-0081.md](../adr/epic0-infra/ADR-0081.md) | Kafka as Primary Message Broker | ACCEPTED |
+| [ADR-0082.md](../adr/epic0-infra/ADR-0082.md) | S3/MinIO strategy | ACCEPTED |
+| [ADR-0083.md](../adr/epic0-infra/ADR-0083.md) | Outbox pattern specification | ACCEPTED |
+| [ADR-0084.md](../adr/epic0-infra/ADR-0084.md) | Row-Level Security in Alembic | ACCEPTED |
+| [ADR-0085.md](../adr/epic0-infra/ADR-0085.md) | Prometheus/Grafana/Jaeger/Loki | ACCEPTED |
+| [ADR-0086.md](../adr/epic0-infra/ADR-0086.md) | Backup and DR strategy | ACCEPTED |
+| [ADR-0090.md](../adr/epic0-infra/ADR-0090.md) | GitOps with ArgoCD | PROPOSED |
+| [ADR-0091.md](../adr/epic0-infra/ADR-0091.md) | Service Mesh (Istio vs Linkerd) | PROPOSED |
+| [ADR-0092.md](../adr/epic0-infra/ADR-0092.md) | API Gateway Strategy | PROPOSED |
+| [ADR-0093.md](../adr/epic0-infra/ADR-0093.md) | Celery as Task Queue | PROPOSED |
+| [ADR-0094.md](../adr/epic0-infra/ADR-0094.md) | Schema Registry Strategy | PROPOSED |
 | [EREN_LOCAL_DEV_SETUP.md](./EREN_LOCAL_DEV_SETUP.md) | Local development environment | READY |
 | [EREN_OBSERVABILITY_SETUP.md](./EREN_OBSERVABILITY_SETUP.md) | Observability setup guide | READY |
 | [EREN_SETTINGS_MODEL.md](./EREN_SETTINGS_MODEL.md) | Settings/configuration model | READY |
@@ -77,13 +87,16 @@ This documentation addresses the following gaps identified in Epic 0:
 
 | Gap | Document |
 |-----|---------|
-| Kubernetes deployment not specified | `ADR-0080_KUBERNETES.md` |
-| Message queue choice not documented | `ADR-0081_MESSAGE_QUEUE.md` |
-| S3/MinIO storage strategy missing | `ADR-0082_OBJECT_STORAGE.md` |
-| Outbox pattern undefined | `ADR-0083_OUTBOX_PATTERN.md` |
-| RLS implementation not guided | `ADR-0084_RLS_ALEMBIC.md` |
-| Observability stack incomplete | `ADR-0085_OBSERVABILITY.md` |
-| Backup/DR not specified | `ADR-0086_BACKUP_DR.md` |
+| Kubernetes deployment not specified | [`../adr/epic0-infra/ADR-0080.md`](../adr/epic0-infra/ADR-0080.md) |
+| Message queue choice not documented | [`../adr/epic0-infra/ADR-0081.md`](../adr/epic0-infra/ADR-0081.md) |
+| S3/MinIO storage strategy missing | [`../adr/epic0-infra/ADR-0082.md`](../adr/epic0-infra/ADR-0082.md) |
+| Outbox pattern undefined | [`../adr/epic0-infra/ADR-0083.md`](../adr/epic0-infra/ADR-0083.md) |
+| RLS implementation not guided | [`../adr/epic0-infra/ADR-0084.md`](../adr/epic0-infra/ADR-0084.md) |
+| Observability stack incomplete | [`../adr/epic0-infra/ADR-0085.md`](../adr/epic0-infra/ADR-0085.md) |
+| Backup/DR not specified | [`../adr/epic0-infra/ADR-0086.md`](../adr/epic0-infra/ADR-0086.md) |
+| API Gateway not defined | [`../adr/epic0-infra/ADR-0092.md`](../adr/epic0-infra/ADR-0092.md) |
+| Task Queue not defined | [`../adr/epic0-infra/ADR-0093.md`](../adr/epic0-infra/ADR-0093.md) |
+| Schema Registry not defined | [`../adr/epic0-infra/ADR-0094.md`](../adr/epic0-infra/ADR-0094.md) |
 | No local dev setup | `EREN_LOCAL_DEV_SETUP.md` |
 | No observability setup guide | `EREN_OBSERVABILITY_SETUP.md` |
 | Settings model unclear | `EREN_SETTINGS_MODEL.md` |
@@ -93,15 +106,24 @@ This documentation addresses the following gaps identified in Epic 0:
 
 ## Architecture Decision Status
 
+All ADRs are located at [`../adr/epic0-infra/`](../adr/epic0-infra/).
+
 | ADR | Title | Status | Date | Owner |
 |-----|-------|--------|------|-------|
-| ADR-0080 | Kubernetes as Deployment Platform | ACCEPTED | 2026-07-16 | Infrastructure Team |
-| ADR-0081 | Kafka as Primary Message Broker | ACCEPTED | 2026-07-16 | Infrastructure Team |
-| ADR-0082 | S3/MinIO Object Storage Strategy | ACCEPTED | 2026-07-16 | Infrastructure Team |
-| ADR-0083 | Outbox Pattern for Event Publishing | ACCEPTED | 2026-07-16 | Architecture Board |
-| ADR-0084 | Row-Level Security in Alembic Migrations | ACCEPTED | 2026-07-16 | Architecture Board |
-| ADR-0085 | Observability Stack | ACCEPTED | 2026-07-16 | Infrastructure Team |
-| ADR-0086 | Backup and Disaster Recovery Strategy | ACCEPTED | 2026-07-16 | Infrastructure Team |
+| [ADR-0080](../adr/epic0-infra/ADR-0080.md) | Kubernetes as Deployment Platform | ACCEPTED | 2026-07-16 | Infrastructure Team |
+| [ADR-0081](../adr/epic0-infra/ADR-0081.md) | Kafka as Primary Message Broker | ACCEPTED | 2026-07-16 | Infrastructure Team |
+| [ADR-0082](../adr/epic0-infra/ADR-0082.md) | S3/MinIO Object Storage Strategy | ACCEPTED | 2026-07-16 | Infrastructure Team |
+| [ADR-0083](../adr/epic0-infra/ADR-0083.md) | Outbox Pattern for Event Publishing | ACCEPTED | 2026-07-16 | Architecture Board |
+| [ADR-0084](../adr/epic0-infra/ADR-0084.md) | Row-Level Security in Alembic Migrations | ACCEPTED | 2026-07-16 | Architecture Board |
+| [ADR-0085](../adr/epic0-infra/ADR-0085.md) | Observability Stack | ACCEPTED | 2026-07-16 | Infrastructure Team |
+| [ADR-0086](../adr/epic0-infra/ADR-0086.md) | Backup and Disaster Recovery Strategy | ACCEPTED | 2026-07-16 | Infrastructure Team |
+| [ADR-0090](../adr/epic0-infra/ADR-0090.md) | GitOps with ArgoCD | PROPOSED | 2026-07-16 | Infrastructure Team |
+| [ADR-0091](../adr/epic0-infra/ADR-0091.md) | Service Mesh (Istio vs Linkerd) | PROPOSED | 2026-07-16 | Infrastructure Team |
+| [ADR-0092](../adr/epic0-infra/ADR-0092.md) | API Gateway Strategy | PROPOSED | 2026-07-16 | Infrastructure Team |
+| [ADR-0093](../adr/epic0-infra/ADR-0093.md) | Celery as Task Queue | PROPOSED | 2026-07-16 | Infrastructure Team |
+| [ADR-0094](../adr/epic0-infra/ADR-0094.md) | Schema Registry Strategy | PROPOSED | 2026-07-16 | Infrastructure Team |
+
+See full ADR index at [`../adr/README.md`](../adr/README.md).
 
 ---
 

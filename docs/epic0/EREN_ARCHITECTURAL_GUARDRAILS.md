@@ -96,9 +96,9 @@ Scope of "architectural decision":
 - New integration
 
 ✅ CORRECT:
-ADR-0012: Adding Trust as a Cross-Cutting Service
+[ADR-0022: Trust as Cross-Cutting Service](../adr/epic0/ADR-0022.md)
 Status: Accepted
-Decision: Trust is a service, not a capability
+Decision: Trust is a cross-cutting capability, not a domain capability
 
 ❌ WRONG:
 "We'll just add this module and document it later"

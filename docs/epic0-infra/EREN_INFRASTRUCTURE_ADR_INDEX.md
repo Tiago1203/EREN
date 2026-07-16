@@ -1,87 +1,25 @@
-# EREN Infrastructure ADR Index
-## Architecture Decision Records for Epic 0-Infra
+# EREN Infrastructure ADR Index — REDIRECT
+
+**This file has moved.**
+
+**→ All Infrastructure ADRs are now located at: [`../adr/epic0-infra/`](./adr/epic0-infra/)
+
+The ADR files are organized by EPIC:
+
+| Location | ADRs |
+|----------|------|
+| [`../adr/epic0/`](./adr/epic0/) | ADR-0001 to ADR-0076 |
+| [`../adr/epic0-infra/`](./adr/epic0-infra/) | ADR-0080 to ADR-0094 |
+| [`../adr/epic1/`](./adr/epic1/) through [`../adr/epic10/`](./adr/epic10/) | (Future EPICs — empty) |
 
 ---
 
-## Version History
+## Why the Change
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | 2026-07-16 | Infrastructure Team | Initial |
+Infrastructure ADRs were reorganized from scattered `docs/epic0-infra/ADR-*.md` files into `docs/adr/epic0-infra/`. See PR #124 for details.
 
 ---
 
-## Purpose
-
-This index tracks all Architecture Decision Records (ADRs) for EREN's infrastructure layer. These ADRs complement the ADRs from Epic 0 by documenting decisions specific to the infrastructure stack.
-
----
-
-## ADR Index by Status
-
-### Accepted
-
-| ADR | Title | Status | Date | Owner |
-|-----|-------|--------|------|-------|
-| ADR-0080 | Kubernetes as Deployment Platform | ACCEPTED | 2026-07-16 | Infrastructure Team |
-| ADR-0081 | Kafka as Primary Message Broker | ACCEPTED | 2026-07-16 | Infrastructure Team |
-| ADR-0082 | S3/MinIO Object Storage Strategy | ACCEPTED | 2026-07-16 | Infrastructure Team |
-| ADR-0083 | Outbox Pattern for Event Publishing | ACCEPTED | 2026-07-16 | Architecture Board |
-| ADR-0084 | Row-Level Security in Alembic Migrations | ACCEPTED | 2026-07-16 | Architecture Board |
-| ADR-0085 | Observability Stack | ACCEPTED | 2026-07-16 | Infrastructure Team |
-| ADR-0086 | Backup and Disaster Recovery Strategy | ACCEPTED | 2026-07-16 | Infrastructure Team |
-
-### Proposed
-
-| ADR | Title | Status | Date | Owner |
-|-----|-------|--------|------|-------|
-| ADR-0090 | GitOps with ArgoCD | PROPOSED | 2026-07-16 | Infrastructure Team |
-| ADR-0091 | Service Mesh (Istio vs Linkerd) | PROPOSED | 2026-07-16 | Infrastructure Team |
-
----
-
-## ADR Index by Category
-
-### Containerization & Orchestration
-
-| ADR | Title | Category |
-|-----|-------|----------|
-| ADR-0080 | Kubernetes as Deployment Platform | Orchestration |
-
-### Messaging
-
-| ADR | Title | Category |
-|-----|-------|----------|
-| ADR-0081 | Kafka as Primary Message Broker | Messaging |
-| ADR-0083 | Outbox Pattern for Event Publishing | Messaging |
-
-### Storage
-
-| ADR | Title | Category |
-|-----|-------|----------|
-| ADR-0082 | S3/MinIO Object Storage Strategy | Storage |
-
-### Database
-
-| ADR | Title | Category |
-|-----|-------|----------|
-| ADR-0084 | Row-Level Security in Alembic Migrations | Database |
-
-### Observability
-
-| ADR | Title | Category |
-|-----|-------|----------|
-| ADR-0085 | Observability Stack | Observability |
-
-### Operations
-
-| ADR | Title | Category |
-|-----|-------|----------|
-| ADR-0086 | Backup and Disaster Recovery Strategy | Operations |
-| ADR-0090 | GitOps with ArgoCD | Operations |
-| ADR-0091 | Service Mesh | Operations |
-
----
-
-*EREN Infrastructure ADR Index v1.0*
+*EREN Infrastructure ADR Index v2.0 — Redirect*
 *Infrastructure Team - 2026-07-16*
+
