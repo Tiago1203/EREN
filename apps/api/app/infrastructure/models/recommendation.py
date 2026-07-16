@@ -91,6 +91,9 @@ class RecommendationModel(Base):
         onupdate=func.now(),
     )
 
+    # SQLAlchemy optimistic locking — auto-increments version on UPDATE
+    __mapper_args__ = {"version_id_col": version}
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "id": str(self.id),
