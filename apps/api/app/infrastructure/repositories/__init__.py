@@ -3,6 +3,7 @@
 These implementations satisfy the abstract repository interfaces
 defined in the domain layer.
 """
+
 from app.domain.device.repository import SQLAlchemyDeviceRepository as DeviceRepositoryImpl
 
 __all__ = [

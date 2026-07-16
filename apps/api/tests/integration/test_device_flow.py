@@ -12,7 +12,6 @@ from datetime import UTC
 from uuid import uuid4
 
 import pytest
-import pytest_asyncio
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -20,8 +19,7 @@ from app.domain.device import DeviceService, SQLAlchemyDeviceRepository
 from app.infrastructure.messaging.outbox import TransactionalOutbox
 
 # Import models to register them with Base.metadata
-from app.infrastructure.models.device import DeviceModel  # noqa: F401
-
+from app.infrastructure.models.device import DeviceModel
 
 # ─── Repository Tests ──────────────────────────────────────────────────────
 
@@ -209,12 +207,14 @@ class TestDeviceRepository:
     async def test_list_with_filters(self, db_session: AsyncSession):
         repository = SQLAlchemyDeviceRepository(db_session)
 
-        for i, (status, device_type) in enumerate([
-            ("active", "diagnostic"),
-            ("active", "imaging"),
-            ("in_maintenance", "diagnostic"),
-            ("active", "diagnostic"),
-        ]):
+        for i, (status, device_type) in enumerate(
+            [
+                ("active", "diagnostic"),
+                ("active", "imaging"),
+                ("in_maintenance", "diagnostic"),
+                ("active", "diagnostic"),
+            ]
+        ):
             await repository.save(
                 tenant_id="tenant-filter",
                 device_id=str(uuid4()),
@@ -239,14 +239,10 @@ class TestDeviceRepository:
             )
         await db_session.commit()
 
-        active, total = await repository.list_by_tenant(
-            "tenant-filter", status_filter="active"
-        )
+        active, total = await repository.list_by_tenant("tenant-filter", status_filter="active")
         assert all(d.status == "active" for d in active)
 
-        critical, total2 = await repository.list_by_tenant(
-            "tenant-filter", is_critical=True
-        )
+        critical, total2 = await repository.list_by_tenant("tenant-filter", is_critical=True)
         assert len(critical) == 0  # None marked as critical
 
 
@@ -278,9 +274,7 @@ class TestDeviceServiceIntegration:
 
         assert device is not None
         # Verify outbox has the event
-        result = await db_session.execute(
-            select(DeviceModel).where(DeviceModel.id == device.id)
-        )
+        result = await db_session.execute(select(DeviceModel).where(DeviceModel.id == device.id))
         saved = result.scalar_one_or_none()
         assert saved is not None
 
@@ -347,6 +341,7 @@ class TestDeviceServiceIntegration:
 
         # 3. Finish maintenance
         from datetime import datetime
+
         next_cal = datetime(2027, 7, 16, tzinfo=UTC)
 
         device = await service.finish_maintenance(

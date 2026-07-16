@@ -1,4 +1,5 @@
 """OpenTelemetry tracing and metrics initialization."""
+
 from __future__ import annotations
 
 import logging

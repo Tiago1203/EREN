@@ -9,8 +9,6 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.models import Base
-
 # Import all models to register them with Base.metadata
 from app.infrastructure.models import (  # noqa: F401
     ActionModel,
@@ -23,6 +21,7 @@ from app.infrastructure.models import (  # noqa: F401
     KnowledgeArticleModel,
     RecommendationModel,
 )
+from app.models import Base
 
 # Build test DB URL from the same postgres instance but different database
 _test_db_url = os.environ.get(

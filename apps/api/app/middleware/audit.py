@@ -160,9 +160,7 @@ class AuditMiddleware(BaseHTTPMiddleware):
             return AuditCategory.DATA_ACCESS
         return AuditCategory.SYSTEM
 
-    def _determine_level(
-        self, method: str, category: AuditCategory
-    ) -> AuditLevel:
+    def _determine_level(self, method: str, category: AuditCategory) -> AuditLevel:
         """Determine audit level based on request."""
         if method in ("POST", "PUT", "PATCH", "DELETE"):
             if category == AuditCategory.AUTHENTICATION:
@@ -170,9 +168,7 @@ class AuditMiddleware(BaseHTTPMiddleware):
             return AuditLevel.MEDIUM
         return AuditLevel.LOW
 
-    async def _record_audit(
-        self, entry: AuditEntry, response: Response | None
-    ) -> None:
+    async def _record_audit(self, entry: AuditEntry, response: Response | None) -> None:
         """Record audit via AuditProvider."""
         if not self._audit_provider:
             return

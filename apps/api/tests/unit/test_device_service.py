@@ -39,12 +39,14 @@ class FakeOutbox:
         aggregate_type: str,
         correlation_id: str | None = None,
     ) -> None:
-        self.appended.append({
-            "event_type": event_type,
-            "payload": payload,
-            "aggregate_type": aggregate_type,
-            "correlation_id": correlation_id,
-        })
+        self.appended.append(
+            {
+                "event_type": event_type,
+                "payload": payload,
+                "aggregate_type": aggregate_type,
+                "correlation_id": correlation_id,
+            }
+        )
 
 
 # ─── Fixtures ──────────────────────────────────────────────────────────────────
@@ -150,7 +152,9 @@ class TestRegisterDevice:
             )
 
     @pytest.mark.asyncio
-    async def test_register_device_publishes_event(self, device_service, mock_repository, fake_outbox):
+    async def test_register_device_publishes_event(
+        self, device_service, mock_repository, fake_outbox
+    ):
         mock_repository.get_by_serial.return_value = None
         mock_repository.save.return_value = make_device()
 
@@ -282,7 +286,9 @@ class TestMaintenance:
         assert any(e["event_type"] == "MaintenanceScheduled" for e in fake_outbox.appended)
 
     @pytest.mark.asyncio
-    async def test_schedule_maintenance_on_decommissioned_raises(self, device_service, mock_repository):
+    async def test_schedule_maintenance_on_decommissioned_raises(
+        self, device_service, mock_repository
+    ):
         device = make_device(status="decommissioned")
         mock_repository.get_by_id.return_value = device
 
@@ -296,7 +302,9 @@ class TestMaintenance:
             )
 
     @pytest.mark.asyncio
-    async def test_schedule_maintenance_while_in_maintenance_raises(self, device_service, mock_repository):
+    async def test_schedule_maintenance_while_in_maintenance_raises(
+        self, device_service, mock_repository
+    ):
         device = make_device(status="in_maintenance")
         mock_repository.get_by_id.return_value = device
 
@@ -327,7 +335,9 @@ class TestMaintenance:
         assert any(e["event_type"] == "MaintenanceStarted" for e in fake_outbox.appended)
 
     @pytest.mark.asyncio
-    async def test_start_maintenance_on_decommissioned_raises(self, device_service, mock_repository):
+    async def test_start_maintenance_on_decommissioned_raises(
+        self, device_service, mock_repository
+    ):
         device = make_device(status="decommissioned")
         mock_repository.get_by_id.return_value = device
 
@@ -359,7 +369,9 @@ class TestMaintenance:
         assert any(e["event_type"] == "MaintenanceCompleted" for e in fake_outbox.appended)
 
     @pytest.mark.asyncio
-    async def test_finish_maintenance_not_in_maintenance_raises(self, device_service, mock_repository):
+    async def test_finish_maintenance_not_in_maintenance_raises(
+        self, device_service, mock_repository
+    ):
         device = make_device(status="active")
         mock_repository.get_by_id.return_value = device
 
@@ -508,7 +520,9 @@ class TestDecommission:
         assert any(e["event_type"] == "DeviceDecommissioned" for e in fake_outbox.appended)
 
     @pytest.mark.asyncio
-    async def test_decommission_already_decommissioned_raises(self, device_service, mock_repository):
+    async def test_decommission_already_decommissioned_raises(
+        self, device_service, mock_repository
+    ):
         device = make_device(status="decommissioned")
         mock_repository.get_by_id.return_value = device
 
@@ -561,7 +575,8 @@ class TestDeviceQueries:
 
         result, total = await device_service.list_devices(
             tenant_id="tenant-1",
-            page=1, page_size=10,
+            page=1,
+            page_size=10,
             device_type="imaging",
             building="Main",
             department="Radiology",
@@ -670,7 +685,9 @@ class TestStartMaintenanceEdgeCases:
 
 class TestFinishMaintenanceEdgeCases:
     @pytest.mark.asyncio
-    async def test_finish_maintenance_concurrent_modification(self, device_service, mock_repository):
+    async def test_finish_maintenance_concurrent_modification(
+        self, device_service, mock_repository
+    ):
         device = make_device(status="in_maintenance")
         mock_repository.get_by_id.return_value = device
         mock_repository.update.return_value = None
@@ -719,4 +736,3 @@ class TestUpdateDeviceEdgeCases:
                 expected_version=1,
                 serial_number="SN-NEW",
             )
-

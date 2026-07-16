@@ -1,9 +1,10 @@
 """SQLAlchemy models for the Incident bounded context."""
+
 from __future__ import annotations
 
 import uuid
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, ClassVar
 
 from sqlalchemy import (
     JSON,
@@ -38,9 +39,7 @@ class IncidentModel(Base):
         {"schema": "incident"},
     )
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tenant_id: Mapped[str] = mapped_column(String(36), nullable=False)
     device_id: Mapped[str] = mapped_column(String(36), nullable=False)
     reported_by: Mapped[str] = mapped_column(String(36), nullable=False)
@@ -93,7 +92,7 @@ class IncidentModel(Base):
     )
 
     # SQLAlchemy optimistic locking — auto-increments version on UPDATE
-    __mapper_args__ = {"version_id_col": version}
+    __mapper_args__: ClassVar[dict[str, Any]] = {"version_id_col": version}
 
     # Relationships
     investigations: Mapped[list[InvestigationModel]] = relationship(
@@ -149,13 +148,9 @@ class InvestigationModel(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
-    completed_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
-    incident: Mapped[IncidentModel] = relationship(
-        back_populates="investigations"
-    )
+    incident: Mapped[IncidentModel] = relationship(back_populates="investigations")
     evidence: Mapped[list[EvidenceModel]] = relationship(
         back_populates="investigation",
         cascade="all, delete-orphan",
@@ -193,9 +188,7 @@ class EvidenceModel(Base):
     recorded_by: Mapped[str] = mapped_column(String(36), nullable=False)
     data: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
 
-    investigation: Mapped[InvestigationModel] = relationship(
-        back_populates="evidence"
-    )
+    investigation: Mapped[InvestigationModel] = relationship(back_populates="evidence")
 
 
 class ActionModel(Base):
@@ -222,9 +215,7 @@ class ActionModel(Base):
     result: Mapped[str] = mapped_column(String(50), nullable=False)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    investigation: Mapped[InvestigationModel] = relationship(
-        back_populates="actions"
-    )
+    investigation: Mapped[InvestigationModel] = relationship(back_populates="actions")
 
 
 class ConversationMessageModel(Base):
@@ -251,6 +242,4 @@ class ConversationMessageModel(Base):
     feedback_type: Mapped[str | None] = mapped_column(String(50), nullable=True)
     feedback_content: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    investigation: Mapped[InvestigationModel] = relationship(
-        back_populates="messages"
-    )
+    investigation: Mapped[InvestigationModel] = relationship(back_populates="messages")

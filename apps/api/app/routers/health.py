@@ -1,4 +1,5 @@
 """System/health router with liveness, readiness, and full health checks."""
+
 from __future__ import annotations
 
 import asyncio

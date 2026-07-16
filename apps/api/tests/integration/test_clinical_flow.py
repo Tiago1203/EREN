@@ -9,7 +9,6 @@ Uses fixtures from conftest.py (db_engine, db_session).
 from __future__ import annotations
 
 import pytest
-import pytest_asyncio
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -21,7 +20,7 @@ from app.events.outbox import OutboxMessage
 from app.infrastructure import EventBus
 
 # Import models to register them with Base.metadata
-from app.models.diagnosis import Diagnosis as DiagnosisModel  # noqa: F401
+from app.models.diagnosis import Diagnosis as DiagnosisModel
 from app.models.patient import Patient as PatientModel  # noqa: F401
 
 
@@ -29,12 +28,10 @@ class TestClinicalFlowPatientDiagnosis:
     """Test complete clinical workflow: Patient → Diagnosis."""
 
     @pytest.mark.asyncio
-    async def test_complete_clinical_flow(
-        self, db_session: AsyncSession
-    ):
+    async def test_complete_clinical_flow(self, db_session: AsyncSession):
         """
         Complete clinical flow test.
-        
+
         Este test demuestra que Patient y Diagnosis funcionan juntos
         sin modificar Foundation.
         """
@@ -42,15 +39,9 @@ class TestClinicalFlowPatientDiagnosis:
         patient_repo = SQLAlchemyPatientRepository(db_session)
         diagnosis_repo = SQLAlchemyDiagnosisRepository(db_session)
         event_bus = EventBus(db_session)
-        
-        patient_service = PatientService(
-            repository=patient_repo,
-            event_bus=event_bus
-        )
-        diagnosis_service = DiagnosisService(
-            repository=diagnosis_repo,
-            event_bus=event_bus
-        )
+
+        patient_service = PatientService(repository=patient_repo, event_bus=event_bus)
+        diagnosis_service = DiagnosisService(repository=diagnosis_repo, event_bus=event_bus)
 
         # ========================================
         # PASO 1: Crear paciente
@@ -153,9 +144,7 @@ class TestClinicalFlowPatientDiagnosis:
 
         # Verificar eventos en outbox
         result = await db_session.execute(
-            select(OutboxMessage).where(
-                OutboxMessage.aggregate_id == diagnosis.id
-            )
+            select(OutboxMessage).where(OutboxMessage.aggregate_id == diagnosis.id)
         )
         events = result.scalars().all()
 
@@ -204,9 +193,7 @@ class TestClinicalFlowPatientDiagnosis:
         # ========================================
         # Consultar directamente en la base de datos
         result = await db_session.execute(
-            select(DiagnosisModel).where(
-                DiagnosisModel.id == diagnosis.id
-            )
+            select(DiagnosisModel).where(DiagnosisModel.id == diagnosis.id)
         )
         audit_record = result.scalar_one_or_none()
 
@@ -219,11 +206,11 @@ class TestClinicalFlowPatientDiagnosis:
         result = await db_session.execute(
             select(OutboxMessage).where(
                 OutboxMessage.aggregate_id == diagnosis.id,
-                OutboxMessage.event_type == "DiagnosisDeleted"
+                OutboxMessage.event_type == "DiagnosisDeleted",
             )
         )
         delete_event = result.scalar_one_or_none()
-        
+
         assert delete_event is not None
 
         # ========================================
@@ -237,26 +224,18 @@ class TestClinicalFlowPatientDiagnosis:
         assert patient_still_exists is not None
 
     @pytest.mark.asyncio
-    async def test_contexts_are_isolated(
-        self, db_session: AsyncSession
-    ):
+    async def test_contexts_are_isolated(self, db_session: AsyncSession):
         """
         Verify that Patient and Diagnosis are truly isolated.
-        
+
         Diagnosis solo conoce patient_id, no la entidad Patient.
         """
         patient_repo = SQLAlchemyPatientRepository(db_session)
         diagnosis_repo = SQLAlchemyDiagnosisRepository(db_session)
         event_bus = EventBus(db_session)
-        
-        patient_service = PatientService(
-            repository=patient_repo,
-            event_bus=event_bus
-        )
-        diagnosis_service = DiagnosisService(
-            repository=diagnosis_repo,
-            event_bus=event_bus
-        )
+
+        patient_service = PatientService(repository=patient_repo, event_bus=event_bus)
+        diagnosis_service = DiagnosisService(repository=diagnosis_repo, event_bus=event_bus)
 
         # Crear paciente
         patient = await patient_service.create_patient(
@@ -290,31 +269,23 @@ class TestClinicalFlowPatientDiagnosis:
         # Verificar que NO tiene columna de relación
         # (no debe tener ForeignKey hacia Patient)
         assert db_diagnosis.patient_id == patient.id
-        
+
         # Verificar que no existe relación ORM
-        assert not hasattr(db_diagnosis, 'patient')
+        assert not hasattr(db_diagnosis, "patient")
 
     @pytest.mark.asyncio
-    async def test_tenant_isolation_between_contexts(
-        self, db_session: AsyncSession
-    ):
+    async def test_tenant_isolation_between_contexts(self, db_session: AsyncSession):
         """
         Verify that tenant isolation works across contexts.
-        
+
         Tenant A no puede ver datos de Tenant B.
         """
         patient_repo = SQLAlchemyPatientRepository(db_session)
         diagnosis_repo = SQLAlchemyDiagnosisRepository(db_session)
         event_bus = EventBus(db_session)
-        
-        patient_service = PatientService(
-            repository=patient_repo,
-            event_bus=event_bus
-        )
-        diagnosis_service = DiagnosisService(
-            repository=diagnosis_repo,
-            event_bus=event_bus
-        )
+
+        patient_service = PatientService(repository=patient_repo, event_bus=event_bus)
+        diagnosis_service = DiagnosisService(repository=diagnosis_repo, event_bus=event_bus)
 
         # Crear pacientes para dos tenants
         patient_a = await patient_service.create_patient(
@@ -379,17 +350,15 @@ class TestClinicalFlowPatientDiagnosis:
 class TestFoundationValidation:
     """
     Validate that Foundation patterns were not broken.
-    
+
     Este test verifica que el flujo funciona SIN modificar Foundation.
     """
-    
+
     @pytest.mark.asyncio
-    async def test_no_foundation_was_modified(
-        self, db_session: AsyncSession
-    ):
+    async def test_no_foundation_was_modified(self, db_session: AsyncSession):
         """
         Verify that the flow works with existing patterns only.
-        
+
         Si este test pasa, significa:
         - No se necesitó modificar Patient
         - No se necesitó modificar Diagnosis
@@ -401,23 +370,23 @@ class TestFoundationValidation:
         from app.domain.patient import PatientService
         from app.domain.patient.repository import SQLAlchemyPatientRepository
         from app.infrastructure import EventBus
-        
+
         # Verificar que todos los componentes existen
         assert PatientService is not None
         assert SQLAlchemyPatientRepository is not None
         assert DiagnosisService is not None
         assert SQLAlchemyDiagnosisRepository is not None
         assert EventBus is not None
-        
+
         # Verificar que tienen la estructura correcta
         repo = SQLAlchemyPatientRepository(db_session)
-        assert hasattr(repo, 'save')
-        assert hasattr(repo, 'get_by_id')
-        assert hasattr(repo, 'list_by_tenant')
-        assert hasattr(repo, 'soft_delete')
-        
+        assert hasattr(repo, "save")
+        assert hasattr(repo, "get_by_id")
+        assert hasattr(repo, "list_by_tenant")
+        assert hasattr(repo, "soft_delete")
+
         diag_repo = SQLAlchemyDiagnosisRepository(db_session)
-        assert hasattr(diag_repo, 'save')
-        assert hasattr(diag_repo, 'get_by_id')
-        assert hasattr(diag_repo, 'list_by_patient')
-        assert hasattr(diag_repo, 'soft_delete')
+        assert hasattr(diag_repo, "save")
+        assert hasattr(diag_repo, "get_by_id")
+        assert hasattr(diag_repo, "list_by_patient")
+        assert hasattr(diag_repo, "soft_delete")

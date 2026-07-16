@@ -41,9 +41,7 @@ class PatientRepository(Protocol):
         """List patients for a tenant with pagination (excludes deleted)."""
         ...
 
-    async def update(
-        self, patient: Patient, expected_version: int, **updates
-    ) -> Patient | None:
+    async def update(self, patient: Patient, expected_version: int, **updates) -> Patient | None:
         """Update an existing patient with optimistic locking."""
         ...
 
@@ -139,9 +137,7 @@ class SQLAlchemyPatientRepository:
 
         return patients, total
 
-    async def update(
-        self, patient: Patient, expected_version: int, **updates
-    ) -> Patient | None:
+    async def update(self, patient: Patient, expected_version: int, **updates) -> Patient | None:
         """Update an existing patient with optimistic locking."""
         # Check version for optimistic locking
         if patient.version != expected_version:

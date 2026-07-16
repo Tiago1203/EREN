@@ -28,12 +28,11 @@ class TestDiagnosisServiceNegative:
     @pytest.fixture
     def service(self, mock_repository, mock_event_bus):
         from app.domain.diagnosis import DiagnosisService
+
         return DiagnosisService(repository=mock_repository, event_bus=mock_event_bus)
 
     @pytest.mark.asyncio
-    async def test_get_diagnosis_returns_none_when_not_found(
-        self, service, mock_repository
-    ):
+    async def test_get_diagnosis_returns_none_when_not_found(self, service, mock_repository):
         """Test get_diagnosis returns None when diagnosis doesn't exist."""
         mock_repository.get_by_id = AsyncMock(return_value=None)
 
@@ -83,9 +82,7 @@ class TestDiagnosisServiceNegative:
         mock_event_bus.publish.assert_called_once()
 
     @pytest.mark.asyncio
-    async def test_delete_diagnosis_with_metadata(
-        self, service, mock_repository, mock_event_bus
-    ):
+    async def test_delete_diagnosis_with_metadata(self, service, mock_repository, mock_event_bus):
         """Test delete_diagnosis calls repository with metadata."""
         mock_diagnosis = MagicMock(id="diagnosis-1", patient_id="patient-1")
         mock_repository.get_by_id = AsyncMock(return_value=mock_diagnosis)
@@ -156,9 +153,7 @@ class TestDiagnosisServiceNegative:
         mock_event_bus.publish.assert_not_called()
 
     @pytest.mark.asyncio
-    async def test_list_diagnoses_returns_empty_list(
-        self, service, mock_repository
-    ):
+    async def test_list_diagnoses_returns_empty_list(self, service, mock_repository):
         """Test list_diagnoses_by_tenant returns empty list."""
         mock_repository.list_by_tenant = AsyncMock(return_value=([], 0))
 
@@ -172,9 +167,7 @@ class TestDiagnosisServiceNegative:
         assert total == 0
 
     @pytest.mark.asyncio
-    async def test_list_diagnoses_by_patient_respects_pagination(
-        self, service, mock_repository
-    ):
+    async def test_list_diagnoses_by_patient_respects_pagination(self, service, mock_repository):
         """Test list_diagnoses_by_patient correctly passes pagination params."""
         mock_diagnoses = [MagicMock(id=f"d{i}") for i in range(10)]
         mock_repository.list_by_patient = AsyncMock(return_value=(mock_diagnoses, 100))
@@ -201,34 +194,40 @@ class TestDiagnosisRepositoryProtocol:
     async def test_repository_protocol_requires_save(self):
         """Verify repository protocol defines save method."""
         from app.domain.diagnosis.repository import DiagnosisRepository
+
         assert DiagnosisRepository is not None
 
     @pytest.mark.asyncio
     async def test_repository_protocol_requires_get_by_id(self):
         """Verify repository protocol defines get_by_id method."""
         from app.domain.diagnosis.repository import DiagnosisRepository
-        assert hasattr(DiagnosisRepository, 'get_by_id')
+
+        assert hasattr(DiagnosisRepository, "get_by_id")
 
     @pytest.mark.asyncio
     async def test_repository_protocol_requires_list_by_tenant(self):
         """Verify repository protocol defines list_by_tenant method."""
         from app.domain.diagnosis.repository import DiagnosisRepository
-        assert hasattr(DiagnosisRepository, 'list_by_tenant')
+
+        assert hasattr(DiagnosisRepository, "list_by_tenant")
 
     @pytest.mark.asyncio
     async def test_repository_protocol_requires_update_with_version(self):
         """Verify repository protocol update accepts version."""
         from app.domain.diagnosis.repository import DiagnosisRepository
-        assert hasattr(DiagnosisRepository, 'update')
+
+        assert hasattr(DiagnosisRepository, "update")
 
     @pytest.mark.asyncio
     async def test_repository_protocol_requires_soft_delete_with_metadata(self):
         """Verify repository protocol soft_delete accepts metadata."""
         from app.domain.diagnosis.repository import DiagnosisRepository
-        assert hasattr(DiagnosisRepository, 'soft_delete')
+
+        assert hasattr(DiagnosisRepository, "soft_delete")
 
     @pytest.mark.asyncio
     async def test_repository_protocol_has_list_by_patient(self):
         """Verify repository protocol has list_by_patient method."""
         from app.domain.diagnosis.repository import DiagnosisRepository
-        assert hasattr(DiagnosisRepository, 'list_by_patient')
+
+        assert hasattr(DiagnosisRepository, "list_by_patient")

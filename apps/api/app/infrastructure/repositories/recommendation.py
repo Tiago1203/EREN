@@ -1,4 +1,5 @@
 """SQLAlchemy implementation of RecommendationRepository."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
@@ -48,21 +49,15 @@ def _model_to_entity(model: RecommendationModel) -> AIRecommendation:
     rec.urgency = RecommendationUrgency(value=model.urgency)
     rec.status = RecommendationStatus(value=model.status)
     rec.rejection_reason = (
-        RejectionReason(value=model.rejection_reason)
-        if model.rejection_reason
-        else None
+        RejectionReason(value=model.rejection_reason) if model.rejection_reason else None
     )
     rec.acceptance_note = (
-        AcceptanceNote(value=model.acceptance_note)
-        if model.acceptance_note
-        else None
+        AcceptanceNote(value=model.acceptance_note) if model.acceptance_note else None
     )
     rec.engineer_feedback = model.engineer_feedback
     rec.expires_at = model.expires_at
     rec.reviewed_at = model.reviewed_at
-    rec.reviewed_by = (
-        EngineerId(value=model.reviewed_by) if model.reviewed_by else None
-    )
+    rec.reviewed_by = EngineerId(value=model.reviewed_by) if model.reviewed_by else None
     rec.superseded_by = model.superseded_by
     rec.supersedes = list(model.supersedes) if model.supersedes else []
     rec.version = model.version
@@ -120,9 +115,7 @@ class RecommendationRepositoryImpl(AbstractRecommendationRepository):
         except Exception as e:
             return Ok(str(e))
 
-    async def get_by_id(
-        self, recommendation_id: Any
-    ) -> Result[AIRecommendation | None, str]:
+    async def get_by_id(self, recommendation_id: Any) -> Result[AIRecommendation | None, str]:
         try:
             model = await self._session.get(RecommendationModel, recommendation_id)
             return Ok(_model_to_entity(model) if model else None)

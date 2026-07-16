@@ -1,4 +1,5 @@
 """SQLAlchemy implementation of DeviceRepository."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
@@ -54,9 +55,7 @@ def _model_to_entity(model: DeviceModel) -> Device:
     device.maintenance_schedule = None
     device.status = DeviceStatus(value=model.status)
     device.registered_at = model.registered_at
-    device.registered_by = (
-        EngineerId(value=model.registered_by) if model.registered_by else None
-    )
+    device.registered_by = EngineerId(value=model.registered_by) if model.registered_by else None
     device.last_status_change = model.last_status_change
     device.version = model.version
     device.created_at = model.created_at
@@ -183,9 +182,7 @@ class DeviceRepositoryImpl(AbstractDeviceRepository):
         except Exception:
             return Ok([])
 
-    async def get_critical_devices(
-        self, tenant_id: TenantId
-    ) -> Result[list[Device], str]:
+    async def get_critical_devices(self, tenant_id: TenantId) -> Result[list[Device], str]:
         try:
             stmt = select(DeviceModel).where(
                 DeviceModel.tenant_id == str(tenant_id),
@@ -196,9 +193,7 @@ class DeviceRepositoryImpl(AbstractDeviceRepository):
         except Exception:
             return Ok([])
 
-    async def get_needing_maintenance(
-        self, tenant_id: TenantId
-    ) -> Result[list[Device], str]:
+    async def get_needing_maintenance(self, tenant_id: TenantId) -> Result[list[Device], str]:
         try:
             stmt = select(DeviceModel).where(
                 DeviceModel.tenant_id == str(tenant_id),

@@ -12,7 +12,6 @@ Uses fixtures from conftest.py (db_engine, db_session).
 from __future__ import annotations
 
 import pytest
-import pytest_asyncio
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -20,7 +19,7 @@ from app.domain.patient import SQLAlchemyPatientRepository
 from app.infrastructure import EventBus
 
 # Import models to register them with Base.metadata
-from app.models.patient import Patient as PatientModel  # noqa: F401
+from app.models.patient import Patient as PatientModel
 
 
 class TestPatientPersistence:
@@ -203,9 +202,7 @@ class TestOutboxPattern:
 
         # Assert - Query outbox table
         result = await db_session.execute(
-            select(OutboxMessage).where(
-                OutboxMessage.aggregate_id == "patient-event-1"
-            )
+            select(OutboxMessage).where(OutboxMessage.aggregate_id == "patient-event-1")
         )
         outbox_entry = result.scalar_one_or_none()
 
@@ -247,9 +244,7 @@ class TestOutboxPattern:
         saved_patient = result.scalar_one_or_none()
 
         result2 = await db_session.execute(
-            select(OutboxMessage).where(
-                OutboxMessage.aggregate_id == "patient-atomic"
-            )
+            select(OutboxMessage).where(OutboxMessage.aggregate_id == "patient-atomic")
         )
         outbox_entry = result2.scalar_one_or_none()
 
@@ -280,9 +275,7 @@ class TestServiceLayer:
     """Test PatientService with real repository."""
 
     @pytest.mark.asyncio
-    async def test_service_create_patient_with_real_repository(
-        self, db_session: AsyncSession
-    ):
+    async def test_service_create_patient_with_real_repository(self, db_session: AsyncSession):
         """Test full flow with service and real repository."""
         from app.domain.patient import PatientService
 

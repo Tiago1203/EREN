@@ -27,12 +27,11 @@ class TestPatientService:
     def service(self, mock_repository, mock_event_bus):
         """Create service with mocks."""
         from app.domain.patient import PatientService
+
         return PatientService(repository=mock_repository, event_bus=mock_event_bus)
 
     @pytest.mark.asyncio
-    async def test_create_patient_returns_patient(
-        self, service, mock_repository, mock_event_bus
-    ):
+    async def test_create_patient_returns_patient(self, service, mock_repository, mock_event_bus):
         """Test that create_patient returns a patient."""
         # Arrange
         mock_repository.save = AsyncMock(return_value=MagicMock(id="test-id"))
@@ -47,12 +46,10 @@ class TestPatientService:
 
         # Assert
         assert result is not None
-        assert hasattr(result, 'id')
+        assert hasattr(result, "id")
 
     @pytest.mark.asyncio
-    async def test_create_patient_calls_repository(
-        self, service, mock_repository, mock_event_bus
-    ):
+    async def test_create_patient_calls_repository(self, service, mock_repository, mock_event_bus):
         """Test that create_patient calls repository.save()."""
         # Arrange
         mock_repository.save = AsyncMock(return_value=MagicMock(id="test-id"))
@@ -69,9 +66,7 @@ class TestPatientService:
         mock_repository.save.assert_called_once()
 
     @pytest.mark.asyncio
-    async def test_create_patient_calls_event_bus(
-        self, service, mock_repository, mock_event_bus
-    ):
+    async def test_create_patient_calls_event_bus(self, service, mock_repository, mock_event_bus):
         """Test that create_patient publishes an event."""
         # Arrange
         mock_repository.save = AsyncMock(return_value=MagicMock(id="test-id"))
@@ -91,9 +86,7 @@ class TestPatientService:
         assert call_args.kwargs["aggregate_type"] == "Patient"
 
     @pytest.mark.asyncio
-    async def test_get_patient_returns_patient(
-        self, service, mock_repository
-    ):
+    async def test_get_patient_returns_patient(self, service, mock_repository):
         """Test that get_patient returns the patient."""
         # Arrange
         expected_patient = MagicMock(id="patient-1")
@@ -109,9 +102,7 @@ class TestPatientService:
         assert result == expected_patient
 
     @pytest.mark.asyncio
-    async def test_get_patient_returns_none_when_not_found(
-        self, service, mock_repository
-    ):
+    async def test_get_patient_returns_none_when_not_found(self, service, mock_repository):
         """Test that get_patient returns None when patient doesn't exist."""
         # Arrange
         mock_repository.get_by_id = AsyncMock(return_value=None)
@@ -144,9 +135,7 @@ class TestPatientService:
         assert result is True
 
     @pytest.mark.asyncio
-    async def test_delete_patient_returns_false_when_not_found(
-        self, service, mock_repository
-    ):
+    async def test_delete_patient_returns_false_when_not_found(self, service, mock_repository):
         """Test that delete_patient returns False when patient doesn't exist."""
         # Arrange
         mock_repository.get_by_id = AsyncMock(return_value=None)
@@ -161,9 +150,7 @@ class TestPatientService:
         assert result is False
 
     @pytest.mark.asyncio
-    async def test_delete_patient_publishes_event(
-        self, service, mock_repository, mock_event_bus
-    ):
+    async def test_delete_patient_publishes_event(self, service, mock_repository, mock_event_bus):
         """Test that delete_patient publishes PatientDeleted event."""
         # Arrange
         mock_repository.get_by_id = AsyncMock(return_value=MagicMock(id="patient-1"))
@@ -181,9 +168,7 @@ class TestPatientService:
         assert call_args.kwargs["event_type"] == "PatientDeleted"
 
     @pytest.mark.asyncio
-    async def test_list_patients_returns_tuple(
-        self, service, mock_repository
-    ):
+    async def test_list_patients_returns_tuple(self, service, mock_repository):
         """Test that list_patients returns (patients, total)."""
         # Arrange
         mock_patients = [MagicMock(id="p1"), MagicMock(id="p2")]

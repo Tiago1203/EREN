@@ -32,9 +32,7 @@ class DiagnosisRepository(Protocol):
         """Save a diagnosis to the database."""
         ...
 
-    async def get_by_id(
-        self, diagnosis_id: str, tenant_id: str
-    ) -> Diagnosis | None:
+    async def get_by_id(self, diagnosis_id: str, tenant_id: str) -> Diagnosis | None:
         """Get a diagnosis by ID within tenant (excludes deleted)."""
         ...
 
@@ -102,9 +100,7 @@ class SQLAlchemyDiagnosisRepository:
         await self._db.flush()
         return diagnosis
 
-    async def get_by_id(
-        self, diagnosis_id: str, tenant_id: str
-    ) -> Diagnosis | None:
+    async def get_by_id(self, diagnosis_id: str, tenant_id: str) -> Diagnosis | None:
         """Get a diagnosis by ID within tenant (excludes deleted)."""
         from sqlalchemy import select
 

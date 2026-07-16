@@ -1,4 +1,5 @@
 """SQLAlchemy implementation of IncidentRepository."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
@@ -62,9 +63,7 @@ def _model_to_entity(model: IncidentModel) -> EngineeringIncident:
     incident.safety_classification = SafetyLevel(value=model.safety_classification)
 
     # Assignment
-    incident.assigned_to = (
-        EngineerId(value=model.assigned_to) if model.assigned_to else None
-    )
+    incident.assigned_to = EngineerId(value=model.assigned_to) if model.assigned_to else None
     incident.triage_notes = model.triage_notes
     incident.estimated_resolution_hours = model.estimated_resolution_hours
 
@@ -78,9 +77,7 @@ def _model_to_entity(model: IncidentModel) -> EngineeringIncident:
     else:
         incident.resolution = None
     incident.closed_at = model.closed_at
-    incident.closed_by = (
-        EngineerId(value=model.closed_by) if model.closed_by else None
-    )
+    incident.closed_by = EngineerId(value=model.closed_by) if model.closed_by else None
     incident.resolution_time_minutes = model.resolution_time_minutes
 
     # Feedback
@@ -128,12 +125,8 @@ def _entity_to_model(
         "assigned_to": str(entity.assigned_to) if entity.assigned_to else None,
         "triage_notes": entity.triage_notes,
         "estimated_resolution_hours": entity.estimated_resolution_hours,
-        "resolution_description": (
-            entity.resolution.description if entity.resolution else None
-        ),
-        "resolution_root_cause": (
-            entity.resolution.root_cause if entity.resolution else None
-        ),
+        "resolution_description": (entity.resolution.description if entity.resolution else None),
+        "resolution_root_cause": (entity.resolution.root_cause if entity.resolution else None),
         "resolution_time_minutes": entity.resolution_time_minutes,
         "closed_at": entity.closed_at,
         "closed_by": str(entity.closed_by) if entity.closed_by else None,
@@ -168,9 +161,7 @@ class IncidentRepositoryImpl(AbstractIncidentRepository):
         except Exception as e:
             return Ok(f"Save failed: {e}")  # Return error as Ok with string
 
-    async def get_by_id(
-        self, incident_id: IncidentId
-    ) -> Result[EngineeringIncident | None, str]:
+    async def get_by_id(self, incident_id: IncidentId) -> Result[EngineeringIncident | None, str]:
         try:
             model = await self._session.get(IncidentModel, incident_id.value)
             if model is None:

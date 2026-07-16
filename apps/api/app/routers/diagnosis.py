@@ -21,9 +21,7 @@ from app.schemas.diagnosis import (
 router = APIRouter(prefix="/api/v1/diagnoses", tags=["Diagnoses"])
 
 
-async def get_diagnosis_service(
-    db: Annotated[AsyncSession, Depends(get_db)]
-) -> DiagnosisService:
+async def get_diagnosis_service(db: Annotated[AsyncSession, Depends(get_db)]) -> DiagnosisService:
     """Dependency injection for DiagnosisService."""
     repository = SQLAlchemyDiagnosisRepository(db)
     event_bus = EventBus(db)
@@ -95,9 +93,7 @@ async def list_diagnoses(
             patient_id, tenant_id, page, page_size
         )
     else:
-        items, total = await service.list_diagnoses_by_tenant(
-            tenant_id, page, page_size
-        )
+        items, total = await service.list_diagnoses_by_tenant(tenant_id, page, page_size)
     return DiagnosisListResponse(
         items=[DiagnosisResponse.model_validate(i) for i in items],
         total=total,

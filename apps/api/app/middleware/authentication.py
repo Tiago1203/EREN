@@ -26,14 +26,16 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
     """Validates JWT and attaches principal to request context."""
 
     # Paths that don't require authentication
-    PUBLIC_PATHS: frozenset[str] = frozenset({
-        "/",
-        "/health",
-        "/api/v1/health",
-        "/docs",
-        "/openapi.json",
-        "/redoc",
-    })
+    PUBLIC_PATHS: frozenset[str] = frozenset(
+        {
+            "/",
+            "/health",
+            "/api/v1/health",
+            "/docs",
+            "/openapi.json",
+            "/redoc",
+        }
+    )
 
     def __init__(self, app, auth_provider: AuthenticationProvider):
         super().__init__(app)

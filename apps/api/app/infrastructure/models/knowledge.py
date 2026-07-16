@@ -1,9 +1,10 @@
 """SQLAlchemy models for the Knowledge bounded context."""
+
 from __future__ import annotations
 
 import uuid
 from datetime import datetime
-from typing import Any
+from typing import Any, ClassVar
 
 from sqlalchemy import (
     JSON,
@@ -33,9 +34,7 @@ class KnowledgeArticleModel(Base):
         {"schema": "knowledge"},
     )
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tenant_id: Mapped[str] = mapped_column(String(36), nullable=False)
 
     # Human-readable ID
@@ -56,9 +55,7 @@ class KnowledgeArticleModel(Base):
     author_name: Mapped[str] = mapped_column(String(255), nullable=False)
 
     # Publication
-    published_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     # Review
     review_comments: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -85,7 +82,7 @@ class KnowledgeArticleModel(Base):
     )
 
     # SQLAlchemy optimistic locking — auto-increments version on UPDATE
-    __mapper_args__ = {"version_id_col": version}
+    __mapper_args__: ClassVar[dict[str, Any]] = {"version_id_col": version}
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -100,9 +97,7 @@ class KnowledgeArticleModel(Base):
             "status": self.status,
             "author_id": self.author_id,
             "author_name": self.author_name,
-            "published_at": (
-                self.published_at.isoformat() if self.published_at else None
-            ),
+            "published_at": (self.published_at.isoformat() if self.published_at else None),
             "review_comments": self.review_comments,
             "reviewed_by": self.reviewed_by,
             "view_count": self.view_count,
@@ -127,9 +122,7 @@ class DomainEventModel(Base):
         {"schema": "knowledge"},
     )
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     aggregate_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
     aggregate_type: Mapped[str] = mapped_column(String(255), nullable=False)
     event_type: Mapped[str] = mapped_column(String(255), nullable=False)

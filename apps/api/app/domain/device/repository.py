@@ -39,16 +39,11 @@ class DeviceRepository(Protocol):
         registered_by: str | None,
         status: str,
         **kwargs: Any,
-    ) -> DeviceModel:
-        ...
+    ) -> DeviceModel: ...
 
-    async def get_by_id(self, device_id: str, tenant_id: str) -> DeviceModel | None:
-        ...
+    async def get_by_id(self, device_id: str, tenant_id: str) -> DeviceModel | None: ...
 
-    async def get_by_serial(
-        self, serial_number: str, tenant_id: str
-    ) -> DeviceModel | None:
-        ...
+    async def get_by_serial(self, serial_number: str, tenant_id: str) -> DeviceModel | None: ...
 
     async def list_by_tenant(
         self,
@@ -63,19 +58,16 @@ class DeviceRepository(Protocol):
         search_query: str | None = None,
         sort_by: str = "created_at",
         sort_order: str = "desc",
-    ) -> tuple[list[DeviceModel], int]:
-        ...
+    ) -> tuple[list[DeviceModel], int]: ...
 
     async def update(
         self,
         device: DeviceModel,
         expected_version: int,
         **updates: Any,
-    ) -> DeviceModel | None:
-        ...
+    ) -> DeviceModel | None: ...
 
-    async def delete(self, device_id: str, tenant_id: str) -> bool:
-        ...
+    async def delete(self, device_id: str, tenant_id: str) -> bool: ...
 
 
 @dataclass
@@ -139,9 +131,7 @@ class SQLAlchemyDeviceRepository:
         await self._db.flush()
         return model
 
-    async def get_by_id(
-        self, device_id: str, tenant_id: str
-    ) -> DeviceModel | None:
+    async def get_by_id(self, device_id: str, tenant_id: str) -> DeviceModel | None:
         from uuid import UUID
 
         from app.infrastructure.models.device import DeviceModel
@@ -154,9 +144,7 @@ class SQLAlchemyDeviceRepository:
         )
         return result.scalar_one_or_none()
 
-    async def get_by_serial(
-        self, serial_number: str, tenant_id: str
-    ) -> DeviceModel | None:
+    async def get_by_serial(self, serial_number: str, tenant_id: str) -> DeviceModel | None:
         from app.infrastructure.models.device import DeviceModel
 
         result = await self._db.execute(

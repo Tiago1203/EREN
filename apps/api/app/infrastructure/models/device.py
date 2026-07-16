@@ -1,9 +1,10 @@
 """SQLAlchemy models for the Device bounded context."""
+
 from __future__ import annotations
 
 import uuid
 from datetime import datetime
-from typing import Any
+from typing import Any, ClassVar
 
 from sqlalchemy import (
     Boolean,
@@ -33,9 +34,7 @@ class DeviceModel(Base):
         {"schema": "device"},
     )
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tenant_id: Mapped[str] = mapped_column(String(36), nullable=False)
 
     # Serial number & Manufacturer
@@ -94,7 +93,7 @@ class DeviceModel(Base):
     )
 
     # SQLAlchemy optimistic locking — auto-increments version on UPDATE
-    __mapper_args__ = {"version_id_col": version}
+    __mapper_args__: ClassVar[dict[str, Any]] = {"version_id_col": version}
 
     def to_dict(self) -> dict[str, Any]:
         return {
