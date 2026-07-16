@@ -4,7 +4,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from core.shared import Err, Ok, 
+from core.shared import (
+    Err,
+    Ok,
     EngineerId,
     IncidentId,
     RecommendationId,
