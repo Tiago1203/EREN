@@ -131,7 +131,7 @@ class KnowledgeService:
 
         # Filter by category if specified
         if category:
-            articles = [a for a in articles if str(a.category) == category]
+            articles = [a for a in articles if a.category.value == category]
 
         return Ok(articles)
 
