@@ -52,6 +52,7 @@ def upgrade() -> None:
         sa.Column("version", sa.Integer(), nullable=False, server_default="1"),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
+        sa.PrimaryKeyConstraint("id"),
         schema="device",
     )
     op.create_index("ix_devices_tenant_id", "devices", ["tenant_id"], schema="device")
@@ -75,6 +76,7 @@ def upgrade() -> None:
         sa.Column("version", sa.Integer(), nullable=False, server_default="1"),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
         sa.ForeignKeyConstraint(["device_id"], ["device.devices.id"], ondelete="CASCADE"),
+        sa.PrimaryKeyConstraint("id"),
         schema="device",
     )
     op.create_index("ix_status_history_device_id", "status_history", ["device_id"], schema="device")

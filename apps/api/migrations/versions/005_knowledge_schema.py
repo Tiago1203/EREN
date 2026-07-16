@@ -44,6 +44,7 @@ def upgrade() -> None:
         sa.Column("version", sa.Integer(), nullable=False, server_default="1"),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
         sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
+        sa.PrimaryKeyConstraint("id"),
         schema="knowledge",
     )
     op.create_index("ix_ka_tenant_id", "knowledge_articles", ["tenant_id"], schema="knowledge")
@@ -65,6 +66,7 @@ def upgrade() -> None:
         sa.Column("event_metadata", sa.JSON(), nullable=True),
         sa.Column("occurred_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.text("now()")),
         sa.Column("version", sa.Integer(), nullable=False, server_default="1"),
+        sa.PrimaryKeyConstraint("id"),
         schema="knowledge",
     )
     op.create_index("ix_de_aggregate_id", "domain_events", ["aggregate_id"], schema="knowledge")
