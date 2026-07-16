@@ -30,11 +30,11 @@ docs/adr/
 
 | EPIC | Accepted | Proposed | Deprecated | Total |
 |------|----------|----------|------------|--------|
-| Epic 0 | 24 | 6 | 2 | 32 |
-| Epic 0-Infra | 7 | 3 | 0 | 10 |
+| Epic 0 | 32 | 6 | 0 | 38 |
+| Epic 0-Infra | 8 | 4 | 0 | 12 |
 | **Epic 1** | **11** | **0** | **0** | **11** |
 | Epic 2-10 | 0 | 0 | 0 | 0 |
-| **Total** | **42** | **9** | **2** | **53** |
+| **Total** | **51** | **10** | **0** | **61** |
 
 ---
 
@@ -67,7 +67,7 @@ ADR-0900 to ADR-0999  →  Epic 9 (Machine Learning)
 ADR-1000 to ADR-1099  →  Epic 10 (Enterprise Release)
 ```
 
-**Note:** Epic 0 ADRs use the original numbering from the legacy ADR index (ADR-0001 to ADR-0076) to preserve history. Epic 0-Infra ADRs start at ADR-0080.
+**Note:** Epic 0 ADRs use the original numbering from the legacy ADR index (ADR-0001 to ADR-0076) to preserve history. Epic 0-Infra ADRs start at ADR-0080. Epic 1 ADRs start at ADR-0100 (ADR-0100 reserved as gap).
 
 ---
 
@@ -133,11 +133,26 @@ ADR-1000 to ADR-1099  →  Epic 10 (Enterprise Release)
 | ADR-0093 | Celery as Task Queue | Proposed |
 | ADR-0094 | Schema Registry Strategy | Proposed |
 
-### Epic 1-10 — Pending
+### Epic 1 — Infrastructure Platform (COMPLETE ✅)
+
+| ADR | Title | Status |
+|-----|-------|--------|
+| ADR-0101 | FastAPI as API Framework | Accepted |
+| ADR-0101 | SQLAlchemy 2.0 ORM | Accepted |
+| ADR-0102 | Alembic for Database Migrations | Accepted |
+| ADR-0103 | Repository Pattern Implementation | Accepted |
+| ADR-0104 | Unit of Work Pattern | Accepted |
+| ADR-0105 | Outbox Pattern for Reliable Events | Accepted |
+| ADR-0106 | Redis Cache Strategy | Accepted |
+| ADR-0107 | RabbitMQ Messaging | Accepted |
+| ADR-0108 | OpenTelemetry Observability | Accepted |
+| ADR-0109 | Structured Logging | Accepted |
+| ADR-0110 | Health Check Strategy | Accepted |
+
+### Epic 2-10 — Pending
 
 | EPIC | Status |
 |------|--------|
-| Epic 1 (Infrastructure Platform) | **COMPLETE ✅** |
 | Epic 2 (Core Business Domain) | Pending |
 | Epic 3 (Hospital Management) | Pending |
 | Epic 4 (AI Core) | Pending |
