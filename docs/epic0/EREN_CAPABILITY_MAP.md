@@ -3,6 +3,15 @@
 
 ---
 
+## Version History
+
+| Version | Date | Author | Changes |
+|---------|------|--------|---------|
+| 1.0 | 2026-07-15 | Architecture Board | Initial |
+| 1.1 | 2026-07-16 | Architecture Board | Realigned with EPIC roadmap phases |
+
+---
+
 ## Overview
 
 This document maps all capabilities required by EREN, organized by domain and cognitive function. Each capability is evaluated for:
@@ -535,24 +544,39 @@ Maturity Scale:
 
 ---
 
-## Implementation Phases
+## Implementation Phases (Aligned with EPIC Roadmap)
 
-### Phase 1: Foundation (Capabilities 1-5)
-- Identity, Authorization, Audit, Encryption, ClinicalContext
+### EPIC 0: Foundation (Pre-implementation)
+- Philosophy, Domain Model, Architecture, Bounded Contexts
 
-### Phase 2: Clinical Core (Capabilities 6-10)
-- DecisionSupport, Trust, AssessRisk, FHIR, MQTT
+### EPIC 1: Infrastructure Platform
+- Identity, Authorization, Audit, Encryption, Secrets, Policy, Compliance
 
-### Phase 3: Biomedical (Capabilities 11-15)
-- DeviceRegistry, AlarmManagement, CalibrationTracking, DICOM
+### EPIC 2: Core Business Domain
+- DeviceRegistry, ClinicalContext, IncidentManagement, RecommendationEngine, KnowledgeRetrieval
 
-### Phase 4: Operations (Capabilities 16-20)
-- HospitalTwin, CapacityManagement, MaintenanceScheduling
+### EPIC 3: Hospital Management Platform
+- CapacityManagement, StaffingOptimization, InventoryManagement, Scheduling, HospitalTwin, AssetTracking, BiomedicalEngineering
 
-### Phase 5: Intelligence (Capabilities 21-25)
-- Learn, Reflect, Analytics, StaffingOptimization
+### EPIC 4: AI Core
+- Perceive, Remember, Know, Trust, Reason, Decide, Explain, Reflect
+
+### EPIC 5: Clinical Intelligence
+- AssessRisk, Plan, Diagnostics, TreatmentGuidance, RootCauseAnalysis, FailurePrediction, CalibrationAdvisor, ComplianceAdvisor, Troubleshooting, MaintenanceSuggestions
+
+### EPIC 6: Integrations
+- FHIR, HL7, DICOM, MQTT, REST, Webhooks
+
+### EPIC 7: User Experience
+- Web Dashboard, Chat Interface, Mobile (Android/iOS), Accessibility
+
+### EPIC 8: Production Readiness
+- Learn (improved), Analytics, Performance Optimization
+
+### EPIC 9: Machine Learning
+- Learn (ML feedback), Model Evaluation, Fine Tuning, Prompt Optimization
 
 ---
 
-*EREN Capability Map v1.0*
-*Architecture Board - 2026-07-15*
+*EREN Capability Map v1.1*
+*Architecture Board - 2026-07-16*

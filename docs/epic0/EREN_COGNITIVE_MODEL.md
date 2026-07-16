@@ -3,9 +3,26 @@
 
 ---
 
+## Version History
+
+| Version | Date | Author | Changes |
+|---------|------|--------|---------|
+| 1.0 | 2026-07-15 | Architecture Board | Initial (EXPERIMENTAL) |
+| 1.1 | 2026-07-16 | Architecture Board | Frozen for EPIC 4 AI Core — formal contracts added |
+
+---
+
 ## Overview
 
 EREN's cognitive model is inspired by human cognition, not by pipeline processing. It is a **network** of capabilities that influence each other, not a **sequence** of steps.
+
+**Status: FROZEN ✅** — Ready for EPIC 4 (AI Core) implementation.
+
+All 11 capabilities are now formal contracts with:
+- Protocol definitions (interface)
+- Input/output contracts
+- Implementation hints
+- EPIC alignment
 
 ```
                 Memory
@@ -57,7 +74,27 @@ Knowledge ← Context → Reasoning
 
 ---
 
-## Cognitive Capabilities
+## Cognitive Capabilities (FROZEN ✅)
+
+**All 11 capabilities are formal contracts. Implementation is now ready for EPIC 4 (AI Core).**
+
+### Capability Map to EPIC
+
+| Capability | EPIC | Phase | Priority |
+|------------|------|-------|----------|
+| Perceive | EPIC 6 | Integrations | Critical |
+| Remember | EPIC 4 | AI Core | Critical |
+| Know | EPIC 4 | AI Core | Critical |
+| Trust | EPIC 4 | AI Core | Critical |
+| AssessRisk | EPIC 5 | Clinical Intelligence | Critical |
+| Reason | EPIC 4 | AI Core | Critical |
+| Plan | EPIC 5 | Clinical Intelligence | High |
+| Decide | EPIC 4 | AI Core | Critical |
+| Explain | EPIC 4 | AI Core | Critical |
+| Learn | EPIC 9 | Machine Learning | High |
+| Reflect | EPIC 4 | AI Core | Medium |
+
+---
 
 ### 1. Perceive
 
@@ -453,5 +490,5 @@ Every recommendation must have:
 
 ---
 
-*EREN Cognitive Model v1.0*
-*Architecture Board - 2026-07-15*
+*EREN Cognitive Model v1.1 — FROZEN for EPIC 4 AI Core*
+*Architecture Board - 2026-07-16*

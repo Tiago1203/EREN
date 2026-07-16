@@ -8,6 +8,7 @@
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-07-15 | Architecture Board | Initial |
+| 1.1 | 2026-07-16 | Architecture Board | AI/LLM + UX + Integration targets added for EPIC 4-7 |
 
 ---
 
@@ -201,6 +202,128 @@ Human clinician always has final authority.
 
 ---
 
+## AI/LLM Targets (EPIC 4-5)
+
+### LLM Latency
+
+| Request Type | MVP Target | Production Target |
+|-------------|------------|-------------------|
+| Simple CDS recommendation | < 5s | < 3s |
+| Complex reasoning (multi-step) | < 10s | < 5s |
+| Evidence retrieval (semantic) | < 2s | < 1s |
+| Root cause analysis | < 15s | < 10s |
+| Failure prediction | < 5s | < 3s |
+| Context embedding generation | < 1s | < 500ms |
+
+### LLM Throughput
+
+| Metric | MVP Target | Production Target |
+|--------|-----------|-------------------|
+| Concurrent CDS requests | 100 | 1,000 |
+| CDS requests/minute | 1,000 | 10,000 |
+| LLM token budget/day | 10M tokens | 100M tokens |
+
+### LLM Quality
+
+| Metric | Target | Notes |
+|--------|--------|-------|
+| Hallucination rate | < 1% | Guardrail G5.1 |
+| Self-validation pass rate | > 95% | Before response delivery |
+| Evidence citation accuracy | > 90% | Sources actually support claims |
+| CDS confidence calibration | > 85% | Actual outcomes vs predicted |
+| Context truncation rate | < 5% | Due to context window |
+| Rate limit impact | < 2% requests | Affected by throttling |
+
+### LLM Context Limits
+
+| Metric | Target |
+|--------|--------|
+| Max context tokens | 128,000 (configurable per model) |
+| Max output tokens | 4,096 per response |
+| Memory retrieval items | Top 20 relevant memories |
+| Evidence retrieval items | Top 10 relevant sources |
+
+---
+
+## Integration Targets (EPIC 6)
+
+### FHIR Integration
+
+| Metric | MVP Target | Production Target |
+|--------|-----------|-------------------|
+| FHIR sync latency | < 5s | < 2s |
+| FHIR resource validation | 100% | 100% |
+| FHIR throughput | 100 resources/min | 1,000 resources/min |
+| FHIR sync reliability | > 99% | > 99.9% |
+
+### MQTT Integration
+
+| Metric | MVP Target | Production Target |
+|--------|-----------|-------------------|
+| MQTT message latency | < 500ms | < 200ms |
+| MQTT throughput | 1,000 msgs/s | 10,000 msgs/s |
+| Alarm delivery (device → UI) | < 1.5s total | < 1s total |
+| MQTT reconnect time | < 5s | < 2s |
+| Message loss rate | < 0.1% | < 0.01% |
+
+### HL7 Integration
+
+| Metric | MVP Target | Production Target |
+|--------|-----------|-------------------|
+| HL7 message processing | < 1s | < 500ms |
+| HL7 throughput | 500 messages/min | 5,000 messages/min |
+| Buffer capacity | 10,000 messages | 100,000 messages |
+| HL7 ack timeout | 30s | 10s |
+
+### Vendor API Integration
+
+| Metric | Target |
+|--------|--------|
+| Philips API response | < 3s |
+| GE API response | < 3s |
+| Dräger API response | < 3s |
+| Mindray API response | < 3s |
+| SAP/ServiceNow/Maximo API | < 5s |
+| Vendor API circuit breaker | 5 failures → open |
+| Vendor API retry | 3x with exponential backoff |
+
+---
+
+## User Experience Targets (EPIC 7)
+
+### Web Performance
+
+| Metric | Target |
+|--------|--------|
+| Dashboard load time | < 3s |
+| First contentful paint | < 1.5s |
+| Time to interactive | < 3s |
+| API response (dashboard) | < 500ms (p95) |
+| Chat response (streaming) | First token < 1s |
+
+### Mobile Performance
+
+| Metric | Target |
+|--------|--------|
+| App launch time | < 3s |
+| Offline data access | 48 hours minimum |
+| Sync on reconnect | < 30s |
+| Battery impact | < 5% per hour active use |
+| Data usage | < 50MB/month average |
+
+### Accessibility
+
+| Standard | Target |
+|----------|--------|
+| WCAG 2.1 AA | Required |
+| Screen reader support | VoiceOver, NVDA, JAWS |
+| Keyboard navigation | Full functionality |
+| Color contrast | 4.5:1 minimum |
+| Touch targets | 44x44px minimum |
+| Response time (accessibility) | < 3s for all operations |
+
+---
+
 ## Monitoring & Observability
 
 ### Metrics Required
@@ -288,5 +411,5 @@ Revisions based on:
 
 ---
 
-*EREN Non-Functional Requirements v1.0*
-*Architecture Board - 2026-07-15*
+*EREN Non-Functional Requirements v1.1*
+*Architecture Board - 2026-07-16*
