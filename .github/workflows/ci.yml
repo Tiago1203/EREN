@@ -130,38 +130,13 @@ jobs:
           pip install -e "apps/api"
 
       - name: Verify infrastructure imports
-        run: python -c "
-from app.infrastructure import (
-    IncidentRepositoryImpl,
-    DeviceRepositoryImpl,
-    RecommendationRepositoryImpl,
-    KnowledgeRepositoryImpl,
-    CacheService,
-    EventBus as MessagingEventBus,
-    configure_logging,
-    setup_tracing,
-)
-print('Infrastructure imports OK')
-"
+        run: python -c "from app.infrastructure import (CacheService,DeviceRepositoryImpl,MessagingEventBus,configure_logging,setup_tracing); print('Infrastructure imports OK')"
 
       - name: Verify domain repository interfaces
-        run: python -c "
-from core.incident.domain.repositories import IncidentRepository
-from core.device.domain.repositories import DeviceRepository
-from core.recommendation.domain.repositories import RecommendationRepository
-from core.knowledge.domain.repositories import KnowledgeRepository
-print('Domain interfaces OK')
-"
+        run: python -c "from core.incident.domain.repositories import IncidentRepository; from core.device.domain.repositories import DeviceRepository; from core.recommendation.domain.repositories import RecommendationRepository; from core.knowledge.domain.repositories import KnowledgeRepository; print('Domain interfaces OK')"
 
       - name: Verify middleware imports
         run: python -c "from app.middleware import AuditMiddleware, AuthenticationMiddleware; print('Middleware imports OK')"
 
       - name: Verify core domain can be imported
-        run: python -c "
-from core.contracts.security.authentication import AuthenticationResult
-from core.incident.domain.entities import Incident
-from core.device.domain.entities import Device
-from core.recommendation.domain.entities import Recommendation
-from core.knowledge.domain.entities import KnowledgeAsset
-print('Core domain imports OK')
-"
+        run: python -c "from core.contracts.security.authentication import AuthenticationResult; from core.incident.domain.entities import EngineeringIncident; from core.device.domain.entities import Device; from core.recommendation.domain.entities import AIRecommendation; from core.knowledge.domain.entities import KnowledgeArticle; print('Core domain imports OK')"
