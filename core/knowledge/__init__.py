@@ -60,6 +60,19 @@ from core.knowledge.knowledge_types import (
     SourceMetadata,
 )
 
+# Knowledge Article Domain (Sprint 6)
+from core.knowledge.domain import (
+    ArticleContent,
+    KnowledgeArticle,
+    KnowledgeCategory,
+    KnowledgeReference,
+    KnowledgeRepository,
+    KnowledgeService,
+    KnowledgeStatus,
+    ReviewInfo,
+    UsageStatistics,
+)
+
 __all__ = [
     # Core Engine
     "CognitiveKnowledgeEngine",
@@ -111,4 +124,14 @@ __all__ = [
     "KnowledgeNotFoundError",
     "ValidationError",
     "TimeoutError",
+    # Knowledge Article Domain (Sprint 6)
+    "KnowledgeArticle",
+    "KnowledgeStatus",
+    "KnowledgeCategory",
+    "ArticleContent",
+    "KnowledgeReference",
+    "ReviewInfo",
+    "UsageStatistics",
+    "KnowledgeService",
+    "KnowledgeRepository",
 ]
