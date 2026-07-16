@@ -18,7 +18,7 @@ from ..repositories.recommendation_repository import RecommendationRepository
 from ..value_objects import (
     AcceptanceNote,
     RecommendationCategory,
-    RecommendationConfidence,
+    RecommendationConfidence as RecConfidence,
     RecommendationStatus,
     RecommendationUrgency,
     RejectionReason,

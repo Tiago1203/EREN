@@ -241,7 +241,6 @@ Epic 2 ────────────────────────�
 
 | Item | Belongs to | Why |
 |------|-----------|------|
-| WorkOrder aggregate | `core/incident/` (pending move) | Lives only in `apps/api/` |
 | Patient domain | EPIC 5 (Clinical) | Not biomedical |
 | Diagnosis domain | EPIC 5 (Clinical) | Not biomedical |
 | Hospital entities | EPIC 3 | Not in scope |
@@ -252,18 +251,23 @@ Epic 2 ────────────────────────�
 
 ## Status: IN PROGRESS 🚧
 
-Pending work (see task list in repo):
-- [ ] Move WorkOrder aggregate to `core/incident/domain/`
-- [ ] Remove duplicate `apps/api/app/domain/device/` (use `core/device/` only)
-- [ ] Remove `apps/api/app/domain/patient/` and `apps/api/app/domain/diagnosis/` (not EPIC 2 scope)
-- [ ] Separate `core/knowledge/engine/` from domain (framework-independent requirement)
+Completed in PR #128:
+- ✅ WorkOrder aggregate created in `core/incident/domain/work_order/` (FSM, SLA, 7 domain events)
+- ✅ Patient + Diagnosis moved to `apps/api/app/clinical/` (EPIC 5 scope)
+- ✅ 8 ADRs created in `docs/adr/epic2/` (ADR-0200 to ADR-0207)
+- ✅ README concatenations: EPIC 0, 0-Infra, 1, ADR index updated
+
+Pending work:
+- [ ] Implement WorkOrder SQLAlchemy repository (wire `core/` interface to `app/infrastructure/`)
+- [ ] Implement Knowledge and Recommendation SQLAlchemy repositories
+- [ ] Move events from `app/domain/` to `core/shared/events/`
 - [ ] Add specification tests for aggregate lifecycle
 - [ ] Add integration tests for context-to-context events
-- [ ] Create all EPIC 2 ADRs
+- [ ] Tests for Knowledge and Recommendation services
 
 **Next:** Epic 3 — Hospital Management Platform
 
 ---
 
-*EREN Epic 2 v1.0*
+*EREN Epic 2 v1.1*
 *Architecture Board - 2026-07-16*
