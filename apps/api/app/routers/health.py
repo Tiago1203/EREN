@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, status
 from pydantic import BaseModel
@@ -88,7 +88,7 @@ async def liveness() -> LivenessResponse:
     """Kubernetes liveness probe — checks if the app is running."""
     return LivenessResponse(
         status="alive",
-        timestamp=datetime.now(timezone.utc).isoformat(),
+        timestamp=datetime.now(UTC).isoformat(),
     )
 
 
@@ -108,7 +108,7 @@ async def readiness() -> ReadinessResponse:
     ready = db_check.get("status") == "healthy"
     return ReadinessResponse(
         status="ready" if ready else "not_ready",
-        timestamp=datetime.now(timezone.utc).isoformat(),
+        timestamp=datetime.now(UTC).isoformat(),
         checks={"database": db_check, "redis": redis_check},
     )
 
@@ -136,7 +136,7 @@ async def full_health() -> FullHealthResponse:
 
     return FullHealthResponse(
         status="healthy" if all_healthy else "degraded",
-        timestamp=datetime.now(timezone.utc).isoformat(),
+        timestamp=datetime.now(UTC).isoformat(),
         version=__version__,
         environment=settings.environment,
         checks={"database": db_check, "redis": redis_check},

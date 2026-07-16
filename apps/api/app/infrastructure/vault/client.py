@@ -72,7 +72,7 @@ class VaultClient:
         """Lazy-initialise the hvac client."""
         if self._client is None:
             try:
-                import hvac  # noqa: F401
+                import hvac
 
                 self._client = hvac.Client(url=self._settings.url, token=self._settings.token)
             except ImportError:

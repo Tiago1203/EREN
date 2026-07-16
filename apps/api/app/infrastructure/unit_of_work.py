@@ -17,8 +17,9 @@ On exit (exception): rollback + discard outbox
 from __future__ import annotations
 
 import logging
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import TYPE_CHECKING, Any, AsyncGenerator
+from typing import TYPE_CHECKING, Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -48,7 +49,7 @@ class UnitOfWork:
         self.recommendations: RecommendationRepositoryImpl | None = None
         self.knowledge: KnowledgeRepositoryImpl | None = None
 
-    async def __aenter__(self) -> "UnitOfWork":
+    async def __aenter__(self) -> UnitOfWork:
         if self._session is None:
             factory = get_session_factory()
             self._session = factory()

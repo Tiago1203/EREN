@@ -1,29 +1,13 @@
 """SQLAlchemy implementation of IncidentRepository."""
 from __future__ import annotations
 
-import uuid
-from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.infrastructure.models.incident import (
-    ActionModel,
-    ConversationMessageModel,
-    EvidenceModel,
-    IncidentModel,
-    InvestigationModel,
-)
-from core.incident.domain.entities import EngineeringIncident, Investigation
+from core.incident.domain.entities import EngineeringIncident
 from core.incident.domain.repositories import IncidentRepository as AbstractIncidentRepository
 from core.incident.domain.value_objects import (
-    ActionResult,
-    ActionType,
-    EvidenceType,
     Feedback,
     IncidentStatus,
-    MessageSender,
     Resolution,
     Symptom,
 )
@@ -34,6 +18,12 @@ from core.shared import (
     Ok,
     Result,
     TenantId,
+)
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.infrastructure.models.incident import (
+    IncidentModel,
 )
 
 if TYPE_CHECKING:
@@ -186,7 +176,7 @@ class IncidentRepositoryImpl(AbstractIncidentRepository):
             if model is None:
                 return Ok(None)
             return Ok(_model_to_entity(model))
-        except Exception as e:
+        except Exception:
             return Ok(None)  # Fallback on error
 
     async def get_by_device(
@@ -206,7 +196,7 @@ class IncidentRepositoryImpl(AbstractIncidentRepository):
             result = await self._session.execute(stmt)
             models = result.scalars().all()
             return Ok([_model_to_entity(m) for m in models])
-        except Exception as e:
+        except Exception:
             return Ok([])
 
     async def get_by_tenant(
@@ -226,7 +216,7 @@ class IncidentRepositoryImpl(AbstractIncidentRepository):
             result = await self._session.execute(stmt)
             models = result.scalars().all()
             return Ok([_model_to_entity(m) for m in models])
-        except Exception as e:
+        except Exception:
             return Ok([])
 
     async def get_open_incidents(
@@ -246,7 +236,7 @@ class IncidentRepositoryImpl(AbstractIncidentRepository):
             result = await self._session.execute(stmt)
             models = result.scalars().all()
             return Ok([_model_to_entity(m) for m in models])
-        except Exception as e:
+        except Exception:
             return Ok([])
 
     async def get_by_engineer(
@@ -266,7 +256,7 @@ class IncidentRepositoryImpl(AbstractIncidentRepository):
             result = await self._session.execute(stmt)
             models = result.scalars().all()
             return Ok([_model_to_entity(m) for m in models])
-        except Exception as e:
+        except Exception:
             return Ok([])
 
     async def delete(self, incident_id: IncidentId) -> Result[bool, str]:
@@ -276,5 +266,5 @@ class IncidentRepositoryImpl(AbstractIncidentRepository):
                 await self._session.delete(model)
                 await self._session.flush()
             return Ok(True)
-        except Exception as e:
+        except Exception:
             return Ok(False)

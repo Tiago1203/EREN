@@ -11,7 +11,6 @@ from math import ceil
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
-from pydantic import Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db

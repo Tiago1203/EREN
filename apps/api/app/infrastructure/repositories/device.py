@@ -1,24 +1,22 @@
 """SQLAlchemy implementation of DeviceRepository."""
 from __future__ import annotations
 
-import uuid
 from typing import TYPE_CHECKING, Any
 
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.infrastructure.models.device import DeviceModel
 from core.device.domain.entities import Device
 from core.device.domain.repositories import DeviceRepository as AbstractDeviceRepository
 from core.device.domain.value_objects import (
-    CalibrationInfo,
     DeviceStatus,
     DeviceType,
     LocationInfo,
     ManufacturerInfo,
     SerialNumber,
 )
-from core.shared import DeviceId, EngineerId, LocationId, Ok, Result, TenantId
+from core.shared import DeviceId, EngineerId, Ok, Result, TenantId
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.infrastructure.models.device import DeviceModel
 
 if TYPE_CHECKING:
     pass

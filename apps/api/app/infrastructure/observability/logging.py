@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from pythonjsonlogger import jsonlogger
@@ -24,7 +24,7 @@ class CorrelationJsonFormatter(jsonlogger.JsonFormatter):
         message_dict: dict[str, Any],
     ) -> None:
         super().add_fields(log_record, record, message_dict)
-        log_record["timestamp"] = datetime.now(timezone.utc).isoformat()
+        log_record["timestamp"] = datetime.now(UTC).isoformat()
         log_record["level"] = record.levelname
         log_record["logger"] = record.name
         log_record["service"] = "eren-api"

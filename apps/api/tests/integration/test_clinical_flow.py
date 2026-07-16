@@ -42,7 +42,6 @@ from app.events.outbox import OutboxMessage
 from app.infrastructure import EventBus
 from app.models import Base
 from app.models.diagnosis import Diagnosis as DiagnosisModel
-from app.models.patient import Patient as PatientModel
 
 DATABASE_URL = os.environ.get(
     "DATABASE_URL",
@@ -446,10 +445,10 @@ class TestFoundationValidation:
         - El patrón se copió correctamente
         """
         # Importar directamente desde los módulos
-        from app.domain.patient import PatientService
-        from app.domain.patient.repository import SQLAlchemyPatientRepository
         from app.domain.diagnosis import DiagnosisService
         from app.domain.diagnosis.repository import SQLAlchemyDiagnosisRepository
+        from app.domain.patient import PatientService
+        from app.domain.patient.repository import SQLAlchemyPatientRepository
         from app.infrastructure import EventBus
         
         # Verificar que todos los componentes existen

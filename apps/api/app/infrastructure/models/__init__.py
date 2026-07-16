@@ -16,13 +16,13 @@ from app.infrastructure.models.knowledge import DomainEventModel, KnowledgeArtic
 from app.infrastructure.models.recommendation import RecommendationModel
 
 __all__ = [
-    "IncidentModel",
-    "InvestigationModel",
-    "EvidenceModel",
     "ActionModel",
     "ConversationMessageModel",
     "DeviceModel",
-    "RecommendationModel",
-    "KnowledgeArticleModel",
     "DomainEventModel",
+    "EvidenceModel",
+    "IncidentModel",
+    "InvestigationModel",
+    "KnowledgeArticleModel",
+    "RecommendationModel",
 ]

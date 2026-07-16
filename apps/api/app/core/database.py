@@ -69,8 +69,8 @@ async def init_db() -> None:
         for schema in ["incident", "device", "recommendation", "knowledge"]:
             await conn.execute(text(f'CREATE SCHEMA IF NOT EXISTS "{schema}"'))
 
-        # Create all tables
-        from app.infrastructure.models import (
+        # Create all tables — models must be imported to register with Base.metadata
+        from app.infrastructure.models import (  # noqa: F401
             ActionModel,
             ConversationMessageModel,
             DeviceModel,

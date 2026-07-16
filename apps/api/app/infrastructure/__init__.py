@@ -14,7 +14,6 @@ The domain layer remains pure and free of infrastructure concerns.
 from app.infrastructure.events import EventBus
 from app.infrastructure.messaging import (
     CacheService,
-    EventBus as MessagingEventBus,
     OutboxEventModel,
     OutboxWorker,
     TransactionalOutbox,
@@ -23,6 +22,9 @@ from app.infrastructure.messaging import (
     close_redis,
     get_event_bus,
     get_redis,
+)
+from app.infrastructure.messaging import (
+    EventBus as MessagingEventBus,
 )
 from app.infrastructure.models import (
     DeviceModel,
@@ -38,26 +40,21 @@ from app.infrastructure.repositories import (
 )
 
 __all__ = [
-    # Events (from existing)
-    "EventBus",
-    # Messaging
-    "MessagingEventBus",
     "CacheService",
-    "TransactionalOutbox",
+    "DeviceModel",
+    "DeviceRepositoryImpl",
+    "DomainEventModel",
+    "EventBus",
+    "MessagingEventBus",
     "OutboxEventModel",
     "OutboxWorker",
+    "TransactionalOutbox",
     "cache_key",
     "close_connection",
     "close_redis",
+    "configure_logging",
     "get_event_bus",
     "get_redis",
-    # Observability
-    "configure_logging",
     "setup_instrumentation",
     "setup_tracing",
-    # Models
-    "DeviceModel",
-    "DomainEventModel",
-    # Repositories
-    "DeviceRepositoryImpl",
 ]

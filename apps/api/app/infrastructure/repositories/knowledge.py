@@ -3,10 +3,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.infrastructure.models.knowledge import KnowledgeArticleModel
 from core.knowledge.domain.entities import KnowledgeArticle
 from core.knowledge.domain.repositories import (
     KnowledgeRepository as AbstractKnowledgeRepository,
@@ -15,10 +11,13 @@ from core.knowledge.domain.value_objects import (
     ArticleContent,
     KnowledgeCategory,
     KnowledgeStatus,
-    ReviewInfo,
     UsageStatistics,
 )
 from core.shared import EngineerId, KnowledgeId, Ok, Result, TenantId
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.infrastructure.models.knowledge import KnowledgeArticleModel
 
 if TYPE_CHECKING:
     pass
@@ -42,9 +41,9 @@ def _model_to_entity(model: KnowledgeArticleModel) -> KnowledgeArticle:
     article.author_id = EngineerId(value=model.author_id)
     article.author_name = model.author_name
     article.status = KnowledgeStatus(value=model.status)
-    article.device_ids = tuple()
-    article.incident_type_tags = tuple()
-    article.references = tuple()
+    article.device_ids = ()
+    article.incident_type_tags = ()
+    article.references = ()
     article.related_articles = tuple(
         m for m in (model.to_dict().get("related_articles") or [])
     )

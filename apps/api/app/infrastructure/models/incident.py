@@ -6,16 +6,16 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import (
+    JSON,
     DateTime,
     ForeignKey,
     Index,
     Integer,
-    JSON,
     String,
     Text,
     func,
 )
-from sqlalchemy.dialects.postgresql import ARRAY, UUID
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
@@ -96,7 +96,7 @@ class IncidentModel(Base):
     __mapper_args__ = {"version_id_col": version}
 
     # Relationships
-    investigations: Mapped[list["InvestigationModel"]] = relationship(
+    investigations: Mapped[list[InvestigationModel]] = relationship(
         back_populates="incident",
         cascade="all, delete-orphan",
     )
@@ -142,7 +142,7 @@ class InvestigationModel(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     incident_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
-        ForeignKey(f"incident.incidents.id"),
+        ForeignKey("incident.incidents.id"),
         nullable=False,
     )
     status: Mapped[str] = mapped_column(String(50), nullable=False, default="active")
@@ -153,18 +153,18 @@ class InvestigationModel(Base):
         DateTime(timezone=True), nullable=True
     )
 
-    incident: Mapped["IncidentModel"] = relationship(
+    incident: Mapped[IncidentModel] = relationship(
         back_populates="investigations"
     )
-    evidence: Mapped[list["EvidenceModel"]] = relationship(
+    evidence: Mapped[list[EvidenceModel]] = relationship(
         back_populates="investigation",
         cascade="all, delete-orphan",
     )
-    actions: Mapped[list["ActionModel"]] = relationship(
+    actions: Mapped[list[ActionModel]] = relationship(
         back_populates="investigation",
         cascade="all, delete-orphan",
     )
-    messages: Mapped[list["ConversationMessageModel"]] = relationship(
+    messages: Mapped[list[ConversationMessageModel]] = relationship(
         back_populates="investigation",
         cascade="all, delete-orphan",
     )
@@ -182,7 +182,7 @@ class EvidenceModel(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     investigation_id: Mapped[str] = mapped_column(
         String(36),
-        ForeignKey(f"incident.investigations.id"),
+        ForeignKey("incident.investigations.id"),
         nullable=False,
     )
     type: Mapped[str] = mapped_column(String(50), nullable=False)
@@ -193,7 +193,7 @@ class EvidenceModel(Base):
     recorded_by: Mapped[str] = mapped_column(String(36), nullable=False)
     data: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict)
 
-    investigation: Mapped["InvestigationModel"] = relationship(
+    investigation: Mapped[InvestigationModel] = relationship(
         back_populates="evidence"
     )
 
@@ -210,7 +210,7 @@ class ActionModel(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     investigation_id: Mapped[str] = mapped_column(
         String(36),
-        ForeignKey(f"incident.investigations.id"),
+        ForeignKey("incident.investigations.id"),
         nullable=False,
     )
     description: Mapped[str] = mapped_column(Text, nullable=False)
@@ -222,7 +222,7 @@ class ActionModel(Base):
     result: Mapped[str] = mapped_column(String(50), nullable=False)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    investigation: Mapped["InvestigationModel"] = relationship(
+    investigation: Mapped[InvestigationModel] = relationship(
         back_populates="actions"
     )
 
@@ -239,7 +239,7 @@ class ConversationMessageModel(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     investigation_id: Mapped[str] = mapped_column(
         String(36),
-        ForeignKey(f"incident.investigations.id"),
+        ForeignKey("incident.investigations.id"),
         nullable=False,
     )
     sender: Mapped[str] = mapped_column(String(50), nullable=False)
@@ -251,6 +251,6 @@ class ConversationMessageModel(Base):
     feedback_type: Mapped[str | None] = mapped_column(String(50), nullable=True)
     feedback_content: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    investigation: Mapped["InvestigationModel"] = relationship(
+    investigation: Mapped[InvestigationModel] = relationship(
         back_populates="messages"
     )

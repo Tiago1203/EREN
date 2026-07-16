@@ -6,7 +6,7 @@
 
 from fastapi import APIRouter
 
-from app.routers import auth, diagnosis, devices, health, patients
+from app.routers import auth, devices, diagnosis, health, patients
 
 api_router = APIRouter()
 api_router.include_router(health.router)

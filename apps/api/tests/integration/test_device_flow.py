@@ -24,8 +24,10 @@ DATABASE_URL = os.environ.get(
 )
 
 # Import models
-from app.models import Base
+from datetime import UTC
+
 from app.infrastructure.models.device import DeviceModel
+from app.models import Base
 
 
 @pytest_asyncio.fixture
@@ -372,8 +374,8 @@ class TestDeviceServiceIntegration:
         v2 = device.version
 
         # 3. Finish maintenance
-        from datetime import datetime, timezone
-        next_cal = datetime(2027, 7, 16, tzinfo=timezone.utc)
+        from datetime import datetime
+        next_cal = datetime(2027, 7, 16, tzinfo=UTC)
 
         device = await service.finish_maintenance(
             device_id=str(device.id),
