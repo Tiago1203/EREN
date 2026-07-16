@@ -9,12 +9,12 @@ import uuid
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from app.domain.diagnosis.events import (
+from app.clinical.diagnosis.events import (
     DiagnosisAmended,
     DiagnosisDeleted,
     DiagnosisRecorded,
 )
-from app.domain.diagnosis.repository import DiagnosisRepository
+from app.clinical.diagnosis.repository import DiagnosisRepository
 from app.infrastructure.events import EventBus
 
 if TYPE_CHECKING:

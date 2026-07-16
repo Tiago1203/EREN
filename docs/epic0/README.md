@@ -93,6 +93,11 @@ Epic 0 establishes the foundational documents that define EREN's identity, purpo
 
 **Epic 0 Status:** COMPLETE ✅ v1.1
 
+**EPIC Roadmap Status:**
+- EPIC 0 (Architecture) — COMPLETE ✅
+- EPIC 1 (Infrastructure) — COMPLETE ✅ (merged)
+- **EPIC 2 (Core Domain) — IN PROGRESS 🚧**
+
 **Changes in v1.1:**
 - ✅ Bounded Context Map: Hospital domain contexts + CD contexts formalized
 - ✅ Cognitive Model: Frozen, AI Core ready (EPIC 4)
@@ -144,14 +149,35 @@ All foundations in place:
 ## Epic Dependencies
 
 ```
+EPIC 0 ────────────────────────────────────────────────────────────→ EPIC 1
+  │                                                                         │
+  ├── Architecture Blueprint ─────────────→ Full stack definition           │
+  ├── Multi-Tenancy Strategy ──────────→ Shared DB + RLS               │
+  ├── Event Architecture ───────────────→ Outbox + RabbitMQ               │
+  ├── Failure Model ───────────────────→ Health + circuit breaker          │
+  ├── Consistency Model ──────────────→ PostgreSQL source of truth       │
+  └── Non-Functional Requirements ───────→ Latency + AI + UX targets       │
+
+EPIC 0 ────────────────────────────────────────────────────────────→ EPIC 2
+  │                                                                         │
+  ├── Bounded Context Map ──────────────→ 4 bounded contexts (v1.1)         │
+  ├── Domain Events Catalog ─────────────→ 67 domain events (v1.1)          │
+  ├── Error Catalog ───────────────────→ DEV-*, INC-*, REC-*, KNW-* codes │
+  ├── Ubiquitous Language ──────────────→ Terminology enforced in entities  │
+  ├── Capability Map ──────────────────→ DeviceRegistry, IncidentMgmt,      │
+  │                                    RecommendationEngine, KnowledgeRetr.    │
+  ├── Domain Ownership ────────────────→ Biomedical owns Device/Incident/   │
+  │                                      Recommendation; Clinical owns Knowledge │
+  └── ADR Index ──────────────────────→ ADR-0200 to ADR-0207 (v1.1)      │
+
 EPIC 0 ────────────────────────────────────────────────────────────→ EPIC 3
   │                                                                         │
   ├── Domain Ownership ────────────────→ Hospital Domain owns entities       │
   ├── Bounded Context Map ────────────→ Hospital + CD contexts defined     │
-  ├── Domain Events Catalog ────────────→ 67 domain events catalogued       │
-  ├── Error Catalog ───────────────────→ CDS, Hospital, Integration errors   │
+  ├── Domain Events Catalog ────────────→ 27 new Hospital + CD events     │
+  ├── Error Catalog ───────────────────→ HOSP-*, LOC-*, DEPT-* codes       │
   ├── Data Classification ──────────────→ PHI, Regulatory, Operational       │
-  └── ADR Index ───────────────────────→ ADRs for Hospital, AI, CDSS        │
+  └── ADR Index ───────────────────────→ ADR-0050 to ADR-0052, 0060-0062  │
 
 EPIC 0 ────────────────────────────────────────────────────────────→ EPIC 4
   │                                                                         │

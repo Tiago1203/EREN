@@ -14,7 +14,6 @@ from .domain import (
     CalibrationInfo,
     Device,
     DeviceRepository,
-    DeviceService,
     DeviceStatus,
     DeviceType,
     LocationInfo,
@@ -34,8 +33,6 @@ __all__ = [
     "LocationInfo",
     "CalibrationInfo",
     "MaintenanceSchedule",
-    # Services
-    "DeviceService",
     # Repositories
     "DeviceRepository",
 ]

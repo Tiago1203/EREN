@@ -1,5 +1,7 @@
-"""Domain services for Device context."""
+"""Domain services for Device context.
 
-from .device_service import DeviceService
+Note: Device domain services are defined as application services
+in apps/api/app/domain/device/service.py (orchestration layer).
+Domain logic lives in core/device/domain/entities/device.py.
+"""
 
-__all__ = ["DeviceService"]

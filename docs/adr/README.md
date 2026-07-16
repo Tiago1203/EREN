@@ -30,11 +30,12 @@ docs/adr/
 
 | EPIC | Accepted | Proposed | Deprecated | Total |
 |------|----------|----------|------------|--------|
-| Epic 0 | 32 | 6 | 0 | 38 |
+| Epic 0 | 27 | 7 | 0 | 34 |
 | Epic 0-Infra | 8 | 4 | 0 | 12 |
 | **Epic 1** | **11** | **0** | **0** | **11** |
-| Epic 2-10 | 0 | 0 | 0 | 0 |
-| **Total** | **51** | **10** | **0** | **61** |
+| **Epic 2** | **6** | **2** | **0** | **8** |
+| Epic 3-10 | 0 | 0 | 0 | 0 |
+| **Total** | **52** | **13** | **0** | **65** |
 
 ---
 
@@ -138,8 +139,7 @@ ADR-1000 to ADR-1099  →  Epic 10 (Enterprise Release)
 | ADR | Title | Status |
 |-----|-------|--------|
 | ADR-0101 | FastAPI as API Framework | Accepted |
-| ADR-0101 | SQLAlchemy 2.0 ORM | Accepted |
-| ADR-0102 | Alembic for Database Migrations | Accepted |
+| ADR-0102 | SQLAlchemy 2.0 ORM + Alembic | Accepted |
 | ADR-0103 | Repository Pattern Implementation | Accepted |
 | ADR-0104 | Unit of Work Pattern | Accepted |
 | ADR-0105 | Outbox Pattern for Reliable Events | Accepted |
@@ -149,11 +149,24 @@ ADR-1000 to ADR-1099  →  Epic 10 (Enterprise Release)
 | ADR-0109 | Structured Logging | Accepted |
 | ADR-0110 | Health Check Strategy | Accepted |
 
-### Epic 2-10 — Pending
+### Epic 2 — Core Business Domain (IN PROGRESS 🚧)
+
+| ADR | Title | Status |
+|-----|-------|--------|
+| ADR-0200 | Domain Model Architecture | Accepted |
+| ADR-0201 | Bounded Context Definitions | Accepted |
+| ADR-0202 | Incident Sub-Aggregate (Investigation) | Accepted |
+| ADR-0203 | Context Integration Pattern | Accepted |
+| ADR-0204 | WorkOrder in Incident Bounded Context | Proposed |
+| ADR-0205 | Knowledge Domain Isolation | Proposed |
+| ADR-0206 | Patient and Diagnosis Scope — Not EPIC 2 | Accepted |
+| ADR-0207 | Knowledge Article Value Objects | Accepted |
+
+### Epic 3-10 — Pending
 
 | EPIC | Status |
 |------|--------|
-| Epic 2 (Core Business Domain) | Pending |
+| Epic 2 (Core Business Domain) | **IN PROGRESS 🚧** |
 | Epic 3 (Hospital Management) | Pending |
 | Epic 4 (AI Core) | Pending |
 | Epic 5 (Clinical Intelligence) | Pending |

@@ -2,7 +2,6 @@
 
 from .entities import Device
 from .repositories import DeviceRepository
-from .services import DeviceService
 from .value_objects import (
     CalibrationInfo,
     DeviceStatus,
@@ -24,8 +23,6 @@ __all__ = [
     "LocationInfo",
     "CalibrationInfo",
     "MaintenanceSchedule",
-    # Services
-    "DeviceService",
     # Repositories
     "DeviceRepository",
 ]
