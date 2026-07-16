@@ -377,36 +377,16 @@ Step 8: Advanced Cognitive
 
 ## Key Architectural Decisions
 
-### ADR-0001: Cognitive Core is Independent
-```
-Decision: Cognitive capabilities (Trust, Reason, Decide) 
-          do NOT depend on domain capabilities.
-          
-Rationale: Ensures cognitive processing is reusable
-           across all domains.
-           
-Impact: Domain capabilities feed cognitive, not the reverse.
-```
+These decisions are documented as ADRs in [`../adr/epic0/`](../adr/epic0/).
 
-### ADR-0002: Security is Horizontal
-```
-Decision: Security capabilities (Identity, Authorization, 
-          Audit) are horizontal and required by all.
-          
-Rationale: HIPAA and IEC 62304 require security controls.
-           
-Impact: Every capability must integrate with security.
-```
-
-### ADR-0003: Integration is Adapters
-```
-Decision: Integration capabilities (FHIR, MQTT, DICOM) 
-          are adapters, not dependencies.
-          
-Rationale: External systems should not constrain EREN design.
-           
-Impact: EREN defines its own models, adapters connect.
-```
+| ADR | Title | Decision |
+|-----|-------|----------|
+| [ADR-0001](../adr/epic0/ADR-0001.md) | Hexagonal Architecture | Cognitive capabilities are reusable across all domains |
+| [ADR-0002](../adr/epic0/ADR-0002.md) | PostgreSQL as Primary Database | Domain entities stored in PostgreSQL as source of truth |
+| [ADR-0003](../adr/epic0/ADR-0003.md) | Event-Driven Architecture | Bounded contexts communicate via domain events |
+| [ADR-0008](../adr/epic0/ADR-0008.md) | Multi-Tenancy Strategy | Shared DB + tenant_id + RLS enforcement |
+| [ADR-0022](../adr/epic0/ADR-0022.md) | Trust as Cross-Cutting | Trust capability wraps every CDS response |
+| [ADR-0045](../adr/epic0/ADR-0045.md) | Vendor Adapters | FHIR, MQTT, DICOM are adapters, not domain dependencies |
 
 ---
 

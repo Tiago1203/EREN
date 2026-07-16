@@ -835,18 +835,22 @@ RFC-XXXX: [Title]
 
 ## Architectural Decision Records
 
-### ADRs to Create
+All ADRs are located in [`../adr/`](./adr/). Key ADRs for this blueprint:
 
 | ADR | Decision |
 |-----|----------|
-| ADR-0001 | Hexagonal architecture with contracts |
-| ADR-0002 | Event-driven cognitive model |
-| ADR-0003 | Three-domain bounded contexts |
-| ADR-0004 | Contract-first development |
-| ADR-0005 | Kubernetes-native deployment |
-| ADR-0006 | OpenTelemetry for observability |
-| ADR-0007 | PostgreSQL + VectorDB + GraphDB |
-| ADR-0008 | Supabase for auth (pluggable) |
+| [ADR-0001](../adr/epic0/ADR-0001.md) | Hexagonal Architecture |
+| [ADR-0002](../adr/epic0/ADR-0002.md) | PostgreSQL as Primary Database |
+| [ADR-0003](../adr/epic0/ADR-0003.md) | Event-Driven Architecture |
+| [ADR-0007](../adr/epic0/ADR-0007.md) | Contract-First Development |
+| [ADR-0008](../adr/epic0/ADR-0008.md) | Multi-Tenancy Strategy |
+| [ADR-0030](../adr/epic0/ADR-0030.md) | Kubernetes Deployment |
+| [ADR-0031](../adr/epic0/ADR-0031.md) | Prometheus + Grafana Observability |
+| [ADR-0080](../adr/epic0-infra/ADR-0080.md) | Kubernetes as Deployment Platform (detailed) |
+| [ADR-0081](../adr/epic0-infra/ADR-0081.md) | Kafka as Primary Message Broker |
+| [ADR-0085](../adr/epic0-infra/ADR-0085.md) | Observability Stack |
+
+See full ADR index at [`../adr/README.md`](../adr/README.md).
 
 ---
 

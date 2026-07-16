@@ -13,7 +13,7 @@
 
 ## Purpose
 
-This document provides the detailed setup guide for EREN's observability stack. It complements ADR-0085_OBSERVABILITY.md by providing concrete configuration files and deployment manifests.
+This document provides the detailed setup guide for EREN's observability stack. It complements [`ADR-0085`](../adr/epic0-infra/ADR-0085.md) by providing concrete configuration files and deployment manifests.
 
 ---
 
