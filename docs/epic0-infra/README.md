@@ -48,7 +48,7 @@ Epic 0-Infra (NEW — Extension of Epic 0.5)
 ├── ../adr/epic0-infra/ADR-0090.md: GitOps (Proposed)
 ├── ../adr/epic0-infra/ADR-0091.md: Service Mesh (Proposed)
 ├── ../adr/epic0-infra/ADR-0092.md: API Gateway (Proposed)
-├── ../adr/epic0-infra/ADR-0093.md: Celery (Proposed)
+├── ../adr/epic0-infra/ADR-0093.md: Celery (**ACCEPTED**)
 ├── ../adr/epic0-infra/ADR-0094.md: Schema Registry (Proposed)
 ├── EREN_LOCAL_DEV_SETUP.md
 ├── EREN_OBSERVABILITY_SETUP.md
@@ -74,7 +74,7 @@ Epic 0-Infra (NEW — Extension of Epic 0.5)
 | [ADR-0090.md](../adr/epic0-infra/ADR-0090.md) | GitOps with ArgoCD | PROPOSED |
 | [ADR-0091.md](../adr/epic0-infra/ADR-0091.md) | Service Mesh (Istio vs Linkerd) | PROPOSED |
 | [ADR-0092.md](../adr/epic0-infra/ADR-0092.md) | API Gateway Strategy | PROPOSED |
-| [ADR-0093.md](../adr/epic0-infra/ADR-0093.md) | Celery as Task Queue | PROPOSED |
+| [ADR-0093.md](../adr/epic0-infra/ADR-0093.md) | Celery as Task Queue | **ACCEPTED ✅** |
 | [ADR-0094.md](../adr/epic0-infra/ADR-0094.md) | Schema Registry Strategy | PROPOSED |
 | [EREN_LOCAL_DEV_SETUP.md](./EREN_LOCAL_DEV_SETUP.md) | Local development environment | READY |
 | [EREN_OBSERVABILITY_SETUP.md](./EREN_OBSERVABILITY_SETUP.md) | Observability setup guide | READY |
@@ -97,7 +97,7 @@ This documentation addresses the following gaps identified in Epic 0:
 | Observability stack incomplete | [`../adr/epic0-infra/ADR-0085.md`](../adr/epic0-infra/ADR-0085.md) |
 | Backup/DR not specified | [`../adr/epic0-infra/ADR-0086.md`](../adr/epic0-infra/ADR-0086.md) |
 | API Gateway not defined | [`../adr/epic0-infra/ADR-0092.md`](../adr/epic0-infra/ADR-0092.md) |
-| Task Queue not defined | [`../adr/epic0-infra/ADR-0093.md`](../adr/epic0-infra/ADR-0093.md) |
+| Task Queue defined | [`../adr/epic0-infra/ADR-0093.md`](../adr/epic0-infra/ADR-0093.md) | **ACCEPTED** (Epic 1 implemented) |
 | Schema Registry not defined | [`../adr/epic0-infra/ADR-0094.md`](../adr/epic0-infra/ADR-0094.md) |
 | No local dev setup | `EREN_LOCAL_DEV_SETUP.md` |
 | No observability setup guide | `EREN_OBSERVABILITY_SETUP.md` |
@@ -122,7 +122,7 @@ All ADRs are located at [`../adr/epic0-infra/`](../adr/epic0-infra/).
 | [ADR-0090](../adr/epic0-infra/ADR-0090.md) | GitOps with ArgoCD | PROPOSED | 2026-07-16 | Infrastructure Team |
 | [ADR-0091](../adr/epic0-infra/ADR-0091.md) | Service Mesh (Istio vs Linkerd) | PROPOSED | 2026-07-16 | Infrastructure Team |
 | [ADR-0092](../adr/epic0-infra/ADR-0092.md) | API Gateway Strategy | PROPOSED | 2026-07-16 | Infrastructure Team |
-| [ADR-0093](../adr/epic0-infra/ADR-0093.md) | Celery as Task Queue | PROPOSED | 2026-07-16 | Infrastructure Team |
+| [ADR-0093](../adr/epic0-infra/ADR-0093.md) | Celery as Task Queue | Accepted | 2026-07-16 | Infrastructure Team |
 | [ADR-0094](../adr/epic0-infra/ADR-0094.md) | Schema Registry Strategy | PROPOSED | 2026-07-16 | Infrastructure Team |
 
 See full ADR index at [`../adr/README.md`](../adr/README.md).

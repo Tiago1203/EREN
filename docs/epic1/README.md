@@ -11,6 +11,37 @@ Epic 1 must be **completed and stable** before any domain EPIC (2-10) can begin 
 
 ---
 
+## Epic Dependencies
+
+```
+Epic 0 ────────────────────────────────────────────→ Epic 1
+  │                                                              │
+  ├── Architecture Blueprint ──────────────────→ Full stack definition  │
+  ├── Multi-Tenancy Strategy ────────────────→ Shared DB + RLS     │
+  ├── Event Architecture ──────────────────────→ Outbox + RabbitMQ    │
+  ├── Failure Model ────────────────────────────→ Health + circuit brk │
+  ├── Consistency Model ────────────────────────→ PostgreSQL source     │
+  └── Non-Functional Requirements ──────────────→ Latency targets     │
+
+Epic 1 ────────────────────────────────────────────→ Epic 2
+  │                                                              │
+  ├── PostgreSQL + Alembic ────────────────────→ Domain data storage   │
+  ├── Repository + Unit of Work ─────────────────→ Domain models        │
+  ├── Outbox Pattern ────────────────────────────→ Event publishing     │
+  ├── RabbitMQ ─────────────────────────────────→ Async messaging     │
+  └── RLS ──────────────────────────────────────→ Multi-tenant safety  │
+
+Epic 1 ────────────────────────────────────────────→ Epic 3
+  │                                                              │
+  └── All infrastructure layers ──────────────────→ Hospital domain    │
+
+Epic 1 ────────────────────────────────────────────→ Epic 4
+  │                                                              │
+  └── FastAPI + observability ───────────────────→ AI Core platform   │
+```
+
+---
+
 ## Relationship to Epic 0
 
 Epic 1 implements the infrastructure decisions documented in Epic 0. Read these **in parallel** with Epic 1:
@@ -44,17 +75,17 @@ Epic 1 delivers a **FastAPI monolithic API** that grows into microservices in EP
 
 ```
 docs/adr/epic1/
-├── ADR-0101.md  FastAPI as API Framework
-├── ADR-0102.md  SQLAlchemy 2.0 ORM
-├── ADR-0103.md  Alembic for Migrations
-├── ADR-0104.md  Repository Pattern
-├── ADR-0105.md  Unit of Work Pattern
-├── ADR-0106.md  Outbox Pattern
-├── ADR-0107.md  Redis Cache Strategy
-├── ADR-0108.md  RabbitMQ Messaging
-├── ADR-0109.md  OpenTelemetry Observability
-├── ADR-0110.md  Structured Logging
-└── ADR-0111.md  Health Check Strategy
+├── ADR-0100.md  FastAPI as API Framework
+├── ADR-0101.md  SQLAlchemy 2.0 ORM
+├── ADR-0102.md  Alembic for Migrations
+├── ADR-0103.md  Repository Pattern
+├── ADR-0104.md  Unit of Work Pattern
+├── ADR-0105.md  Outbox Pattern
+├── ADR-0106.md  Redis Cache Strategy
+├── ADR-0107.md  RabbitMQ Messaging
+├── ADR-0108.md  OpenTelemetry Observability
+├── ADR-0109.md  Structured Logging
+└── ADR-0110.md  Health Check Strategy
 ```
 
 ---
