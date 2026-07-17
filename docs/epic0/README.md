@@ -96,10 +96,15 @@ Epic 0 establishes the foundational documents that define EREN's identity, purpo
 **EPIC Roadmap Status:**
 - EPIC 0 (Architecture) — COMPLETE ✅
 - EPIC 1 (Infrastructure) — COMPLETE ✅ (merged)
-- **EPIC 2 (Core Domain) — IN PROGRESS 🚧** (PR #128)
-- EPIC 3 (Hospital Management) — Pending
+- EPIC 2 (Core Business Domain) — COMPLETE ✅ (merged)
+- **EPIC 3 (Hospital Management) — IN PROGRESS 🚧**
 - EPIC 4 (AI Core) — Pending
-- EPIC 5-10 — Pending
+- EPIC 5 (Clinical Intelligence) — Pending
+- EPIC 6 (Integrations) — Pending
+- EPIC 7 (User Experience) — Pending
+- EPIC 8 (Production Readiness) — Pending
+- EPIC 9 (Machine Learning) — Pending
+- EPIC 10 (Enterprise Release) — Pending
 
 **Changes in v1.1:**
 - ✅ Bounded Context Map: Hospital domain contexts + CD contexts formalized

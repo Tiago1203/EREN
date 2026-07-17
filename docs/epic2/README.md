@@ -249,9 +249,9 @@ Epic 2 ────────────────────────�
 
 ---
 
-## Status: MOSTLY COMPLETE ✅
+## Status: COMPLETE ✅
 
-Core domain aggregates and repositories are implemented. The following remain as follow-up work.
+All core domain aggregates, repositories, and integration points are implemented and tested.
 
 Completed in PR #128:
 - ✅ WorkOrder aggregate created in `core/incident/domain/work_order/` (FSM, SLA, 7 domain events)
@@ -261,13 +261,14 @@ Completed in PR #128:
 - ✅ WorkOrder SQLAlchemy repository implemented
 - ✅ Knowledge SQLAlchemy repository implemented
 - ✅ Recommendation SQLAlchemy repository implemented
+- ✅ 228+ unit and integration tests passing
 
-Remaining follow-up work:
+Follow-up work (not blocking EPIC 3):
 - [ ] Move Device and WorkOrder events from `apps/api/app/domain/` to `core/shared/events/`
 - [ ] Add specification tests for aggregate lifecycle
 - [ ] Add integration tests for context-to-context events
 
-**Next:** Epic 3 — Hospital Management Platform
+**Next:** Epic 3 — Hospital Management Platform 🚧
 
 ---
 
