@@ -1,0 +1,1 @@
+"""Staffing value objects."""
