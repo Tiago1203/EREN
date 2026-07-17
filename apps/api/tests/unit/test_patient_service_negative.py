@@ -27,7 +27,7 @@ class TestPatientServiceNegative:
 
     @pytest.fixture
     def service(self, mock_repository, mock_event_bus):
-        from app.domain.patient import PatientService
+        from app.clinical.patient import PatientService
 
         return PatientService(repository=mock_repository, event_bus=mock_event_bus)
 
@@ -225,7 +225,7 @@ class TestPatientRepositoryProtocol:
     @pytest.mark.asyncio
     async def test_repository_protocol_requires_save(self):
         """Verify repository protocol defines save method."""
-        from app.domain.patient.repository import PatientRepository
+        from app.clinical.patient.repository import PatientRepository
 
         # PatientRepository is a Protocol, not a class
         # This test verifies the Protocol exists
@@ -234,7 +234,7 @@ class TestPatientRepositoryProtocol:
     @pytest.mark.asyncio
     async def test_repository_protocol_requires_get_by_id(self):
         """Verify repository protocol defines get_by_id method."""
-        from app.domain.patient.repository import PatientRepository
+        from app.clinical.patient.repository import PatientRepository
 
         # Check Protocol has the required method signature
         assert hasattr(PatientRepository, "get_by_id")
@@ -242,14 +242,14 @@ class TestPatientRepositoryProtocol:
     @pytest.mark.asyncio
     async def test_repository_protocol_requires_list_by_tenant(self):
         """Verify repository protocol defines list_by_tenant method."""
-        from app.domain.patient.repository import PatientRepository
+        from app.clinical.patient.repository import PatientRepository
 
         assert hasattr(PatientRepository, "list_by_tenant")
 
     @pytest.mark.asyncio
     async def test_repository_protocol_requires_update_with_version(self):
         """Verify repository protocol update accepts version."""
-        from app.domain.patient.repository import PatientRepository
+        from app.clinical.patient.repository import PatientRepository
 
         # Update should accept expected_version for optimistic locking
         assert hasattr(PatientRepository, "update")
@@ -257,7 +257,7 @@ class TestPatientRepositoryProtocol:
     @pytest.mark.asyncio
     async def test_repository_protocol_requires_soft_delete_with_metadata(self):
         """Verify repository protocol soft_delete accepts metadata."""
-        from app.domain.patient.repository import PatientRepository
+        from app.clinical.patient.repository import PatientRepository
 
         # soft_delete should accept deleted_by and delete_reason
         assert hasattr(PatientRepository, "soft_delete")

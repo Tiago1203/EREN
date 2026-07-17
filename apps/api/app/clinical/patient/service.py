@@ -9,8 +9,8 @@ import uuid
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from app.domain.patient.events import PatientCreated, PatientDeleted, PatientUpdated
-from app.domain.patient.repository import PatientRepository
+from app.clinical.patient.events import PatientCreated, PatientDeleted, PatientUpdated
+from app.clinical.patient.repository import PatientRepository
 from app.infrastructure.events import EventBus
 
 if TYPE_CHECKING:

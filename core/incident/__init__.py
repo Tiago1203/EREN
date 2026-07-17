@@ -6,8 +6,8 @@ which is the heart of the EREN Clinical Engineering Copilot.
 Architecture:
 - domain/entities: EngineeringIncident aggregate, Investigation sub-aggregate
 - domain/value_objects: IncidentStatus, Symptom, Resolution, etc.
-- domain/services: IncidentService for domain operations
 - domain/repositories: Repository interfaces
+- domain/work_order: WorkOrder sub-aggregate
 - application: Commands, queries, and handlers
 - infrastructure: Repository implementations, messaging
 """
@@ -20,7 +20,6 @@ from .domain import (
     EngineeringIncident,
     Evidence,
     IncidentRepository,
-    IncidentService,
     IncidentStatus,
     Investigation,
     MessageSender,
@@ -28,6 +27,19 @@ from .domain import (
     Resolution,
     SafetyLevel,
     Symptom,
+    # WorkOrder sub-aggregate
+    WorkOrder,
+    WorkOrderAssigned,
+    WorkOrderCancelled,
+    WorkOrderCompleted,
+    WorkOrderCreated,
+    WorkOrderOnHold,
+    WorkOrderPriority,
+    WorkOrderRepository,
+    WorkOrderScheduled,
+    WorkOrderStarted,
+    WorkOrderStatus,
+    WorkOrderType,
 )
 
 __all__ = [
@@ -46,8 +58,19 @@ __all__ = [
     "ActionType",
     "ActionResult",
     "MessageSender",
-    # Services
-    "IncidentService",
     # Repositories
     "IncidentRepository",
+    # WorkOrder sub-aggregate
+    "WorkOrder",
+    "WorkOrderRepository",
+    "WorkOrderType",
+    "WorkOrderPriority",
+    "WorkOrderStatus",
+    "WorkOrderCreated",
+    "WorkOrderAssigned",
+    "WorkOrderScheduled",
+    "WorkOrderStarted",
+    "WorkOrderOnHold",
+    "WorkOrderCompleted",
+    "WorkOrderCancelled",
 ]

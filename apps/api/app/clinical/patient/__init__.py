@@ -1,11 +1,11 @@
 """Patient domain package."""
 
-from app.domain.patient.events import PatientCreated, PatientDeleted, PatientUpdated
-from app.domain.patient.repository import (
+from app.clinical.patient.events import PatientCreated, PatientDeleted, PatientUpdated
+from app.clinical.patient.repository import (
     PatientRepository,
     SQLAlchemyPatientRepository,
 )
-from app.domain.patient.service import PatientService
+from app.clinical.patient.service import PatientService
 
 __all__ = [
     "PatientCreated",

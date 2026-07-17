@@ -1,15 +1,15 @@
 """Diagnosis bounded context."""
 
-from app.domain.diagnosis.events import (
+from app.clinical.diagnosis.events import (
     DiagnosisAmended,
     DiagnosisDeleted,
     DiagnosisRecorded,
 )
-from app.domain.diagnosis.repository import (
+from app.clinical.diagnosis.repository import (
     DiagnosisRepository,
     SQLAlchemyDiagnosisRepository,
 )
-from app.domain.diagnosis.service import DiagnosisService
+from app.clinical.diagnosis.service import DiagnosisService
 
 __all__ = [
     "DiagnosisAmended",

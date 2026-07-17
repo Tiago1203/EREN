@@ -12,7 +12,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
-from app.domain.patient import PatientService, SQLAlchemyPatientRepository
+from app.clinical.patient import PatientService, SQLAlchemyPatientRepository
 from app.infrastructure.events import EventBus
 from app.models.patient import Patient
 from app.schemas.patient import (

@@ -27,7 +27,7 @@ class TestDiagnosisServiceNegative:
 
     @pytest.fixture
     def service(self, mock_repository, mock_event_bus):
-        from app.domain.diagnosis import DiagnosisService
+        from app.clinical.diagnosis import DiagnosisService
 
         return DiagnosisService(repository=mock_repository, event_bus=mock_event_bus)
 
@@ -193,41 +193,41 @@ class TestDiagnosisRepositoryProtocol:
     @pytest.mark.asyncio
     async def test_repository_protocol_requires_save(self):
         """Verify repository protocol defines save method."""
-        from app.domain.diagnosis.repository import DiagnosisRepository
+        from app.clinical.diagnosis.repository import DiagnosisRepository
 
         assert DiagnosisRepository is not None
 
     @pytest.mark.asyncio
     async def test_repository_protocol_requires_get_by_id(self):
         """Verify repository protocol defines get_by_id method."""
-        from app.domain.diagnosis.repository import DiagnosisRepository
+        from app.clinical.diagnosis.repository import DiagnosisRepository
 
         assert hasattr(DiagnosisRepository, "get_by_id")
 
     @pytest.mark.asyncio
     async def test_repository_protocol_requires_list_by_tenant(self):
         """Verify repository protocol defines list_by_tenant method."""
-        from app.domain.diagnosis.repository import DiagnosisRepository
+        from app.clinical.diagnosis.repository import DiagnosisRepository
 
         assert hasattr(DiagnosisRepository, "list_by_tenant")
 
     @pytest.mark.asyncio
     async def test_repository_protocol_requires_update_with_version(self):
         """Verify repository protocol update accepts version."""
-        from app.domain.diagnosis.repository import DiagnosisRepository
+        from app.clinical.diagnosis.repository import DiagnosisRepository
 
         assert hasattr(DiagnosisRepository, "update")
 
     @pytest.mark.asyncio
     async def test_repository_protocol_requires_soft_delete_with_metadata(self):
         """Verify repository protocol soft_delete accepts metadata."""
-        from app.domain.diagnosis.repository import DiagnosisRepository
+        from app.clinical.diagnosis.repository import DiagnosisRepository
 
         assert hasattr(DiagnosisRepository, "soft_delete")
 
     @pytest.mark.asyncio
     async def test_repository_protocol_has_list_by_patient(self):
         """Verify repository protocol has list_by_patient method."""
-        from app.domain.diagnosis.repository import DiagnosisRepository
+        from app.clinical.diagnosis.repository import DiagnosisRepository
 
         assert hasattr(DiagnosisRepository, "list_by_patient")

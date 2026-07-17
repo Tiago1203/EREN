@@ -133,6 +133,11 @@ See full ADR index at [`../adr/README.md`](../adr/README.md).
 
 **Epic 0-Infra Status:** COMPLETE ✅ v1.0
 
+**EPIC Roadmap Status:**
+- EPIC 0-Infra (Infrastructure Design) — COMPLETE ✅
+- EPIC 1 (Infrastructure Platform) — COMPLETE ✅ (merged)
+- **EPIC 2 (Core Domain) — IN PROGRESS 🚧**
+
 All infrastructure design decisions are now documented and ready for Epic 1 implementation.
 
 **Score:** Pre-implementation (will be evaluated after Epic 1)

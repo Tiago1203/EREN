@@ -26,7 +26,7 @@ class TestDiagnosisService:
     @pytest.fixture
     def service(self, mock_repository, mock_event_bus):
         """Create service with mocks."""
-        from app.domain.diagnosis import DiagnosisService
+        from app.clinical.diagnosis import DiagnosisService
 
         return DiagnosisService(repository=mock_repository, event_bus=mock_event_bus)
 

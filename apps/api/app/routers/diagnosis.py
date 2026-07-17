@@ -8,8 +8,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
-from app.domain.diagnosis.repository import SQLAlchemyDiagnosisRepository
-from app.domain.diagnosis.service import DiagnosisService
+from app.clinical.diagnosis.repository import SQLAlchemyDiagnosisRepository
+from app.clinical.diagnosis.service import DiagnosisService
 from app.infrastructure.events import EventBus
 from app.schemas.diagnosis import (
     DiagnosisCreate,

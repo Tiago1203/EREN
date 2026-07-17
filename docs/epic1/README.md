@@ -151,6 +151,12 @@ apps/api/
 
 **Epic 1 Status:** COMPLETE ✅
 
+**EPIC Roadmap Status:**
+- EPIC 0 (Architecture) — COMPLETE ✅
+- EPIC 0-Infra (Infrastructure Design) — COMPLETE ✅
+- EPIC 1 (Infrastructure Platform) — COMPLETE ✅ (merged)
+- **EPIC 2 (Core Domain) — IN PROGRESS 🚧**
+
 | Component | Implementation |
 |-----------|----------------|
 | PostgreSQL | ✅ asyncpg, connection pooling |

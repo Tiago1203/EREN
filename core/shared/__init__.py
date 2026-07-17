@@ -74,6 +74,7 @@ from .primitives import (
     MaintenanceId,
     OrganizationId,
     RecommendationId,
+    WorkOrderId,
     TenantId,
 )
 from .value_objects import (

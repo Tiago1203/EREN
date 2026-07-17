@@ -10,7 +10,6 @@ from .entities import (
     Investigation,
 )
 from .repositories import IncidentRepository
-from .services import IncidentService
 from .value_objects import (
     ActionResult,
     ActionType,
@@ -20,6 +19,20 @@ from .value_objects import (
     MessageSender,
     Resolution,
     Symptom,
+)
+from .work_order import (
+    WorkOrder,
+    WorkOrderAssigned,
+    WorkOrderCancelled,
+    WorkOrderCompleted,
+    WorkOrderCreated,
+    WorkOrderOnHold,
+    WorkOrderPriority,
+    WorkOrderRepository,
+    WorkOrderScheduled,
+    WorkOrderStarted,
+    WorkOrderStatus,
+    WorkOrderType,
 )
 
 __all__ = [
@@ -41,8 +54,20 @@ __all__ = [
     # Shared
     "Priority",
     "SafetyLevel",
-    # Services
-    "IncidentService",
     # Repositories
     "IncidentRepository",
+    # WorkOrder sub-aggregate
+    "WorkOrder",
+    "WorkOrderRepository",
+    "WorkOrderType",
+    "WorkOrderPriority",
+    "WorkOrderStatus",
+    # WorkOrder Events
+    "WorkOrderCreated",
+    "WorkOrderAssigned",
+    "WorkOrderScheduled",
+    "WorkOrderStarted",
+    "WorkOrderOnHold",
+    "WorkOrderCompleted",
+    "WorkOrderCancelled",
 ]
