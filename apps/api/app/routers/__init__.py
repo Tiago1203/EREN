@@ -14,7 +14,6 @@ from app.routers import (
     departments,
     devices,
     diagnosis,
-    facilities,
     floors,
     health,
     hospitals,

@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+from enum import StrEnum
+
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class BuildingTypeEnum(str):
+class BuildingTypeEnum(StrEnum):
     MAIN = "main"
     OUTPATIENT = "outpatient"
     EMERGENCY = "emergency"
