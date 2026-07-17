@@ -1,0 +1,1 @@
+"""Staffing application services."""

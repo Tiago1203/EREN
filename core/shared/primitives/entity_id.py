@@ -98,3 +98,33 @@ OrganizationId = EntityId
 LocationId = EntityId
 RecommendationId = EntityId
 WorkOrderId = EntityId
+
+# EPIC 3 — Hospital Management Entity IDs
+CampusId = EntityId
+BuildingId = EntityId
+FloorId = EntityId
+RoomId = EntityId
+BedId = EntityId
+HospitalId = EntityId
+StaffId = EntityId
+RoleId = EntityId
+TeamId = EntityId
+ShiftId = EntityId
+DepartmentId = EntityId
+DepartmentGroupId = EntityId
+UnitId = EntityId
+DepartmentAssignmentId = EntityId
+AssetId = EntityId
+ManufacturerId = EntityId
+VendorId = EntityId
+ContractId = EntityId
+WarrantyId = EntityId
+SparePartId = EntityId
+WarehouseId = EntityId
+PurchaseOrderId = EntityId
+PurchaseOrderLineItemId = EntityId
+SupplierId = EntityId
+MaintenancePlanId = EntityId
+MaintenanceScheduleId = EntityId
+MaintenanceRecordId = EntityId
+

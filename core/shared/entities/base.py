@@ -20,6 +20,11 @@ if TYPE_CHECKING:
     pass
 
 
+def _default_version() -> int:
+    """Default factory for version field — always returns 1."""
+    return 1
+
+
 @dataclass(eq=False)
 class BaseEntity:
     """Base class for all entities in EREN domain.
@@ -64,14 +69,28 @@ class BaseEntity:
     """
 
     id: EntityId = field(kw_only=True)
-    version: int = field(default=1, kw_only=True)
+    version: int = field(default_factory=_default_version, kw_only=True)
     created_at: datetime = field(default_factory=lambda: datetime.now(UTC), kw_only=True)
     updated_at: datetime = field(default_factory=lambda: datetime.now(UTC), kw_only=True)
-    _pending_events: list["DomainEvent"] = field(default_factory=list, init=False, repr=False)
+    _pending_events: list["DomainEvent"] = field(default_factory=list, init=False, repr=False, kw_only=True)
 
     def __post_init__(self) -> None:
         # Lock the entity after __post_init__
         object.__setattr__(self, "_locked", True)
+
+    def _mark_created(self) -> None:
+        """Mark entity as created. Called by factory methods after entity creation."""
+        self._unlock_for_mutation()
+        self.version = 1
+        self.updated_at = datetime.now(UTC)
+        self._relock_after_mutation()
+
+    def _mark_updated(self) -> None:
+        """Mark entity as updated. Called after any state change."""
+        self._unlock_for_mutation()
+        self.version += 1
+        self.updated_at = datetime.now(UTC)
+        self._relock_after_mutation()
 
     def __setattr__(self, name: str, value: Any) -> None:
         if getattr(self, "_locked", False) and name not in ("version", "updated_at", "_pending_events"):
@@ -136,6 +155,7 @@ class BaseEntity:
         return hash(self.id)
 
 
+@dataclass(eq=False)
 class AggregateRoot(BaseEntity):
     """Base class for aggregate roots.
 

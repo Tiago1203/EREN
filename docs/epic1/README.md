@@ -155,7 +155,10 @@ apps/api/
 - EPIC 0 (Architecture) — COMPLETE ✅
 - EPIC 0-Infra (Infrastructure Design) — COMPLETE ✅
 - EPIC 1 (Infrastructure Platform) — COMPLETE ✅ (merged)
-- **EPIC 2 (Core Domain) — IN PROGRESS 🚧**
+- EPIC 2 (Core Business Domain) — COMPLETE ✅ (merged)
+- EPIC 3 (Hospital Management) — COMPLETE ✅ (merged PR #131)
+- EPIC 4 (AI Core) — Pending
+- EPIC 5 (Clinical Intelligence) — Pending
 
 | Component | Implementation |
 |-----------|----------------|

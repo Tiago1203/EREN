@@ -1,0 +1,1 @@
+"""Capacity domain events."""

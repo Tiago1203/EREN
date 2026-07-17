@@ -15,8 +15,8 @@ EREN es un **Cognitive Operating System (COS)** especializado en Ingeniería Cl�
 
 **Para la máxima autoridad del proyecto, ver [VISION.md](./VISION.md).**
 
-> **Estado actual:** EPIC-2 (Core Business Domain) ✅ MERGED.
-> Épica 0: Documentación ✅ · Épica 1: Infraestructura ✅ · Épica 2: Core Domain ✅ MERGED
+> **Estado actual:** EPIC-3 (Hospital Management Platform) 🚧 EN PROGRESO.
+> Épica 0: Documentación ✅ · Épica 1: Infraestructura ✅ · Épica 2: Core Domain ✅ · Épica 3: Hospital Management 🚧
 > Documentos canónicos:
 > [ARCHITECTURE_OVERVIEW.md](./ARCHITECTURE_OVERVIEW.md) ·
 > [SYSTEM_DESIGN.md](./SYSTEM_DESIGN.md) ·
@@ -138,9 +138,20 @@ El proyecto usa GitHub Actions. Verifica el estado en la pestaña "Actions" del 
 
 **Total: 228+ tests passing (unit + integration)**
 
+### 🚧 Hospital Bounded Contexts (Épica 3)
+
+| Context | Estado | Descripción |
+|---------|--------|------------|
+| Capacity Context | 🚧 In Progress | Bed, Room, Floor, Building, Campus |
+| Staffing Context | 🚧 In Progress | Staff, Role, Team, Shift |
+| Organization Context | 🚧 In Progress | Hospital, Organization, Department |
+| Maintenance Context | 🚧 In Progress | Maintenance plans, schedules |
+| Asset Management Context | 🚧 In Progress | Asset, Manufacturer, Vendor, Contract |
+| Inventory Context | 🚧 In Progress | SpareParts, Warehouse, PurchaseOrders |
+
 ### 🎯 Próximo (Épica 3)
 
-- **Épica 3: Hospital Management Platform** — Próximo
+- **Épica 3: Hospital Management Platform** 🚧 En progreso
 - Épica 4: AI Core
 - Épica 5: Clinical Intelligence
 - Épica 6: Integrations

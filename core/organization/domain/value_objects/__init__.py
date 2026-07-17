@@ -1,0 +1,1 @@
+"""Organization value objects."""
