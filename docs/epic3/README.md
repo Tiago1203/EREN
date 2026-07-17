@@ -251,22 +251,39 @@ PostgreSQL with multi-tenant isolation:
 
 ---
 
-## Status: IN PROGRESS
+## Status: COMPLETE ✅
 
-**Epic 3 Status:** IN PROGRESS
+**Epic 3 Status:** COMPLETE ✅
+
+All bounded contexts, SQLAlchemy models, repositories, API schemas/routers, and tests are implemented.
+
+Completed in PR #131:
+- ✅ 6 bounded contexts: Capacity, Staffing, Organization, Department, Asset Management, Inventory
+- ✅ SQLAlchemy models: 21 models across 6 schema files
+- ✅ Repository implementations: 6 repository classes
+- ✅ API schemas: 13 schemas (bed, staff, department, asset, campus, building, floor, room, organization, hospital, team, role, warehouse, supplier, spare_part, purchase_order)
+- ✅ API routers: 13 routers registered in api_router
+- ✅ Alembic migration 008: All 6 schemas + 20 tables
+- ✅ Unit tests: 3 new test files (organization, department, asset)
+- ✅ Docs: README concatenations updated (EPIC 0→1→2→3)
 
 **EPIC Roadmap Status:**
-- EPIC 0 (Architecture) — COMPLETE
-- EPIC 0-Infra (Infrastructure Design) — COMPLETE
-- EPIC 1 (Infrastructure Platform) — COMPLETE (merged)
-- EPIC 2 (Core Business Domain) — COMPLETE (merged)
-- **EPIC 3 (Hospital Management) — IN PROGRESS**
+- EPIC 0 (Architecture) — COMPLETE ✅
+- EPIC 0-Infra (Infrastructure Design) — COMPLETE ✅
+- EPIC 1 (Infrastructure Platform) — COMPLETE ✅ (merged)
+- EPIC 2 (Core Business Domain) — COMPLETE ✅ (merged)
+- **EPIC 3 (Hospital Management) — COMPLETE ✅**
 - EPIC 4 (AI Core) — Pending
 - EPIC 5 (Clinical Intelligence) — Pending
+- EPIC 6 (Integrations) — Pending
+- EPIC 7 (User Experience) — Pending
+- EPIC 8 (Production Readiness) — Pending
+- EPIC 9 (Machine Learning) — Pending
+- EPIC 10 (Enterprise Release) — Pending
 
-**Next:** Epic 4 — AI Core (parallel track)
+**Next:** Epic 4 — AI Core 🚧
 
 ---
 
-*EREN Epic 3 v1.0*
+*EREN Epic 3 v1.1*
 *Architecture Board - 2026-07-16*

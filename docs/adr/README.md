@@ -34,9 +34,9 @@ docs/adr/
 | Epic 0-Infra | 8 | 4 | 0 | 12 |
 | Epic 1 | 11 | 0 | 0 | 11 |
 | Epic 2 | 6 | 2 | 0 | 8 |
-| **Epic 3** | **0** | **12** | **0** | **12** |
+| Epic 3 | 12 | 0 | 0 | 12 |
 | Epic 4-10 | 0 | 0 | 0 | 0 |
-| **Total** | **55** | **34** | **2** | **81** |
+| **Total** | **67** | **22** | **2** | **91** |
 
 ---
 
@@ -163,29 +163,27 @@ ADR-1000 to ADR-1099  →  Epic 10 (Enterprise Release)
 | ADR-0206 | Patient and Diagnosis Scope — Not EPIC 2 | Accepted |
 | ADR-0207 | Knowledge Article Value Objects | Accepted |
 
-### Epic 3 — Hospital Management Platform (IN PROGRESS 🚧)
+### Epic 3 — Hospital Management Platform (COMPLETE ✅)
 
 | ADR | Title | Status |
 |-----|-------|--------|
-| ADR-0300 | Hospital Context Architecture | Proposed |
-| ADR-0301 | Capacity Bounded Context | Proposed |
-| ADR-0302 | Staffing Bounded Context | Proposed |
-| ADR-0303 | Organization Bounded Context | Proposed |
-| ADR-0304 | Department Bounded Context | Proposed |
-| ADR-0305 | Asset Management Bounded Context | Proposed |
-| ADR-0306 | Maintenance Bounded Context | Proposed |
-| ADR-0307 | Inventory Bounded Context | Proposed |
-| ADR-0308 | Organization Hierarchy Model | Proposed |
-| ADR-0309 | Department Hierarchy Model | Proposed |
-| ADR-0310 | Work Order Integration with Hospital | Proposed |
-| ADR-0311 | Multi-Tenant Data Isolation | Proposed |
+| ADR-0300 | Hospital Context Architecture | Accepted |
+| ADR-0301 | Capacity Bounded Context | Accepted |
+| ADR-0302 | Staffing Bounded Context | Accepted |
+| ADR-0303 | Organization Bounded Context | Accepted |
+| ADR-0304 | Department Bounded Context | Accepted |
+| ADR-0305 | Asset Management Bounded Context | Accepted |
+| ADR-0306 | Maintenance Bounded Context | Accepted |
+| ADR-0307 | Inventory Bounded Context | Accepted |
+| ADR-0308 | Organization Hierarchy Model | Accepted |
+| ADR-0309 | Department Hierarchy Model | Accepted |
+| ADR-0310 | Work Order Integration with Hospital | Accepted |
+| ADR-0311 | Multi-Tenant Data Isolation | Accepted |
 
 ### Epic 4-10 — Pending
 
 | EPIC | Status |
 |------|--------|
-| Epic 2 (Core Business Domain) | **COMPLETE ✅** | |
-| Epic 3 (Hospital Management) | **IN PROGRESS 🚧** |
 | Epic 4 (AI Core) | Pending |
 | Epic 5 (Clinical Intelligence) | Pending |
 | Epic 6 (Integrations) | Pending |
@@ -267,5 +265,5 @@ ADRs are reviewed quarterly:
 
 ---
 
-*EREN ADR Master Index v1.0*
+*EREN ADR Master Index v1.1*
 *Architecture Board - 2026-07-16*
