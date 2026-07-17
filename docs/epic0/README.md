@@ -1,4 +1,4 @@
-# EREN Epic 0: Foundation Documents
+# EREN Epic 0 v1.1: Foundation Documents
 
 ## Purpose
 
@@ -147,8 +147,9 @@ All foundations in place:
 - All can be updated when evidence requires
 
 **Next:** Epic 1 - Infrastructure Platform ✅
-**Then:** Epic 2 - Core Business Domain
-**Then:** Epic 3 - Hospital Management Platform
+**Then:** Epic 2 - Core Business Domain ✅
+**Then:** Epic 3 - Hospital Management Platform ✅
+**Then:** Epic 4 - AI Core
 
 **Infrastructure Extension:** See [Epic 0-Infra](../epic0-infra/) for detailed infrastructure design documents that fill the gaps identified in Epic 0 (Kubernetes, Kafka, S3/MinIO, Outbox Pattern, RLS in Alembic, Observability Stack, Backup/DR Strategy).
 
@@ -336,19 +337,5 @@ Each document requires:
 
 ---
 
-*EREN Epic 0 - Foundation Documents*
-*Version 1.1 - 2026-07-16*
-
----
-
-## Epic 0 v1.1 (Changes for EPIC Roadmap Alignment)
-
-| Document | Purpose | Status |
-|----------|---------|--------|
-| [EREN_BOUNDED_CONTEXT_MAP.md](./EREN_BOUNDED_CONTEXT_MAP.md) | Hospital + CD contexts added | ✅ UPDATED |
-| [EREN_COGNITIVE_MODEL.md](./EREN_COGNITIVE_MODEL.md) | Frozen, AI Core ready | ✅ UPDATED |
-| [EREN_DOMAIN_EVENTS_CATALOG.md](./EREN_DOMAIN_EVENTS_CATALOG.md) | Hospital + CD events added (67 total) | ✅ UPDATED |
-| [EREN_ADR_INDEX.md](./EREN_ADR_INDEX.md) | 7 new ADRs (Hospital, AI, CDSS, Integrations, UX, GDPR, ML) | ✅ UPDATED |
-| [EREN_CAPABILITY_MAP.md](./EREN_CAPABILITY_MAP.md) | Realigned with EPIC phases | ✅ UPDATED |
-| [EREN_FAILURE_MODEL.md](./EREN_FAILURE_MODEL.md) | AI + Integration failure modes | ✅ UPDATED |
-| [EREN_NONFUNCTIONAL_REQUIREMENTS.md](./EREN_NONFUNCTIONAL_REQUIREMENTS.md) | AI/LLM + UX + Integration targets | ✅ UPDATED |
+*EREN Epic 0 v1.1 - Foundation Documents*
+*Architecture Board - 2026-07-16*

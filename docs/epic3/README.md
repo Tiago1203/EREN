@@ -1,4 +1,5 @@
 # EREN Epic 3 — Hospital Management Platform
+*Version 1.1 - 2026-07-16*
 
 ---
 
@@ -7,6 +8,7 @@
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-07-16 | Architecture Board | Initial |
+| 1.1 | 2026-07-16 | Architecture Board | ADRs accepted (Proposed → Accepted) |
 
 ---
 
@@ -175,18 +177,18 @@ Core entities: SparePart (aggregate root), Warehouse, PurchaseOrder, Supplier
 
 | File | Title | Status |
 |------|-------|--------|
-| `docs/adr/epic3/ADR-0300.md` | Hospital Context Architecture | Proposed |
-| `docs/adr/epic3/ADR-0301.md` | Capacity Bounded Context | Proposed |
-| `docs/adr/epic3/ADR-0302.md` | Staffing Bounded Context | Proposed |
-| `docs/adr/epic3/ADR-0303.md` | Organization Bounded Context | Proposed |
-| `docs/adr/epic3/ADR-0304.md` | Department Bounded Context | Proposed |
-| `docs/adr/epic3/ADR-0305.md` | Asset Management Bounded Context | Proposed |
-| `docs/adr/epic3/ADR-0306.md` | Maintenance Bounded Context | Proposed |
-| `docs/adr/epic3/ADR-0307.md` | Inventory Bounded Context | Proposed |
-| `docs/adr/epic3/ADR-0308.md` | Organization Hierarchy Model | Proposed |
-| `docs/adr/epic3/ADR-0309.md` | Department Hierarchy Model | Proposed |
-| `docs/adr/epic3/ADR-0310.md` | Work Order Integration with Hospital | Proposed |
-| `docs/adr/epic3/ADR-0311.md` | Multi-Tenant Data Isolation | Proposed |
+| `docs/adr/epic3/ADR-0300.md` | Hospital Context Architecture | Accepted |
+| `docs/adr/epic3/ADR-0301.md` | Capacity Bounded Context | Accepted |
+| `docs/adr/epic3/ADR-0302.md` | Staffing Bounded Context | Accepted |
+| `docs/adr/epic3/ADR-0303.md` | Organization Bounded Context | Accepted |
+| `docs/adr/epic3/ADR-0304.md` | Department Bounded Context | Accepted |
+| `docs/adr/epic3/ADR-0305.md` | Asset Management Bounded Context | Accepted |
+| `docs/adr/epic3/ADR-0306.md` | Maintenance Bounded Context | Accepted |
+| `docs/adr/epic3/ADR-0307.md` | Inventory Bounded Context | Accepted |
+| `docs/adr/epic3/ADR-0308.md` | Organization Hierarchy Model | Accepted |
+| `docs/adr/epic3/ADR-0309.md` | Department Hierarchy Model | Accepted |
+| `docs/adr/epic3/ADR-0310.md` | Work Order Integration with Hospital | Accepted |
+| `docs/adr/epic3/ADR-0311.md` | Multi-Tenant Data Isolation | Accepted |
 
 ---
 
@@ -285,5 +287,5 @@ Completed in PR #131:
 
 ---
 
-*EREN Epic 3 v1.1*
+*EREN Epic 3 v1.1 - Hospital Management Platform*
 *Architecture Board - 2026-07-16*
