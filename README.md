@@ -15,8 +15,8 @@ EREN es un **Cognitive Operating System (COS)** especializado en Ingeniería Cl�
 
 **Para la máxima autoridad del proyecto, ver [VISION.md](./VISION.md).**
 
-> **Estado actual:** EPIC-1 (Fundamentos de Infraestructura) completo.
-> Épica 0: Documentación ✅ · Infraestructura ✅ · Bounded Contexts ✅
+> **Estado actual:** EPIC-2 (Core Business Domain) ✅ MERGED.
+> Épica 0: Documentación ✅ · Épica 1: Infraestructura ✅ · Épica 2: Core Domain ✅ MERGED
 > Documentos canónicos:
 > [ARCHITECTURE_OVERVIEW.md](./ARCHITECTURE_OVERVIEW.md) ·
 > [SYSTEM_DESIGN.md](./SYSTEM_DESIGN.md) ·
@@ -124,26 +124,32 @@ El proyecto usa GitHub Actions. Verifica el estado en la pestaña "Actions" del 
 | CI/CD (GitHub Actions) | ✅ | Lint + Typecheck + Tests + Docker Build |
 | Pre-commit Hooks | ✅ | Ruff + Black + isort + MyPy + Bandit |
 
-### ✅ Bounded Contexts
+### ✅ Bounded Contexts (Épica 2)
 
 | Context | Estado | Tests |
 |---------|--------|-------|
-| Shared Kernel | ✅ | 61 tests |
-| Patient Context | ✅ | 23 tests |
-| Device Context | ✅ | 17 tests |
-| Incident Context | ✅ | 16 tests |
-| Recommendation Context | ✅ | 19 tests |
-| Knowledge Context | ✅ | Integration tests |
+| Shared Kernel | ✅ | Done |
+| Patient Context | ✅ | Moved to EPIC 5 scope |
+| Device Context | ✅ | Done |
+| Incident Context | ✅ | Done |
+| Recommendation Context | ✅ | Done |
+| Knowledge Context | ✅ | Done |
+| WorkOrder Sub-Aggregate | ✅ | Done (PR #128) |
 
-**Total: 108+ tests passing (unit + integration)**
+**Total: 228+ tests passing (unit + integration)**
 
-### 🎯 Próximo (Épica 6+)
+### 🎯 Próximo (Épica 3)
 
-- Épica 6: Observabilidad
-- Épica 7: Performance & Scale
-- Épica 8: Security Hardening
-- Épica 9: Conversational UI
-- Épica 10: Mobile & Accessibility
+- **Épica 3: Hospital Management Platform** — Próximo
+- Épica 4: AI Core
+- Épica 5: Clinical Intelligence
+- Épica 6: Integrations
+- Épica 7: User Experience
+- Épica 8: Production Readiness
+- Épica 9: Machine Learning
+- Épica 10: Enterprise Release
+
+**Ver estado completo en:** [`docs/epic0/README.md`](./docs/epic0/README.md) · [`docs/adr/README.md`](./docs/adr/README.md)
 
 ---
 
