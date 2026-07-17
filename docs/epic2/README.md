@@ -249,21 +249,23 @@ Epic 2 ────────────────────────�
 
 ---
 
-## Status: IN PROGRESS 🚧
+## Status: MOSTLY COMPLETE ✅
+
+Core domain aggregates and repositories are implemented. The following remain as follow-up work.
 
 Completed in PR #128:
 - ✅ WorkOrder aggregate created in `core/incident/domain/work_order/` (FSM, SLA, 7 domain events)
 - ✅ Patient + Diagnosis moved to `apps/api/app/clinical/` (EPIC 5 scope)
 - ✅ 8 ADRs created in `docs/adr/epic2/` (ADR-0200 to ADR-0207)
 - ✅ README concatenations: EPIC 0, 0-Infra, 1, ADR index updated
+- ✅ WorkOrder SQLAlchemy repository implemented
+- ✅ Knowledge SQLAlchemy repository implemented
+- ✅ Recommendation SQLAlchemy repository implemented
 
-Pending work:
-- [ ] Implement WorkOrder SQLAlchemy repository (wire `core/` interface to `app/infrastructure/`)
-- [ ] Implement Knowledge and Recommendation SQLAlchemy repositories
-- [ ] Move events from `app/domain/` to `core/shared/events/`
+Remaining follow-up work:
+- [ ] Move Device and WorkOrder events from `apps/api/app/domain/` to `core/shared/events/`
 - [ ] Add specification tests for aggregate lifecycle
 - [ ] Add integration tests for context-to-context events
-- [ ] Tests for Knowledge and Recommendation services
 
 **Next:** Epic 3 — Hospital Management Platform
 

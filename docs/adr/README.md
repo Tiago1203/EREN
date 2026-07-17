@@ -30,12 +30,12 @@ docs/adr/
 
 | EPIC | Accepted | Proposed | Deprecated | Total |
 |------|----------|----------|------------|--------|
-| Epic 0 | 27 | 7 | 0 | 34 |
+| Epic 0 | 30 | 6 | 2 | 38 |
 | Epic 0-Infra | 8 | 4 | 0 | 12 |
 | **Epic 1** | **11** | **0** | **0** | **11** |
 | **Epic 2** | **6** | **2** | **0** | **8** |
 | Epic 3-10 | 0 | 0 | 0 | 0 |
-| **Total** | **52** | **13** | **0** | **65** |
+| **Total** | **55** | **12** | **2** | **69** |
 
 ---
 
@@ -74,7 +74,7 @@ ADR-1000 to ADR-1099  →  Epic 10 (Enterprise Release)
 
 ## Quick Reference
 
-### Epic 0 — Foundation
+### Epic 0 — Foundation (38 ADRs)
 
 | ADR | Title | Status |
 |-----|-------|--------|
