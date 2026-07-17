@@ -149,7 +149,7 @@ ADR-1000 to ADR-1099  →  Epic 10 (Enterprise Release)
 | ADR-0109 | Structured Logging | Accepted |
 | ADR-0110 | Health Check Strategy | Accepted |
 
-### Epic 2 — Core Business Domain (IN PROGRESS 🚧)
+### Epic 2 — Core Business Domain (COMPLETE ✅)
 
 | ADR | Title | Status |
 |-----|-------|--------|
@@ -166,7 +166,7 @@ ADR-1000 to ADR-1099  →  Epic 10 (Enterprise Release)
 
 | EPIC | Status |
 |------|--------|
-| Epic 2 (Core Business Domain) | **IN PROGRESS 🚧** |
+| Epic 2 (Core Business Domain) | **COMPLETE ✅** | |
 | Epic 3 (Hospital Management) | Pending |
 | Epic 4 (AI Core) | Pending |
 | Epic 5 (Clinical Intelligence) | Pending |
