@@ -1,5 +1,5 @@
 # EREN Epic 2 — Core Business Domain
-*Version 1.0 - 2026-07-16*
+*Version 1.1 - 2026-07-16*
 
 ---
 

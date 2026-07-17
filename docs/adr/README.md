@@ -34,7 +34,7 @@ docs/adr/
 | Epic 0-Infra | 8 | 4 | 0 | 12 |
 | Epic 1 | 11 | 0 | 0 | 11 |
 | Epic 2 | 6 | 2 | 0 | 8 |
-| Epic 3 | 12 | 0 | 0 | 12 |
+| Epic 3 | 12 | 0 | 0 | 12 | ✅ All Accepted |
 | Epic 4-10 | 0 | 0 | 0 | 0 |
 | **Total** | **67** | **22** | **2** | **91** |
 
@@ -167,18 +167,18 @@ ADR-1000 to ADR-1099  →  Epic 10 (Enterprise Release)
 
 | ADR | Title | Status |
 |-----|-------|--------|
-| ADR-0300 | Hospital Context Architecture | Accepted |
-| ADR-0301 | Capacity Bounded Context | Accepted |
-| ADR-0302 | Staffing Bounded Context | Accepted |
-| ADR-0303 | Organization Bounded Context | Accepted |
-| ADR-0304 | Department Bounded Context | Accepted |
-| ADR-0305 | Asset Management Bounded Context | Accepted |
-| ADR-0306 | Maintenance Bounded Context | Accepted |
-| ADR-0307 | Inventory Bounded Context | Accepted |
-| ADR-0308 | Organization Hierarchy Model | Accepted |
-| ADR-0309 | Department Hierarchy Model | Accepted |
-| ADR-0310 | Work Order Integration with Hospital | Accepted |
-| ADR-0311 | Multi-Tenant Data Isolation | Accepted |
+| ADR-0300 | Hospital Context Architecture | **Accepted ✅** |
+| ADR-0301 | Capacity Bounded Context | **Accepted ✅** |
+| ADR-0302 | Staffing Bounded Context | **Accepted ✅** |
+| ADR-0303 | Organization Bounded Context | **Accepted ✅** |
+| ADR-0304 | Department Bounded Context | **Accepted ✅** |
+| ADR-0305 | Asset Management Bounded Context | **Accepted ✅** |
+| ADR-0306 | Maintenance Bounded Context | **Accepted ✅** |
+| ADR-0307 | Inventory Bounded Context | **Accepted ✅** |
+| ADR-0308 | Organization Hierarchy Model | **Accepted ✅** |
+| ADR-0309 | Department Hierarchy Model | **Accepted ✅** |
+| ADR-0310 | Work Order Integration with Hospital | **Accepted ✅** |
+| ADR-0311 | Multi-Tenant Data Isolation | **Accepted ✅** |
 
 ### Epic 4-10 — Pending
 
