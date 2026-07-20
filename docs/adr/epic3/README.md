@@ -5,6 +5,7 @@
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | 2026-07-16 | Architecture Board | Initial |
+| 1.1 | 2026-07-20 | Architecture Board | All ADRs Accepted — sync with master index |
 
 ---
 
@@ -12,7 +13,7 @@
 
 | EPIC | Accepted | Proposed | Deprecated | Total |
 |------|----------|----------|------------|--------|
-| Epic 3 | 0 | 12 | 0 | 12 |
+| Epic 3 | 12 | 0 | 0 | 12 | ✅ All Accepted |
 
 ---
 
@@ -20,18 +21,18 @@
 
 | ADR | Title | Status |
 |-----|-------|--------|
-| ADR-0300 | Hospital Context Architecture | Proposed |
-| ADR-0301 | Capacity Bounded Context | Proposed |
-| ADR-0302 | Staffing Bounded Context | Proposed |
-| ADR-0303 | Organization Bounded Context | Proposed |
-| ADR-0304 | Department Bounded Context | Proposed |
-| ADR-0305 | Asset Management Bounded Context | Proposed |
-| ADR-0306 | Maintenance Bounded Context | Proposed |
-| ADR-0307 | Inventory Bounded Context | Proposed |
-| ADR-0308 | Organization Hierarchy Model | Proposed |
-| ADR-0309 | Department Hierarchy Model | Proposed |
-| ADR-0310 | Work Order Integration with Hospital | Proposed |
-| ADR-0311 | Multi-Tenant Data Isolation | Proposed |
+| ADR-0300 | Hospital Context Architecture | **Accepted ✅** |
+| ADR-0301 | Capacity Bounded Context | **Accepted ✅** |
+| ADR-0302 | Staffing Bounded Context | **Accepted ✅** |
+| ADR-0303 | Organization Bounded Context | **Accepted ✅** |
+| ADR-0304 | Department Bounded Context | **Accepted ✅** |
+| ADR-0305 | Asset Management Bounded Context | **Accepted ✅** |
+| ADR-0306 | Maintenance Bounded Context | **Accepted ✅** |
+| ADR-0307 | Inventory Bounded Context | **Accepted ✅** |
+| ADR-0308 | Organization Hierarchy Model | **Accepted ✅** |
+| ADR-0309 | Department Hierarchy Model | **Accepted ✅** |
+| ADR-0310 | Work Order Integration with Hospital | **Accepted ✅** |
+| ADR-0311 | Multi-Tenant Data Isolation | **Accepted ✅** |
 
 ---
 
@@ -63,5 +64,5 @@ See EPIC 0: [`../../epic0/EREN_BOUNDED_CONTEXT_MAP.md`](../../epic0/EREN_BOUNDED
 
 ---
 
-*EREN Epic 3 ADR Index v1.0*
-*Architecture Board - 2026-07-16*
+*EREN Epic 3 ADR Index v1.1*
+*Architecture Board - 2026-07-20*
