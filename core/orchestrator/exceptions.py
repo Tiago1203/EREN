@@ -74,3 +74,20 @@ class TraceError(OrchestrationError):
     def __init__(self, reason: str = "") -> None:
         super().__init__(f"Trace error: {reason}")
         self.reason = reason
+
+
+class EngineNotFoundError(OrchestrationError):
+    """Raised when a requested engine is not found."""
+
+    def __init__(self, engine_id: str = "") -> None:
+        super().__init__(f"Engine not found: {engine_id}")
+        self.engine_id = engine_id
+
+
+class PlanExecutionError(OrchestrationError):
+    """Raised when plan execution fails."""
+
+    def __init__(self, reason: str = "", step_id: str = "") -> None:
+        super().__init__(f"Plan execution failed: {reason}")
+        self.reason = reason
+        self.step_id = step_id
