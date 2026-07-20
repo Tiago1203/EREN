@@ -144,17 +144,17 @@ jobs:
       - name: Verify infrastructure imports
         run: |
           cd apps/api
-          echo 'from app.infrastructure import CacheService, configure_logging, setup_tracing, DeviceModel; print("Infrastructure imports OK")' > /tmp/check_infra.py
+          echo 'from app.infrastructure.repositories import DeviceRepositoryImpl; from app.infrastructure.events import EventPublisher; print("Infrastructure imports OK")' > /tmp/check_infra.py
           PYTHONPATH="$GITHUB_WORKSPACE:$GITHUB_WORKSPACE/apps/api" uv run python /tmp/check_infra.py
 
       - name: Verify domain repository interfaces
         run: |
           cd apps/api
-          echo 'from app.domain.device.repository import DeviceRepository; from app.domain.work_order.repository import WorkOrderRepository; from core.device.domain.repositories import DeviceRepository as CoreDeviceRepo; from core.incident.domain.repositories import IncidentRepository; from core.recommendation.domain.repositories import RecommendationRepository; from core.knowledge.domain.repositories import KnowledgeRepository; print("Domain repository interfaces OK")' > /tmp/check_repos.py
+          echo 'from app.domain.device.repository import DeviceRepository; from app.domain.work_order.repository import WorkOrderRepository; from app.domain.knowledge.repository import KnowledgeRepository; print("Domain repository interfaces OK")' > /tmp/check_repos.py
           PYTHONPATH="$GITHUB_WORKSPACE:$GITHUB_WORKSPACE/apps/api" uv run python /tmp/check_repos.py
 
       - name: Verify domain entities can be imported
         run: |
           cd apps/api
-          echo 'from core.device.domain.entities import Device; from core.incident.domain.entities import EngineeringIncident; from core.recommendation.domain.entities import AIRecommendation; from core.knowledge.domain.entities import KnowledgeArticle; from app.domain.work_order.service import WorkOrderService; print("Domain entities OK")' > /tmp/check_entities.py
+          echo 'from app.domain.device.entities import Device; from app.domain.work_order.entities import WorkOrder; from app.domain.knowledge.entities import KnowledgeArticle; from app.domain.incident.entities import Incident; print("Domain entities OK")' > /tmp/check_entities.py
           PYTHONPATH="$GITHUB_WORKSPACE:$GITHUB_WORKSPACE/apps/api" uv run python /tmp/check_entities.py
