@@ -69,8 +69,8 @@ EPIC 7 (Providers)                  EPIC 8 (Sessions)
 | **EPIC 0** | AI Foundation | Kernel, Contracts, Interfaces | ✅ COMPLETE |
 | **EPIC 1** | Conversation | Gestión de conversaciones | ✅ COMPLETE |
 | **EPIC 2** | Context | Construcción de contexto | ✅ COMPLETE |
-| **EPIC 3** | Prompt | Ingeniería de prompts | 🚧 NEXT |
-| **EPIC 4** | Memory | Sistema de memoria | PENDING |
+| **EPIC 3** | Prompt | Ingeniería de prompts | ✅ COMPLETE |
+| **EPIC 4** | Memory | Sistema de memoria | 🚧 NEXT |
 | **EPIC 5** | Tools | Registro de herramientas | PENDING |
 | **EPIC 6** | Response | Construcción de respuestas | PENDING |
 | **EPIC 7** | Providers | Abstracción LLM | PENDING |
