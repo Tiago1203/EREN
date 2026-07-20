@@ -58,6 +58,12 @@ EPIC 7 (Providers)                  EPIC 8 (Sessions)
         └──────┬───────┘
                           ▼
         EPIC 9 (AI Integration)
+               │
+               ▼
+    EPIC 10 (Domain Integration Layer)
+               │
+               ▼
+    FASE 1 Business Domain
 ```
 
 ---
@@ -76,6 +82,7 @@ EPIC 7 (Providers)                  EPIC 8 (Sessions)
 | **EPIC 7** | Providers | Abstracción LLM | ✅ COMPLETE |
 | **EPIC 8** | Sessions | Gestión de sesiones | ✅ COMPLETE |
 | **EPIC 9** | AI Integration | Integración completa | ✅ COMPLETE |
+| **EPIC 10** | Domain Integration Layer | Conectar AI Core con Dominio | ✅ COMPLETE |
 
 ---
 
