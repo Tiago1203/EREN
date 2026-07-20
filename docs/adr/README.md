@@ -17,7 +17,7 @@
 | Epic 7 | 12 | 0 | 0 | 12 |
 | **Epic 8** | **12** | **0** | **0** | **12** ✅ All Accepted |
 | Epic 9-10 | 0 | 0 | 0 | 0 |
-| **Total** | **125** | **23** | **2** | **150** |
+| **Total** | **125** | **12** | **2** | **139** |
 
 ---
 
@@ -66,5 +66,5 @@
 
 ---
 
-*EREN ADR Master Index v1.7*
+*EREN ADR Master Index v1.8*
 *Architecture Board - 2026-07-20*
