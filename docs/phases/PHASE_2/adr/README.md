@@ -19,7 +19,10 @@ docs/phases/PHASE_2/adr/
 │   ├── ADR-2006.md          # Provider Abstraction
 │   ├── ADR-2007.md          # DI Strategy
 │   └── ADR-2008.md          # Context Object Design
-├── epic1/                    # PENDING
+├── epic1/                    # ✅ COMPLETO (3 ADRs)
+│   ├── ADR-2100.md          # Conversation Architecture
+│   ├── ADR-2101.md          # Conversation State
+│   └── ADR-2102.md          # Event-Driven System
 ├── epic2/                    # PENDING
 ├── epic3/                    # PENDING
 ├── epic4/                    # PENDING
@@ -37,7 +40,7 @@ docs/phases/PHASE_2/adr/
 | Épica | ADRs | Estado |
 |-------|------|--------|
 | **EPIC 0** | 9 | ✅ Complete |
-| EPIC 1 | 3 | PENDING |
+| **EPIC 1** | 3 | ✅ Complete |
 | EPIC 2 | 3 | PENDING |
 | EPIC 3 | 3 | PENDING |
 | EPIC 4 | 3 | PENDING |
@@ -47,7 +50,7 @@ docs/phases/PHASE_2/adr/
 | EPIC 8 | 3 | PENDING |
 | EPIC 9 | 3 | PENDING |
 
-**Total: 36 ADRs (9 Complete, 27 Pending)**
+**Total: 36 ADRs (12 Complete, 24 Pending)**
 
 ---
 
@@ -66,6 +69,18 @@ docs/phases/PHASE_2/adr/
 | ADR-2008 | Context Object Design | ✅ Accepted |
 
 **Ubicación:** `docs/phases/PHASE_2/adr/epic0/`
+
+---
+
+## 📋 EPIC 1 - ADRs Completos
+
+| ADR | Título | Estado |
+|-----|--------|--------|
+| ADR-2100 | Conversation Architecture | ✅ Accepted |
+| ADR-2101 | Conversation State | ✅ Accepted |
+| ADR-2102 | Event-Driven System | ✅ Accepted |
+
+**Ubicación:** `docs/phases/PHASE_2/adr/epic1/`
 
 ---
 

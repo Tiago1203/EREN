@@ -5,6 +5,7 @@ base sobre la cual se construyen todas las capacidades de IA.
 
 ## Módulos
 
+### EPIC 0 - AI Foundation
 - **kernel**: Núcleo central del AI Core
 - **contracts**: Interfaces y abstracciones
 - **dto**: Data Transfer Objects
@@ -15,40 +16,42 @@ base sobre la cual se construyen todas las capacidades de IA.
 - **di**: Inyección de dependencias
 - **context**: Objetos de contexto
 
+### EPIC 1 - Conversation
+- **conversation**: Controlador de conversaciones
+
 ## Uso
 
 ```python
 from core.ai import AIKernel
+from core.ai.conversation import ConversationController
 
-# Create and initialize kernel
+# AI Kernel
 kernel = AIKernel()
 await kernel.initialize()
-
-# Process requests
 response = await kernel.process(request)
 
-# Stream responses
-async for chunk in kernel.stream(request):
-    print(chunk.content)
+# Conversation Controller
+controller = ConversationController()
+conversation = controller.create_conversation(
+    tenant_id="tenant-1",
+    title="Support Chat",
+)
 ```
 
 ## Arquitectura
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        AI KERNEL                                    │
+│                        AI CORE                                     │
 │                                                               │
 │  ┌─────────────────────────────────────────────────────────┐ │
-│  │                  AI Configuration                         │ │
+│  │                   AI FOUNDATION (EPIC 0)                   │ │
+│  │     Kernel, Contracts, DTOs, Config, Registry, etc.       │ │
 │  └─────────────────────────────────────────────────────────┘ │
 │                                                               │
-│  ┌──────────────┐ ┌──────────────┐ ┌──────────────────────┐ │
-│  │  Model      │ │  Provider    │ │    Dependency        │ │
-│  │  Registry   │ │  Router      │ │    Injection         │ │
-│  └──────────────┘ └──────────────┘ └──────────────────────┘ │
-│                                                               │
 │  ┌─────────────────────────────────────────────────────────┐ │
-│  │                  AI Context Manager                       │ │
+│  │                CONVERSATION (EPIC 1)                     │ │
+│  │    Controller, Lifecycle, Repository, Events           │ │
 │  └─────────────────────────────────────────────────────────┘ │
 └───────────────────────────────────────────────────────────────┘
 ```
@@ -110,6 +113,28 @@ from core.ai.providers import (
     AnthropicProvider,
     AzureOpenAIProvider,
     ProviderRouter,
+)
+
+# Conversation module (EPIC 1)
+from core.ai.conversation import (
+    ConversationController,
+    ConversationLifecycle,
+    SessionLifecycle,
+    Conversation,
+    ConversationContext,
+    ConversationMetadata,
+    ConversationMessage,
+    ConversationParticipant,
+    ConversationSession,
+    ConversationState,
+    ConversationType,
+    ConversationRepository,
+    InMemoryConversationRepository,
+    ConversationEvent,
+    ConversationEventDispatcher,
+    ConversationEventType,
+    get_event_dispatcher,
+    reset_event_dispatcher,
 )
 
 __version__ = "1.0.0"
@@ -180,4 +205,23 @@ __all__ = [
     "AnthropicProvider",
     "AzureOpenAIProvider",
     "ProviderRouter",
+    # Conversation (EPIC 1)
+    "ConversationController",
+    "ConversationLifecycle",
+    "SessionLifecycle",
+    "Conversation",
+    "ConversationContext",
+    "ConversationMetadata",
+    "ConversationMessage",
+    "ConversationParticipant",
+    "ConversationSession",
+    "ConversationState",
+    "ConversationType",
+    "ConversationRepository",
+    "InMemoryConversationRepository",
+    "ConversationEvent",
+    "ConversationEventDispatcher",
+    "ConversationEventType",
+    "get_event_dispatcher",
+    "reset_event_dispatcher",
 ]
