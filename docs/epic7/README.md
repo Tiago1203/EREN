@@ -31,11 +31,7 @@ User Experience proporciona:
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    User Experience Layer                       │
-│                                                               │
-│  ┌─────────────┐  ┌──────────────┐  ┌─────────────────┐   │
-│  │   Web App   │  │  Mobile App  │  │   Accessibility │   │
-│  │  (Next.js)  │  │  (React Nat)│  │     (WCAG)      │   │
-│  └─────────────┘  └──────────────┘  └─────────────────┘   │
+│  Web App | Mobile App | Accessibility                       │
 └───────────────────────────┬─────────────────────────────────┘
                             │
          ┌──────────────────┼──────────────────┐
@@ -43,7 +39,6 @@ User Experience proporciona:
 ┌─────────────────┐  ┌──────────┐     ┌──────────────┐
 │     EPIC 6       │  │  EPIC 5  │     │    EPIC 4    │
 │   Integrations   │  │  Clinical │     │   AI Core     │
-│                  │  │Intelligence│     │              │
 └─────────────────┘  └──────────┘     └──────────────┘
 ```
 
@@ -52,7 +47,6 @@ User Experience proporciona:
 ## Components
 
 ### 1. Web Application
-
 | Component | Description |
 |-----------|-------------|
 | Dashboard | Real-time metrics |
@@ -62,39 +56,21 @@ User Experience proporciona:
 | Recommendations | AI suggestions |
 
 ### 2. Mobile Application
-
 | Platform | Description |
 |----------|-------------|
-| iOS 14+ | App Store distribution |
+| iOS 14+ | App Store |
 | Android 8+ | Play Store + APK |
 
 ### 3. Accessibility
-
 - WCAG 2.1 Level AA
 - Screen reader support
 - Keyboard navigation
-- High contrast mode
 
 ---
 
 ## ADR Index
 
-12 ADRs document the architectural decisions:
-
-| ADR | Title | Status |
-|-----|-------|--------|
-| ADR-0700 | User Experience Architecture | Accepted |
-| ADR-0701 | Web Application Architecture | Accepted |
-| ADR-0702 | Dashboard Design | Accepted |
-| ADR-0703 | Chat Interface Design | Accepted |
-| ADR-0704 | Device Management UI | Accepted |
-| ADR-0705 | Incident Management UI | Accepted |
-| ADR-0706 | Recommendations UI | Accepted |
-| ADR-0707 | Mobile Application Architecture | Accepted |
-| ADR-0708 | Accessibility Standards | Accepted |
-| ADR-0709 | Authentication & Authorization | Accepted |
-| ADR-0710 | Notification System | Accepted |
-| ADR-0711 | Internationalization | Accepted |
+12 ADRs document the architectural decisions.
 
 ---
 
