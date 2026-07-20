@@ -16,7 +16,7 @@ docs/phases/PHASE_2/adr/
 ├── epic4/                    # ✅ COMPLETO (3 ADRs)
 ├── epic5/                    # ✅ COMPLETO (3 ADRs)
 ├── epic6/                    # ✅ COMPLETO (3 ADRs)
-├── epic7/                    # PENDING
+├── epic7/                    # ✅ COMPLETO (3 ADRs)
 ├── epic8/                    # PENDING
 └── epic9/                    # PENDING
 ```
@@ -34,11 +34,11 @@ docs/phases/PHASE_2/adr/
 | **EPIC 4** | 3 | ✅ Complete |
 | **EPIC 5** | 3 | ✅ Complete |
 | **EPIC 6** | 3 | ✅ Complete |
-| EPIC 7 | 3 | PENDING |
+| **EPIC 7** | 3 | ✅ Complete |
 | EPIC 8 | 3 | PENDING |
 | EPIC 9 | 3 | PENDING |
 
-**Total: 36 ADRs (27 Complete, 9 Pending)**
+**Total: 36 ADRs (30 Complete, 6 Pending)**
 
 ---
 
@@ -129,6 +129,18 @@ docs/phases/PHASE_2/adr/
 | ADR-2602 | Streaming Support | ✅ Accepted |
 
 **Ubicación:** `docs/phases/PHASE_2/adr/epic6/`
+
+---
+
+## 📋 EPIC 7 - ADRs Completos
+
+| ADR | Título | Estado |
+|-----|--------|--------|
+| ADR-2700 | Provider Architecture | ✅ Accepted |
+| ADR-2701 | Fallback & Retry | ✅ Accepted |
+| ADR-2702 | Rate Limiting & Cost | ✅ Accepted |
+
+**Ubicación:** `docs/phases/PHASE_2/adr/epic7/`
 
 ---
 
