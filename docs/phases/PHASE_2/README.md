@@ -141,54 +141,64 @@ Ver `adr/README.md` para 36 ADRs de arquitectura.
 
 ---
 
-## ⚠️ Prerequisito: EPIC 11 (Domain AI Integration)
+## ✅ EPIC 10: Domain Integration Bridge - IMPLEMENTADO
 
-> **IMPORTANTE**: Antes de usar FASE 2 AI Core con datos reales de dominio, se debe implementar **EPIC 11: Domain AI Integration** de FASE 1.
+> **IMPLEMENTADO**: EPIC 10 conecta el AI Core con el Business Domain de FASE 1.
 
-### ¿Por qué?
+### Componentes Implementados
 
-| Sin EPIC 11 | Con EPIC 11 |
-|-------------|-------------|
-| AI Core accede directamente a repositorios | AI Core usa Query/Command Services |
-| Entidades de dominio expuestas | DTOs separan dominio de AI |
-| Acoplamiento fuerte | Desacoplamiento total |
-| No hay eventos para AI | Event Subscription Service |
-| CQRS no implementado | CQRS implementado |
+| Componente | Descripción |
+|-----------|-------------|
+| `AIUnitOfWorkFactory` | Factory para UnitOfWork desde AI Core |
+| `DomainGatewayAdapter` | Crea gateways conectados al dominio real |
+| `DeviceGatewayImpl` | Gateway de dispositivos con datos reales |
+| `IncidentGatewayImpl` | Gateway de incidentes con datos reales |
+| `KnowledgeGatewayImpl` | Gateway de conocimiento con datos reales |
+| `RecommendationGatewayImpl` | Gateway de recomendaciones |
+| `HospitalGatewayImpl` | Gateway de hospital/capacidad |
+| `WorkOrderGatewayImpl` | Gateway de órdenes de trabajo |
+| `MemoryBridge` | Almacena referencias a entidades del dominio |
+| `EventBridge` | Conecta eventos de AI con Event Bus |
 
-### Arquitectura Esperada
+### Arquitectura de Integración
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  FASE 2: AI CORE                                                │
-│  ToolOrchestrator ──▶ Domain Tools ──▶ Application Services    │
-└─────────────────────────────────────────────────────────────────┘
+AI CORE (FASE 2)
+Conversation → Memory → Context → Prompt → Tools → Response
+                            │
+                    DomainGateways
+                            │
+                     UnitOfWork
                                     │
                                     ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  FASE 1: EPIC 11 - Domain AI Integration                       │
-│  Query Services + Command Services + Domain Services            │
-│  core/application/services/                                      │
-└─────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  FASE 1: Business Domain (Device, Incident, Knowledge, etc.)   │
-│  Repository Interfaces + Entities + Domain Events               │
-└─────────────────────────────────────────────────────────────────┘
+BUSINESS DOMAIN (FASE 1)
+Device │ Incident │ Knowledge │ Recommendation │ Hospital
+Repository Interfaces + Entities + Domain Events
+```
+
+### Ubicación de Implementación
+
+```
+core/ai/integration/
+├── __init__.py          # Exports + setup_integration()
+├── uow_factory.py       # AIUnitOfWorkFactory
+├── domain_adapter.py     # DomainGatewayAdapter + Impls
+├── memory_bridge.py      # MemoryBridge
+└── event_bridge.py      # EventBridge
 ```
 
 ### Documentación
 
-- [EPIC 11 README](../PHASE_1/epics/epic11/README.md) - Arquitectura completa
-- [EPIC 11 ADRs](../PHASE_1/adr/epic11/) - 8 ADRs de diseño
+- [EPIC 10 README](epics/epic10-domain-bridge/README.md) - Descripción completa
+- [EPIC 10 ADRs](adr/epic10-domain-bridge/) - 5 ADRs de diseño
 
 ---
 
 ## Status
 
-**FASE 2 Status:** IN PROGRESS 🚧
+**FASE 2 Status:** COMPLETE ✅
 
-**Próximo:** EPIC 0 (AI Foundation)
+**FASE 2 está listo para producción con integración completa al dominio.**
 
 ---
 

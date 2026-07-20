@@ -19,7 +19,8 @@ docs/phases/PHASE_2/adr/
 ├── epic7/                    # ✅ COMPLETO (3 ADRs)
 ├── epic8/                    # ✅ COMPLETO (3 ADRs)
 ├── epic9/                    # ✅ COMPLETO (3 ADRs)
-└── epic10/                   # ✅ COMPLETO (5 ADRs)
+├── epic10/                   # ✅ COMPLETO (5 ADRs)
+└── epic10-domain-bridge/    # ✅ COMPLETO (5 ADRs)
 ```
 
 ---
@@ -38,8 +39,10 @@ docs/phases/PHASE_2/adr/
 | **EPIC 7** | 3 | ✅ Complete |
 | **EPIC 8** | 3 | ✅ Complete |
 | **EPIC 9** | 3 | ✅ Complete |
+| **EPIC 10** | 5 | ✅ Complete |
+| **EPIC 10 Domain Bridge** | 5 | ✅ Complete |
 
-**Total: 36 ADRs (36 Complete, 0 Pending)**
+**Total: 41 ADRs (41 Complete, 0 Pending)**
 
 ---
 
