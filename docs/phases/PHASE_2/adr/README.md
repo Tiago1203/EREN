@@ -15,7 +15,7 @@ docs/phases/PHASE_2/adr/
 ├── epic3/                    # ✅ COMPLETO (3 ADRs)
 ├── epic4/                    # ✅ COMPLETO (3 ADRs)
 ├── epic5/                    # ✅ COMPLETO (3 ADRs)
-├── epic6/                    # PENDING
+├── epic6/                    # ✅ COMPLETO (3 ADRs)
 ├── epic7/                    # PENDING
 ├── epic8/                    # PENDING
 └── epic9/                    # PENDING
@@ -33,12 +33,12 @@ docs/phases/PHASE_2/adr/
 | **EPIC 3** | 3 | ✅ Complete |
 | **EPIC 4** | 3 | ✅ Complete |
 | **EPIC 5** | 3 | ✅ Complete |
-| EPIC 6 | 3 | PENDING |
+| **EPIC 6** | 3 | ✅ Complete |
 | EPIC 7 | 3 | PENDING |
 | EPIC 8 | 3 | PENDING |
 | EPIC 9 | 3 | PENDING |
 
-**Total: 36 ADRs (24 Complete, 12 Pending)**
+**Total: 36 ADRs (27 Complete, 9 Pending)**
 
 ---
 
@@ -117,6 +117,18 @@ docs/phases/PHASE_2/adr/
 | ADR-2502 | Tool Routing | ✅ Accepted |
 
 **Ubicación:** `docs/phases/PHASE_2/adr/epic5/`
+
+---
+
+## 📋 EPIC 6 - ADRs Completos
+
+| ADR | Título | Estado |
+|-----|--------|--------|
+| ADR-2600 | Response Architecture | ✅ Accepted |
+| ADR-2601 | Response Elements | ✅ Accepted |
+| ADR-2602 | Streaming Support | ✅ Accepted |
+
+**Ubicación:** `docs/phases/PHASE_2/adr/epic6/`
 
 ---
 
