@@ -70,8 +70,8 @@ EPIC 7 (Providers)                  EPIC 8 (Sessions)
 | **EPIC 1** | Conversation | Gestión de conversaciones | ✅ COMPLETE |
 | **EPIC 2** | Context | Construcción de contexto | ✅ COMPLETE |
 | **EPIC 3** | Prompt | Ingeniería de prompts | ✅ COMPLETE |
-| **EPIC 4** | Memory | Sistema de memoria | 🚧 NEXT |
-| **EPIC 5** | Tools | Registro de herramientas | PENDING |
+| **EPIC 4** | Memory | Sistema de memoria | ✅ COMPLETE |
+| **EPIC 5** | Tools | Registro de herramientas | 🚧 NEXT |
 | **EPIC 6** | Response | Construcción de respuestas | PENDING |
 | **EPIC 7** | Providers | Abstracción LLM | PENDING |
 | **EPIC 8** | Sessions | Gestión de sesiones | PENDING |
