@@ -10,24 +10,9 @@
 docs/phases/PHASE_2/adr/
 ├── README.md
 ├── epic0/                    # ✅ COMPLETO (9 ADRs)
-│   ├── ADR-2000.md          # AI Foundation Architecture
-│   ├── ADR-2001.md          # Contract Design
-│   ├── ADR-2002.md          # DTO Schema
-│   ├── ADR-2003.md          # Exception Hierarchy
-│   ├── ADR-2004.md          # Configuration Model
-│   ├── ADR-2005.md          # Model Registry
-│   ├── ADR-2006.md          # Provider Abstraction
-│   ├── ADR-2007.md          # DI Strategy
-│   └── ADR-2008.md          # Context Object Design
 ├── epic1/                    # ✅ COMPLETO (3 ADRs)
-│   ├── ADR-2100.md          # Conversation Architecture
-│   ├── ADR-2101.md          # Conversation State
-│   └── ADR-2102.md          # Event-Driven System
 ├── epic2/                    # ✅ COMPLETO (3 ADRs)
-│   ├── ADR-2200.md          # Context Architecture
-│   ├── ADR-2201.md          # Context Window
-│   └── ADR-2202.md          # Compression & Prioritization
-├── epic3/                    # PENDING
+├── epic3/                    # ✅ COMPLETO (3 ADRs)
 ├── epic4/                    # PENDING
 ├── epic5/                    # PENDING
 ├── epic6/                    # PENDING
@@ -45,7 +30,7 @@ docs/phases/PHASE_2/adr/
 | **EPIC 0** | 9 | ✅ Complete |
 | **EPIC 1** | 3 | ✅ Complete |
 | **EPIC 2** | 3 | ✅ Complete |
-| EPIC 3 | 3 | PENDING |
+| **EPIC 3** | 3 | ✅ Complete |
 | EPIC 4 | 3 | PENDING |
 | EPIC 5 | 3 | PENDING |
 | EPIC 6 | 3 | PENDING |
@@ -53,7 +38,7 @@ docs/phases/PHASE_2/adr/
 | EPIC 8 | 3 | PENDING |
 | EPIC 9 | 3 | PENDING |
 
-**Total: 36 ADRs (15 Complete, 21 Pending)**
+**Total: 36 ADRs (18 Complete, 18 Pending)**
 
 ---
 
@@ -96,6 +81,18 @@ docs/phases/PHASE_2/adr/
 | ADR-2202 | Compression & Prioritization | ✅ Accepted |
 
 **Ubicación:** `docs/phases/PHASE_2/adr/epic2/`
+
+---
+
+## 📋 EPIC 3 - ADRs Completos
+
+| ADR | Título | Estado |
+|-----|--------|--------|
+| ADR-2300 | Prompt Architecture | ✅ Accepted |
+| ADR-2301 | Template System | ✅ Accepted |
+| ADR-2302 | Prompt Strategies | ✅ Accepted |
+
+**Ubicación:** `docs/phases/PHASE_2/adr/epic3/`
 
 ---
 
