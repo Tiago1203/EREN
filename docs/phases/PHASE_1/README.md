@@ -71,6 +71,26 @@ Al terminar esta fase tienes:
 
 ---
 
+## 📋 Épicas Completadas (0-11)
+
+| Épica | Descripción | Status |
+|-------|-------------|--------|
+| **EPIC 0** | Arquitectura, ADRs, DDD | ✅ |
+| **EPIC 1** | Infraestructura, Docker, CI/CD | ✅ |
+| **EPIC 2** | Shared Kernel | ✅ |
+| **EPIC 3** | Device Context | ✅ |
+| **EPIC 4** | Incident Context | ✅ |
+| **EPIC 5** | Recommendation Context | ✅ |
+| **EPIC 6** | Knowledge Context | ✅ |
+| **EPIC 7** | APIs base, Contratos | ✅ |
+| **EPIC 8** | Seguridad, Persistencia | ✅ |
+| **EPIC 9** | Consolidación, Documentación | ✅ |
+| **EPIC 10** | Enterprise Release | ✅ |
+| **EPIC 11** | Domain AI Integration | 📋 En Progreso |
+
+---
+
 ## 🔗 Enlaces
 
-- [Siguiente: FASE 2](../PHASE_2/) - Enterprise Release
+- [EPIC 11: Domain AI Integration](./epics/epic11/) - Preparar dominio para AI Core
+- [Siguiente: FASE 2](../PHASE_2/) - AI Core
