@@ -16,8 +16,9 @@
 | Epic 6 | 12 | 0 | 0 | 12 |
 | Epic 7 | 12 | 0 | 0 | 12 |
 | **Epic 8** | **12** | **0** | **0** | **12** ✅ All Accepted |
-| Epic 9-10 | 0 | 0 | 0 | 0 |
-| **Total** | **125** | **12** | **2** | **139** |
+| **Epic 9** | **12** | **0** | **0** | **12** ✅ All Accepted |
+| Epic 10 | 0 | 0 | 0 | 0 |
+| **Total** | **137** | **12** | **2** | **151** |
 
 ---
 
@@ -35,8 +36,9 @@
 | Epic 6 | 12 | ✅ COMPLETE |
 | Epic 7 | 12 | ✅ COMPLETE |
 | **Epic 8** | **12** | **✅ COMPLETE** |
-| Epic 9-10 | 0 | ⏳ PENDING |
-| **TOTAL** | **150** | **10/10 COMPLETE** |
+| **Epic 9** | **12** | **✅ COMPLETE** |
+| Epic 10 | 0 | ⏳ PENDING |
+| **TOTAL** | **151** | **11/11 COMPLETE** |
 
 ---
 
@@ -57,14 +59,30 @@
 | ADR-0810 | Multi-Region Deployment | Accepted |
 | ADR-0811 | High Availability Design | Accepted |
 
-### Epic 9-10 — Pending
+### Epic 9 — Machine Learning (12 ADRs) ✅ COMPLETE
+
+| ADR | Title | Status |
+|-----|-------|--------|
+| ADR-0900 | Machine Learning Architecture | Accepted |
+| ADR-0901 | Feedback Learning System | Accepted |
+| ADR-0902 | Model Evaluation Framework | Accepted |
+| ADR-0903 | Fine Tuning Strategy | Accepted |
+| ADR-0904 | Prompt Optimization Pipeline | Accepted |
+| ADR-0905 | Analytics Architecture | Accepted |
+| ADR-0906 | AI Metrics Definition | Accepted |
+| ADR-0907 | Reinforcement Learning Setup | Accepted |
+| ADR-0908 | Dataset Management | Accepted |
+| ADR-0909 | Model Versioning | Accepted |
+| ADR-0910 | A/B Testing Framework | Accepted |
+| ADR-0911 | Continuous Learning Loop | Accepted |
+
+### Epic 10 — Enterprise Release (Pending)
 
 | EPIC | Status |
 |------|--------|
-| Epic 9 (Machine Learning) | Pending |
 | Epic 10 (Enterprise Release) | Pending |
 
 ---
 
-*EREN ADR Master Index v1.8*
+*EREN ADR Master Index v1.9*
 *Architecture Board - 2026-07-20*
