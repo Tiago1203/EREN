@@ -17,7 +17,7 @@ docs/phases/PHASE_2/adr/
 ├── epic5/                    # ✅ COMPLETO (3 ADRs)
 ├── epic6/                    # ✅ COMPLETO (3 ADRs)
 ├── epic7/                    # ✅ COMPLETO (3 ADRs)
-├── epic8/                    # PENDING
+├── epic8/                    # ✅ COMPLETO (3 ADRs)
 └── epic9/                    # PENDING
 ```
 
@@ -35,10 +35,10 @@ docs/phases/PHASE_2/adr/
 | **EPIC 5** | 3 | ✅ Complete |
 | **EPIC 6** | 3 | ✅ Complete |
 | **EPIC 7** | 3 | ✅ Complete |
-| EPIC 8 | 3 | PENDING |
+| **EPIC 8** | 3 | ✅ Complete |
 | EPIC 9 | 3 | PENDING |
 
-**Total: 36 ADRs (30 Complete, 6 Pending)**
+**Total: 36 ADRs (33 Complete, 3 Pending)**
 
 ---
 
@@ -141,6 +141,18 @@ docs/phases/PHASE_2/adr/
 | ADR-2702 | Rate Limiting & Cost | ✅ Accepted |
 
 **Ubicación:** `docs/phases/PHASE_2/adr/epic7/`
+
+---
+
+## 📋 EPIC 8 - ADRs Completos
+
+| ADR | Título | Estado |
+|-----|--------|--------|
+| ADR-2800 | Session Architecture | ✅ Accepted |
+| ADR-2801 | Token Budget | ✅ Accepted |
+| ADR-2802 | Session Lifecycle | ✅ Accepted |
+
+**Ubicación:** `docs/phases/PHASE_2/adr/epic8/`
 
 ---
 
