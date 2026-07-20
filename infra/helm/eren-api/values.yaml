@@ -1,19 +1,41 @@
-# Default values for eren-api.
+# EREN Enterprise Helm Chart Values
+# Version: 1.0.0
 
 replicaCount: 3
 
 image:
-  repository: eren-api
-  tag: latest
+  repository: eren/eren-api
+  tag: "1.0.0"
   pullPolicy: IfNotPresent
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+serviceAccount:
+  create: true
+  annotations: {}
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "8000"
+  prometheus.io/path: "/metrics"
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+
 service:
   type: ClusterIP
-  port: 80
+  port: 8000
   metricsPort: 9090
 
 ingress:
@@ -22,43 +44,31 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
   hosts:
-    - host: api.eren.dev
+    - host: api.eren.example.com
       paths:
         - path: /api
           pathType: Prefix
   tls:
     - secretName: eren-api-tls
       hosts:
-        - api.eren.dev
+        - api.eren.example.com
 
 resources:
   limits:
-    cpu: 1000m
-    memory: 1Gi
+    cpu: 2000m
+    memory: 2Gi
   requests:
-    cpu: 250m
+    cpu: 500m
     memory: 512Mi
 
 autoscaling:
   enabled: true
-  minReplicas: 2
+  minReplicas: 3
   maxReplicas: 10
   targetCPUUtilizationPercentage: 70
   targetMemoryUtilizationPercentage: 80
-
-env:
-  EREN_API_ENVIRONMENT: production
-  EREN_API_DEBUG: "false"
-  EREN_API_OTEL_ENDPOINT: "http://jaeger-collector.observability:4317"
-
-secrets:
-  database-url: ""
-  redis-url: ""
-  rabbitmq-url: ""
-  supabase-url: ""
-  supabase-anon-key: ""
-  supabase-service-role-key: ""
 
 nodeSelector: {}
 
@@ -74,12 +84,78 @@ affinity:
               app: eren-api
           topologyKey: kubernetes.io/hostname
 
+env:
+  EREN_API_ENVIRONMENT: production
+  EREN_API_DEBUG: "false"
+  EREN_API_VERSION: "1.0.0"
+  EREN_API_OTEL_ENDPOINT: "http://jaeger-collector.observability:4317"
+  EREN_API_LOG_LEVEL: "INFO"
+
+secrets:
+  database-url: ""
+  redis-url: ""
+  rabbitmq-url: ""
+  supabase-url: ""
+  supabase-anon-key: ""
+  supabase-service-role-key: ""
+  ai-api-key: ""
+
+# AI Configuration
+ai:
+  enabled: true
+  provider: "openai"
+  model: "gpt-4"
+  maxTokens: 4096
+  temperature: 0.7
+
+# ML Configuration
+ml:
+  enabled: true
+  feedbackLearning: true
+  modelEvaluation: true
+  fineTuning: false
+
+# Clinical Configuration
+clinical:
+  enabled: true
+  cdssEnabled: true
+  differentialDiagnosis: true
+  rootCauseAnalysis: true
+
+# Integration Configuration
+integrations:
+  fhir:
+    enabled: true
+    serverUrl: "https://fhir.example.com"
+  hl7:
+    enabled: false
+  mqtt:
+    enabled: false
+  dicom:
+    enabled: false
+
+# Monitoring
+monitoring:
+  enabled: true
+  prometheus:
+    enabled: true
+  grafana:
+    enabled: true
+  alerting:
+    enabled: true
+
+# License Configuration
+license:
+  enabled: true
+  serverUrl: "https://license.eren.example.com"
+  checkInterval: "1h"
+
 livenessProbe:
   httpGet:
     path: /api/v1/health/live
     port: 8000
-  initialDelaySeconds: 10
-  periodSeconds: 30
+  initialDelaySeconds: 30
+  periodSeconds: 10
   timeoutSeconds: 5
   failureThreshold: 3
 
@@ -88,6 +164,17 @@ readinessProbe:
     path: /api/v1/health/ready
     port: 8000
   initialDelaySeconds: 5
-  periodSeconds: 10
+  periodSeconds: 5
   timeoutSeconds: 3
   failureThreshold: 3
+
+# Backup configuration
+backup:
+  enabled: true
+  schedule: "0 2 * * *"
+  retention: 30
+
+# Pod disruption budget
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 2
