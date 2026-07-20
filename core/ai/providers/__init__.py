@@ -1,4 +1,14 @@
-"""AI Providers - Abstracción de proveedores de IA."""
+"""AI Providers - Abstracción de proveedores de IA.
+
+Este módulo proporciona una capa de abstracción para múltiples proveedores de IA,
+incluyendo OpenAI, Anthropic, Google Gemini, Ollama y Azure OpenAI.
+
+Características:
+- Fallback automático entre proveedores
+- Rate limiting
+- Retry con backoff
+- Tracking de uso y costos
+"""
 
 from __future__ import annotations
 
@@ -20,6 +30,26 @@ from core.ai.exceptions import (
     AIProviderError,
     AIProviderNotFoundError,
 )
+
+# Importar componentes del provider manager
+from core.ai.providers.models import (
+    ProviderType,
+    ModelCapability,
+    ModelInfo as ProviderModelInfo,
+    TokenUsage,
+    ChatMessage,
+    ToolCall,
+    CompletionResult,
+    ChatCompletionResult,
+    StreamChunk as ProviderStreamChunk,
+    ProviderConfig,
+    UsageRecord,
+    ProviderStats,
+    AIProvider as BaseAIProvider,
+)
+from core.ai.providers.manager import ProviderManager, RateLimiter
+from core.ai.providers.openai_provider import OpenAIProvider
+from core.ai.providers.anthropic_provider import AnthropicProvider
 
 
 class BaseProvider(AIProvider):
