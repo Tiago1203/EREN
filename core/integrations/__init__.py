@@ -7,3 +7,35 @@ Connects EREN with external systems:
 - Enterprise (ServiceNow, SAP, Maximo, Azure AD)
 """
 __version__ = "1.0.0"
+
+from core.integrations.hospital import (
+    FHIRClient,
+    HL7Listener,
+    DICOMClient,
+    DICOMWebClient,
+    HospitalSystemConfig,
+)
+from core.integrations.devices import (
+    MedicalDeviceAdapter,
+    DeviceAdapterRegistry,
+    PhilipsIntelliVueAdapter,
+    GEHealthcareAdapter,
+    DraegerMedicalAdapter,
+    MindrayAdapter,
+    get_adapter_registry,
+)
+
+__all__ = [
+    "FHIRClient",
+    "HL7Listener",
+    "DICOMClient",
+    "DICOMWebClient",
+    "HospitalSystemConfig",
+    "MedicalDeviceAdapter",
+    "DeviceAdapterRegistry",
+    "PhilipsIntelliVueAdapter",
+    "GEHealthcareAdapter",
+    "DraegerMedicalAdapter",
+    "MindrayAdapter",
+    "get_adapter_registry",
+]
