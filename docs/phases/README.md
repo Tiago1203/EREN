@@ -9,7 +9,7 @@
 | Fase | Estado | Épicas | Descripción |
 |------|--------|--------|-------------|
 | **FASE 1** | ✅ COMPLETO | EPIC 0-10 | Foundation & Platform |
-| **FASE 2** | 🚧 IN PROGRESS | EPIC 11-15 | AI Core |
+| **FASE 2** | 🚧 IN PROGRESS | EPIC 0-9 | AI Core |
 
 ---
 
@@ -24,12 +24,18 @@ docs/phases/
 │   └── adr/                  # ADRs epic0-10
 └── PHASE_2/                   🚧 IN PROGRESS
     ├── README.md
-    └── epics/                # epic11-15
-        ├── epic11/          # Reasoning Engine
-        ├── epic12/          # RAG Pipeline
-        ├── epic13/          # Orchestrator
-        ├── epic14/          # Agent Runtime
-        └── epic15/          # Memory & Learning
+    ├── epics/                # epic0-9
+    │   ├── epic0/          # AI Foundation
+    │   ├── epic1/          # Conversation
+    │   ├── epic2/          # Context
+    │   ├── epic3/          # Prompt
+    │   ├── epic4/          # Memory
+    │   ├── epic5/          # Tools
+    │   ├── epic6/          # Response
+    │   ├── epic7/          # Providers
+    │   ├── epic8/          # Sessions
+    │   └── epic9/          # AI Integration
+    └── adr/                  # ADRs epic0-9
 ```
 
 ---
@@ -59,20 +65,30 @@ Al terminar FASE 1 tienes:
 
 FASE 2 implementa el Cognitive Operating System:
 
-| Épica | Nombre | Estado |
-|-------|--------|--------|
-| **EPIC 11** | Reasoning Engine | 🚧 IN PROGRESS |
-| **EPIC 12** | RAG Pipeline | PENDING |
-| **EPIC 13** | Orchestrator | PENDING |
-| **EPIC 14** | Agent Runtime | PENDING |
-| **EPIC 15** | Memory & Learning | PENDING |
+| Épica | Nombre | Descripción | Estado |
+|-------|--------|-------------|--------|
+| **EPIC 0** | AI Foundation | Kernel, Contracts, Interfaces | 🚧 IN PROGRESS |
+| **EPIC 1** | Conversation | Gestión de conversaciones | PENDING |
+| **EPIC 2** | Context | Construcción de contexto | PENDING |
+| **EPIC 3** | Prompt | Ingeniería de prompts | PENDING |
+| **EPIC 4** | Memory | Sistema de memoria | PENDING |
+| **EPIC 5** | Tools | Registro de herramientas | PENDING |
+| **EPIC 6** | Response | Construcción de respuestas | PENDING |
+| **EPIC 7** | Providers | Abstracción LLM | PENDING |
+| **EPIC 8** | Sessions | Gestión de sesiones | PENDING |
+| **EPIC 9** | AI Integration | Integración completa | PENDING |
 
 **Al terminar FASE 2:**
-- Motor de razonamiento explicable
-- RAG Pipeline con retrieval híbrido
-- Orchestrator que coordina motores
-- Runtime de agentes cognitivos
-- Sistema de memoria y aprendizaje
+- AI Foundation con kernel, contratos, interfaces
+- Conversation management
+- Context building
+- Prompt engineering
+- Memory system
+- Tool registry
+- Response building
+- LLM providers abstraction
+- Session management
+- Full AI integration
 
 **EREN será un Cognitive Operating System completo.**
 
