@@ -35,8 +35,9 @@ docs/adr/
 | Epic 1 | 11 | 0 | 0 | 11 |
 | Epic 2 | 6 | 2 | 0 | 8 |
 | Epic 3 | 12 | 0 | 0 | 12 | ✅ All Accepted |
-| Epic 4-10 | 0 | 0 | 0 | 0 |
-| **Total** | **67** | **22** | **2** | **91** |
+| **Epic 4** | **0** | **11** | **0** | **11** |
+| Epic 5-10 | 0 | 0 | 0 | 0 |
+| **Total** | **67** | **33** | **2** | **102** |
 
 ---
 
@@ -180,11 +181,26 @@ ADR-1000 to ADR-1099  →  Epic 10 (Enterprise Release)
 | ADR-0310 | Work Order Integration with Hospital | **Accepted ✅** |
 | ADR-0311 | Multi-Tenant Data Isolation | **Accepted ✅** |
 
-### Epic 4-10 — Pending
+### Epic 4 — AI Core (IN PROGRESS 🚧)
+
+| ADR | Title | Status |
+|-----|-------|--------|
+| ADR-0400 | AI Core Architecture | Proposed |
+| ADR-0401 | LLM Provider Abstraction | Proposed |
+| ADR-0402 | Cognitive Runtime Design | Proposed |
+| ADR-0403 | RAG Architecture | Proposed |
+| ADR-0404 | Conversation Model | Proposed |
+| ADR-0405 | Reasoning Engine Strategy | Proposed |
+| ADR-0406 | Confidence Scoring Model | Proposed |
+| ADR-0407 | Safety & Hallucination Detection | Proposed |
+| ADR-0408 | Tool Orchestration | Proposed |
+| ADR-0409 | Memory Architecture | Proposed |
+| ADR-0410 | Explainability Requirements | Proposed |
+
+### Epic 5-10 — Pending
 
 | EPIC | Status |
 |------|--------|
-| Epic 4 (AI Core) | Pending |
 | Epic 5 (Clinical Intelligence) | Pending |
 | Epic 6 (Integrations) | Pending |
 | Epic 7 (User Experience) | Pending |
@@ -265,5 +281,5 @@ ADRs are reviewed quarterly:
 
 ---
 
-*EREN ADR Master Index v1.1*
-*Architecture Board - 2026-07-16*
+*EREN ADR Master Index v1.2*
+*Architecture Board - 2026-07-20*

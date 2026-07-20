@@ -263,14 +263,14 @@ Completed in PR #128:
 - ✅ Recommendation SQLAlchemy repository implemented
 - ✅ 228+ unit and integration tests passing
 
-Follow-up work (not blocking EPIC 3):
+Follow-up work (not blocking EPIC 4):
 - [ ] Move Device and WorkOrder events from `apps/api/app/domain/` to `core/shared/events/`
 - [ ] Add specification tests for aggregate lifecycle
 - [ ] Add integration tests for context-to-context events
 
-**Next:** Epic 3 — Hospital Management Platform 🚧
+**Next:** Epic 4 — AI Core 🚧 (see [`../epic4/README.md`](../epic4/README.md))
 
 ---
 
 *EREN Epic 2 v1.1*
-*Architecture Board - 2026-07-16*
+*Architecture Board - 2026-07-20*

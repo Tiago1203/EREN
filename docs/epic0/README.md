@@ -89,16 +89,17 @@ Epic 0 establishes the foundational documents that define EREN's identity, purpo
 
 ---
 
-## Epic 0 v1.1 Complete — Ready for EPIC 3
+## Epic 0 v1.1 Complete — Ready for EPIC 4
 
 **Epic 0 Status:** COMPLETE ✅ v1.1
 
 **EPIC Roadmap Status:**
 - EPIC 0 (Architecture) — COMPLETE ✅
+- EPIC 0-Infra (Infrastructure Design) — COMPLETE ✅
 - EPIC 1 (Infrastructure) — COMPLETE ✅ (merged)
 - EPIC 2 (Core Business Domain) — COMPLETE ✅ (merged)
-- **EPIC 3 (Hospital Management) — IN PROGRESS 🚧**
-- EPIC 4 (AI Core) — Pending
+- **EPIC 3 (Hospital Management) — COMPLETE ✅ (merged PR #131)**
+- **EPIC 4 (AI Core) — IN PROGRESS 🚧**
 - EPIC 5 (Clinical Intelligence) — Pending
 - EPIC 6 (Integrations) — Pending
 - EPIC 7 (User Experience) — Pending
@@ -149,7 +150,7 @@ All foundations in place:
 **Next:** Epic 1 - Infrastructure Platform ✅
 **Then:** Epic 2 - Core Business Domain ✅
 **Then:** Epic 3 - Hospital Management Platform ✅
-**Then:** Epic 4 - AI Core
+**Then:** **Epic 4 - AI Core 🚧** (see [`../epic4/README.md`](../epic4/README.md))
 
 **Infrastructure Extension:** See [Epic 0-Infra](../epic0-infra/) for detailed infrastructure design documents that fill the gaps identified in Epic 0 (Kubernetes, Kafka, S3/MinIO, Outbox Pattern, RLS in Alembic, Observability Stack, Backup/DR Strategy).
 
@@ -338,4 +339,4 @@ Each document requires:
 ---
 
 *EREN Epic 0 v1.1 - Foundation Documents*
-*Architecture Board - 2026-07-16*
+*Architecture Board - 2026-07-20*

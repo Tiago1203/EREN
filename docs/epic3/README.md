@@ -274,8 +274,8 @@ Completed in PR #131:
 - EPIC 0-Infra (Infrastructure Design) — COMPLETE ✅
 - EPIC 1 (Infrastructure Platform) — COMPLETE ✅ (merged)
 - EPIC 2 (Core Business Domain) — COMPLETE ✅ (merged)
-- **EPIC 3 (Hospital Management) — COMPLETE ✅**
-- EPIC 4 (AI Core) — Pending
+- **EPIC 3 (Hospital Management) — COMPLETE ✅ (merged PR #131)**
+- **EPIC 4 (AI Core) — IN PROGRESS 🚧**
 - EPIC 5 (Clinical Intelligence) — Pending
 - EPIC 6 (Integrations) — Pending
 - EPIC 7 (User Experience) — Pending
@@ -283,9 +283,9 @@ Completed in PR #131:
 - EPIC 9 (Machine Learning) — Pending
 - EPIC 10 (Enterprise Release) — Pending
 
-**Next:** Epic 4 — AI Core 🚧
+**Next:** Epic 4 — AI Core 🚧 (see [`../epic4/README.md`](../epic4/README.md))
 
 ---
 
 *EREN Epic 3 v1.1 - Hospital Management Platform*
-*Architecture Board - 2026-07-16*
+*Architecture Board - 2026-07-20*

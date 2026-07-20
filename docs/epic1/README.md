@@ -147,7 +147,7 @@ apps/api/
 
 ---
 
-## Epic 1 Complete — Ready for Epic 2
+## Epic 1 Complete — Ready for Epic 4
 
 **Epic 1 Status:** COMPLETE ✅
 
@@ -157,7 +157,7 @@ apps/api/
 - EPIC 1 (Infrastructure Platform) — COMPLETE ✅ (merged)
 - EPIC 2 (Core Business Domain) — COMPLETE ✅ (merged)
 - EPIC 3 (Hospital Management) — COMPLETE ✅ (merged PR #131)
-- EPIC 4 (AI Core) — Pending
+- **EPIC 4 (AI Core) — IN PROGRESS 🚧**
 - EPIC 5 (Clinical Intelligence) — Pending
 
 | Component | Implementation |
@@ -178,4 +178,4 @@ apps/api/
 | Outbox Pattern | ✅ TransactionalOutbox + OutboxWorker |
 | Settings | ✅ pydantic-settings, env vars |
 
-**Next:** Epic 2 - Core Business Domain
+**Next:** Epic 4 - AI Core 🚧 (see [`../epic4/README.md`](../epic4/README.md))

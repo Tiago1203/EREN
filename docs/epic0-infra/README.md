@@ -129,7 +129,7 @@ See full ADR index at [`../adr/README.md`](../adr/README.md).
 
 ---
 
-## Epic 0-Infra Complete — Ready for Epic 1
+## Epic 0-Infra Complete — Ready for Epic 4
 
 **Epic 0-Infra Status:** COMPLETE ✅ v1.0
 
@@ -139,12 +139,12 @@ See full ADR index at [`../adr/README.md`](../adr/README.md).
 - EPIC 1 (Infrastructure Platform) — COMPLETE ✅ (merged)
 - EPIC 2 (Core Business Domain) — COMPLETE ✅ (merged)
 - EPIC 3 (Hospital Management) — COMPLETE ✅ (merged PR #131)
-- EPIC 4 (AI Core) — Pending
+- **EPIC 4 (AI Core) — IN PROGRESS 🚧**
 - EPIC 5 (Clinical Intelligence) — Pending
 
-All infrastructure design decisions are now documented and ready for Epic 1 implementation.
+All infrastructure design decisions are now documented and ready for Epic 4 implementation.
 
-**Score:** Pre-implementation (will be evaluated after Epic 1)
+**Score:** Pre-implementation (will be evaluated after Epic 4)
 
 **Epic Dependencies:**
 
@@ -160,14 +160,15 @@ Epic 0-Infra ──────────────────────�
   ├── Celery ADR ────────────────────────→ Celery task queue    │
   └── Backup/DR ADR ────────────────────→ K8s PVC + CronJob      │
 
-Epic 1 ────────────────────────────────────────────────→ Epic 2
+Epic 4 ────────────────────────────────────────────────→ Epic 5
   │                                                              │
-  └── PostgreSQL, Alembic, RLS ──────────→ Domain data storage    │
+  ├── FastAPI + observability ─────────────→ AI Core platform      │
+  └── Redis ─────────────────────────────→ Session memory        │
 ```
 
-**Next:** Epic 1 - Infrastructure Platform ✅ (implemented)
+**Next:** Epic 4 - AI Core 🚧 (see [`../epic4/README.md`](../epic4/README.md))
 
 **These are LIVE documents:**
 - All are versioned
-- All are reviewed before Epic 1 implementation
+- All are reviewed before Epic implementation
 - All can be updated when evidence requires
