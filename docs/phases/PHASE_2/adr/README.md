@@ -8,15 +8,15 @@
 
 | ADR | Épica | Título | Estado |
 |-----|-------|--------|--------|
-| ADR-2000 | EPIC 0 | AI Foundation Architecture | Proposed |
-| ADR-2001 | EPIC 0 | Contract Design | Proposed |
-| ADR-2002 | EPIC 0 | DTO Schema | Proposed |
-| ADR-2003 | EPIC 0 | Exception Hierarchy | Proposed |
-| ADR-2004 | EPIC 0 | Configuration Model | Proposed |
-| ADR-2005 | EPIC 0 | Model Registry | Proposed |
-| ADR-2006 | EPIC 0 | Provider Abstraction | Proposed |
-| ADR-2007 | EPIC 0 | DI Strategy | Proposed |
-| ADR-2008 | EPIC 0 | Context Object Design | Proposed |
+| ADR-2000 | EPIC 0 | AI Foundation Architecture | ✅ Accepted |
+| ADR-2001 | EPIC 0 | Contract Design | ✅ Accepted |
+| ADR-2002 | EPIC 0 | DTO Schema | ✅ Accepted |
+| ADR-2003 | EPIC 0 | Exception Hierarchy | ✅ Accepted |
+| ADR-2004 | EPIC 0 | Configuration Model | ✅ Accepted |
+| ADR-2005 | EPIC 0 | Model Registry | ✅ Accepted |
+| ADR-2006 | EPIC 0 | Provider Abstraction | ✅ Accepted |
+| ADR-2007 | EPIC 0 | DI Strategy | ✅ Accepted |
+| ADR-2008 | EPIC 0 | Context Object Design | ✅ Accepted |
 | ADR-2100 | EPIC 1 | Conversation Architecture | Proposed |
 | ADR-2101 | EPIC 1 | Conversation State | Proposed |
 | ADR-2102 | EPIC 1 | Message Format | Proposed |
@@ -47,7 +47,23 @@
 
 ---
 
-## Total: 36 ADRs
+## Total: 36 ADRs (9 Accepted, 27 Proposed)
+
+---
+
+## ADRs Implementados (EPIC 0)
+
+| ADR | Archivo | Estado |
+|-----|---------|--------|
+| ADR-2000 | ADR-2000.md | ✅ Accepted |
+| ADR-2001 | ADR-2001.md | ✅ Accepted |
+| ADR-2002 | ADR-2002.md | ✅ Accepted |
+| ADR-2003 | ADR-2003.md | ✅ Accepted |
+| ADR-2004 | ADR-2004.md | ✅ Accepted |
+| ADR-2005 | ADR-2005.md | ✅ Accepted |
+| ADR-2006 | ADR-2006.md | ✅ Accepted |
+| ADR-2007 | ADR-2007.md | ✅ Accepted |
+| ADR-2008 | ADR-2008.md | ✅ Accepted |
 
 ---
 
