@@ -23,7 +23,10 @@ docs/phases/PHASE_2/adr/
 │   ├── ADR-2100.md          # Conversation Architecture
 │   ├── ADR-2101.md          # Conversation State
 │   └── ADR-2102.md          # Event-Driven System
-├── epic2/                    # PENDING
+├── epic2/                    # ✅ COMPLETO (3 ADRs)
+│   ├── ADR-2200.md          # Context Architecture
+│   ├── ADR-2201.md          # Context Window
+│   └── ADR-2202.md          # Compression & Prioritization
 ├── epic3/                    # PENDING
 ├── epic4/                    # PENDING
 ├── epic5/                    # PENDING
@@ -41,7 +44,7 @@ docs/phases/PHASE_2/adr/
 |-------|------|--------|
 | **EPIC 0** | 9 | ✅ Complete |
 | **EPIC 1** | 3 | ✅ Complete |
-| EPIC 2 | 3 | PENDING |
+| **EPIC 2** | 3 | ✅ Complete |
 | EPIC 3 | 3 | PENDING |
 | EPIC 4 | 3 | PENDING |
 | EPIC 5 | 3 | PENDING |
@@ -50,7 +53,7 @@ docs/phases/PHASE_2/adr/
 | EPIC 8 | 3 | PENDING |
 | EPIC 9 | 3 | PENDING |
 
-**Total: 36 ADRs (12 Complete, 24 Pending)**
+**Total: 36 ADRs (15 Complete, 21 Pending)**
 
 ---
 
@@ -81,6 +84,18 @@ docs/phases/PHASE_2/adr/
 | ADR-2102 | Event-Driven System | ✅ Accepted |
 
 **Ubicación:** `docs/phases/PHASE_2/adr/epic1/`
+
+---
+
+## 📋 EPIC 2 - ADRs Completos
+
+| ADR | Título | Estado |
+|-----|--------|--------|
+| ADR-2200 | Context Architecture | ✅ Accepted |
+| ADR-2201 | Context Window | ✅ Accepted |
+| ADR-2202 | Compression & Prioritization | ✅ Accepted |
+
+**Ubicación:** `docs/phases/PHASE_2/adr/epic2/`
 
 ---
 

@@ -69,8 +69,8 @@ FASE 2 implementa el Cognitive Operating System:
 |-------|--------|-------------|--------|
 | **EPIC 0** | AI Foundation | Kernel, Contracts, Interfaces | ✅ COMPLETE |
 | **EPIC 1** | Conversation | Gestión de conversaciones | ✅ COMPLETE |
-| **EPIC 2** | Context | Construcción de contexto | 🚧 NEXT |
-| **EPIC 3** | Prompt | Ingeniería de prompts | PENDING |
+| **EPIC 2** | Context | Construcción de contexto | ✅ COMPLETE |
+| **EPIC 3** | Prompt | Ingeniería de prompts | 🚧 NEXT |
 | **EPIC 4** | Memory | Sistema de memoria | PENDING |
 | **EPIC 5** | Tools | Registro de herramientas | PENDING |
 | **EPIC 6** | Response | Construcción de respuestas | PENDING |
