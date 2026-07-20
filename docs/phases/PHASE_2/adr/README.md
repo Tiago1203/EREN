@@ -14,7 +14,7 @@ docs/phases/PHASE_2/adr/
 ├── epic2/                    # ✅ COMPLETO (3 ADRs)
 ├── epic3/                    # ✅ COMPLETO (3 ADRs)
 ├── epic4/                    # ✅ COMPLETO (3 ADRs)
-├── epic5/                    # PENDING
+├── epic5/                    # ✅ COMPLETO (3 ADRs)
 ├── epic6/                    # PENDING
 ├── epic7/                    # PENDING
 ├── epic8/                    # PENDING
@@ -32,13 +32,13 @@ docs/phases/PHASE_2/adr/
 | **EPIC 2** | 3 | ✅ Complete |
 | **EPIC 3** | 3 | ✅ Complete |
 | **EPIC 4** | 3 | ✅ Complete |
-| EPIC 5 | 3 | PENDING |
+| **EPIC 5** | 3 | ✅ Complete |
 | EPIC 6 | 3 | PENDING |
 | EPIC 7 | 3 | PENDING |
 | EPIC 8 | 3 | PENDING |
 | EPIC 9 | 3 | PENDING |
 
-**Total: 36 ADRs (21 Complete, 15 Pending)**
+**Total: 36 ADRs (24 Complete, 12 Pending)**
 
 ---
 
@@ -105,6 +105,18 @@ docs/phases/PHASE_2/adr/
 | ADR-2402 | Memory Operations | ✅ Accepted |
 
 **Ubicación:** `docs/phases/PHASE_2/adr/epic4/`
+
+---
+
+## 📋 EPIC 5 - ADRs Completos
+
+| ADR | Título | Estado |
+|-----|--------|--------|
+| ADR-2500 | Tool Architecture | ✅ Accepted |
+| ADR-2501 | Tool Execution | ✅ Accepted |
+| ADR-2502 | Tool Routing | ✅ Accepted |
+
+**Ubicación:** `docs/phases/PHASE_2/adr/epic5/`
 
 ---
 
