@@ -1,19 +1,14 @@
 """Domain models for the Orchestrator engine.
 
-Architecture scaffolding only. These are **data structure declarations** for the
-shapes the orchestrator moves through — no logic, AI, or agents live here.
-Fields are intentionally minimal and may evolve.
-
-Lifecycle shapes:
-
-``CognitiveContext`` (in) → (execute plan / invoke engines) → ``EngineResponse``
-accumulated in ``ExecutionState`` → (merge) → ``OrchestrationResult`` (out).
+Domain models for orchestration including context, responses, and plan steps.
 """
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Any
 
 
 @dataclass(frozen=True, slots=True)
@@ -22,7 +17,7 @@ class CognitiveContext:
 
     The orchestrator's input shape ("receive a context"). Carries the request
     plus the ambient information required for multi-tenant isolation and
-    auditability. Concrete fields will be refined later.
+    auditability.
     """
 
     request: str = ""
@@ -31,18 +26,30 @@ class CognitiveContext:
     metadata: Mapping[str, str] = field(default_factory=dict)
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass
+class PlanStep:
+    """A single step in an execution plan."""
+    step_id: str
+    engine: str
+    action: str
+    input_data: dict[str, Any] = field(default_factory=dict)
+    depends_on: list[str] = field(default_factory=list)
+
+
+@dataclass
 class EngineResponse:
     """A single engine's contribution to the request.
 
     Produced by "invoke engines". ``engine`` is the id of the engine that ran;
-    ``payload`` is its opaque output (typed later); ``confidence`` supports the
-    future explainability/confidence requirements.
+    ``output`` is its opaque output; ``confidence`` supports explainability.
     """
 
     engine: str
-    payload: object = None
+    success: bool = True
+    output: Any = None
+    error: str | None = None
     confidence: float = 0.0
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True, slots=True)
@@ -57,7 +64,7 @@ class ExecutionState:
     responses: tuple[EngineResponse, ...] = field(default_factory=tuple)
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass
 class OrchestrationResult:
     """The final, explainable result returned to the caller.
 
@@ -67,5 +74,8 @@ class OrchestrationResult:
     """
 
     context: CognitiveContext
-    responses: tuple[EngineResponse, ...] = field(default_factory=tuple)
-    output: object = None
+    responses: Sequence[EngineResponse] = field(default_factory=tuple)
+    output: Any = None
+    success: bool = True
+    confidence: float = 0.0
+    execution_summary: dict[str, Any] = field(default_factory=dict)
