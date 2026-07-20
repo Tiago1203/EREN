@@ -1,6 +1,34 @@
 """Hospital Systems Integration - FHIR, HL7, DICOM."""
 from dataclasses import dataclass
 
+from core.integrations.hospital.fhir import (
+    FHIRClient,
+    FHIRDevice,
+    FHIRPatient,
+    FHIRObservation,
+    FHIRResourceType,
+    create_fhir_client,
+)
+from core.integrations.hospital.hl7 import (
+    HL7Listener,
+    HL7Message,
+    HL7Parser,
+    HL7Segment,
+    HL7MessageType,
+    create_hl7_listener,
+)
+from core.integrations.hospital.dicom import (
+    DICOMClient,
+    DICOMPatient,
+    DICOMStudy,
+    DICOMSeries,
+    DICOMInstance,
+    DICOMWebClient,
+    DICOMPriority,
+    create_dicom_client,
+    create_dicom_web_client,
+)
+
 
 @dataclass
 class HospitalSystemConfig:
@@ -9,20 +37,30 @@ class HospitalSystemConfig:
     hl7_port: int = 2575
     dicom_ae_title: str | None = None
     dicom_host: str | None = None
+    dicom_port: int = 11112
 
 
-@dataclass
-class FHIRDevice:
-    """FHIR Device resource."""
-    id: str
-    identifier: str
-    status: str
-    device_type: str
-
-
-@dataclass
-class HL7Message:
-    """Parsed HL7 message."""
-    message_type: str
-    trigger_event: str
-    segments: dict
+__all__ = [
+    "FHIRClient",
+    "FHIRDevice",
+    "FHIRPatient",
+    "FHIRObservation",
+    "FHIRResourceType",
+    "create_fhir_client",
+    "HL7Listener",
+    "HL7Message",
+    "HL7Parser",
+    "HL7Segment",
+    "HL7MessageType",
+    "create_hl7_listener",
+    "DICOMClient",
+    "DICOMPatient",
+    "DICOMStudy",
+    "DICOMSeries",
+    "DICOMInstance",
+    "DICOMWebClient",
+    "DICOMPriority",
+    "create_dicom_client",
+    "create_dicom_web_client",
+    "HospitalSystemConfig",
+]

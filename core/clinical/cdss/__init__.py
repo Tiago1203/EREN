@@ -33,3 +33,16 @@ class CDSSResult:
     recommendations: list[Recommendation]
     confidence: float
     summary: str
+
+
+# Import engine for convenience
+from core.clinical.cdss.engine import CDSSEngine, get_cdss_engine
+
+__all__ = [
+    "Recommendation",
+    "RecommendationPriority",
+    "EvidenceLevel",
+    "CDSSResult",
+    "CDSSEngine",
+    "get_cdss_engine",
+]

@@ -35,3 +35,23 @@ class MaintenanceSuggestion:
     description: str
     estimated_duration: str
     recommended_date: str
+
+
+# Import engine for convenience
+from core.clinical.predictive.engine import (
+    PredictiveEngine,
+    get_predictive_engine,
+    FailurePrediction,
+    MaintenanceSuggestion,
+    RiskLevel,
+    MaintenanceType,
+)
+
+__all__ = [
+    "RiskLevel",
+    "MaintenanceType",
+    "FailurePrediction",
+    "MaintenanceSuggestion",
+    "PredictiveEngine",
+    "get_predictive_engine",
+]

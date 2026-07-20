@@ -2,6 +2,20 @@
 from dataclasses import dataclass
 from enum import Enum
 
+from core.integrations.devices.base import (
+    DeviceAlarm,
+    DeviceInfo,
+    DeviceReading,
+    DeviceStatus,
+    DeviceAdapterRegistry,
+    MedicalDeviceAdapter,
+    get_adapter_registry,
+)
+from core.integrations.devices.philips import PhilipsIntelliVueAdapter
+from core.integrations.devices.ge import GEHealthcareAdapter
+from core.integrations.devices.draeger import DraegerMedicalAdapter
+from core.integrations.devices.mindray import MindrayAdapter
+
 
 class DeviceVendor(str, Enum):
     PHILIPS = "philips"
@@ -36,3 +50,22 @@ class DeviceConfig:
     port: int
     username: str | None = None
     password: str | None = None
+
+
+__all__ = [
+    "MedicalDeviceAdapter",
+    "DeviceAdapterRegistry",
+    "DeviceInfo",
+    "DeviceReading",
+    "DeviceAlarm",
+    "DeviceStatus",
+    "DeviceVendor",
+    "DeviceTelemetry",
+    "DeviceAlert",
+    "DeviceConfig",
+    "PhilipsIntelliVueAdapter",
+    "GEHealthcareAdapter",
+    "DraegerMedicalAdapter",
+    "MindrayAdapter",
+    "get_adapter_registry",
+]
