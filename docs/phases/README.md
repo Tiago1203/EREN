@@ -10,7 +10,7 @@
 |------|--------|--------|-------------|
 | **FASE 1** | ✅ COMPLETO | EPIC 0-11 | Foundation & Platform + Domain AI Integration |
 | **FASE 2** | ✅ COMPLETO | EPIC 0-11-2 | AI Core + Runtime Integration |
-| **FASE 3** | 🚧 IN PROGRESS | EPIC 0-11 | Clinical Intelligence (EPIC 0 ✅, EPIC 1 ✅, EPIC 2 ✅) |
+| **FASE 3** | 🚧 IN PROGRESS | EPIC 0-11 | Clinical Intelligence (EPIC 0 ✅, EPIC 1 ✅, EPIC 2 ✅, EPIC 3 ✅) |
 
 ---
 
@@ -136,7 +136,7 @@ FASE 3 implementa Clinical Intelligence para transformar EREN en un Clinical Dec
 - Explicabilidad de recomendaciones
 - Seguridad del paciente
 
-**Progreso actual:** 3/12 EPICs completados (EPIC 0: Foundation ✅, EPIC 1: Knowledge Engine ✅, EPIC 2: Reasoning Engine ✅)
+**Progreso actual:** 4/12 EPICs completados (EPIC 0: Foundation ✅, EPIC 1: Knowledge Engine ✅, EPIC 2: Reasoning Engine ✅, EPIC 3: Evidence Retrieval ✅)
 
 ---
 
