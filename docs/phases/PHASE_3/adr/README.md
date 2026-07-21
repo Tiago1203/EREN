@@ -9,7 +9,18 @@
 ```
 docs/phases/PHASE_3/adr/
 ├── README.md
-└── epic0-clinical-intelligence-foundation/  # ✅ IN PROGRESS (7 ADRs)
+├── epic0/                           # ✅ COMPLETO (7 ADRs)
+├── epic1/                           # 📋 TODO
+├── epic2/                           # 📋 TODO
+├── epic3/                           # 📋 TODO
+├── epic4/                           # 📋 TODO
+├── epic5/                           # 📋 TODO
+├── epic6/                           # 📋 TODO
+├── epic7/                           # 📋 TODO
+├── epic8/                           # 📋 TODO
+├── epic9/                           # 📋 TODO
+├── epic10/                          # 📋 TODO
+└── epic11/                          # 📋 TODO
 ```
 
 ---
@@ -18,7 +29,7 @@ docs/phases/PHASE_3/adr/
 
 | Épica | ADRs | Estado |
 |-------|------|--------|
-| **EPIC 0** | 7 | 🚧 In Progress |
+| **EPIC 0** | 7 | ✅ COMPLETE |
 | **EPIC 1** | - | 📋 TODO |
 | **EPIC 2** | - | 📋 TODO |
 | **EPIC 3** | - | 📋 TODO |
@@ -31,11 +42,11 @@ docs/phases/PHASE_3/adr/
 | **EPIC 10** | - | 📋 TODO |
 | **EPIC 11** | - | 📋 TODO |
 
-**Total: 7 ADRs (0 Complete, 7 In Progress)**
+**Total: 7 ADRs (7 Complete)**
 
 ---
 
-## 📋 EPIC 0 - ADRs (In Progress)
+## 📋 EPIC 0 - ADRs (COMPLETO)
 
 | ADR | Título | Estado |
 |-----|--------|--------|
@@ -47,7 +58,7 @@ docs/phases/PHASE_3/adr/
 | ADR-3005 | Validation Model Design | ✅ Accepted |
 | ADR-3006 | Knowledge Interface Design | ✅ Accepted |
 
-**Ubicación:** `docs/phases/PHASE_3/adr/epic0-clinical-intelligence-foundation/`
+**Ubicación:** `docs/phases/PHASE_3/adr/epic0/`
 
 ---
 
@@ -77,5 +88,24 @@ Descripción de la decisión tomada.
 
 ---
 
-*EREN FASE 3 ADR Index v1.0*
+## Conexión con FASE 1 y FASE 2
+
+```
+FASE 1 (Business Domain) ✅
+        │
+        ▼
+FASE 2 (AI Core) ✅
+        │
+        ▼
+FASE 3 (Clinical Intelligence) 🚧
+        │
+        ├── EPIC 0: Foundation ✅ ← COMPLETO
+        ├── EPIC 1: Biomedical Knowledge Engine 📋 TODO
+        ├── EPIC 2: Reasoning Engine 📋 TODO
+        └── ... (EPIC 3-11)
+```
+
+---
+
+*EREN FASE 3 ADR Index v1.1*
 *Architecture Board - 2026-07-21*
