@@ -1,6 +1,6 @@
 # EPIC 0: Clinical Intelligence Foundation - ADR Index
 
-*Architecture Decision Records para EPIC 0*
+*Architecture Decision Records para EPIC 0 - Clinical Intelligence Foundation*
 
 ---
 
@@ -17,6 +17,7 @@
 | ADR-3006 | Knowledge Interface Design | ✅ Accepted | Alta |
 
 **Total: 7 ADRs (7 Accepted)**
+**Estado: ✅ COMPLETE**
 
 ---
 
@@ -42,6 +43,43 @@ Pipeline de validación multi-etapa con severidades.
 
 ### ADR-3006: Conocimiento
 Interfaces abstractas para bases de conocimiento médico.
+
+---
+
+## Ubicación de Archivos
+
+```
+docs/phases/PHASE_3/adr/epic0/
+├── README.md
+├── ADR-3000.md  (Clinical Intelligence Architecture)
+├── ADR-3001.md  (Clinical DTO Design)
+├── ADR-3002.md  (Evidence Model Design)
+├── ADR-3003.md  (Safety Model Design)
+├── ADR-3004.md  (Confidence Interface Design)
+├── ADR-3005.md  (Validation Model Design)
+└── ADR-3006.md  (Knowledge Interface Design)
+```
+
+---
+
+## Conexión con FASE 1 y FASE 2
+
+```
+FASE 1 (Business Domain) ✅
+        │
+        ▼
+FASE 2 (AI Core) ✅
+        │
+        ▼
+FASE 3: CLINICAL INTELLIGENCE 🚧
+        │
+        └── EPIC 0: Foundation ✅ ← COMPLETO
+                ├── DTOs
+                ├── Contracts
+                ├── Models
+                ├── Interfaces
+                └── Policies
+```
 
 ---
 
@@ -71,5 +109,11 @@ Descripción de la decisión tomada.
 
 ---
 
-*EREN PHASE 3 ADR Index - EPIC 0*
+## Próximo EPIC
+
+**EPIC 1: Biomedical Knowledge Engine** - Construirá sobre esta foundation para crear el motor de conocimiento biomédico.
+
+---
+
+*EREN PHASE 3 ADR Index - EPIC 0 v1.1*
 *Architecture Board - 2026-07-21*
