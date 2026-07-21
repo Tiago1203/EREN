@@ -132,6 +132,9 @@ class AIUnitOfWorkFactory:
             async with factory() as uow:
                 devices = await uow.devices.list_by_tenant(...)
         """
+        import logging
+        logger = logging.getLogger(__name__)
+        
         from sqlalchemy.ext.asyncio import AsyncSession
         
         if self._session_factory:
@@ -143,19 +146,29 @@ class AIUnitOfWorkFactory:
                 session = factory()
             except ImportError:
                 # En testing o cuando la API no está disponible
+                logger.error(
+                    "AIUnitOfWorkFactory: Cannot create session. "
+                    "Either provide session_factory or ensure API is available."
+                )
                 raise RuntimeError(
                     "AIUnitOfWorkFactory requires session_factory or API to be available"
                 )
         
+        uow = AIUnitOfWork(session)
+        
         try:
-            uow = AIUnitOfWork(session)
             yield uow
-            await uow.commit()
-        except Exception:
+        except Exception as e:
+            logger.warning(f"AIUnitOfWork: Rolling back due to exception: {e}")
             await session.rollback()
             raise
+        else:
+            # Solo hace commit si no hubo excepciones
+            await uow.commit()
         finally:
+            # Siempre cierra la sesión
             await session.close()
+            logger.debug("AIUnitOfWork: Session closed")
 
 
 # Instancia global para la aplicación

@@ -119,10 +119,39 @@ class DomainGatewayAdapter:
 
 
 # =============================================================================
+# Base Gateway con validación de tenant
+# =============================================================================
+
+class BaseGatewayImpl:
+    """
+    Clase base para gateways con validación de tenant.
+    
+    Provee validación centralizada de tenant_id para todos los gateways.
+    """
+    
+    def _validate_tenant(self, tenant_id: str, operation: str = "operation") -> None:
+        """
+        Valida que tenant_id sea válido.
+        
+        Args:
+            tenant_id: ID del tenant a validar
+            operation: Nombre de la operación para mensajes de error
+            
+        Raises:
+            ValueError: Si tenant_id es None, vacío o solo espacios
+        """
+        if not tenant_id or not str(tenant_id).strip():
+            raise ValueError(
+                f"{self.__class__.__name__}.{operation}: "
+                f"tenant_id is required and cannot be empty or whitespace"
+            )
+
+
+# =============================================================================
 # Implementaciones de Gateway con UnitOfWork Real
 # =============================================================================
 
-class DeviceGatewayImpl(DeviceGateway):
+class DeviceGatewayImpl(DeviceGateway, BaseGatewayImpl):
     """
     Implementación real de DeviceGateway.
     
@@ -138,6 +167,7 @@ class DeviceGatewayImpl(DeviceGateway):
         tenant_id: str,
     ) -> "DeviceDTO | None":
         """Obtiene dispositivo por ID usando repositorio real."""
+        self._validate_tenant(tenant_id, "get_by_id")
         from core.ai.domain import DeviceDTO
         
         async with self._uow_factory() as uow:
@@ -154,6 +184,7 @@ class DeviceGatewayImpl(DeviceGateway):
         limit: int = 10,
     ) -> list["DeviceDTO"]:
         """Busca dispositivos usando repositorio real."""
+        self._validate_tenant(tenant_id, "search")
         from core.ai.domain import DeviceDTO
         
         async with self._uow_factory() as uow:
@@ -173,6 +204,7 @@ class DeviceGatewayImpl(DeviceGateway):
         limit: int = 50,
     ) -> list["DeviceDTO"]:
         """Obtiene dispositivos por estado."""
+        self._validate_tenant(tenant_id, "get_by_status")
         return await self.search(
             query="",
             tenant_id=tenant_id,
@@ -185,6 +217,7 @@ class DeviceGatewayImpl(DeviceGateway):
         tenant_id: str,
     ) -> list["DeviceDTO"]:
         """Obtiene dispositivos críticos."""
+        self._validate_tenant(tenant_id, "get_critical_devices")
         async with self._uow_factory() as uow:
             models, _ = await uow.devices.list_by_tenant(
                 tenant_id=tenant_id,
@@ -199,6 +232,7 @@ class DeviceGatewayImpl(DeviceGateway):
         tenant_id: str,
     ) -> list["DeviceDTO"]:
         """Obtiene dispositivos que necesitan mantenimiento."""
+        self._validate_tenant(tenant_id, "get_needing_maintenance")
         async with self._uow_factory() as uow:
             models, _ = await uow.devices.list_by_tenant(
                 tenant_id=tenant_id,
@@ -214,12 +248,12 @@ class DeviceGatewayImpl(DeviceGateway):
         tenant_id: str,
     ) -> dict:
         """Obtiene historial de dispositivo."""
+        self._validate_tenant(tenant_id, "get_history")
         # Por implementar - requiere acceso a tablas de historial
-        return {
-            "device_id": device_id,
-            "maintenance_records": [],
-            "incidents": [],
-        }
+        raise NotImplementedError(
+            "DeviceGatewayImpl.get_history() requires access to maintenance history tables. "
+            "This functionality is pending implementation."
+        )
     
     async def get_location(
         self,
@@ -227,6 +261,7 @@ class DeviceGatewayImpl(DeviceGateway):
         tenant_id: str,
     ) -> dict:
         """Obtiene ubicación del dispositivo."""
+        self._validate_tenant(tenant_id, "get_location")
         device = await self.get_by_id(device_id, tenant_id)
         if device is None:
             return {}
@@ -258,7 +293,7 @@ class DeviceGatewayImpl(DeviceGateway):
         )
 
 
-class IncidentGatewayImpl(IncidentGateway):
+class IncidentGatewayImpl(IncidentGateway, BaseGatewayImpl):
     """
     Implementación real de IncidentGateway.
     """
@@ -272,6 +307,7 @@ class IncidentGatewayImpl(IncidentGateway):
         tenant_id: str,
     ) -> "IncidentDTO | None":
         """Obtiene incidente por ID."""
+        self._validate_tenant(tenant_id, "get_by_id")
         from core.ai.domain import IncidentDTO
         
         async with self._uow_factory() as uow:
@@ -288,6 +324,7 @@ class IncidentGatewayImpl(IncidentGateway):
         limit: int = 10,
     ) -> list["IncidentDTO"]:
         """Busca incidentes."""
+        self._validate_tenant(tenant_id, "search")
         from core.ai.domain import IncidentDTO
         
         async with self._uow_factory() as uow:
@@ -307,6 +344,7 @@ class IncidentGatewayImpl(IncidentGateway):
         limit: int = 50,
     ) -> list["IncidentDTO"]:
         """Obtiene incidentes abiertos."""
+        self._validate_tenant(tenant_id, "get_open_incidents")
         return await self.search(
             query="",
             tenant_id=tenant_id,
@@ -321,6 +359,7 @@ class IncidentGatewayImpl(IncidentGateway):
         limit: int = 20,
     ) -> list["IncidentDTO"]:
         """Obtiene incidentes de un dispositivo."""
+        self._validate_tenant(tenant_id, "get_by_device")
         async with self._uow_factory() as uow:
             models, _ = await uow.incidents.list_by_tenant(
                 tenant_id=tenant_id,
@@ -337,6 +376,7 @@ class IncidentGatewayImpl(IncidentGateway):
         limit: int = 20,
     ) -> list["IncidentDTO"]:
         """Obtiene incidentes asignados a un ingeniero."""
+        self._validate_tenant(tenant_id, "get_by_engineer")
         async with self._uow_factory() as uow:
             models, _ = await uow.incidents.list_by_tenant(
                 tenant_id=tenant_id,
@@ -352,10 +392,11 @@ class IncidentGatewayImpl(IncidentGateway):
         tenant_id: str,
     ) -> dict:
         """Obtiene historial del incidente."""
-        return {
-            "incident_id": incident_id,
-            "timeline": [],
-        }
+        self._validate_tenant(tenant_id, "get_history")
+        raise NotImplementedError(
+            "IncidentGatewayImpl.get_history() requires access to incident history tables. "
+            "This functionality is pending implementation."
+        )
     
     async def analyze(
         self,
@@ -363,13 +404,11 @@ class IncidentGatewayImpl(IncidentGateway):
         tenant_id: str,
     ) -> dict:
         """Analiza incidente."""
-        return {
-            "incident_id": incident_id,
-            "root_cause": "Pending analysis",
-            "contributing_factors": [],
-            "recommended_actions": [],
-            "similar_incidents": [],
-        }
+        self._validate_tenant(tenant_id, "analyze")
+        raise NotImplementedError(
+            "IncidentGatewayImpl.analyze() requires AI analysis capabilities. "
+            "This functionality is pending implementation."
+        )
     
     def _model_to_dto(self, model: Any) -> "IncidentDTO":
         """Convierte modelo a DTO."""
@@ -389,7 +428,7 @@ class IncidentGatewayImpl(IncidentGateway):
         )
 
 
-class KnowledgeGatewayImpl(KnowledgeGateway):
+class KnowledgeGatewayImpl(KnowledgeGateway, BaseGatewayImpl):
     """Implementación real de KnowledgeGateway."""
     
     def __init__(self, uow_factory: AIUnitOfWorkFactory):
@@ -401,6 +440,7 @@ class KnowledgeGatewayImpl(KnowledgeGateway):
         tenant_id: str,
     ) -> "KnowledgeArticleDTO | None":
         """Obtiene artículo por ID."""
+        self._validate_tenant(tenant_id, "get_by_id")
         from core.ai.domain import KnowledgeArticleDTO
         
         async with self._uow_factory() as uow:
@@ -417,6 +457,7 @@ class KnowledgeGatewayImpl(KnowledgeGateway):
         limit: int = 10,
     ) -> list["KnowledgeArticleDTO"]:
         """Busca artículos."""
+        self._validate_tenant(tenant_id, "search")
         from core.ai.domain import KnowledgeArticleDTO
         
         async with self._uow_factory() as uow:
@@ -436,6 +477,7 @@ class KnowledgeGatewayImpl(KnowledgeGateway):
         limit: int = 10,
     ) -> list["KnowledgeArticleDTO"]:
         """Busca manuales."""
+        self._validate_tenant(tenant_id, "search_manuals")
         return await self.search(
             query=query,
             tenant_id=tenant_id,
@@ -450,6 +492,7 @@ class KnowledgeGatewayImpl(KnowledgeGateway):
         limit: int = 10,
     ) -> list["KnowledgeArticleDTO"]:
         """Busca procedimientos."""
+        self._validate_tenant(tenant_id, "search_procedures")
         return await self.search(
             query=query,
             tenant_id=tenant_id,
@@ -463,6 +506,7 @@ class KnowledgeGatewayImpl(KnowledgeGateway):
         tenant_id: str,
     ) -> list["KnowledgeArticleDTO"]:
         """Obtiene artículos relacionados con un dispositivo."""
+        self._validate_tenant(tenant_id, "get_by_device")
         return await self.search(
             query=device_id,
             tenant_id=tenant_id,
@@ -476,7 +520,11 @@ class KnowledgeGatewayImpl(KnowledgeGateway):
         limit: int = 5,
     ) -> list["KnowledgeArticleDTO"]:
         """Obtiene artículos relacionados."""
-        return []
+        self._validate_tenant(tenant_id, "get_related")
+        raise NotImplementedError(
+            "KnowledgeGatewayImpl.get_related() requires article relationship table. "
+            "This functionality is pending implementation."
+        )
     
     def _model_to_dto(self, model: Any) -> "KnowledgeArticleDTO":
         """Convierte modelo a DTO."""
@@ -494,7 +542,7 @@ class KnowledgeGatewayImpl(KnowledgeGateway):
         )
 
 
-class RecommendationGatewayImpl(RecommendationGateway):
+class RecommendationGatewayImpl(RecommendationGateway, BaseGatewayImpl):
     """Implementación real de RecommendationGateway."""
     
     def __init__(self, uow_factory: AIUnitOfWorkFactory):
@@ -506,6 +554,7 @@ class RecommendationGatewayImpl(RecommendationGateway):
         tenant_id: str,
     ) -> "RecommendationDTO | None":
         """Obtiene recomendación por ID."""
+        self._validate_tenant(tenant_id, "get_by_id")
         from core.ai.domain import RecommendationDTO
         
         async with self._uow_factory() as uow:
@@ -521,6 +570,7 @@ class RecommendationGatewayImpl(RecommendationGateway):
         limit: int = 20,
     ) -> list["RecommendationDTO"]:
         """Obtiene recomendaciones pendientes."""
+        self._validate_tenant(tenant_id, "get_pending")
         from core.ai.domain import RecommendationDTO
         
         async with self._uow_factory() as uow:
@@ -539,8 +589,12 @@ class RecommendationGatewayImpl(RecommendationGateway):
         limit: int = 20,
     ) -> list["RecommendationDTO"]:
         """Obtiene recomendaciones de alta confianza."""
-        # Filtrar por confianza requiere implementación custom
-        return []
+        self._validate_tenant(tenant_id, "get_by_confidence")
+        raise NotImplementedError(
+            "RecommendationGatewayImpl.get_by_confidence() requires custom filtering by confidence score. "
+            "The repository does not support confidence-based filtering yet. "
+            "Use get_pending() and filter results in application layer."
+        )
     
     async def get_by_device(
         self,
@@ -548,7 +602,11 @@ class RecommendationGatewayImpl(RecommendationGateway):
         tenant_id: str,
     ) -> list["RecommendationDTO"]:
         """Obtiene recomendaciones para un dispositivo."""
-        return []
+        self._validate_tenant(tenant_id, "get_by_device")
+        raise NotImplementedError(
+            "RecommendationGatewayImpl.get_by_device() requires device_id filter in repository. "
+            "This functionality is pending implementation."
+        )
     
     async def generate(
         self,
@@ -557,8 +615,11 @@ class RecommendationGatewayImpl(RecommendationGateway):
         tenant_id: str,
     ) -> list["RecommendationDTO"]:
         """Genera nuevas recomendaciones."""
-        # Implementación real requiere AI
-        return []
+        self._validate_tenant(tenant_id, "generate")
+        raise NotImplementedError(
+            "RecommendationGatewayImpl.generate() requires AI generation capabilities. "
+            "This functionality is pending implementation with AI Core integration."
+        )
     
     def _model_to_dto(self, model: Any) -> "RecommendationDTO":
         """Convierte modelo a DTO."""
@@ -577,7 +638,7 @@ class RecommendationGatewayImpl(RecommendationGateway):
         )
 
 
-class HospitalGatewayImpl(HospitalGateway):
+class HospitalGatewayImpl(HospitalGateway, BaseGatewayImpl):
     """Implementación real de HospitalGateway."""
     
     def __init__(self, uow_factory: AIUnitOfWorkFactory):
@@ -589,10 +650,11 @@ class HospitalGatewayImpl(HospitalGateway):
         tenant_id: str,
     ) -> "HospitalDTO | None":
         """Obtiene campus/hospital por ID."""
-        from core.ai.domain import HospitalDTO
-        
-        # Por implementar
-        return None
+        self._validate_tenant(tenant_id, "get_by_id")
+        raise NotImplementedError(
+            "HospitalGatewayImpl.get_by_id() requires Hospital/Campus entity and repository. "
+            "This functionality is pending implementation."
+        )
     
     async def get_departments(
         self,
@@ -600,6 +662,7 @@ class HospitalGatewayImpl(HospitalGateway):
         tenant_id: str,
     ) -> list["DepartmentDTO"]:
         """Obtiene departamentos."""
+        self._validate_tenant(tenant_id, "get_departments")
         from core.ai.domain import DepartmentDTO
         
         async with self._uow_factory() as uow:
@@ -612,16 +675,11 @@ class HospitalGatewayImpl(HospitalGateway):
         tenant_id: str,
     ) -> "CapacityDTO":
         """Obtiene información de capacidad."""
-        from core.ai.domain import CapacityDTO
-        
-        return CapacityDTO(
-            campus_id=campus_id,
-            campus_name="Main Hospital",
-            total_beds=500,
-            occupied_beds=450,
-            available_beds=50,
-            occupancy_rate=0.9,
-            departments=[],
+        self._validate_tenant(tenant_id, "get_capacity")
+        raise NotImplementedError(
+            "HospitalGatewayImpl.get_capacity() requires capacity aggregation query. "
+            "This functionality is pending implementation. "
+            "Use get_departments() to get per-department capacity."
         )
     
     async def get_available_beds(
@@ -631,7 +689,11 @@ class HospitalGatewayImpl(HospitalGateway):
         limit: int = 20,
     ) -> list[dict]:
         """Obtiene camas disponibles."""
-        return []
+        self._validate_tenant(tenant_id, "get_available_beds")
+        raise NotImplementedError(
+            "HospitalGatewayImpl.get_available_beds() requires bed availability tracking. "
+            "This functionality is pending implementation."
+        )
     
     def _model_to_dto_dept(self, model: Any) -> "DepartmentDTO":
         """Convierte modelo a DepartmentDTO."""
@@ -647,7 +709,7 @@ class HospitalGatewayImpl(HospitalGateway):
         )
 
 
-class WorkOrderGatewayImpl(WorkOrderGateway):
+class WorkOrderGatewayImpl(WorkOrderGateway, BaseGatewayImpl):
     """Implementación real de WorkOrderGateway."""
     
     def __init__(self, uow_factory: AIUnitOfWorkFactory):
@@ -659,6 +721,7 @@ class WorkOrderGatewayImpl(WorkOrderGateway):
         tenant_id: str,
     ) -> "WorkOrderDTO | None":
         """Obtiene orden de trabajo por ID."""
+        self._validate_tenant(tenant_id, "get_by_id")
         from core.ai.domain import WorkOrderDTO
         
         async with self._uow_factory() as uow:
@@ -674,6 +737,7 @@ class WorkOrderGatewayImpl(WorkOrderGateway):
         limit: int = 20,
     ) -> list["WorkOrderDTO"]:
         """Obtiene órdenes pendientes."""
+        self._validate_tenant(tenant_id, "get_pending")
         from core.ai.domain import WorkOrderDTO
         
         async with self._uow_factory() as uow:
@@ -691,7 +755,11 @@ class WorkOrderGatewayImpl(WorkOrderGateway):
         tenant_id: str,
     ) -> list["WorkOrderDTO"]:
         """Obtiene órdenes con SLA incumplido."""
-        return []
+        self._validate_tenant(tenant_id, "get_sla_breached")
+        raise NotImplementedError(
+            "WorkOrderGatewayImpl.get_sla_breached() requires SLA breach query. "
+            "This functionality is pending implementation."
+        )
     
     async def get_by_device(
         self,
@@ -699,6 +767,7 @@ class WorkOrderGatewayImpl(WorkOrderGateway):
         tenant_id: str,
     ) -> list["WorkOrderDTO"]:
         """Obtiene órdenes para un dispositivo."""
+        self._validate_tenant(tenant_id, "get_by_device")
         from core.ai.domain import WorkOrderDTO
         
         async with self._uow_factory() as uow:

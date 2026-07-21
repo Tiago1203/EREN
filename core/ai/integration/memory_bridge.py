@@ -231,10 +231,11 @@ class MemoryBridge:
             **kwargs,
         ).id
     
-    def get_with_references(
+    async def get_with_references(
         self,
         memory_id: str,
         resolve: bool = True,
+        tenant_id: str | None = None,
     ) -> MemoryWithReferences | None:
         """
         Obtiene memoria con sus referencias.
@@ -242,6 +243,7 @@ class MemoryBridge:
         Args:
             memory_id: ID de la memoria
             resolve: Si True, resuelve las referencias a entidades reales
+            tenant_id: Tenant ID para resolver referencias
             
         Returns:
             Memoria con referencias o None
@@ -253,8 +255,11 @@ class MemoryBridge:
         # Extraer referencias del contenido
         references = self._extract_references(item.content)
         
-        if resolve and references and self._adapter:
-            references = self._resolve_references(references)
+        # Usar tenant_id del item o el proporcionado
+        effective_tenant_id = tenant_id or item.tenant_id or ""
+        
+        if resolve and references and self._adapter and effective_tenant_id:
+            references = await self._resolve_references(references, effective_tenant_id)
         
         return MemoryWithReferences(
             memory_id=memory_id,
@@ -307,11 +312,14 @@ class MemoryBridge:
     def _extract_references(self, content: str) -> list[DomainReference]:
         """Extrae referencias del contenido."""
         references = []
+        seen_ids = set()  # Evitar duplicados
         
-        # Buscar patrones [Reference: {...}] o [References: [...]]
+        # Patrón más robusto que busca cualquier JSON válido después de [Reference o [References
         patterns = [
-            r'\[Reference:\s*(\{[^}]+\})\]',
-            r'\[References:\s*(\[.*?\])\]',
+            # Patrón para [Reference: {"type": ..., "id": ...}]
+            r'\[Reference:\s*(\{.*?\})\s*\]',
+            # Patrón para [References: [ {"type": ...}, ... ] ]
+            r'\[References:\s*(\[.*?\])\s*\]',
         ]
         
         for pattern in patterns:
@@ -324,14 +332,16 @@ class MemoryBridge:
                         # Múltiples referencias
                         for ref_data in data:
                             ref = self._parse_ref_data(ref_data)
-                            if ref:
+                            if ref and ref.entity_id not in seen_ids:
                                 references.append(ref)
-                    else:
+                                seen_ids.add(ref.entity_id)
+                    elif isinstance(data, dict):
                         # Una sola referencia
                         ref = self._parse_ref_data(data)
-                        if ref:
+                        if ref and ref.entity_id not in seen_ids:
                             references.append(ref)
-                except (json.JSONDecodeError, TypeError):
+                            seen_ids.add(ref.entity_id)
+                except (json.JSONDecodeError, TypeError, KeyError):
                     continue
         
         return references
@@ -350,9 +360,10 @@ class MemoryBridge:
         except (json.JSONDecodeError, KeyError):
             return None
     
-    def _resolve_references(
+    async def _resolve_references(
         self,
         references: list[DomainReference],
+        tenant_id: str,
     ) -> list[DomainReference]:
         """Resuelve referencias a entidades reales usando el adapter."""
         if self._adapter is None:
@@ -361,7 +372,7 @@ class MemoryBridge:
         resolved = []
         
         for ref in references:
-            resolved_ref = self._resolve_reference(ref)
+            resolved_ref = await self._resolve_reference(ref, tenant_id)
             if resolved_ref:
                 resolved.append(resolved_ref)
             else:
@@ -370,8 +381,16 @@ class MemoryBridge:
         
         return resolved
     
-    def _resolve_reference(self, ref: DomainReference) -> DomainReference | None:
-        """Resuelve una referencia individual."""
+    async def _resolve_reference(
+        self,
+        ref: DomainReference,
+        tenant_id: str,
+    ) -> DomainReference | None:
+        """Resuelve una referencia individual de forma async."""
+        import logging
+        
+        logger = logging.getLogger(__name__)
+        
         try:
             if ref.entity_type == EntityType.DEVICE:
                 gateway = self._adapter.create_device_gateway()
@@ -380,9 +399,8 @@ class MemoryBridge:
             else:
                 return None
             
-            # Ejecutar en sync (simplificado)
-            import asyncio
-            entity = asyncio.run(gateway.get_by_id(ref.entity_id, ""))
+            # Usar await correctamente en contexto async
+            entity = await gateway.get_by_id(ref.entity_id, tenant_id)
             if entity:
                 return DomainReference(
                     entity_type=ref.entity_type,
@@ -394,8 +412,10 @@ class MemoryBridge:
                         "current_status": getattr(entity, 'status', None),
                     },
                 )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(
+                f"Failed to resolve reference {ref.entity_type.value}:{ref.entity_id}: {e}"
+            )
         
         return None
 
