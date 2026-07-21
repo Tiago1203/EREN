@@ -10,7 +10,7 @@
 docs/phases/PHASE_3/adr/
 ├── README.md
 ├── epic0/                           # ✅ COMPLETO (7 ADRs)
-├── epic1/                           # 📋 TODO
+├── epic1/                           # 🚧 IN PROGRESS (5 ADRs)
 ├── epic2/                           # 📋 TODO
 ├── epic3/                           # 📋 TODO
 ├── epic4/                           # 📋 TODO
@@ -30,7 +30,7 @@ docs/phases/PHASE_3/adr/
 | Épica | ADRs | Estado |
 |-------|------|--------|
 | **EPIC 0** | 7 | ✅ COMPLETE |
-| **EPIC 1** | - | 📋 TODO |
+| **EPIC 1** | 5 | 🚧 IN PROGRESS |
 | **EPIC 2** | - | 📋 TODO |
 | **EPIC 3** | - | 📋 TODO |
 | **EPIC 4** | - | 📋 TODO |
@@ -42,7 +42,7 @@ docs/phases/PHASE_3/adr/
 | **EPIC 10** | - | 📋 TODO |
 | **EPIC 11** | - | 📋 TODO |
 
-**Total: 7 ADRs (7 Complete)**
+**Total: 12 ADRs (7 Complete, 5 In Progress)**
 
 ---
 
@@ -59,6 +59,20 @@ docs/phases/PHASE_3/adr/
 | ADR-3006 | Knowledge Interface Design | ✅ Accepted |
 
 **Ubicación:** `docs/phases/PHASE_3/adr/epic0/`
+
+---
+
+## 📋 EPIC 1 - ADRs (IN PROGRESS)
+
+| ADR | Título | Estado |
+|-----|--------|--------|
+| ADR-3010 | Knowledge Graph Architecture | 🚧 In Progress |
+| ADR-3011 | Medical Ontology Design | 🚧 In Progress |
+| ADR-3012 | Equipment Taxonomy Design | 🚧 In Progress |
+| ADR-3013 | Standards Repository Design | 🚧 In Progress |
+| ADR-3014 | Evidence Store Architecture | 🚧 In Progress |
+
+**Ubicación:** `docs/phases/PHASE_3/adr/epic1/`
 
 ---
 
