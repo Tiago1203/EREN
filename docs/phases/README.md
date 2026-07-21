@@ -10,6 +10,7 @@
 |------|--------|--------|-------------|
 | **FASE 1** | ✅ COMPLETO | EPIC 0-11 | Foundation & Platform + Domain AI Integration |
 | **FASE 2** | ✅ COMPLETO | EPIC 0-11-2 | AI Core + Runtime Integration |
+| **FASE 3** | 🚧 IN PROGRESS | EPIC 0-11 | Clinical Intelligence |
 
 ---
 
@@ -22,23 +23,15 @@ docs/phases/
 │   ├── README.md
 │   ├── epics/                # epic0-10
 │   └── adr/                  # ADRs epic0-10
-└── PHASE_2/                   ✅ COMPLETO
+├── PHASE_2/                   ✅ COMPLETO
+│   ├── README.md
+│   ├── epics/                # epic0-11-2
+│   └── adr/                  # ADRs epic0-11-2
+└── PHASE_3/                   🚧 IN PROGRESS
     ├── README.md
-    ├── epics/                # epic0-11-2
-    │   ├── epic0/          # AI Foundation
-    │   ├── epic1/          # Conversation
-    │   ├── epic2/          # Context
-    │   ├── epic3/          # Prompt
-    │   ├── epic4/          # Memory
-    │   ├── epic5/          # Tools
-    │   ├── epic6/          # Response
-    │   ├── epic7/          # Providers
-    │   ├── epic8/          # Sessions
-    │   ├── epic9/          # AI Integration
-    │   ├── epic10/         # Domain Integration Bridge
-    │   ├── epic11/         # Runtime Integration
-    │   └── epic11-2/       # Runtime Fix Phase 2 ← NUEVO
-    └── adr/                  # ADRs epic0-11-2
+    ├── epics/                # epic0-11
+    │   └── epic0/           # Clinical Intelligence Foundation ← NUEVO
+    └── adr/                  # ADRs epic0-11
 ```
 
 ---
@@ -102,7 +95,50 @@ FASE 2 implementa el Cognitive Operating System:
 
 ---
 
+## 🎯 FASE 3 (Clinical Intelligence) - EN PROGRESO
+
+FASE 3 implementa Clinical Intelligence para transformar EREN en un Clinical Decision Support System (CDSS):
+
+| Épica | Nombre | Descripción | Estado |
+|-------|--------|-------------|--------|
+| **EPIC 0** | Clinical Intelligence Foundation | DTOs, Contracts, Models, Interfaces | 🚧 IN PROGRESS |
+| **EPIC 1** | Biomedical Knowledge Engine | Medical KB, Ontologies | 📋 TODO |
+| **EPIC 2** | Reasoning Engine | Clinical reasoning, Decision trees | 📋 TODO |
+| **EPIC 3** | Evidence Retrieval | Evidence chains, Source evaluation | 📋 TODO |
+| **EPIC 4** | Confidence Engine | Confidence scores, Uncertainty | 📋 TODO |
+| **EPIC 5** | Explainability Engine | Explanations, Traceability | 📋 TODO |
+| **EPIC 6** | Biomedical Rules Engine | Clinical rules, Drug interactions | 📋 TODO |
+| **EPIC 7** | Safety Engine | Safety checks, Alerts | 📋 TODO |
+| **EPIC 8** | Clinical Validation | Validation pipeline | 📋 TODO |
+| **EPIC 9** | Decision Engine | Final decisions, Recommendations | 📋 TODO |
+| **EPIC 10** | Learning Engine | Continuous learning | 📋 TODO |
+| **EPIC 11** | Continuous Improvement | Feedback, Optimization | 📋 TODO |
+
+**Al terminar FASE 3:**
+- Foundation con DTOs, Contracts, Models, Interfaces ✅ (EPIC 0)
+- Biomedical Knowledge Engine (EPIC 1)
+- Clinical Reasoning Engine (EPIC 2)
+- Evidence Retrieval System (EPIC 3)
+- Confidence Scoring Engine (EPIC 4)
+- Explainability Engine (EPIC 5)
+- Biomedical Rules Engine (EPIC 6)
+- Clinical Safety Engine (EPIC 7)
+- Clinical Validation Pipeline (EPIC 8)
+- Clinical Decision Engine (EPIC 9)
+- Continuous Learning Engine (EPIC 10)
+- Continuous Improvement (EPIC 11)
+
+**EREN será un Clinical Decision Support System completo con:**
+- Razonamiento clínico automatizado
+- Recomendaciones basadas en evidencia
+- Validación de decisiones médicas
+- Explicabilidad de recomendaciones
+- Seguridad del paciente
+
+---
+
 ## 📂 Acceso Rápido
 
 - [FASE 1 README](./PHASE_1/README.md)
 - [FASE 2 README](./PHASE_2/README.md)
+- [FASE 3 README](./PHASE_3/README.md)
