@@ -4,69 +4,193 @@ Biomedical Knowledge Engine
 This module provides the knowledge management components for Clinical Intelligence,
 including Knowledge Graph, Medical Ontology, Equipment Taxonomy, Standards Repository,
 and Evidence Store.
+
+Complete implementation of EPIC 1 for EREN PHASE 3.
 """
 
+# Version
+__version__ = "1.0.0"
+
+# Graph module
 from core.intelligence.knowledge.graph import (
-    BiomedicalKnowledgeGraph,
+    ConceptType,
+    RelationType,
     ConceptNode,
     EntityNode,
+    StandardNode,
+    DeviceNode,
     RelationEdge,
-    RelationType,
+    Subgraph,
+    Path,
+    GraphStats,
+    IKnowledgeGraphRepository,
+    BiomedicalKnowledgeGraph,
 )
+
+# Ontology module
 from core.intelligence.knowledge.ontology import (
-    MedicalOntology,
-    MedicalOntologyConcept,
     CodeSystem,
-    ConceptType,
+    ConceptType as OntologyConceptType,
+    RelationshipType,
+    OntologyRelationship,
+    MedicalOntologyConcept,
+    ConceptHierarchy,
+    CodeMapping,
+    SearchResult,
+    IOntologyRepository,
+    MedicalOntology,
 )
+
+# Taxonomy module
 from core.intelligence.knowledge.taxonomy import (
-    EquipmentTaxonomy,
+    RiskClass,
     DeviceCategory,
+    FailureSeverity,
+    FailureFrequency,
+    MaintenanceType,
     FailureMode,
     MaintenanceLogic,
-    RiskClass,
+    CategoryHierarchy,
+    FailureModeAnalysis,
+    MaintenanceSchedule,
+    ITaxonomyRepository,
+    EquipmentTaxonomy,
 )
+
+# Standards module
 from core.intelligence.knowledge.standards import (
-    StandardsRepository,
-    Standard,
     StandardOrganization,
+    StandardCategory,
     VerificationMethod,
+    ComplianceStatus,
+    RiskClassification,
+    Standard,
+    StandardRequirement,
+    ComplianceCheck,
+    ComplianceReport,
+    StandardComparison,
+    IStandardsRepository,
+    StandardsRepository,
 )
+
+# Evidence module
 from core.intelligence.knowledge.retrieval import (
-    EvidenceStore,
-    Evidence,
     EvidenceSourceType,
     EvidenceLevel,
+    QueryType,
+    Evidence,
+    EvidenceQuery,
+    EvidenceFilters,
+    EvidenceRetrieval,
+    EvidenceWithRelevance,
+    EvidenceChain,
+    EvidenceStore,
 )
 
-__version__ = "0.1.0"
+# Vocabulary module
+from core.intelligence.knowledge.vocabulary import (
+    VocabularyType,
+    BiomedicalConcept,
+    TermMapping,
+    MedicalVocabulary,
+)
+
+# Exceptions
+from core.intelligence.knowledge.exceptions import (
+    KnowledgeError,
+    KnowledgeGraphError,
+    NodeNotFoundError,
+    EdgeNotFoundError,
+    OntologyError,
+    ConceptNotFoundError,
+    TaxonomyError,
+    CategoryNotFoundError,
+    StandardsError,
+    StandardNotFoundError,
+    EvidenceError,
+    EvidenceNotFoundError,
+)
 
 __all__ = [
+    # Version
+    "__version__",
     # Graph
-    "BiomedicalKnowledgeGraph",
+    "ConceptType",
+    "RelationType",
     "ConceptNode",
     "EntityNode",
+    "StandardNode",
+    "DeviceNode",
     "RelationEdge",
-    "RelationType",
+    "Subgraph",
+    "Path",
+    "GraphStats",
+    "IKnowledgeGraphRepository",
+    "BiomedicalKnowledgeGraph",
     # Ontology
-    "MedicalOntology",
-    "MedicalOntologyConcept",
     "CodeSystem",
-    "ConceptType",
+    "OntologyConceptType",
+    "RelationshipType",
+    "OntologyRelationship",
+    "MedicalOntologyConcept",
+    "ConceptHierarchy",
+    "CodeMapping",
+    "SearchResult",
+    "IOntologyRepository",
+    "MedicalOntology",
     # Taxonomy
-    "EquipmentTaxonomy",
+    "RiskClass",
     "DeviceCategory",
+    "FailureSeverity",
+    "FailureFrequency",
+    "MaintenanceType",
     "FailureMode",
     "MaintenanceLogic",
-    "RiskClass",
+    "CategoryHierarchy",
+    "FailureModeAnalysis",
+    "MaintenanceSchedule",
+    "ITaxonomyRepository",
+    "EquipmentTaxonomy",
     # Standards
-    "StandardsRepository",
-    "Standard",
     "StandardOrganization",
+    "StandardCategory",
     "VerificationMethod",
-    # Retrieval
-    "EvidenceStore",
-    "Evidence",
+    "ComplianceStatus",
+    "RiskClassification",
+    "Standard",
+    "StandardRequirement",
+    "ComplianceCheck",
+    "ComplianceReport",
+    "StandardComparison",
+    "IStandardsRepository",
+    "StandardsRepository",
+    # Evidence
     "EvidenceSourceType",
     "EvidenceLevel",
+    "QueryType",
+    "Evidence",
+    "EvidenceQuery",
+    "EvidenceFilters",
+    "EvidenceRetrieval",
+    "EvidenceWithRelevance",
+    "EvidenceChain",
+    "EvidenceStore",
+    # Vocabulary
+    "VocabularyType",
+    "BiomedicalConcept",
+    "TermMapping",
+    "MedicalVocabulary",
+    # Exceptions
+    "KnowledgeError",
+    "KnowledgeGraphError",
+    "NodeNotFoundError",
+    "EdgeNotFoundError",
+    "OntologyError",
+    "ConceptNotFoundError",
+    "TaxonomyError",
+    "CategoryNotFoundError",
+    "StandardsError",
+    "StandardNotFoundError",
+    "EvidenceError",
+    "EvidenceNotFoundError",
 ]

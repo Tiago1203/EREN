@@ -8,13 +8,13 @@
 
 | ADR | Título | Estado | Severidad |
 |-----|--------|--------|-----------|
-| ADR-3010 | Knowledge Graph Architecture | 🚧 In Progress | Crítica |
-| ADR-3011 | Medical Ontology Design | 🚧 In Progress | Alta |
-| ADR-3012 | Equipment Taxonomy Design | 🚧 In Progress | Alta |
-| ADR-3013 | Standards Repository Design | 🚧 In Progress | Alta |
-| ADR-3014 | Evidence Store Architecture | 🚧 In Progress | Crítica |
+| ADR-3010 | Knowledge Graph Architecture | ✅ Accepted | Crítica |
+| ADR-3011 | Medical Ontology Design | ✅ Accepted | Alta |
+| ADR-3012 | Equipment Taxonomy Design | ✅ Accepted | Alta |
+| ADR-3013 | Standards Repository Design | ✅ Accepted | Alta |
+| ADR-3014 | Evidence Store Architecture | ✅ Accepted | Crítica |
 
-**Total: 5 ADRs (0 Complete, 5 In Progress)**
+**Total: 5 ADRs (5 Complete, 0 In Progress)**
 
 ---
 
