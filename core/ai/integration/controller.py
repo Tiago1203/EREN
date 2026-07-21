@@ -34,6 +34,7 @@ from core.ai.integration.models import (
     ProcessingContext,
     ProcessingState,
 )
+from core.ai.integration import setup_integration
 
 
 class AICoreController:
@@ -64,6 +65,11 @@ class AICoreController:
         self._providers: ProviderManager | None = None
         self._sessions: SessionManager | None = None
         
+        # Integration components (EPIC 11)
+        self._gateways: dict[str, object] = {}
+        self._memory_bridge = None
+        self._event_bridge = None
+        
         # Métricas
         self._metrics = AICoreMetrics()
         
@@ -93,6 +99,17 @@ class AICoreController:
     async def initialize(self) -> None:
         """Inicializa todos los componentes."""
         try:
+            # ============================================
+            # EPIC 11: Setup Integration Layer
+            # ============================================
+            integration = setup_integration(
+                uow_factory=None,  # Uses default
+                event_bus=None,     # Uses default
+            )
+            self._gateways = integration["gateways"]
+            self._memory_bridge = integration["memory_bridge"]
+            self._event_bridge = integration["event_bridge"]
+            
             # Inicializar Session Manager
             self._sessions = SessionManager(
                 default_budget=self._config.default_token_budget,
@@ -135,8 +152,16 @@ class AICoreController:
             if self._config.enable_tools:
                 self._tools = ToolOrchestrator()
             
-            # Inicializar Context Builder
-            self._context = ContextBuilder()
+            # Inicializar Context Builder with injected gateways (EPIC 11)
+            from core.ai.context_builder.providers import get_providers_with_gateways
+            providers = get_providers_with_gateways(
+                device_gateway=self._gateways.get("device"),
+                incident_gateway=self._gateways.get("incident"),
+                knowledge_gateway=self._gateways.get("knowledge"),
+                recommendation_gateway=self._gateways.get("recommendation"),
+                hospital_gateway=self._gateways.get("hospital"),
+            )
+            self._context = ContextBuilder(providers=providers)
             
             # Inicializar Prompt Builder
             self._prompt = PromptBuilder(PromptConfig(
