@@ -20,7 +20,9 @@ docs/phases/PHASE_2/adr/
 ├── epic8/                    # ✅ COMPLETO (3 ADRs)
 ├── epic9/                    # ✅ COMPLETO (3 ADRs)
 ├── epic10/                   # ✅ COMPLETO (5 ADRs)
-└── epic10-domain-bridge/    # ✅ COMPLETO (5 ADRs)
+├── epic10-domain-bridge/    # ✅ COMPLETO (5 ADRs)
+├── epic11-runtime-integration/  # ✅ COMPLETO (5 ADRs)
+└── epic11-2-runtime-fix-phase2/ # ✅ COMPLETO (1 ADR)
 ```
 
 ---
@@ -41,8 +43,10 @@ docs/phases/PHASE_2/adr/
 | **EPIC 9** | 3 | ✅ Complete |
 | **EPIC 10** | 5 | ✅ Complete |
 | **EPIC 10 Domain Bridge** | 5 | ✅ Complete |
+| **EPIC 11** | 5 | ✅ Complete |
+| **EPIC 11-2** | 1 | ✅ Complete |
 
-**Total: 41 ADRs (41 Complete, 0 Pending)**
+**Total: 42 ADRs (42 Complete, 0 Pending)**
 
 ---
 
@@ -169,6 +173,28 @@ docs/phases/PHASE_2/adr/
 | ADR-2902 | AI Core Configuration | ✅ Accepted |
 
 **Ubicación:** `docs/phases/PHASE_2/adr/epic9/`
+
+---
+
+## 📋 EPIC 11 - Runtime Integration ADRs Completos
+
+| ADR | Título | Estado |
+|-----|--------|--------|
+| ADR-2110 | Domain Gateway Adapter | ✅ Accepted |
+| ADR-2111 | Memory Bridge Pattern | ✅ Accepted |
+| ADR-2112 | Event Bridge Pattern | ✅ Accepted |
+
+**Ubicación:** `docs/phases/PHASE_2/adr/epic11-runtime-integration/`
+
+---
+
+## 📋 EPIC 11-2 - Runtime Fix Phase 2 ADRs Completos
+
+| ADR | Título | Estado |
+|-----|--------|--------|
+| ADR-2113 | SessionEvent Naming Conflict Resolution | ✅ Accepted |
+
+**Ubicación:** `docs/phases/PHASE_2/adr/epic11-2-runtime-fix-phase2/`
 
 ---
 

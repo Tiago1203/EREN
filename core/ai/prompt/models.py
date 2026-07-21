@@ -157,8 +157,8 @@ class PromptTemplate:
 @dataclass
 class RenderedPrompt:
     """Prompt renderizado listo para usar."""
-    system_message: str | None = None
     user_message: str
+    system_message: str | None = None
     assistant_message: str | None = None
     
     # Metadatos

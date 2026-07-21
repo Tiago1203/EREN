@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from dataclasses import dataclass
 from typing import Any
 
 from core.ai.prompt.models import PromptTemplate, RenderedPrompt

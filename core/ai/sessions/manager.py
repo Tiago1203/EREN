@@ -11,8 +11,8 @@ from core.ai.sessions.models import (
     Message,
     Session,
     SessionContext,
-    SessionEvent,
-    SessionEvent as EventType,
+    SessionEventRecord,
+    SessionEvent as SessionEventEnum,
     SessionStats,
     SessionStatus,
     TokenBudget,
@@ -116,7 +116,7 @@ class SessionManager:
         self._user_sessions[user_id].add(session_id)
         
         # Registrar evento
-        self._add_event(session, EventType.CREATED)
+        self._add_event(session, SessionEventEnum.CREATED)
         
         return session
     
@@ -136,7 +136,7 @@ class SessionManager:
             return False
         
         session.close()
-        self._add_event(session, EventType.CLOSED)
+        self._add_event(session, SessionEventEnum.CLOSED)
         return True
     
     def delete_session(self, session_id: str) -> bool:
@@ -162,7 +162,7 @@ class SessionManager:
             return False
         
         session.pause()
-        self._add_event(session, EventType.PAUSED)
+        self._add_event(session, SessionEventEnum.PAUSED)
         return True
     
     def resume_session(self, session_id: str) -> bool:
@@ -175,7 +175,7 @@ class SessionManager:
             return False
         
         session.resume()
-        self._add_event(session, EventType.RESUMED)
+        self._add_event(session, SessionEventEnum.RESUMED)
         return True
     
     # ========== Messages ==========
@@ -212,8 +212,8 @@ class SessionManager:
         
         if session.add_message(message):
             event_type = (
-                EventType.MESSAGE_SENT if role == "user"
-                else EventType.MESSAGE_RECEIVED
+                SessionEventEnum.MESSAGE_SENT if role == "user"
+                else SessionEventEnum.MESSAGE_RECEIVED
             )
             self._add_event(session, event_type, message_id=message.id, tokens=tokens)
             return message
@@ -389,7 +389,7 @@ class SessionManager:
         duration_ms: int = 0,
     ) -> None:
         """Agrega un evento a la sesión."""
-        event = SessionEvent(
+        event = SessionEventRecord(
             id=str(uuid.uuid4()),
             session_id=session.id,
             event_type=event_type,

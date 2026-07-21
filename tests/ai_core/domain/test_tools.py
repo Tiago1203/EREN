@@ -163,7 +163,7 @@ class TestGetDeviceHistoryTool:
     async def test_execute_returns_not_found_for_unknown_device(self, tool, context):
         """Test that execute returns not_found for unknown device."""
         # Override the mock to return None
-        tool._gateway.get_by_id = AsyncMock(return_value=None)
+        tool._device.get_by_id = AsyncMock(return_value=None)
         
         result = await tool.execute(
             {"device_id": "unknown"},

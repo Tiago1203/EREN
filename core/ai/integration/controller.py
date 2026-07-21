@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Any, AsyncIterator
 
 from core.ai.conversation import ConversationController
-from core.ai.context import ContextBuilder
+from core.ai.context_builder import ContextBuilder
 from core.ai.memory import MemoryManager
 from core.ai.prompt import PromptBuilder, PromptConfig
 from core.ai.providers import (
@@ -34,7 +34,12 @@ from core.ai.integration.models import (
     ProcessingContext,
     ProcessingState,
 )
-from core.ai.integration import setup_integration
+
+
+def _get_setup_integration():
+    """Lazy import to avoid circular dependency."""
+    from core.ai.integration import setup_integration
+    return setup_integration
 
 
 class AICoreController:
@@ -153,7 +158,12 @@ class AICoreController:
                 self._tools = ToolOrchestrator()
             
             # Inicializar Context Builder with injected gateways (EPIC 11)
-            from core.ai.context_builder.providers import get_providers_with_gateways
+            from core.ai.context_builder.providers import (
+                get_providers_with_gateways,
+                providers_to_sources,
+            )
+            from core.ai.context_builder.models import ContextSource
+            
             providers = get_providers_with_gateways(
                 device_gateway=self._gateways.get("device"),
                 incident_gateway=self._gateways.get("incident"),
@@ -161,7 +171,10 @@ class AICoreController:
                 recommendation_gateway=self._gateways.get("recommendation"),
                 hospital_gateway=self._gateways.get("hospital"),
             )
-            self._context = ContextBuilder(providers=providers)
+            
+            # EPIC 11.1: Convertir providers a sources para ContextBuilder
+            sources = providers_to_sources(providers)
+            self._context = ContextBuilder(sources=sources)
             
             # Inicializar Prompt Builder
             self._prompt = PromptBuilder(PromptConfig(
@@ -313,28 +326,69 @@ class AICoreController:
         extra_context: dict[str, Any] | None,
     ) -> dict[str, Any]:
         """Construye el contexto de procesamiento."""
+        from core.ai.context_builder.models import ContextQuery, ContextSource
+        
         context_data = {}
         
-        # Agregar contexto de sesión
+        # 1. Agregar contexto de sesión
         if session.context:
             context_data["session"] = {
                 "topic": session.context.topic,
                 "domain": session.context.domain,
             }
         
-        # Agregar historial de memoria
+        # 2. Agregar historial de memoria
         if self._memory:
             memories = await self._memory.retrieve(user_input, limit=5)
             context_data["memories"] = [m.content for m in memories]
         
-        # Agregar herramientas disponibles
+        # 3. EPIC 11.1: Construir contexto de dominio usando ContextBuilder
+        # Esto ejecuta todos los providers (Device, Incident, Knowledge, etc.)
+        if self._context and self._context.sources:
+            try:
+                context_query = ContextQuery(
+                    query=user_input,
+                    tenant_id=session.tenant_id or "default",
+                    max_tokens=4000,
+                    include_sources=[
+                        ContextSource.DEVICE,
+                        ContextSource.INCIDENT,
+                        ContextSource.KNOWLEDGE,
+                        ContextSource.RECOMMENDATION,
+                        ContextSource.HOSPITAL,
+                    ],
+                )
+                context_result = await self._context.build(context_query)
+                # Convertir ContextResult a dict para el prompt
+                context_data["domain_context"] = {
+                    "items": [
+                        {
+                            "content": item.content,
+                            "relevance": item.relevance_score,
+                            "source": item.source.value,
+                            "metadata": item.metadata,
+                        }
+                        for item in context_result.items
+                    ],
+                    "included_sources": [s.value for s in context_result.included_sources],
+                    "excluded_sources": [s.value for s in context_result.excluded_sources],
+                    "total_tokens": context_result.total_tokens,
+                }
+            except Exception as e:
+                # Fail gracefully - no contexto de dominio es mejor que crash
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.warning(f"ContextBuilder failed: {e}")
+                context_data["domain_context"] = {"items": [], "error": str(e)}
+        
+        # 4. Agregar herramientas disponibles
         if self._tools:
             tools = self._tools.list_tools()
             context_data["tools"] = [
                 {"id": t.id, "name": t.name} for t in tools
             ]
         
-        # Agregar contexto extra
+        # 5. Agregar contexto extra
         if extra_context:
             context_data.update(extra_context)
         

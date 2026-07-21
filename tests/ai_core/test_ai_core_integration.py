@@ -264,15 +264,15 @@ class TestPromptBuilder:
         """Verifica creación del builder."""
         from core.ai import PromptBuilder, PromptConfig
         
-        config = PromptConfig(strategy="direct")
+        config = PromptConfig()
         builder = PromptBuilder(config)
         
         assert builder is not None
 
     def test_prompt_strategies(self):
         """Verifica estrategias de prompt."""
-        from core.ai.prompt import PromptStrategy
+        from core.ai.prompt import PromptStrategyType
         
-        assert PromptStrategy.DIRECT is not None
-        assert PromptStrategy.CHAIN_OF_THOUGHT is not None
-        assert PromptStrategy.FEW_SHOT is not None
+        assert PromptStrategyType.DIRECT is not None
+        assert PromptStrategyType.CHAIN_OF_THOUGHT is not None
+        assert PromptStrategyType.FEW_SHOT is not None
