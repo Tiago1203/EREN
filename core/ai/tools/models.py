@@ -109,6 +109,16 @@ class ToolDefinition:
         return len(errors) == 0, errors
 
 
+class ToolStatus(str, Enum):
+    """Estado de ejecución de herramienta."""
+    PENDING = "pending"
+    RUNNING = "running"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    CANCELLED = "cancelled"
+    TIMEOUT = "timeout"
+
+
 @dataclass
 class ToolExecution:
     """Ejecución de una herramienta."""
@@ -136,16 +146,6 @@ class ToolExecution:
     
     # Contexto
     context: dict[str, Any] = field(default_factory=dict)
-
-
-class ToolStatus(str, Enum):
-    """Estado de ejecución de herramienta."""
-    PENDING = "pending"
-    RUNNING = "running"
-    COMPLETED = "completed"
-    FAILED = "failed"
-    CANCELLED = "cancelled"
-    TIMEOUT = "timeout"
 
 
 @dataclass

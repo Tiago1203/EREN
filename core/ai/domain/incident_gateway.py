@@ -231,7 +231,7 @@ class IncidentGateway(IIncidentGateway):
     
     def _mock_search(self, query: str, limit: int) -> list[IncidentDTO]:
         """Mock search."""
-        all_incidents = list(self._mock_get_by_id("inc-001"), self._mock_get_by_id("inc-002"))
+        all_incidents = [self._mock_get_by_id("inc-001"), self._mock_get_by_id("inc-002")]
         query_lower = query.lower()
         return [
             i for i in all_incidents

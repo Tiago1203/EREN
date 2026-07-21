@@ -21,7 +21,6 @@ from core.ai.dto import (
 
 # ============== Provider Contracts ==============
 
-@runtime_checkable
 class AIProvider(ABC):
     """Contrato base para proveedores de IA."""
 
@@ -106,7 +105,6 @@ class FunctionCallingProvider(AIProvider):
 
 # ============== Model Registry Contracts ==============
 
-@runtime_checkable
 class ModelRegistry(ABC):
     """Contrato para registro de modelos."""
 
@@ -152,7 +150,6 @@ class ModelRegistry(ABC):
 
 # ============== Configuration Contracts ==============
 
-@runtime_checkable
 class AIConfiguration(ABC):
     """Contrato para configuración del AI Core."""
 
@@ -194,7 +191,6 @@ class AIConfiguration(ABC):
 
 # ============== Dependency Injection Contracts ==============
 
-@runtime_checkable
 class Container(ABC):
     """Contrato para contenedor de inyección de dependencias."""
 
@@ -261,7 +257,6 @@ class Scope(ABC):
 
 # ============== Kernel Contracts ==============
 
-@runtime_checkable
 class AIKernel(ABC):
     """Contrato para el kernel del AI Core."""
 
@@ -311,7 +306,6 @@ class AIKernel(ABC):
 
 # ============== Context Contracts ==============
 
-@runtime_checkable
 class AIContextManager(ABC):
     """Contrato para gestión de contexto."""
 
@@ -343,7 +337,6 @@ class AIContextManager(ABC):
 
 # ============== Tool Contracts ==============
 
-@runtime_checkable
 class Tool(ABC):
     """Contrato para herramientas ejecutables."""
 
@@ -371,7 +364,6 @@ class Tool(ABC):
         ...
 
 
-@runtime_checkable
 class ToolRegistry(ABC):
     """Contrato para registro de herramientas."""
 

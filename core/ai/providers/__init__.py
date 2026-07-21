@@ -14,7 +14,8 @@ from __future__ import annotations
 
 from typing import Any, AsyncIterator
 
-from core.ai.contracts import AIProvider, ProviderRegistry
+from core.ai.contracts import AIProvider
+from core.ai.registry import ProviderRegistry
 from core.ai.dto import (
     AIRequest,
     AIResponse,
@@ -44,10 +45,9 @@ from core.ai.providers.models import (
     StreamChunk as ProviderStreamChunk,
     ProviderConfig,
     UsageRecord,
-    ProviderStats,
     AIProvider as BaseAIProvider,
 )
-from core.ai.providers.manager import ProviderManager, RateLimiter
+from core.ai.providers.manager import ProviderManager, RateLimiter, ProviderStats
 from core.ai.providers.openai_provider import OpenAIProvider
 from core.ai.providers.anthropic_provider import AnthropicProvider
 

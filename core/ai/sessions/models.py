@@ -161,8 +161,8 @@ class ConversationLimit:
 
 
 @dataclass
-class SessionEvent:
-    """Evento de sesión."""
+class SessionEventRecord:
+    """Registro de evento de sesión."""
     id: str
     session_id: str
     event_type: SessionEvent

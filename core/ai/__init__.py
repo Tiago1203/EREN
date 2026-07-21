@@ -174,12 +174,9 @@ from core.ai.context_builder import (
     ContextBuilder,
     ContextPriority,
     CompressionStrategy,
-    PriorityItem,
-    PriorityScore,
+    # Note: PriorityItem and PriorityScore removed - not exported by context_builder
 )
 from core.ai.context_builder.models import (
-    ContextBlock,
-    ContextMetadata as CBContextMetadata,
     ContextSource,
     ContextPriority as CBContextPriority,
 )
@@ -191,11 +188,7 @@ from core.ai.prompt import (
     PromptTemplate,
     PromptStrategy,
     RenderedPrompt,
-    TemplateVariable,
-)
-from core.ai.prompt.models import (
-    PromptType,
-    PromptStrategy as PPromptStrategy,
+    # Note: TemplateVariable renamed to PromptVariable
 )
 from core.ai.prompt.renderer import PromptRenderer
 from core.ai.prompt.optimizer import PromptOptimizer
@@ -203,9 +196,9 @@ from core.ai.prompt.strategy import (
     DirectStrategy,
     ChainOfThoughtStrategy,
     FewShotStrategy,
-    TreeOfThoughtsStrategy,
+    TreeOfThoughtStrategy,
 )
-from core.ai.prompt.versioning import PromptVersion, PromptVersionStore
+from core.ai.prompt.versioning import PromptVersion, PromptVersioningManager
 
 # EPIC 4 - Memory Manager
 from core.ai.memory import (
@@ -217,7 +210,6 @@ from core.ai.memory import (
 )
 from core.ai.memory.models import (
     MemoryConfig,
-    MemoryStats,
 )
 from core.ai.memory.repository import MemoryRepository
 
@@ -240,7 +232,6 @@ from core.ai.tools import (
     get_registry,
     set_registry,
 )
-from core.ai.tools.models import StreamChunk as ToolStreamChunk
 
 # EPIC 6 - Response Composer
 from core.ai.response import (
@@ -392,10 +383,7 @@ __all__ = [
     "ContextBuilder",
     "ContextPriority",
     "CompressionStrategy",
-    "PriorityItem",
-    "PriorityScore",
-    "ContextBlock",
-    "CBContextMetadata",
+    # Note: PriorityItem, PriorityScore, ContextBlock, CBContextMetadata removed - not exported
     "ContextSource",
     "CBContextPriority",
     
@@ -405,17 +393,17 @@ __all__ = [
     "PromptTemplate",
     "PromptStrategy",
     "RenderedPrompt",
-    "TemplateVariable",
-    "PromptType",
-    "PPromptStrategy",
+    # Note: TemplateVariable renamed to PromptVariable
+    # Note: PromptType not exported from models
+    # Note: PPromptStrategy not in models
     "PromptRenderer",
     "PromptOptimizer",
     "DirectStrategy",
     "ChainOfThoughtStrategy",
     "FewShotStrategy",
-    "TreeOfThoughtsStrategy",
+    "TreeOfThoughtStrategy",
     "PromptVersion",
-    "PromptVersionStore",
+    "PromptVersioningManager",
     
     # ========== EPIC 4 - Memory Manager ==========
     "MemoryManager",
@@ -424,7 +412,6 @@ __all__ = [
     "MemoryRepository",
     "InMemoryMemoryRepository",
     "MemoryConfig",
-    "MemoryStats",
     
     # ========== EPIC 5 - Tool Orchestrator ==========
     "ToolOrchestrator",

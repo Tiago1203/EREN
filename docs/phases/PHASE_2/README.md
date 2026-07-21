@@ -83,6 +83,8 @@ EPIC 7 (Providers)                  EPIC 8 (Sessions)
 | **EPIC 8** | Sessions | Gestión de sesiones | ✅ COMPLETE |
 | **EPIC 9** | AI Integration | Integración completa | ✅ COMPLETE |
 | **EPIC 10** | Domain Integration Layer | Conectar AI Core con Dominio | ✅ COMPLETE |
+| **EPIC 11** | Runtime Integration | AI Core ↔ Business Domain | ✅ COMPLETE |
+| **EPIC 11-2** | Runtime Fix Phase 2 | Bug fixes y estabilización | ✅ COMPLETE |
 
 ---
 
@@ -191,6 +193,63 @@ core/ai/integration/
 
 - [EPIC 10 README](epics/epic10-domain-bridge/README.md) - Descripción completa
 - [EPIC 10 ADRs](adr/epic10-domain-bridge/) - 5 ADRs de diseño
+
+---
+
+## ✅ EPIC 11: Runtime Integration - IMPLEMENTADO
+
+> **IMPLEMENTADO**: EPIC 11 conecta el AI Core con el Business Domain.
+
+### Componentes Implementados
+
+| Componente | Descripción |
+|-----------|-------------|
+| Domain Gateway Adapter | Factory de gateways conectados al dominio |
+| Device Gateway | Gateway de dispositivos |
+| Incident Gateway | Gateway de incidentes |
+| Knowledge Gateway | Gateway de conocimiento |
+| Memory Bridge | Almacena referencias a entidades del dominio |
+| Event Bridge | Conecta eventos de AI con Event Bus |
+
+### Documentación
+
+- [EPIC 11 README](epics/epic11-runtime-integration/README.md) - Descripción completa
+
+---
+
+## ✅ EPIC 11-2: Runtime Fix Phase 2 - IMPLEMENTADO
+
+> **IMPLEMENTADO**: EPIC 11-2 corrige bugs críticos y completa módulos faltantes.
+
+### Bugs Corregidos
+
+| Bug | Descripción | Severidad |
+|-----|-------------|-----------|
+| SessionEvent Naming Conflict | Dataclass sobrescribía Enum | 🔴 Crítica |
+| PromptConfig API | Parámetros incorrectos en tests | 🟡 Media |
+| BaseContextProvider Tests | Métodos abstractos sin implementar | 🟡 Media |
+| IncidentGateway Mock | Sintaxis incorrecta `list(a, b)` | 🟡 Media |
+| GetDeviceHistoryTool Test | Referencia incorrecta `_gateway` | 🟢 Baja |
+
+### Módulos Completados
+
+| Módulo | Descripción |
+|--------|-------------|
+| `core/ingestion/metadata.py` | MetadataBuilder, MedicalMetadataBuilder |
+| `core/session/__init__.py` | Exports de SessionPolicies, SessionMetricsCollector |
+
+### Resultados
+
+| Métrica | Antes | Después |
+|---------|-------|---------|
+| Tests Fallando | 12 | 0 |
+| Tests Pasando | 65 | 77+ |
+| AI Core Tests | ❌ | ✅ |
+
+### Documentación
+
+- [EPIC 11-2 README](epics/epic11-2-runtime-fix-phase2/README.md) - Descripción completa
+- [ADR-2113](adr/epic11-2-runtime-fix-phase2/ADR-2113.md) - SessionEvent Naming Conflict
 
 ---
 

@@ -96,6 +96,10 @@ optimized = optimizer.optimize_rendered(prompt)
 ```
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 from core.ai.prompt.models import (
     PromptModel,
     PromptRole,

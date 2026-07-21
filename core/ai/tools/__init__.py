@@ -91,6 +91,10 @@ if tool:
 ```
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 from core.ai.tools.models import (
     ToolCategory,
     ToolCapability,

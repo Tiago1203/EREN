@@ -43,11 +43,92 @@ __all__ = [
     "get_all_providers",
     "get_providers_with_gateways",
     "create_provider",
+    # EPIC 11.1 - Adapter
+    "provider_to_source_getter",
+    "providers_to_sources",
 ]
 
 
 # Lazy-loaded gateways for provider creation
 _gateways: dict[str, object] = {}
+
+
+def provider_to_source_getter(
+    provider: "BaseContextProvider",
+) -> tuple["ContextSource", "ContextSourceGetter"]:
+    """
+    Convierte un BaseContextProvider a ContextSourceGetter.
+    
+    Este adapter permite que los providers de dominio (que heredan de
+    BaseContextProvider) sean usados por ContextBuilder (que espera
+    un dict de ContextSource → ContextSourceGetter).
+    
+    Args:
+        provider: Provider a convertir
+        
+    Returns:
+        Tuple de (ContextSource, ContextSourceGetter)
+        
+    Usage:
+        from core.ai.context_builder.models import ContextSource
+        
+        provider = DeviceContextProvider(gateway=my_gateway)
+        source, getter = provider_to_source_getter(provider)
+        # source = ContextSource.DEVICE
+        # getter = async function that calls provider.get_context()
+    """
+    from core.ai.context_builder.models import ContextSource
+    
+    # Map provider name to ContextSource enum
+    source_map = {
+        "device": ContextSource.DEVICE,
+        "incident": ContextSource.INCIDENT,
+        "knowledge": ContextSource.KNOWLEDGE,
+        "recommendation": ContextSource.RECOMMENDATION,
+        "hospital": ContextSource.HOSPITAL,
+        "conversation": ContextSource.CONVERSATION,
+        "memory": ContextSource.MEMORY,
+        "session": ContextSource.SESSION,
+        "user": ContextSource.USER,
+        "system": ContextSource.SYSTEM,
+    }
+    
+    source = source_map.get(provider.name.lower(), ContextSource.USER)
+    
+    async def getter(query: "ContextQuery") -> list["ContextItem"]:
+        return await provider.get_context(query)
+    
+    return source, getter
+
+
+def providers_to_sources(
+    providers: list["BaseContextProvider"],
+) -> dict["ContextSource", "ContextSourceGetter"]:
+    """
+    Convierte una lista de providers a sources dict.
+    
+    Este es el adapter principal que conecta el sistema de providers
+    con ContextBuilder.
+    
+    Args:
+        providers: Lista de providers
+        
+    Returns:
+        Dict compatible con ContextBuilder.sources
+        
+    Usage:
+        providers = get_providers_with_gateways(
+            device_gateway=...,
+            incident_gateway=...,
+        )
+        sources = providers_to_sources(providers)
+        context_builder = ContextBuilder(sources=sources)
+    """
+    sources = {}
+    for provider in providers:
+        source, getter = provider_to_source_getter(provider)
+        sources[source] = getter
+    return sources
 
 
 def set_gateways(gateways: dict[str, object]) -> None:
