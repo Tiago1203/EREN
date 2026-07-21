@@ -26,7 +26,7 @@ class AIEventType(str, Enum):
     ANOMALY_DETECTED = "anomaly_detected"
     CONTEXT_REFRESHED = "context_refreshed"
     CRITICAL_ALERT = "critical_alert"
-    PREDICTIONGenerated = "prediction_generated"
+    PREDICTION_GENERATED = "prediction_generated"
 
 
 @dataclass(frozen=True)
@@ -117,8 +117,14 @@ class EventBridge:
         Args:
             event: Evento a publicar
         """
+        import logging
+        logger = logging.getLogger(__name__)
+        
         if self._event_bus is None:
-            # Silently skip if no event bus configured
+            logger.warning(
+                f"EventBridge: Event '{event.event_type.value}' not published. "
+                "Event bus not configured. Event dropped."
+            )
             return
         
         domain_event = event.to_domain_event()
@@ -129,6 +135,8 @@ class EventBridge:
             event=domain_event,
             tenant_id=event.tenant_id,
         )
+        
+        logger.debug(f"EventBridge: Published event '{event.event_type.value}' to topic 'ai.{event.event_type.value}'")
     
     async def subscribe_to_domain_events(
         self,
@@ -140,7 +148,14 @@ class EventBridge:
         Args:
             event_types: Tipos de evento a escuchar (None = todos)
         """
+        import logging
+        logger = logging.getLogger(__name__)
+        
         if self._event_bus is None:
+            logger.warning(
+                "EventBridge: Cannot subscribe to domain events. "
+                "Event bus not configured."
+            )
             return
         
         types_to_subscribe = event_types or list(DomainEventType)
@@ -152,6 +167,7 @@ class EventBridge:
                 handler=handler,
             )
             self._subscriptions.append(subscription)
+            logger.debug(f"EventBridge: Subscribed to topic 'domain.{event_type.value}'")
     
     def on_domain_event(
         self,
