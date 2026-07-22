@@ -2,7 +2,7 @@
 
 import pytest
 
-from core.workflows.types import (
+from core.PHASE_1.workflows.workflows.types import (
     WorkflowType,
     WorkflowStatus,
     NodeType,
@@ -15,15 +15,15 @@ from core.workflows.types import (
     Checkpoint,
     WorkflowMetrics,
 )
-from core.workflows.graph import ExecutionGraph, get_execution_graph, clear_graph_cache
-from core.workflows.state_store import StateStore, get_state_store, reset_state_store
-from core.workflows.state import StateManager, get_state_manager, reset_state_manager
-from core.workflows.checkpoint import CheckpointManager, get_checkpoint_manager
-from core.workflows.recovery import RecoveryManager, get_recovery_manager
-from core.workflows.planner import WorkflowPlanner
-from core.workflows.executor import WorkflowExecutor, TaskExecutor
-from core.workflows.scheduler import WorkflowScheduler
-from core.workflows.engine import WorkflowPlatform, WorkflowEngine, get_workflow_platform
+from core.PHASE_1.workflows.workflows.graph import ExecutionGraph, get_execution_graph, clear_graph_cache
+from core.PHASE_1.workflows.workflows.state_store import StateStore, get_state_store, reset_state_store
+from core.PHASE_1.workflows.workflows.state import StateManager, get_state_manager, reset_state_manager
+from core.PHASE_1.workflows.workflows.checkpoint import CheckpointManager, get_checkpoint_manager
+from core.PHASE_1.workflows.workflows.recovery import RecoveryManager, get_recovery_manager
+from core.PHASE_1.workflows.workflows.planner import WorkflowPlanner
+from core.PHASE_1.workflows.workflows.executor import WorkflowExecutor, TaskExecutor
+from core.PHASE_1.workflows.workflows.scheduler import WorkflowScheduler
+from core.PHASE_1.workflows.workflows.engine import WorkflowPlatform, WorkflowEngine, get_workflow_platform
 
 
 class TestWorkflowTypes:
