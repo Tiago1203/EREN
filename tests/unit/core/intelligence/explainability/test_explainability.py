@@ -259,18 +259,24 @@ class TestEvidenceTreeBuilder:
         return EvidenceTreeBuilder()
 
     def test_build_empty_bundle(self, builder):
-        """Test builder with empty evidence bundle."""
-        try:
-            tree = builder.build({})
-            
-            assert isinstance(tree, EvidenceTree)
-            assert tree.total_evidence_count == 0
-        except Exception as e:
-            # Known bug: EvidenceTreeBuilder tries to modify frozen dataclass
-            pytest.skip(f"Known bug: EvidenceTreeBuilder frozen dataclass issue - {e}")
+        """Test builder with empty evidence bundle.
+        
+        OPTION 4: TreeNodes are created with children from the start,
+        maintaining immutability (frozen=True).
+        """
+        tree = builder.build({})
+        
+        assert isinstance(tree, EvidenceTree)
+        assert tree.total_evidence_count == 0
+        # Verify root has both branches even with empty evidence
+        assert len(tree.root.children) == 2
 
     def test_build_with_supporting_evidence(self, builder):
-        """Test builder with supporting evidence."""
+        """Test builder with supporting evidence.
+        
+        OPTION 4: All children are created at once as lists,
+        no post-creation modification of frozen dataclasses.
+        """
         bundle = {
             "supporting": [
                 {"content": "Evidence 1", "quality_score": 0.8, "source_name": "Source 1"},
@@ -279,13 +285,13 @@ class TestEvidenceTreeBuilder:
             "contradicting": []
         }
         
-        try:
-            tree = builder.build(bundle)
-            
-            assert isinstance(tree, EvidenceTree)
-        except Exception as e:
-            # Known bug: EvidenceTreeBuilder tries to modify frozen dataclass
-            pytest.skip(f"Known bug: EvidenceTreeBuilder frozen dataclass issue - {e}")
+        tree = builder.build(bundle)
+        
+        assert isinstance(tree, EvidenceTree)
+        assert tree.total_evidence_count == 2
+        # Verify supporting branch has children
+        supporting_branch = tree.root.children[0]
+        assert len(supporting_branch.children) == 2
 
 
 class TestSourceTracer:
@@ -353,23 +359,22 @@ class TestExplainabilityEngine:
 
     @pytest.mark.asyncio
     async def test_explain(self, engine):
-        """Test complete explanation generation."""
+        """Test complete explanation generation.
+        
+        Uses OPTION 4 for EvidenceTree construction,
+        maintaining immutability throughout.
+        """
         recommendation = {"id": "r001", "action": "Calibrate device"}
         reasoning_chain = {"steps": []}
         evidence_bundle = {"supporting": [], "contradicting": []}
         confidence = {"score": 0.8, "level": "high"}
         
-        # Note: This may fail due to frozen dataclass issue in EvidenceTreeBuilder
-        try:
-            result = await engine.explain(
-                recommendation,
-                reasoning_chain,
-                evidence_bundle,
-                confidence
-            )
-            
-            assert isinstance(result, Explanation)
-            assert result.recommendation_id == "r001"
-        except Exception as e:
-            # Expected failure due to frozen dataclass bug in code
-            pytest.skip(f"Known bug: EvidenceTreeBuilder frozen dataclass issue - {e}")
+        result = await engine.explain(
+            recommendation,
+            reasoning_chain,
+            evidence_bundle,
+            confidence
+        )
+        
+        assert isinstance(result, Explanation)
+        assert result.recommendation_id == "r001"

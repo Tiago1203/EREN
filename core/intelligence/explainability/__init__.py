@@ -245,31 +245,32 @@ class ReasoningGraphGenerator:
 
 
 class EvidenceTreeBuilder:
-    """Builds evidence trees."""
+    """
+    Builds evidence trees using immutable TreeNodes.
     
+    Uses OPTION 4: Create TreeNodes with children from the start
+    to maintain immutability (frozen=True) and avoid FrozenInstanceError.
+    
+    This approach is more declarative, efficient, and maintains
+    the immutability contract required for clinical auditability.
+    
+    ADR: ADR-3050 - Immutable Evidence Tree Construction
+    """
+
     def build(self, evidence_bundle: dict) -> EvidenceTree:
-        """Build evidence tree from bundle."""
+        """
+        Build evidence tree from bundle.
+        
+        OPTION 4 Implementation: All TreeNodes are created with their
+        complete children list from the start, avoiding any post-creation
+        modification that would break the frozen dataclass contract.
+        """
         supporting = evidence_bundle.get("supporting", [])
         contradicting = evidence_bundle.get("contradicting", [])
-        
-        # Create root
-        root = TreeNode(
-            node_id="root",
-            label="Recommendation",
-            node_type=TreeNodeType.ROOT,
-            children=[],
-        )
-        
-        # Create supporting branch
-        supporting_node = TreeNode(
-            node_id="supporting",
-            label=f"Supporting Evidence ({len(supporting)})",
-            node_type=TreeNodeType.CATEGORY,
-            children=[],
-        )
-        
-        for i, e in enumerate(supporting[:5]):
-            child = TreeNode(
+
+        # Build children for supporting branch (all at once)
+        supporting_children = [
+            TreeNode(
                 node_id=f"supp_{i}",
                 label=e.get("content", "")[:80],
                 node_type=TreeNodeType.EVIDENCE,
@@ -278,18 +279,12 @@ class EvidenceTreeBuilder:
                 confidence=e.get("quality_score"),
                 source=e.get("source_name"),
             )
-            supporting_node.children.append(child)
-        
-        # Create contradicting branch
-        contradicting_node = TreeNode(
-            node_id="contradicting",
-            label=f"Contradicting Evidence ({len(contradicting)})",
-            node_type=TreeNodeType.CATEGORY,
-            children=[],
-        )
-        
-        for i, e in enumerate(contradicting[:5]):
-            child = TreeNode(
+            for i, e in enumerate(supporting[:5])
+        ]
+
+        # Build children for contradicting branch (all at once)
+        contradicting_children = [
+            TreeNode(
                 node_id=f"contra_{i}",
                 label=e.get("content", "")[:80],
                 node_type=TreeNodeType.EVIDENCE,
@@ -298,10 +293,33 @@ class EvidenceTreeBuilder:
                 confidence=e.get("quality_score"),
                 source=e.get("source_name"),
             )
-            contradicting_node.children.append(child)
-        
-        root.children = [supporting_node, contradicting_node]
-        
+            for i, e in enumerate(contradicting[:5])
+        ]
+
+        # Create supporting node WITH its children already populated
+        supporting_node = TreeNode(
+            node_id="supporting",
+            label=f"Supporting Evidence ({len(supporting)})",
+            node_type=TreeNodeType.CATEGORY,
+            children=supporting_children,
+        )
+
+        # Create contradicting node WITH its children already populated
+        contradicting_node = TreeNode(
+            node_id="contradicting",
+            label=f"Contradicting Evidence ({len(contradicting)})",
+            node_type=TreeNodeType.CATEGORY,
+            children=contradicting_children,
+        )
+
+        # Create root node WITH both branches as children
+        root = TreeNode(
+            node_id="root",
+            label="Recommendation",
+            node_type=TreeNodeType.ROOT,
+            children=[supporting_node, contradicting_node],
+        )
+
         return EvidenceTree(
             tree_id=f"tree_{datetime.now().timestamp()}",
             root=root,
