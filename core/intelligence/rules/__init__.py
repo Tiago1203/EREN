@@ -7,6 +7,10 @@ This module provides deterministic rule-based validation:
 - IEC/ISO/AAMI Standards Validation
 - Clinical Rules
 - Engineering Rules
+
+ARCHITECTURE NOTE:
+- Severity and RiskLevel are imported from Foundation (single source of truth)
+- StandardType is specific to Rules and remains local
 """
 
 from enum import Enum
@@ -14,29 +18,16 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional, Any
 
+# Import shared enums from Foundation (SINGLE SOURCE OF TRUTH)
+from core.intelligence.foundation import Severity, RiskLevel
+
 
 # Version
 __version__ = "1.0.0"
 
 
-class Severity(Enum):
-    """Severity levels for violations."""
-    CRITICAL = "critical"
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-
-
-class RiskLevel(Enum):
-    """Risk levels."""
-    CRITICAL = "critical"
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-
-
 class StandardType(Enum):
-    """Types of standards."""
+    """Types of standards. (Engine-specific enum)"""
     IEC = "iec"
     ISO = "iso"
     AAMI = "aami"
@@ -50,7 +41,7 @@ class Violation:
     standard: str
     clause: str
     description: str
-    severity: Severity
+    severity: Severity  # From Foundation
     current_value: Any
     required_value: Any
     action: str | None = None
@@ -71,7 +62,7 @@ class ValidationResult:
     violations: list[Violation]
     warnings: list[Warning]
     recommendations: list[str]
-    risk_level: RiskLevel
+    risk_level: RiskLevel  # From Foundation
     validation_time_ms: int
     standards_checked: list[str]
 
@@ -85,7 +76,7 @@ class Rule:
     condition: str
     standard: str
     clause: str
-    severity: Severity
+    severity: Severity  # From Foundation
     action: str | None = None
 
 

@@ -11,6 +11,10 @@ This module provides continuous improvement governance:
 - Governance
 - Rollback
 - Performance Monitoring
+
+ARCHITECTURE NOTE:
+- RevisionStatus, ApprovalDecision, RollbackTrigger, QualityDimension
+  are imported from Foundation (single source of truth)
 """
 
 from enum import Enum
@@ -18,46 +22,17 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
 
+# Import shared enums from Foundation (SINGLE SOURCE OF TRUTH)
+from core.intelligence.foundation import (
+    RevisionStatus,
+    ApprovalDecision,
+    RollbackTrigger,
+    QualityDimension,
+)
+
 
 # Version
 __version__ = "1.0.0"
-
-
-# ============ ENUMS ============
-
-class RevisionStatus(Enum):
-    """Status of knowledge revision."""
-    PENDING = "pending"
-    IN_REVIEW = "in_review"
-    APPROVED = "approved"
-    REJECTED = "rejected"
-    NEEDS_REVISION = "needs_revision"
-
-
-class ApprovalDecision(Enum):
-    """Approval decision."""
-    APPROVED = "approved"
-    REJECTED = "rejected"
-    NEEDS_REVIEW = "needs_review"
-    ESCALATE = "escalate"
-
-
-class RollbackTrigger(Enum):
-    """Triggers for rollback."""
-    MANUAL = "manual"
-    AUTOMATIC = "automatic"
-    SCHEDULED = "scheduled"
-    EMERGENCY = "emergency"
-
-
-class QualityDimension(Enum):
-    """Dimensions of knowledge quality."""
-    ACCURACY = "accuracy"
-    CONSISTENCY = "consistency"
-    EVIDENCE = "evidence"
-    REPEATABILITY = "repeatability"
-    COVERAGE = "coverage"
-    IMPACT = "impact"
 
 
 # ============ DOMAIN MODELS ============
@@ -537,7 +512,7 @@ class ContinuousImprovementEngine:
 __all__ = [
     # Version
     "__version__",
-    # Enums
+    # Enums (re-exported from Foundation for convenience)
     "RevisionStatus",
     "ApprovalDecision",
     "RollbackTrigger",
