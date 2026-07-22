@@ -42,7 +42,7 @@ docs/phases/PHASE_3/adr/
 | **EPIC 10** | - | 📋 TODO |
 | **EPIC 11** | - | 📋 TODO |
 
-**Total: 41 ADRs (41 Complete, 0 In Progress)**
+**Total: 45 ADRs (45 Complete, 0 In Progress)**
 
 ---
 
