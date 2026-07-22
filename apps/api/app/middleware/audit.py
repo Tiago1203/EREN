@@ -18,7 +18,7 @@ from starlette.requests import Request
 from starlette.responses import Response
 
 if TYPE_CHECKING:
-    from core.contracts.security.audit import AuditProvider
+    from core.PHASE_1.infrastructure.contracts.security.audit import AuditProvider
 
 logger = logging.getLogger(__name__)
 
@@ -173,9 +173,9 @@ class AuditMiddleware(BaseHTTPMiddleware):
         if not self._audit_provider:
             return
 
-        from core.contracts.security.audit import AuditCategory as ContractCategory
-        from core.contracts.security.audit import AuditEntry as ContractAuditEntry
-        from core.contracts.security.audit import AuditLevel as ContractAuditLevel
+        from core.PHASE_1.infrastructure.contracts.security.audit import AuditCategory as ContractCategory
+        from core.PHASE_1.infrastructure.contracts.security.audit import AuditEntry as ContractAuditEntry
+        from core.PHASE_1.infrastructure.contracts.security.audit import AuditLevel as ContractAuditLevel
 
         # Map to contract types
         contract_category = ContractCategory(entry.category.value.upper())

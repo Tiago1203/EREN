@@ -1,0 +1,98 @@
+"""EREN OS Cognitive Capability SDK.
+
+This module implements the Cognitive Capability SDK (CCSDK), the official
+framework for developing cognitive capabilities for EREN.
+
+Philosophy:
+    Developers never implement directly the Cognitive Kernel.
+    They develop capabilities using the Capability SDK.
+
+Key Concepts:
+    - Capability: A self-contained cognitive function
+    - BaseCapability: Abstract base for all capabilities
+    - Builder: Builder pattern for creating capabilities
+    - Registry: Manages capability registration
+    - LifecycleManager: Handles capability lifecycle
+
+Example:
+    >>> from core.PHASE_2.sdk import BaseCapability, CapabilityBuilder
+    >>> class MyCapability(BaseCapability):
+    ...     def initialize(self, context): pass
+    ...     def execute(self, context): return CapabilityResult(success=True)
+    ...     def shutdown(self): pass
+    ...
+    >>> metadata = CapabilityBuilder().named("my-capability").build()
+"""
+
+from __future__ import annotations
+
+from core.PHASE_2.sdk.builder import CapabilityBuilder, CapabilityClassBuilder
+
+# Core
+from core.PHASE_2.sdk.capability import BaseCapability
+
+# Exceptions
+from core.PHASE_2.sdk.exceptions import (
+    CapabilityAlreadyRegisteredError,
+    CapabilityBuilderError,
+    CapabilityContextError,
+    CapabilityContractError,
+    CapabilityDependencyError,
+    CapabilityExecutionError,
+    CapabilityInitializationError,
+    CapabilityNotFoundError,
+    CapabilityStateError,
+    CapabilityValidationError,
+    SDKException,
+)
+from core.PHASE_2.sdk.lifecycle import LifecycleManager, get_lifecycle_manager
+from core.PHASE_2.sdk.registry import (
+    CapabilityRegistry,
+    get_capability_registry,
+    reset_capability_registry,
+)
+
+# Types
+from core.PHASE_2.sdk.types import (
+    CapabilityCategory,
+    CapabilityContext,
+    CapabilityHealth,
+    CapabilityMetadata,
+    CapabilityPriority,
+    CapabilityResult,
+    CapabilityState,
+    ValidationResult,
+)
+
+__all__ = [
+    # Core
+    "BaseCapability",
+    "CapabilityBuilder",
+    "CapabilityClassBuilder",
+    "LifecycleManager",
+    "get_lifecycle_manager",
+    "CapabilityRegistry",
+    "get_capability_registry",
+    "reset_capability_registry",
+    # Types
+    "CapabilityState",
+    "CapabilityCategory",
+    "CapabilityPriority",
+    "CapabilityMetadata",
+    "CapabilityContext",
+    "CapabilityResult",
+    "CapabilityHealth",
+    "ValidationResult",
+    # Exceptions
+    "SDKException",
+    "CapabilityInitializationError",
+    "CapabilityExecutionError",
+    "CapabilityNotFoundError",
+    "CapabilityAlreadyRegisteredError",
+    "CapabilityValidationError",
+    "CapabilityDependencyError",
+    "CapabilityContractError",
+    "CapabilityStateError",
+    "CapabilityBuilderError",
+    "CapabilityContextError",
+]

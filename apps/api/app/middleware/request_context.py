@@ -17,7 +17,7 @@ from starlette.requests import Request
 from starlette.responses import Response
 
 if TYPE_CHECKING:
-    from core.contracts.security.authentication import Principal
+    from core.PHASE_1.infrastructure.contracts.security.authentication import Principal
 
 REQUEST_ID_HEADER = "X-Request-ID"
 

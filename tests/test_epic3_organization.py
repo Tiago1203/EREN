@@ -6,13 +6,13 @@ from datetime import date
 
 import pytest
 
-from core.organization.domain.entities import Hospital, Organization
-from core.organization.domain.entities import (
+from core.PHASE_1.domain.organization.domain.entities import Hospital, Organization
+from core.PHASE_1.domain.organization.domain.entities import (
     HospitalType,
     OwnershipType,
     OrganizationStatus,
 )
-from core.shared import OrganizationId, HospitalId, TenantId
+from core.PHASE_1.infrastructure.shared import OrganizationId, HospitalId, TenantId
 
 
 class TestOrganization:

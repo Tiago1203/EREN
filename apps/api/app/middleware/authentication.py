@@ -17,7 +17,7 @@ from app.middleware.request_context import (
 )
 
 if TYPE_CHECKING:
-    from core.contracts.security.authentication import AuthenticationProvider, Principal
+    from core.PHASE_1.infrastructure.contracts.security.authentication import AuthenticationProvider, Principal
 
 logger = logging.getLogger(__name__)
 

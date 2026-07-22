@@ -6,9 +6,9 @@ from decimal import Decimal
 
 import pytest
 
-from core.department.domain.entities import Department, Unit
-from core.department.domain.entities import DepartmentType, DepartmentStatus, UnitType, UnitStatus
-from core.shared import DepartmentId, UnitId, TenantId, OrganizationId
+from core.PHASE_1.domain.department.domain.entities import Department, Unit
+from core.PHASE_1.domain.department.domain.entities import DepartmentType, DepartmentStatus, UnitType, UnitStatus
+from core.PHASE_1.infrastructure.shared import DepartmentId, UnitId, TenantId, OrganizationId
 
 
 class TestDepartment:

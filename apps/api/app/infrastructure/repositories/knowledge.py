@@ -4,17 +4,17 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from core.knowledge.domain.entities import KnowledgeArticle
-from core.knowledge.domain.repositories import (
+from core.PHASE_1.domain.knowledge.domain.entities import KnowledgeArticle
+from core.PHASE_1.domain.knowledge.domain.repositories import (
     KnowledgeRepository as AbstractKnowledgeRepository,
 )
-from core.knowledge.domain.value_objects import (
+from core.PHASE_1.domain.knowledge.domain.value_objects import (
     ArticleContent,
     KnowledgeCategory,
     KnowledgeStatus,
     UsageStatistics,
 )
-from core.shared import EngineerId, KnowledgeId, Ok, Result, TenantId
+from core.PHASE_1.infrastructure.shared import EngineerId, KnowledgeId, Ok, Result, TenantId
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 

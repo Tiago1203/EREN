@@ -90,6 +90,48 @@ Al terminar esta fase tienes:
 
 ---
 
+## Código Fuente
+
+El código de FASE 1 se encuentra en:
+
+```
+core/PHASE_1/
+├── domain/                   # Entidades de negocio
+│   ├── asset/              # Gestión de activos
+│   ├── capacity/           # Capacidad hospitalaria
+│   ├── department/         # Departamentos
+│   ├── device/             # Dispositivos médicos
+│   ├── incident/           # Incidentes
+│   ├── inventory/         # Inventario
+│   ├── knowledge/          # Conocimiento
+│   ├── models/            # Modelos de dominio
+│   ├── organization/       # Organizaciones
+│   └── staffing/           # Personal
+├── infrastructure/         # Infraestructura
+│   ├── events/           # Sistema de eventos
+│   ├── shared/           # Módulos compartidos
+│   ├── lifecycle/        # Ciclo de vida
+│   ├── boot/             # Bootstrapping
+│   ├── container/        # Contenedor DI
+│   ├── contracts/        # Contratos
+│   ├── biomedical/       # Dominio biomédico
+│   ├── diagnostic/       # Diagnóstico
+│   └── diagnostics/     # Diagnósticos
+├── clinical/              # Clínica
+├── application/           # Servicios de aplicación
+└── workflows/             # Flujos de trabajo
+```
+
+Los tests correspondientes se encuentran en:
+
+```
+tests/unit/PHASE_1/
+├── domain/           # Tests de entidades de negocio
+└── infrastructure/    # Tests de infraestructura
+```
+
+---
+
 ## 🔗 Enlaces
 
 - [EPIC 11: Domain AI Integration](./epics/epic11/) - Preparar dominio para AI Core

@@ -7,10 +7,10 @@ from decimal import Decimal
 
 import pytest
 
-from core.asset.domain.entities import Asset, Contract, Warranty
-from core.asset.domain.entities import AssetStatus, ContractType, ContractStatus, WarrantyType
-from core.asset.domain.entities import DepreciationMethod
-from core.shared import AssetId, ContractId, WarrantyId, TenantId, DeviceId, VendorId
+from core.PHASE_1.domain.asset.domain.entities import Asset, Contract, Warranty
+from core.PHASE_1.domain.asset.domain.entities import AssetStatus, ContractType, ContractStatus, WarrantyType
+from core.PHASE_1.domain.asset.domain.entities import DepreciationMethod
+from core.PHASE_1.infrastructure.shared import AssetId, ContractId, WarrantyId, TenantId, DeviceId, VendorId
 
 
 class TestAsset:

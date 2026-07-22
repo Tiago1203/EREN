@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
-from core.contracts.security.authentication import (
+from core.PHASE_1.infrastructure.contracts.security.authentication import (
     AuthenticationFactor,
     AuthenticationMethod,
     AuthenticationResult,

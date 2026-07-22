@@ -2,7 +2,7 @@
 
 import pytest
 
-from core.diagnostics import (
+from core.PHASE_1.infrastructure.diagnostics import (
     ERENDiagnostics,
     SystemHealth,
     HealthStatus,
@@ -160,7 +160,7 @@ class TestDiagnosticsEvents:
 
     def test_events_published(self):
         """Test that diagnostic events are published."""
-        from core.diagnostics.events import get_publisher, DiagnosticsEventType
+        from core.PHASE_1.infrastructure.diagnostics.events import get_publisher, DiagnosticsEventType
 
         publisher = get_publisher()
         publisher.clear_history()

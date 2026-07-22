@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 import sys
 sys.path.insert(0, '/workspace/project/EREN')
 
-from core.runtime import (
+from core.PHASE_2.runtime import (
     CognitiveRuntime,
     RuntimeBuilder,
     RuntimeConfiguration,

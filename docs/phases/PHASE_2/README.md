@@ -261,6 +261,67 @@ core/ai/integration/
 
 ---
 
+## Código Fuente
+
+El código de FASE 2 se encuentra en:
+
+```
+core/PHASE_2/
+├── ai/                    # Kernel de IA
+├── agents/               # Sistema de agentes
+├── context/              # Context Builder
+├── embeddings/           # Sistema de embeddings
+├── execution/            # Motor de ejecución
+├── ingestion/            # Ingesta de datos
+├── memory/               # Sistema de memoria
+├── orchestration/       # Orquestación
+│   ├── orchestrator/    # Orquestador principal
+│   └── orchestration/   # Componentes de orquestación
+├── pipeline/             # Pipeline de datos
+├── planner/              # Planificador
+│   ├── planner/         # Planificador principal
+│   └── planning/         # Componentes de planificación
+├── providers/            # Proveedores LLM
+├── rag/                  # RAG Pipeline
+├── registry/             # Registro de servicios
+├── retrieval/            # Motor de recuperación
+├── session/              # Gestión de sesiones
+├── runtime/              # Runtime
+├── router/               # Enrutador
+├── intent/               # Detección de intención
+├── capabilities/         # Sistema de capacidades
+├── cognitive/            # Motor cognitivo
+├── plugins/              # Sistema de plugins
+├── scheduler/            # Planificador
+├── sdk/                  # SDK
+├── decision/              # Motor de decisión
+├── learning/              # Motor de aprendizaje
+└── reasoning/            # Motor de razonamiento
+```
+
+Los tests correspondientes se encuentran en:
+
+```
+tests/unit/PHASE_2/
+├── ai/               # Tests del kernel de IA
+├── agents/           # Tests de agentes
+├── context/          # Tests de context
+├── embeddings/       # Tests de embeddings
+├── execution/        # Tests de ejecución
+├── ingestion/        # Tests de ingesta
+├── memory/           # Tests de memoria
+├── orchestration/    # Tests de orquestación
+├── pipeline/        # Tests de pipeline
+├── planner/         # Tests de planner
+├── providers/       # Tests de providers
+├── rag/             # Tests de RAG
+├── registry/        # Tests de registry
+├── retrieval/       # Tests de retrieval
+└── session/        # Tests de sesión
+```
+
+---
+
 ## Quick Start
 
 ```python

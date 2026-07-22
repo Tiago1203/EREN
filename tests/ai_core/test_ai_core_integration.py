@@ -13,52 +13,52 @@ class TestAICoreImports:
 
     def test_import_kernel(self):
         """Verifica que kernel está importable."""
-        from core.ai import AIKernel
+        from core.PHASE_2.ai import AIKernel
         assert AIKernel is not None
 
     def test_import_conversation(self):
         """Verifica que conversation está importable."""
-        from core.ai import ConversationController
+        from core.PHASE_2.ai import ConversationController
         assert ConversationController is not None
 
     def test_import_context_builder(self):
         """Verifica que context_builder está importable."""
-        from core.ai import ContextBuilder
+        from core.PHASE_2.ai import ContextBuilder
         assert ContextBuilder is not None
 
     def test_import_prompt(self):
         """Verifica que prompt está importable."""
-        from core.ai import PromptBuilder
+        from core.PHASE_2.ai import PromptBuilder
         assert PromptBuilder is not None
 
     def test_import_memory(self):
         """Verifica que memory está importable."""
-        from core.ai import MemoryManager
+        from core.PHASE_2.ai import MemoryManager
         assert MemoryManager is not None
 
     def test_import_tools(self):
         """Verifica que tools está importable."""
-        from core.ai import ToolOrchestrator
+        from core.PHASE_2.ai import ToolOrchestrator
         assert ToolOrchestrator is not None
 
     def test_import_response(self):
         """Verifica que response está importable."""
-        from core.ai import ResponseComposer
+        from core.PHASE_2.ai import ResponseComposer
         assert ResponseComposer is not None
 
     def test_import_providers(self):
         """Verifica que providers está importable."""
-        from core.ai import ProviderManager
+        from core.PHASE_2.ai import ProviderManager
         assert ProviderManager is not None
 
     def test_import_sessions(self):
         """Verifica que sessions está importable."""
-        from core.ai import SessionManager
+        from core.PHASE_2.ai import SessionManager
         assert SessionManager is not None
 
     def test_import_integration(self):
         """Verifica que integration está importable."""
-        from core.ai import AICoreController, AICoreConfig
+        from core.PHASE_2.ai import AICoreController, AICoreConfig
         assert AICoreController is not None
         assert AICoreConfig is not None
 
@@ -68,7 +68,7 @@ class TestAICoreConfig:
 
     def test_default_config(self):
         """Verifica configuración por defecto."""
-        from core.ai import AICoreConfig
+        from core.PHASE_2.ai import AICoreConfig
         
         config = AICoreConfig()
         
@@ -80,7 +80,7 @@ class TestAICoreConfig:
 
     def test_custom_config(self):
         """Verifica configuración personalizada."""
-        from core.ai import AICoreConfig
+        from core.PHASE_2.ai import AICoreConfig
         
         config = AICoreConfig(
             default_provider="anthropic",
@@ -98,7 +98,7 @@ class TestAICoreController:
 
     def test_controller_creation(self):
         """Verifica que el controller se crea."""
-        from core.ai import AICoreController, AICoreConfig
+        from core.PHASE_2.ai import AICoreController, AICoreConfig
         
         config = AICoreConfig()
         controller = AICoreController(config)
@@ -108,7 +108,7 @@ class TestAICoreController:
 
     def test_controller_initial_status(self):
         """Verifica estado inicial del controller."""
-        from core.ai import AICoreController, AICoreStatus
+        from core.PHASE_2.ai import AICoreController, AICoreStatus
         
         controller = AICoreController()
         
@@ -120,7 +120,7 @@ class TestAICoreController:
 
     def test_controller_stats(self):
         """Verifica estadísticas del controller."""
-        from core.ai import AICoreController
+        from core.PHASE_2.ai import AICoreController
         
         controller = AICoreController()
         stats = controller.stats
@@ -134,7 +134,7 @@ class TestSessionManagement:
 
     def test_create_session(self):
         """Verifica creación de sesión."""
-        from core.ai import SessionManager, TokenBudget, ConversationLimit
+        from core.PHASE_2.ai import SessionManager, TokenBudget, ConversationLimit
         
         manager = SessionManager()
         session = manager.create_session(user_id="test-user")
@@ -145,7 +145,7 @@ class TestSessionManagement:
 
     def test_session_token_budget(self):
         """Verifica presupuesto de tokens."""
-        from core.ai import TokenBudget
+        from core.PHASE_2.ai import TokenBudget
         
         budget = TokenBudget(total_limit=1000)
         
@@ -154,7 +154,7 @@ class TestSessionManagement:
 
     def test_session_limits(self):
         """Verifica límites de conversación."""
-        from core.ai import ConversationLimit
+        from core.PHASE_2.ai import ConversationLimit
         
         limits = ConversationLimit(
             max_messages_per_session=50,
@@ -170,14 +170,14 @@ class TestProviders:
 
     def test_provider_manager_creation(self):
         """Verifica creación del manager."""
-        from core.ai import ProviderManager
+        from core.PHASE_2.ai import ProviderManager
         
         manager = ProviderManager()
         assert manager is not None
 
     def test_provider_types(self):
         """Verifica tipos de proveedor."""
-        from core.ai import ProviderType
+        from core.PHASE_2.ai import ProviderType
         
         assert ProviderType.OPENAI is not None
         assert ProviderType.ANTHROPIC is not None
@@ -190,7 +190,7 @@ class TestResponseComposer:
 
     def test_create_response(self):
         """Verifica creación de respuesta."""
-        from core.ai import ResponseComposer, ResponseType
+        from core.PHASE_2.ai import ResponseComposer, ResponseType
         
         composer = ResponseComposer()
         response = composer.create_response(ResponseType.MARKDOWN)
@@ -200,7 +200,7 @@ class TestResponseComposer:
 
     def test_add_text(self):
         """Verifica agregar texto."""
-        from core.ai import ResponseComposer
+        from core.PHASE_2.ai import ResponseComposer
         
         composer = ResponseComposer()
         composer.create_response()
@@ -210,7 +210,7 @@ class TestResponseComposer:
 
     def test_add_code(self):
         """Verifica agregar código."""
-        from core.ai import ResponseComposer
+        from core.PHASE_2.ai import ResponseComposer
         
         composer = ResponseComposer()
         composer.create_response()
@@ -224,14 +224,14 @@ class TestMemoryManager:
 
     def test_memory_creation(self):
         """Verifica creación del manager."""
-        from core.ai import MemoryManager
+        from core.PHASE_2.ai import MemoryManager
         
         manager = MemoryManager()
         assert manager is not None
 
     def test_memory_types(self):
         """Verifica tipos de memoria."""
-        from core.ai import MemoryType
+        from core.PHASE_2.ai import MemoryType
         
         assert MemoryType.WORKING is not None
         assert MemoryType.SHORT is not None
@@ -243,14 +243,14 @@ class TestToolOrchestrator:
 
     def test_orchestrator_creation(self):
         """Verifica creación del orchestrator."""
-        from core.ai import ToolOrchestrator
+        from core.PHASE_2.ai import ToolOrchestrator
         
         orchestrator = ToolOrchestrator()
         assert orchestrator is not None
 
     def test_tool_categories(self):
         """Verifica categorías de herramientas."""
-        from core.ai import ToolCategory
+        from core.PHASE_2.ai import ToolCategory
         
         assert ToolCategory.DATABASE is not None
         assert ToolCategory.API is not None
@@ -262,7 +262,7 @@ class TestPromptBuilder:
 
     def test_builder_creation(self):
         """Verifica creación del builder."""
-        from core.ai import PromptBuilder, PromptConfig
+        from core.PHASE_2.ai import PromptBuilder, PromptConfig
         
         config = PromptConfig()
         builder = PromptBuilder(config)
@@ -271,7 +271,7 @@ class TestPromptBuilder:
 
     def test_prompt_strategies(self):
         """Verifica estrategias de prompt."""
-        from core.ai.prompt import PromptStrategyType
+        from core.PHASE_2.ai.prompt import PromptStrategyType
         
         assert PromptStrategyType.DIRECT is not None
         assert PromptStrategyType.CHAIN_OF_THOUGHT is not None

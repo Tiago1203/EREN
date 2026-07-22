@@ -321,7 +321,7 @@ class TestConversationMemoryProvider:
 
     def test_write_and_read(self, provider):
         """Test write and read."""
-        from core.memory import MemoryEntry, MemoryType
+        from core.PHASE_2.memory import MemoryEntry, MemoryType
 
         entry = MemoryEntry(
             content="Hello, how are you?",
@@ -339,7 +339,7 @@ class TestConversationMemoryProvider:
 
     def test_search(self, provider):
         """Test search."""
-        from core.memory import MemoryEntry, MemoryType, MemoryQuery
+        from core.PHASE_2.memory import MemoryEntry, MemoryType, MemoryQuery
 
         provider.write(MemoryEntry(
             content="Patient has diabetes",
@@ -353,7 +353,7 @@ class TestConversationMemoryProvider:
 
     def test_delete(self, provider):
         """Test delete."""
-        from core.memory import MemoryEntry, MemoryType
+        from core.PHASE_2.memory import MemoryEntry, MemoryType
 
         provider.write(MemoryEntry(
             content="Test",

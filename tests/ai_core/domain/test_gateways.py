@@ -14,7 +14,7 @@ class TestDeviceGateway:
     
     @pytest.fixture
     def gateway(self):
-        from core.ai.domain import DeviceGateway
+        from core.PHASE_2.ai.domain import DeviceGateway
         return DeviceGateway()
     
     @pytest.mark.asyncio
@@ -86,7 +86,7 @@ class TestIncidentGateway:
     
     @pytest.fixture
     def gateway(self):
-        from core.ai.domain import IncidentGateway
+        from core.PHASE_2.ai.domain import IncidentGateway
         return IncidentGateway()
     
     @pytest.mark.asyncio
@@ -129,7 +129,7 @@ class TestKnowledgeGateway:
     
     @pytest.fixture
     def gateway(self):
-        from core.ai.domain import KnowledgeGateway
+        from core.PHASE_2.ai.domain import KnowledgeGateway
         return KnowledgeGateway()
     
     @pytest.mark.asyncio
@@ -157,7 +157,7 @@ class TestHospitalGateway:
     
     @pytest.fixture
     def gateway(self):
-        from core.ai.domain import HospitalGateway
+        from core.PHASE_2.ai.domain import HospitalGateway
         return HospitalGateway()
     
     @pytest.mark.asyncio
@@ -184,7 +184,7 @@ class TestRecommendationGateway:
     
     @pytest.fixture
     def gateway(self):
-        from core.ai.domain import RecommendationGateway
+        from core.PHASE_2.ai.domain import RecommendationGateway
         return RecommendationGateway()
     
     @pytest.mark.asyncio
