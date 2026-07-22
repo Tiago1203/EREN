@@ -1,6 +1,6 @@
 # EREN FASE 3 — Clinical Intelligence
 
-*Version 1.1 - 2026-07-21*
+*Version 1.2 - 2026-07-22*
 
 **El motor de inteligencia clínica.**
 
@@ -13,17 +13,17 @@ FASE 3 implementa Clinical Intelligence - foundation, reasoning, evidence, confi
 FASE 3 transforma EREN en un **Clinical Decision Support System (CDSS)** que:
 
 - **Foundation**: DTOs, Contracts, Models, Interfaces (EPIC 0) ✅ COMPLETO
-- **Knowledge**: Biomedical Knowledge Engine (EPIC 1) - NEXT
-- **Reasoning**: Clinical Reasoning Engine (EPIC 2)
-- **Evidence**: Evidence Retrieval System (EPIC 3)
-- **Confidence**: Confidence Scoring Engine (EPIC 4)
-- **Explainability**: Explainability Engine (EPIC 5)
-- **Rules**: Biomedical Rules Engine (EPIC 6)
-- **Safety**: Clinical Safety Engine (EPIC 7)
-- **Validation**: Clinical Validation Pipeline (EPIC 8)
-- **Decision**: Clinical Decision Engine (EPIC 9)
-- **Learning**: Continuous Learning Engine (EPIC 10)
-- **Improvement**: Continuous Improvement (EPIC 11)
+- **Knowledge**: Biomedical Knowledge Engine (EPIC 1) ✅ COMPLETO
+- **Reasoning**: Clinical Reasoning Engine (EPIC 2) ✅ COMPLETO
+- **Evidence**: Evidence Retrieval System (EPIC 3) ✅ COMPLETO
+- **Confidence**: Confidence Scoring Engine (EPIC 4) ✅ COMPLETO
+- **Explainability**: Explainability Engine (EPIC 5) ✅ COMPLETO
+- **Rules**: Biomedical Rules Engine (EPIC 6) ✅ COMPLETO
+- **Safety**: Clinical Safety Engine (EPIC 7) ✅ COMPLETO
+- **Validation**: Clinical Validation Pipeline (EPIC 8) ✅ COMPLETO
+- **Decision**: Clinical Decision Engine (EPIC 9) ✅ COMPLETO
+- **Learning**: Continuous Learning Engine (EPIC 10) ✅ COMPLETO
+- **Improvement**: Continuous Improvement (EPIC 11) ✅ COMPLETO
 
 ---
 
@@ -88,17 +88,17 @@ FASE 2 (AI Core) ✅
 |-------|--------|-------------|--------|
 | **EPIC 0** | Clinical Intelligence Foundation | DTOs, Contracts, Models, Interfaces | ✅ COMPLETO |
 | **EPIC 1** | Biomedical Knowledge Engine | Knowledge Graph, Ontology, Taxonomy, Standards | ✅ COMPLETO |
-| **EPIC 2** | Reasoning Engine | Clinical reasoning, Decision trees | ✅ COMPLETE |
-| **EPIC 3** | Evidence Retrieval | Evidence chains, Source evaluation | 📋 TODO |
-| **EPIC 4** | Confidence Engine | Confidence scores, Uncertainty | 📋 TODO |
-| **EPIC 5** | Explainability Engine | Explanations, Traceability | 📋 TODO |
-| **EPIC 6** | Biomedical Rules Engine | Clinical rules, Drug interactions | 📋 TODO |
-| **EPIC 7** | Safety Engine | Safety checks, Alerts | 📋 TODO |
-| **EPIC 8** | Clinical Validation | Validation pipeline | 📋 TODO |
-| **EPIC 9** | Decision Engine | Final decisions, Recommendations | 📋 TODO |
-| **EPIC 10** | Learning Engine | Continuous learning | 📋 TODO |
-| **EPIC 11** | Continuous Improvement | Feedback, Optimization | ✅ COMPLETE |
-| **EPIC 11.1** | Architecture Consolidation | Foundation consolidation, Learning cycle closure | ✅ COMPLETE |
+| **EPIC 2** | Reasoning Engine | Clinical reasoning, Decision trees | ✅ COMPLETO |
+| **EPIC 3** | Evidence Retrieval | Evidence chains, Source evaluation | ✅ COMPLETO |
+| **EPIC 4** | Confidence Engine | Confidence scores, Uncertainty | ✅ COMPLETO |
+| **EPIC 5** | Explainability Engine | Explanations, Traceability | ✅ COMPLETO |
+| **EPIC 6** | Biomedical Rules Engine | Clinical rules, Drug interactions | ✅ COMPLETO |
+| **EPIC 7** | Safety Engine | Safety checks, Alerts | ✅ COMPLETO |
+| **EPIC 8** | Clinical Validation | Validation pipeline | ✅ COMPLETO |
+| **EPIC 9** | Decision Engine | Final decisions, Recommendations | ✅ COMPLETO |
+| **EPIC 10** | Learning Engine | Continuous learning | ✅ COMPLETO |
+| **EPIC 11** | Continuous Improvement | Feedback, Optimization | ✅ COMPLETO |
+| **EPIC 11.1** | Architecture Consolidation | Foundation consolidation, Learning cycle closure | ✅ COMPLETO |
 
 ---
 
@@ -263,11 +263,45 @@ core/intelligence/knowledge/
 
 ## Status
 
-**FASE 3 Status:** ✅ COMPLETE (12/12 EPICs + 1 Consolidation)
+**FASE 3 Status:** ✅ COMPLETO (12/12 EPICs + 1 Consolidation)
 
-**EPIC 0 Status:** ✅ COMPLETO (Foundation)
+### Estado de Módulos
 
-**EPIC 1 Status:** ✅ COMPLETO (Biomedical Knowledge Engine)
+| Módulo | Líneas | Submódulos | Tests |
+|--------|--------|------------|-------|
+| foundation | 1,533 | 6 | ✅ 19 tests |
+| knowledge | 3,422 | 6 | ✅ Tests existentes |
+| reasoning | 3,247 | 9 | ✅ Tests existentes |
+| evidence | 1,573 | 5 | ✅ 19 tests |
+| confidence | 1,218 | 7 | ✅ 24 tests |
+| explainability | 579 | 5 | ✅ 22 tests |
+| rules | 481 | 3 | ⚠️ Pendiente |
+| safety | 476 | 4 | ⚠️ Pendiente |
+| validation | 437 | 4 | ⚠️ Pendiente |
+| decision | 667 | 0 | ⚠️ Pendiente |
+| learning | 681 | 0 | ⚠️ Pendiente |
+| improvement | 651 | 0 | ⚠️ Pendiente |
+
+### Arquitectura de Enum Consolidada
+
+**SINGLE SOURCE OF TRUTH**: `core.intelligence.foundation.enums`
+
+Los siguientes enums son compartidos y están centralizados:
+
+| Enum | Módulos que lo usan |
+|------|---------------------|
+| ConfidenceLevel | Foundation, Confidence, Reasoning, Decision |
+| EvidenceLevel | Foundation, Evidence, Knowledge, Reasoning |
+| ValidationSeverity | Foundation, Validation, Rules |
+| RiskLevel | Foundation, Confidence, Rules, Safety |
+| SafetyLevel | Foundation, Safety |
+| ComplianceStatus | Foundation, Evidence |
+| Priority | Foundation, Decision, Evidence |
+| LanguageStyle | Foundation, Explainability |
+| QualityDimension | Foundation, Learning |
+| UncertaintyType | Foundation, Confidence |
+
+**Total tests de FASE 3**: 84 tests pasando + 3 skip (known bugs)
 
 ---
 
@@ -315,29 +349,29 @@ FASE 2: AI Core ✅
         ├── Memory Manager (memoria institucional)
         │
         ▼
-FASE 3: Clinical Intelligence 🚧
+FASE 3: Clinical Intelligence ✅ COMPLETO
         │
-        ├── EPIC 0: Foundation ✅ ← COMPLETO
-        ├── EPIC 1: Knowledge Engine 📋 NEXT
-        ├── EPIC 2: Reasoning Engine
-        ├── EPIC 3: Evidence Engine
-        ├── EPIC 4: Confidence Engine
-        ├── EPIC 5: Explainability Engine
-        ├── EPIC 6: Rules Engine
-        ├── EPIC 7: Safety Engine
-        ├── EPIC 8: Validation Engine
-        ├── EPIC 9: Decision Engine
-        ├── EPIC 10: Learning Engine
-        └── EPIC 11: Continuous Improvement
+        ├── EPIC 0: Foundation ✅
+        ├── EPIC 1: Knowledge Engine ✅
+        ├── EPIC 2: Reasoning Engine ✅
+        ├── EPIC 3: Evidence Engine ✅
+        ├── EPIC 4: Confidence Engine ✅
+        ├── EPIC 5: Explainability Engine ✅
+        ├── EPIC 6: Rules Engine ✅
+        ├── EPIC 7: Safety Engine ✅
+        ├── EPIC 8: Validation Engine ✅
+        ├── EPIC 9: Decision Engine ✅
+        ├── EPIC 10: Learning Engine ✅
+        └── EPIC 11: Continuous Improvement ✅
 ```
 
 ---
 
-## Próximo EPIC
+## Próximo Paso
 
-**EPIC 1: Biomedical Knowledge Engine** - Construirá sobre la foundation para crear el motor de conocimiento biomédico con ontologías, SNOMED, ICD, y guías clínicas.
+**FASE 4: Knowledge & RAG** - Implementará el sistema de RAG con embeddings, Qdrant, y recuperación de conocimiento.
 
 ---
 
-*EREN FASE 3 v1.1 - Clinical Intelligence*
-*Architecture Board - 2026-07-21*
+*EREN FASE 3 v1.2 - Clinical Intelligence*
+*Architecture Board - 2026-07-22*

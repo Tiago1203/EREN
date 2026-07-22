@@ -9,6 +9,10 @@ This module provides explainability capabilities:
 - Decision Path Tracer
 - Source Tracer
 - Natural Language Explainer
+
+ARCHITECTURE NOTE:
+LanguageStyle is imported from core.intelligence.foundation.enums to ensure consistency.
+NodeType, EdgeType, and TreeNodeType are specific to this engine.
 """
 
 from enum import Enum
@@ -16,12 +20,14 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional, Any
 
+# Import shared enums from SINGLE SOURCE OF TRUTH
+from core.intelligence.foundation.enums import LanguageStyle
 
 # Version
 __version__ = "1.0.0"
 
 
-# Enums
+# Engine-specific Enums
 class NodeType(Enum):
     """Types of nodes in reasoning graph."""
     SYMPTOM = "symptom"
@@ -47,14 +53,6 @@ class TreeNodeType(Enum):
     CATEGORY = "category"
     EVIDENCE = "evidence"
     CONCLUSION = "conclusion"
-
-
-class LanguageStyle(Enum):
-    """Styles for natural language generation."""
-    TECHNICAL = "technical"
-    CLINICAL = "clinical"
-    SIMPLE = "simple"
-    FORMAL = "formal"
 
 
 # Data Classes
