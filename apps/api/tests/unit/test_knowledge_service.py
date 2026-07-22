@@ -5,15 +5,15 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from core.knowledge.domain.services.knowledge_service import KnowledgeService
-from core.knowledge.domain.entities.knowledge_article import KnowledgeArticle
-from core.knowledge.domain.value_objects import (
+from core.PHASE_1.domain.knowledge.domain.services.knowledge_service import KnowledgeService
+from core.PHASE_1.domain.knowledge.domain.entities.knowledge_article import KnowledgeArticle
+from core.PHASE_1.domain.knowledge.domain.value_objects import (
     ArticleContent,
     KnowledgeCategory,
     KnowledgeStatus,
 )
-from core.knowledge.domain.repositories.knowledge_repository import KnowledgeRepository
-from core.shared import (
+from core.PHASE_1.domain.knowledge.domain.repositories.knowledge_repository import KnowledgeRepository
+from core.PHASE_1.infrastructure.shared import (
     EngineerId,
     KnowledgeId,
     Ok,

@@ -8,10 +8,10 @@ build context from various sources.
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 
-from core.ai.context_builder.providers.base import ContextItem, ContextQuery, BaseContextProvider
-from core.ai.context_builder.providers.device_provider import DeviceContextProvider
-from core.ai.context_builder.providers.knowledge_provider import KnowledgeContextProvider
-from core.ai.context_builder.providers.incident_provider import IncidentContextProvider
+from core.PHASE_2.ai.context_builder.providers.base import ContextItem, ContextQuery, BaseContextProvider
+from core.PHASE_2.ai.context_builder.providers.device_provider import DeviceContextProvider
+from core.PHASE_2.ai.context_builder.providers.knowledge_provider import KnowledgeContextProvider
+from core.PHASE_2.ai.context_builder.providers.incident_provider import IncidentContextProvider
 
 
 class TestContextItem:

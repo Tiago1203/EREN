@@ -373,5 +373,37 @@ FASE 3: Clinical Intelligence ✅ COMPLETO
 
 ---
 
+## Código Fuente
+
+El código de FASE 3 se encuentra en:
+
+```
+core/PHASE_3/
+├── intelligence/           # Motores de Clinical Intelligence
+│   ├── foundation/        # EPIC 0: Foundation
+│   ├── confidence/        # EPIC 4: Confidence Engine
+│   ├── decision/          # EPIC 9: Decision Engine
+│   ├── evidence/           # EPIC 3: Evidence Retrieval
+│   ├── explainability/     # EPIC 5: Explainability
+│   ├── improvement/        # EPIC 11: Improvement
+│   ├── knowledge/          # EPIC 1: Knowledge Engine
+│   ├── learning/           # EPIC 10: Learning Engine
+│   ├── reasoning/          # EPIC 2: Reasoning Engine
+│   ├── rules/              # EPIC 6: Rules Engine
+│   ├── safety/             # EPIC 7: Safety Engine
+│   └── validation/         # EPIC 8: Validation
+├── integrations/           # EPIC 6: Integraciones
+└── embeddings/             # Embeddings clínicos
+```
+
+Los tests correspondientes se encuentran en:
+
+```
+tests/unit/PHASE_3/
+└── intelligence/           # Tests de Clinical Intelligence
+```
+
+---
+
 *EREN FASE 3 v1.2 - Clinical Intelligence*
 *Architecture Board - 2026-07-22*

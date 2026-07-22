@@ -5,17 +5,17 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from core.recommendation.domain.services.recommendation_service import RecommendationService
-from core.recommendation.domain.entities.recommendation import AIRecommendation
-from core.recommendation.domain.value_objects import (
+from core.PHASE_3.recommendation.domain.services.recommendation_service import RecommendationService
+from core.PHASE_3.recommendation.domain.entities.recommendation import AIRecommendation
+from core.PHASE_3.recommendation.domain.value_objects import (
     RecommendationCategory,
     RecommendationConfidence,
     RecommendationStatus,
     RecommendationUrgency,
     RejectionReason,
 )
-from core.recommendation.domain.repositories.recommendation_repository import RecommendationRepository
-from core.shared import (
+from core.PHASE_3.recommendation.domain.repositories.recommendation_repository import RecommendationRepository
+from core.PHASE_1.infrastructure.shared import (
     DeviceId,
     EngineerId,
     IncidentId,

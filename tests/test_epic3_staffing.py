@@ -4,10 +4,10 @@ from datetime import UTC, datetime
 
 import pytest
 
-from core.staffing.domain.entities.role import Role, RoleType
-from core.staffing.domain.entities.shift import Shift, ShiftStatus, ShiftType
-from core.staffing.domain.entities.staff import EmploymentStatus, Staff, StaffType
-from core.staffing.domain.entities.team import Team, TeamType
+from core.PHASE_1.domain.staffing.domain.entities.role import Role, RoleType
+from core.PHASE_1.domain.staffing.domain.entities.shift import Shift, ShiftStatus, ShiftType
+from core.PHASE_1.domain.staffing.domain.entities.staff import EmploymentStatus, Staff, StaffType
+from core.PHASE_1.domain.staffing.domain.entities.team import Team, TeamType
 
 
 @pytest.fixture

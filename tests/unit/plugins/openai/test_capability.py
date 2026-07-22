@@ -12,7 +12,7 @@ from plugins.openai.exceptions import (
     OpenAIAuthenticationError,
     OpenAITimeoutError,
 )
-from core.sdk import CapabilityContext, CapabilityResult
+from core.PHASE_2.sdk import CapabilityContext, CapabilityResult
 
 
 class TestOpenAICapabilityMetrics:

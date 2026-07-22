@@ -4,15 +4,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from core.incident.domain.entities import EngineeringIncident
-from core.incident.domain.repositories import IncidentRepository as AbstractIncidentRepository
-from core.incident.domain.value_objects import (
+from core.PHASE_1.domain.incident.domain.entities import EngineeringIncident
+from core.PHASE_1.domain.incident.domain.repositories import IncidentRepository as AbstractIncidentRepository
+from core.PHASE_1.domain.incident.domain.value_objects import (
     Feedback,
     IncidentStatus,
     Resolution,
     Symptom,
 )
-from core.shared import (
+from core.PHASE_1.infrastructure.shared import (
     DeviceId,
     EngineerId,
     IncidentId,
@@ -41,7 +41,7 @@ def _incident_status_to_str(status: IncidentStatus) -> str:
 
 def _model_to_entity(model: IncidentModel) -> EngineeringIncident:
     """Convert SQLAlchemy model to domain entity."""
-    from core.shared import Priority, SafetyLevel
+    from core.PHASE_1.infrastructure.shared import Priority, SafetyLevel
 
     symptom = Symptom(
         description=model.symptom_description,

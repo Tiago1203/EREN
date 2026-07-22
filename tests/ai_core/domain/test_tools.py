@@ -8,10 +8,10 @@ interact with gateways and return proper results.
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 
-from core.ai.tools.domain.base import BaseDomainTool, DomainToolConfig, ToolExecutionContext
-from core.ai.tools.domain.device_tools import SearchDeviceTool, GetDeviceHistoryTool
-from core.ai.tools.domain.knowledge_tools import SearchKnowledgeTool
-from core.ai.tools.domain.hospital_tools import GetCapacityInfoTool
+from core.PHASE_2.ai.tools.domain.base import BaseDomainTool, DomainToolConfig, ToolExecutionContext
+from core.PHASE_2.ai.tools.domain.device_tools import SearchDeviceTool, GetDeviceHistoryTool
+from core.PHASE_2.ai.tools.domain.knowledge_tools import SearchKnowledgeTool
+from core.PHASE_2.ai.tools.domain.hospital_tools import GetCapacityInfoTool
 
 
 class TestToolExecutionContext:
@@ -72,7 +72,7 @@ class TestSearchDeviceTool:
     
     @pytest.fixture
     def mock_gateway(self):
-        from core.ai.domain import DeviceDTO
+        from core.PHASE_2.ai.domain import DeviceDTO
         gateway = MagicMock()
         gateway.search = AsyncMock(return_value=[
             DeviceDTO(
@@ -125,7 +125,7 @@ class TestGetDeviceHistoryTool:
     
     @pytest.fixture
     def mock_gateways(self):
-        from core.ai.domain import DeviceDTO
+        from core.PHASE_2.ai.domain import DeviceDTO
         device_gateway = MagicMock()
         device_gateway.get_by_id = AsyncMock(return_value=DeviceDTO(
             id="dev-001",
@@ -178,7 +178,7 @@ class TestSearchKnowledgeTool:
     
     @pytest.fixture
     def mock_gateway(self):
-        from core.ai.domain import KnowledgeArticleDTO
+        from core.PHASE_2.ai.domain import KnowledgeArticleDTO
         gateway = MagicMock()
         gateway.search = AsyncMock(return_value=[
             KnowledgeArticleDTO(
@@ -220,7 +220,7 @@ class TestGetCapacityInfoTool:
     
     @pytest.fixture
     def mock_gateway(self):
-        from core.ai.domain import CapacityDTO
+        from core.PHASE_2.ai.domain import CapacityDTO
         gateway = MagicMock()
         gateway.get_capacity = AsyncMock(return_value=CapacityDTO(
             campus_id="campus-001",

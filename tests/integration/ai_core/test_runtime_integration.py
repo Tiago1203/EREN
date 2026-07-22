@@ -55,7 +55,7 @@ class TestUOWFactory:
     @pytest.mark.asyncio
     async def test_uow_factory_can_create_uow(self):
         """Verify UOW factory can create UnitOfWork."""
-        from core.ai.integration.uow_factory import AIUnitOfWorkFactory
+        from core.PHASE_2.ai.integration.uow_factory import AIUnitOfWorkFactory
         from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 
         # Create a test engine (in-memory SQLite for testing)
@@ -96,8 +96,8 @@ class TestGatewaysWithMockedUOW:
     @pytest.mark.asyncio
     async def test_device_gateway_uses_uow(self):
         """Verify DeviceGateway uses AIUnitOfWork."""
-        from core.ai.integration.domain_adapter import DeviceGatewayImpl
-        from core.ai.integration.uow_factory import AIUnitOfWork
+        from core.PHASE_2.ai.integration.domain_adapter import DeviceGatewayImpl
+        from core.PHASE_2.ai.integration.uow_factory import AIUnitOfWork
 
         # Create mock session
         mock_session = AsyncMock()
@@ -110,8 +110,8 @@ class TestGatewaysWithMockedUOW:
     @pytest.mark.asyncio
     async def test_incident_gateway_uses_uow(self):
         """Verify IncidentGateway uses AIUnitOfWork."""
-        from core.ai.integration.domain_adapter import IncidentGatewayImpl
-        from core.ai.integration.uow_factory import AIUnitOfWork
+        from core.PHASE_2.ai.integration.domain_adapter import IncidentGatewayImpl
+        from core.PHASE_2.ai.integration.uow_factory import AIUnitOfWork
 
         # Create mock session
         mock_session = AsyncMock()
@@ -124,8 +124,8 @@ class TestGatewaysWithMockedUOW:
     @pytest.mark.asyncio
     async def test_knowledge_gateway_uses_uow(self):
         """Verify KnowledgeGateway uses AIUnitOfWork."""
-        from core.ai.integration.domain_adapter import KnowledgeGatewayImpl
-        from core.ai.integration.uow_factory import AIUnitOfWork
+        from core.PHASE_2.ai.integration.domain_adapter import KnowledgeGatewayImpl
+        from core.PHASE_2.ai.integration.uow_factory import AIUnitOfWork
 
         # Create mock session
         mock_session = AsyncMock()
@@ -138,8 +138,8 @@ class TestGatewaysWithMockedUOW:
     @pytest.mark.asyncio
     async def test_recommendation_gateway_uses_uow(self):
         """Verify RecommendationGateway uses AIUnitOfWork."""
-        from core.ai.integration.domain_adapter import RecommendationGatewayImpl
-        from core.ai.integration.uow_factory import AIUnitOfWork
+        from core.PHASE_2.ai.integration.domain_adapter import RecommendationGatewayImpl
+        from core.PHASE_2.ai.integration.uow_factory import AIUnitOfWork
 
         # Create mock session
         mock_session = AsyncMock()
@@ -155,17 +155,17 @@ class TestContextProvidersDI:
 
     def test_providers_module_has_set_gateways(self):
         """Verify providers module has set_gateways function."""
-        from core.ai.context_builder.providers import set_gateways
+        from core.PHASE_2.ai.context_builder.providers import set_gateways
         assert callable(set_gateways)
 
     def test_providers_module_has_get_providers_with_gateways(self):
         """Verify providers module has get_providers_with_gateways function."""
-        from core.ai.context_builder.providers import get_providers_with_gateways
+        from core.PHASE_2.ai.context_builder.providers import get_providers_with_gateways
         assert callable(get_providers_with_gateways)
 
     def test_get_providers_with_gateways_returns_providers(self):
         """Verify get_providers_with_gateways returns provider list."""
-        from core.ai.context_builder.providers import get_providers_with_gateways
+        from core.PHASE_2.ai.context_builder.providers import get_providers_with_gateways
 
         # Create mock gateways
         mock_device_gateway = MagicMock()
@@ -192,8 +192,8 @@ class TestAICoreControllerIntegration:
     @pytest.mark.asyncio
     async def test_controller_has_integration_components(self):
         """Verify AICoreController has integration components."""
-        from core.ai.integration.controller import AICoreController
-        from core.ai.integration.models import AICoreConfig
+        from core.PHASE_2.ai.integration.controller import AICoreController
+        from core.PHASE_2.ai.integration.models import AICoreConfig
 
         controller = AICoreController()
 
@@ -204,8 +204,8 @@ class TestAICoreControllerIntegration:
 
     def test_controller_initializes_with_empty_gateways(self):
         """Verify controller starts with empty gateways dict."""
-        from core.ai.integration.controller import AICoreController
-        from core.ai.integration.models import AICoreConfig
+        from core.PHASE_2.ai.integration.controller import AICoreController
+        from core.PHASE_2.ai.integration.models import AICoreConfig
 
         controller = AICoreController()
         assert controller._gateways == {}
@@ -216,8 +216,8 @@ class TestSetupIntegration:
 
     def test_setup_integration_returns_gateways(self):
         """Verify setup_integration returns all gateways."""
-        from core.ai.integration import setup_integration
-        from core.ai.integration.uow_factory import AIUnitOfWorkFactory
+        from core.PHASE_2.ai.integration import setup_integration
+        from core.PHASE_2.ai.integration.uow_factory import AIUnitOfWorkFactory
 
         # Create a mock factory that raises (will use default)
         mock_factory = MagicMock(spec=AIUnitOfWorkFactory)
@@ -238,10 +238,10 @@ class TestIntegrationFlow:
     @pytest.mark.asyncio
     async def test_full_flow_components_exist(self):
         """Verify all components in the full flow exist and are connected."""
-        from core.ai.integration.controller import AICoreController
-        from core.ai.integration.models import AICoreConfig
-        from core.ai.context_builder.providers import get_providers_with_gateways
-        from core.ai.integration import setup_integration
+        from core.PHASE_2.ai.integration.controller import AICoreController
+        from core.PHASE_2.ai.integration.models import AICoreConfig
+        from core.PHASE_2.ai.context_builder.providers import get_providers_with_gateways
+        from core.PHASE_2.ai.integration import setup_integration
 
         # 1. Verify setup_integration exists and returns expected keys
         integration = setup_integration()
@@ -277,7 +277,7 @@ class TestNoMocksInFlow:
 
     def test_device_gateway_no_hardcoded_data(self):
         """Verify DeviceGateway doesn't return hardcoded data."""
-        from core.ai.integration.domain_adapter import DeviceGatewayImpl
+        from core.PHASE_2.ai.integration.domain_adapter import DeviceGatewayImpl
         import inspect
 
         # Check that get_by_id doesn't return hardcoded values
@@ -286,7 +286,7 @@ class TestNoMocksInFlow:
 
     def test_incident_gateway_no_hardcoded_data(self):
         """Verify IncidentGateway doesn't return hardcoded data."""
-        from core.ai.integration.domain_adapter import IncidentGatewayImpl
+        from core.PHASE_2.ai.integration.domain_adapter import IncidentGatewayImpl
         import inspect
 
         source = inspect.getsource(IncidentGatewayImpl.get_by_id)
@@ -297,7 +297,7 @@ class TestNoMocksInFlow:
 
     def test_knowledge_gateway_no_hardcoded_data(self):
         """Verify KnowledgeGateway doesn't return hardcoded data."""
-        from core.ai.integration.domain_adapter import KnowledgeGatewayImpl
+        from core.PHASE_2.ai.integration.domain_adapter import KnowledgeGatewayImpl
         import inspect
 
         source = inspect.getsource(KnowledgeGatewayImpl.get_by_id)
@@ -306,7 +306,7 @@ class TestNoMocksInFlow:
 
     def test_recommendation_gateway_no_hardcoded_data(self):
         """Verify RecommendationGateway doesn't return hardcoded data."""
-        from core.ai.integration.domain_adapter import RecommendationGatewayImpl
+        from core.PHASE_2.ai.integration.domain_adapter import RecommendationGatewayImpl
         import inspect
 
         source = inspect.getsource(RecommendationGatewayImpl.get_by_id)

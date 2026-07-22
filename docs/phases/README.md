@@ -14,25 +14,79 @@
 
 ---
 
-## 📁 Estructura
+## 📁 Estructura del Proyecto
 
 ```
-docs/phases/
-├── README.md
-├── PHASE_1/                   ✅ COMPLETO
-│   ├── README.md
-│   ├── epics/                # epic0-10
-│   └── adr/                  # ADRs epic0-10
-├── PHASE_2/                   ✅ COMPLETO
-│   ├── README.md
-│   ├── epics/                # epic0-11-2
-│   └── adr/                  # ADRs epic0-11-2
-└── PHASE_3/                   🚧 IN PROGRESS
-    ├── README.md
-    ├── epics/                # epic0-11
-    │   ├── epic0/           # Clinical Intelligence Foundation ✅ COMPLETO
-    │   └── epic1/           # Biomedical Knowledge Engine ✅ COMPLETO
-    └── adr/                  # ADRs epic0-11
+EREN/
+├── docs/phases/                # Documentación por fases
+│   ├── PHASE_1/               # ✅ COMPLETO
+│   │   ├── README.md
+│   │   ├── epics/            # epic0-10
+│   │   └── adr/              # ADRs epic0-10
+│   ├── PHASE_2/               # ✅ COMPLETO
+│   │   ├── README.md
+│   │   ├── epics/            # epic0-11-2
+│   │   └── adr/              # ADRs epic0-11-2
+│   └── PHASE_3/               # 🚧 IN PROGRESS
+│       ├── README.md
+│       ├── epics/             # epic0-11
+│       └── adr/               # ADRs epic0-11
+│
+├── core/                       # Código fuente por fases
+│   ├── PHASE_1/              # Business Domain
+│   │   ├── domain/           # Entidades de negocio (Asset, Device, Incident, etc.)
+│   │   ├── infrastructure/   # Infraestructura (Events, Shared, etc.)
+│   │   ├── clinical/         # Clínica
+│   │   ├── application/      # Servicios de aplicación
+│   │   └── workflows/        # Flujos de trabajo
+│   │
+│   ├── PHASE_2/              # AI Core
+│   │   ├── ai/              # Kernel de IA
+│   │   ├── agents/          # Sistema de agentes
+│   │   ├── context/         # Context Builder
+│   │   ├── embeddings/      # Embeddings
+│   │   ├── execution/       # Motor de ejecución
+│   │   ├── ingestion/       # Ingesta de datos
+│   │   ├── memory/          # Sistema de memoria
+│   │   ├── orchestration/   # Orquestación
+│   │   ├── providers/      # Proveedores LLM
+│   │   ├── rag/            # RAG Pipeline
+│   │   ├── registry/       # Registro de servicios
+│   │   ├── retrieval/       # Motor de recuperación
+│   │   ├── planner/        # Planificador
+│   │   ├── session/        # Gestión de sesiones
+│   │   └── [otros módulos]
+│   │
+│   ├── PHASE_3/              # Clinical Intelligence
+│   │   ├── intelligence/    # Motores de inteligencia clínica
+│   │   │   ├── foundation/  # EPIC 0: Foundation
+│   │   │   ├── confidence/  # EPIC 4: Confidence Engine
+│   │   │   ├── decision/    # EPIC 9: Decision Engine
+│   │   │   ├── evidence/    # EPIC 3: Evidence Retrieval
+│   │   │   ├── explainability/ # EPIC 5: Explainability
+│   │   │   ├── improvement/ # EPIC 11: Improvement
+│   │   │   ├── knowledge/   # EPIC 1: Knowledge Engine
+│   │   │   ├── learning/    # EPIC 10: Learning Engine
+│   │   │   ├── reasoning/   # EPIC 2: Reasoning Engine
+│   │   │   ├── rules/      # EPIC 6: Rules Engine
+│   │   │   ├── safety/     # EPIC 7: Safety Engine
+│   │   │   └── validation/ # EPIC 8: Validation
+│   │   ├── integrations/   # EPIC 6: Integraciones
+│   │   └── embeddings/     # Embeddings clínicos
+│   │
+│   └── LEGACY/              # Módulos sin clasificar
+│       ├── collaboration/
+│       └── tools/
+│
+└── tests/                     # Tests por fases
+    ├── unit/
+    │   ├── PHASE_1/         # Tests de Business Domain
+    │   ├── PHASE_2/         # Tests de AI Core
+    │   ├── PHASE_3/         # Tests de Clinical Intelligence
+    │   ├── SHARED/          # Tests compartidos
+    │   └── LEGACY/          # Tests de módulos huérfanos
+    ├── integration/
+    └── [otros tests]
 ```
 
 ---

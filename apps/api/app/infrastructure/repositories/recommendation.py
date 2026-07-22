@@ -4,11 +4,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from core.recommendation.domain.entities import AIRecommendation
-from core.recommendation.domain.repositories import (
+from core.PHASE_3.recommendation.domain.entities import AIRecommendation
+from core.PHASE_3.recommendation.domain.repositories import (
     RecommendationRepository as AbstractRecommendationRepository,
 )
-from core.recommendation.domain.value_objects import (
+from core.PHASE_3.recommendation.domain.value_objects import (
     AcceptanceNote,
     RecommendationCategory,
     RecommendationConfidence,
@@ -16,7 +16,7 @@ from core.recommendation.domain.value_objects import (
     RecommendationUrgency,
     RejectionReason,
 )
-from core.shared import (
+from core.PHASE_1.infrastructure.shared import (
     DeviceId,
     EngineerId,
     IncidentId,

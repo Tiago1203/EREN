@@ -4,16 +4,16 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from core.device.domain.entities import Device
-from core.device.domain.repositories import DeviceRepository as AbstractDeviceRepository
-from core.device.domain.value_objects import (
+from core.PHASE_1.domain.device.domain.entities import Device
+from core.PHASE_1.domain.device.domain.repositories import DeviceRepository as AbstractDeviceRepository
+from core.PHASE_1.domain.device.domain.value_objects import (
     DeviceStatus,
     DeviceType,
     LocationInfo,
     ManufacturerInfo,
     SerialNumber,
 )
-from core.shared import DeviceId, EngineerId, Ok, Result, TenantId
+from core.PHASE_1.infrastructure.shared import DeviceId, EngineerId, Ok, Result, TenantId
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 

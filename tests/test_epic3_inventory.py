@@ -5,10 +5,10 @@ from decimal import Decimal
 
 import pytest
 
-from core.inventory.domain.entities.purchase_order import POStatus, PurchaseOrder
-from core.inventory.domain.entities.spare_part import PartCategory, SparePart, SparePartStatus
-from core.inventory.domain.entities.supplier import Supplier, SupplierStatus, SupplierType
-from core.inventory.domain.entities.warehouse import Warehouse, WarehouseStatus, WarehouseType
+from core.PHASE_1.domain.inventory.domain.entities.purchase_order import POStatus, PurchaseOrder
+from core.PHASE_1.domain.inventory.domain.entities.spare_part import PartCategory, SparePart, SparePartStatus
+from core.PHASE_1.domain.inventory.domain.entities.supplier import Supplier, SupplierStatus, SupplierType
+from core.PHASE_1.domain.inventory.domain.entities.warehouse import Warehouse, WarehouseStatus, WarehouseType
 
 
 @pytest.fixture
