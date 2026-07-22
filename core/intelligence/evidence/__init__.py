@@ -29,7 +29,7 @@ from core.intelligence.evidence.retrieval import (
 # Evidence Bundle
 from core.intelligence.evidence.bundle import (
     ComplianceStatus,
-    Priority,
+    EvidencePriority,
     RuleMatch,
     EvidenceSummary,
     EvidenceBundle,
@@ -83,7 +83,7 @@ __all__ = [
     "EvidenceRetriever",
     # Evidence Bundle
     "ComplianceStatus",
-    "Priority",
+    "EvidencePriority",
     "RuleMatch",
     "EvidenceSummary",
     "EvidenceBundle",

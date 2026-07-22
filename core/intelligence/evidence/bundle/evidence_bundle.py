@@ -3,6 +3,10 @@ Evidence Bundle Module
 
 Complete implementation for bundling evidence with supporting
 and contradicting evidence for clinical reasoning.
+
+ARCHITECTURE NOTE:
+ComplianceStatus is imported from core.intelligence.foundation.enums to ensure consistency.
+EvidencePriority is a local enum specific to evidence bundling (different from foundation.Priority).
 """
 
 from enum import Enum
@@ -10,17 +14,12 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
 
-
-class ComplianceStatus(Enum):
-    """Compliance status."""
-    COMPLIANT = "compliant"
-    NON_COMPLIANT = "non_compliant"
-    WARNING = "warning"
-    PENDING = "pending"
+# Import shared enum from SINGLE SOURCE OF TRUTH
+from core.intelligence.foundation.enums import ComplianceStatus
 
 
-class Priority(Enum):
-    """Priority levels."""
+class EvidencePriority(Enum):
+    """Priority levels for evidence bundles (local - different from foundation.Priority)."""
     CRITICAL = 1
     HIGH = 2
     MEDIUM = 3
@@ -36,8 +35,8 @@ class RuleMatch:
     conditions_met: list[str] = field(default_factory=list)
     conditions_not_met: list[str] = field(default_factory=list)
     action: Optional[str] = None
-    priority: Priority = Priority.MEDIUM
-    compliance_status: ComplianceStatus = ComplianceStatus.PENDING
+    priority: EvidencePriority = EvidencePriority.MEDIUM
+    compliance_status: ComplianceStatus = ComplianceStatus.PENDING_REVIEW
 
 
 @dataclass(frozen=True)
@@ -194,13 +193,13 @@ class EvidenceBundleGenerator:
         else:
             recommendation = f"Further investigation needed for: {hypothesis_name}"
         
-        # Compliance status
+        # Compliance status (using Foundation ComplianceStatus values)
         if not supporting:
-            compliance = ComplianceStatus.WARNING
+            compliance = ComplianceStatus.NON_COMPLIANT  # WARNING -> NON_COMPLIANT
         elif not contradicting:
             compliance = ComplianceStatus.COMPLIANT
         else:
-            compliance = ComplianceStatus.PENDING
+            compliance = ComplianceStatus.PENDING_REVIEW  # PENDING -> PENDING_REVIEW
         
         # Calculate confidence
         overall_confidence = self._calculate_confidence(supporting, contradicting)
@@ -273,8 +272,11 @@ class EvidenceBundleManager:
 
 
 __all__ = [
+    # Imported from Foundation
     "ComplianceStatus",
-    "Priority",
+    # Local enums
+    "EvidencePriority",
+    # Data classes
     "RuleMatch",
     "EvidenceSummary",
     "EvidenceBundle",

@@ -1,5 +1,9 @@
 """
 Clinical Intelligence Models
+
+NOTE: All shared Enums (EvidenceLevel, ValidationSeverity, ConfidenceLevel, etc.)
+are defined in core.intelligence.foundation.enums - this module only contains
+Domain Models (dataclasses) and Engine-specific Enums.
 """
 
 from dataclasses import dataclass, field
@@ -7,19 +11,28 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
+# Import shared enums from SINGLE SOURCE OF TRUTH
+from core.intelligence.foundation.enums import (
+    EvidenceLevel,
+    ValidationSeverity,
+    ConfidenceLevel,
+)
+
 __all__ = [
+    # Shared enums (imported from foundation.enums)
     "EvidenceLevel",
+    "ValidationSeverity",
+    "ConfidenceLevel",
+    # Domain Models
     "EvidenceSource",
     "Evidence",
     "EvidenceChain",
     "SafetyLevel",
     "SafetyCheck",
     "ClinicalWarning",
-    "ValidationSeverity",
     "ValidationRule",
     "ValidationResult",
     "ValidationPipeline",
-    "ConfidenceLevel",
     "ConfidenceScore",
 ]
 
@@ -27,25 +40,6 @@ __all__ = [
 # ============================================================================
 # EVIDENCE MODELS
 # ============================================================================
-
-class EvidenceLevel(Enum):
-    """
-    Nivel de evidencia según jerarquía clínica.
-    
-    - A: Revisiones sistemáticas, RCTs de alta calidad
-    - B: Estudios de cohorte, RCTs de baja calidad
-    - C: Estudios de caso-control, series de casos
-    - D: Opinión de expertos, investigación básica
-    """
-    A_SYSTEMATIC = "a_systematic"
-    A_RCT_HIGH = "a_rct_high"
-    B_COHORT = "b_cohort"
-    B_RCT_LOW = "b_rct_low"
-    C_CASE_CONTROL = "c_case_control"
-    C_CASE_SERIES = "c_case_series"
-    D_EXPERT_OPINION = "d_expert_opinion"
-    D_BENCH_RESEARCH = "d_bench_research"
-
 
 class EvidenceSourceType(Enum):
     """Tipos de fuente de evidencia."""
@@ -169,15 +163,8 @@ class ClinicalWarning:
 # ============================================================================
 # VALIDATION MODELS
 # ============================================================================
-
-class ValidationSeverity(Enum):
-    """Severidad de fallo de validación."""
-    BLOCKING = "blocking"
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-    INFO = "info"
-
+# NOTE: ValidationSeverity is now imported from core.intelligence.foundation.enums
+# ValidationSeverity enum is shared across Validation, Decision, and Rules engines
 
 class ValidationRuleType(Enum):
     """Tipos de reglas de validación."""
@@ -230,16 +217,8 @@ class ValidationReport:
 # ============================================================================
 # CONFIDENCE MODELS
 # ============================================================================
-
-class ConfidenceLevel(Enum):
-    """Nivel de confianza."""
-    VERY_HIGH = "very_high"  # > 0.95
-    HIGH = "high"  # 0.85 - 0.95
-    MODERATE = "moderate"  # 0.70 - 0.85
-    LOW = "low"  # 0.50 - 0.70
-    VERY_LOW = "very_low"  # < 0.50
-    UNCERTAIN = "uncertain"
-
+# NOTE: ConfidenceLevel is now imported from core.intelligence.foundation.enums
+# ConfidenceLevel enum is shared across Confidence, Reasoning, and Decision engines
 
 class ConfidenceFactorType(Enum):
     """Tipos de factores de confianza."""

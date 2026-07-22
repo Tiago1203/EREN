@@ -9,6 +9,11 @@ This module provides confidence calculation and uncertainty quantification:
 - Quality Evaluator
 - Coverage Analyzer
 - Ambiguity Detector
+
+ARCHITECTURE NOTE:
+All shared Enums (ConfidenceLevel, RiskLevel, UncertaintyType) are imported
+from core.intelligence.foundation.enums to ensure consistency.
+Only Engine-specific enums are defined locally.
 """
 
 from enum import Enum
@@ -16,41 +21,25 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
 
+# Import shared enums from SINGLE SOURCE OF TRUTH
+from core.intelligence.foundation.enums import (
+    ConfidenceLevel,
+    RiskLevel,
+    UncertaintyType,
+)
 
 # Version
 __version__ = "1.0.0"
 
 
-class ConfidenceLevel(Enum):
-    """Confidence levels."""
-    HIGH = "high"           # >= 0.8
-    MEDIUM = "medium"       # 0.5 - 0.8
-    LOW = "low"            # 0.3 - 0.5
-    UNCERTAIN = "uncertain" # < 0.3
-
-
-class RiskLevel(Enum):
-    """Risk levels."""
-    CRITICAL = "critical"
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-
-
-class UncertaintyType(Enum):
-    """Types of uncertainty."""
-    EPISTEMIC = "epistemic"
-    ALEATORY = "aleatory"
-    MEASUREMENT = "measurement"
-    MODEL = "model"
-    CONTEXT = "context"
-
-
-class QualityDimension(Enum):
-    """Dimensions of quality."""
+# Engine-specific ConfidenceQualityDimension (different from foundation.QualityDimension)
+class ConfidenceQualityDimension(Enum):
+    """Dimensions of quality for confidence evaluation."""
     EVIDENCE_QUALITY = "evidence_quality"
     REASONING_QUALITY = "reasoning_quality"
     OUTPUT_QUALITY = "output_quality"
+    COVERAGE = "coverage"
+    CONSISTENCY = "consistency"
 
 
 @dataclass(frozen=True)
@@ -130,7 +119,7 @@ class UncertaintyReport:
 class QualityScore:
     """Quality evaluation result."""
     overall_quality: float
-    dimensions: dict[QualityDimension, float]
+    dimensions: dict[ConfidenceQualityDimension, float]
     issues: list[str]
     strengths: list[str]
 
@@ -341,12 +330,16 @@ class ConfidenceCalculator:
     
     def _get_level(self, score: float) -> ConfidenceLevel:
         """Get confidence level from score."""
-        if score >= 0.8:
+        if score >= 0.95:
+            return ConfidenceLevel.VERY_HIGH
+        elif score >= 0.85:
             return ConfidenceLevel.HIGH
-        elif score >= 0.5:
-            return ConfidenceLevel.MEDIUM
-        elif score >= 0.3:
+        elif score >= 0.70:
+            return ConfidenceLevel.MODERATE
+        elif score >= 0.50:
             return ConfidenceLevel.LOW
+        elif score >= 0.30:
+            return ConfidenceLevel.VERY_LOW
         else:
             return ConfidenceLevel.UNCERTAIN
     
@@ -412,11 +405,12 @@ class ConfidenceEngine:
 __all__ = [
     # Version
     "__version__",
-    # Enums
+    # Enums (imported from Foundation)
     "ConfidenceLevel",
     "RiskLevel",
     "UncertaintyType",
-    "QualityDimension",
+    # Local enums
+    "ConfidenceQualityDimension",
     # Data classes
     "ConfidenceScore",
     "RiskFactor",
