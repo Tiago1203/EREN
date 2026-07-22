@@ -21,7 +21,7 @@ docs/phases/PHASE_3/adr/
 ├── epic9/                           # ✅ COMPLETO (2 ADRs)
 ├── epic10/                          # ✅ COMPLETO (2 ADRs)
 ├── epic11/                          # ✅ COMPLETO (3 ADRs)
-└── epic11-1/                        # ✅ COMPLETO (1 ADR)
+└── epic11-1/                        # ✅ COMPLETO (5 ADRs)
 ```
 
 ---
@@ -42,7 +42,7 @@ docs/phases/PHASE_3/adr/
 | **EPIC 9** | 2 | ✅ COMPLETO |
 | **EPIC 10** | 2 | ✅ COMPLETO |
 | **EPIC 11** | 3 | ✅ COMPLETO |
-| **EPIC 11.1** | 1 | ✅ COMPLETO |
+| **EPIC 11.1** | 5 | ✅ COMPLETO |
 
 ---
 

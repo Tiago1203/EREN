@@ -297,6 +297,44 @@ FASE 3 (Clinical Intelligence) ✅
 |-----|--------|--------|
 | ADR-3114 | Foundation Enums Architecture | ✅ COMPLETE |
 | ADR-3115 | Learning Cycle Closure | ✅ COMPLETE |
+| ADR-3050 | Immutable Evidence Tree Construction (Option 4) | ✅ COMPLETE |
+| ADR-3051 | Enum Consolidation Strategy | ✅ COMPLETE |
+| ADR-3052 | Unit Test Coverage Strategy for FASE 3 | ✅ COMPLETE |
+
+---
+
+## Tests Implementados
+
+| Módulo | Tests | Estado |
+|--------|-------|--------|
+| foundation | 19 | ✅ PASSING |
+| confidence | 24 | ✅ PASSING |
+| explainability | 22 | ✅ PASSING |
+| evidence | 19 | ✅ PASSING |
+| **Total** | **84** | ✅ **100% PASSING** |
+
+---
+
+## Correcciones Implementadas
+
+### Opción 4: Immutable Evidence Tree Construction
+
+**Problema:** `FrozenInstanceError` en EvidenceTreeBuilder
+
+**Solución:** Crear TreeNodes con children desde el inicio
+
+```python
+# ANTES (rompe frozen):
+supporting_node = TreeNode(children=[])
+supporting_node.children.append(child)  # ❌ Error
+
+# DESPUÉS (inmutable):
+supporting_children = [
+    TreeNode(node_id=f"supp_{i}", label=..., children=[])
+    for i, e in enumerate(supporting[:5])
+]
+supporting_node = TreeNode(children=supporting_children)  # ✅ Funciona
+```
 
 ---
 
@@ -304,8 +342,11 @@ FASE 3 (Clinical Intelligence) ✅
 
 - [ADR-3114: Foundation Enums Architecture](./adr/ADR-3114.md)
 - [ADR-3115: Learning Cycle Closure](./adr/ADR-3115.md)
+- [ADR-3050: Immutable Evidence Tree Construction](./adr/ADR-3050.md)
+- [ADR-3051: Enum Consolidation Strategy](./adr/ADR-3051.md)
+- [ADR-3052: Unit Test Coverage Strategy](./adr/ADR-3052.md)
 
 ---
 
 *Document created: 2026-07-22*
-*Last updated: 2026-07-22*
+*Last updated: 2026-07-22 v1.2*
