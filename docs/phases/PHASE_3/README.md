@@ -392,9 +392,14 @@ core/PHASE_3/
 │   ├── rules/              # EPIC 6: Rules Engine
 │   ├── safety/             # EPIC 7: Safety Engine
 │   └── validation/         # EPIC 8: Validation
-├── integrations/           # EPIC 6: Integraciones
-└── embeddings/             # Embeddings clínicos
+├── integrations/           # Integraciones clínicas
+├── embeddings/             # Embeddings clínicos
+├── recommendation/          # Sistema de recomendaciones
+└── knowledge_assets/        # Gestión de activos de conocimiento
 ```
+
+**Nota sobre Knowledge Assets:**
+El módulo `knowledge_assets/` es un componente transversal de PHASE_3 que gestiona activos de conocimiento como documentos, manuales, protocolos, recursos FHIR, imágenes DICOM, etc. Para más información, ver [core/PHASE_3/knowledge_assets/](../../core/PHASE_3/knowledge_assets/).
 
 Los tests correspondientes se encuentran en:
 

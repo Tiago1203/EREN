@@ -10,7 +10,7 @@ import uuid
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
-from core.PHASE_1.domain.knowledge_assets.types import (
+from core.PHASE_3.knowledge_assets.types import (
     AuditAction,
     AuditLog,
     PermissionLevel,

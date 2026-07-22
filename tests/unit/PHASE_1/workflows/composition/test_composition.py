@@ -1,6 +1,6 @@
 """Tests for the Cognitive Composition Root."""
 
-from core.composition import (
+from core.PHASE_1.workflows.composition import (
     CognitiveCompositionRoot,
     CompositionRootFactory,
     CompositionBuilder,

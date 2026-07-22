@@ -38,19 +38,19 @@ Philosophy:
 from __future__ import annotations
 
 # Components
-from core.PHASE_1.domain.knowledge_assets.catalog import (
+from core.PHASE_3.knowledge_assets.catalog import (
     AssetCatalog,
     get_asset_catalog,
     reset_asset_catalog,
 )
-from core.PHASE_1.domain.knowledge_assets.collections import (
+from core.PHASE_3.knowledge_assets.collections import (
     AssetCollections,
     get_asset_collections,
     reset_asset_collections,
 )
 
 # Exceptions
-from core.PHASE_1.domain.knowledge_assets.exceptions import (
+from core.PHASE_3.knowledge_assets.exceptions import (
     AssetNotFoundError,
     AssetRegistryError,
     AuditLogError,
@@ -62,21 +62,21 @@ from core.PHASE_1.domain.knowledge_assets.exceptions import (
     ValidationError,
     VersionNotFoundError,
 )
-from core.PHASE_1.domain.knowledge_assets.permissions import (
+from core.PHASE_3.knowledge_assets.permissions import (
     AuditLogger,
     PermissionChecker,
     get_audit_logger,
     get_permission_checker,
     reset_permissions,
 )
-from core.PHASE_1.domain.knowledge_assets.registry import (
+from core.PHASE_3.knowledge_assets.registry import (
     KnowledgeAssetRegistry,
     get_asset_registry,
     reset_asset_registry,
 )
 
 # Types
-from core.PHASE_1.domain.knowledge_assets.types import (
+from core.PHASE_3.knowledge_assets.types import (
     AssetCollection,
     AssetMetadata,
     AssetSearchQuery,
@@ -88,7 +88,7 @@ from core.PHASE_1.domain.knowledge_assets.types import (
     LifecycleState,
     PermissionLevel,
 )
-from core.PHASE_1.domain.knowledge_assets.versions import (
+from core.PHASE_3.knowledge_assets.versions import (
     VersionManager,
     get_version_manager,
     reset_version_manager,

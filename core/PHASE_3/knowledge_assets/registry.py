@@ -10,13 +10,13 @@ import threading
 import uuid
 from typing import TYPE_CHECKING
 
-from core.PHASE_1.domain.knowledge_assets.catalog import AssetCatalog, get_asset_catalog
-from core.PHASE_1.domain.knowledge_assets.collections import AssetCollections, get_asset_collections
-from core.PHASE_1.domain.knowledge_assets.exceptions import (
+from core.PHASE_3.knowledge_assets.catalog import AssetCatalog, get_asset_catalog
+from core.PHASE_3.knowledge_assets.collections import AssetCollections, get_asset_collections
+from core.PHASE_3.knowledge_assets.exceptions import (
     AssetNotFoundError,
 )
-from core.PHASE_1.domain.knowledge_assets.permissions import AuditLogger, PermissionChecker, get_audit_logger
-from core.PHASE_1.domain.knowledge_assets.types import (
+from core.PHASE_3.knowledge_assets.permissions import AuditLogger, PermissionChecker, get_audit_logger
+from core.PHASE_3.knowledge_assets.types import (
     AssetMetadata,
     AssetSearchQuery,
     AssetStatistics,
@@ -24,7 +24,7 @@ from core.PHASE_1.domain.knowledge_assets.types import (
     AuditAction,
     LifecycleState,
 )
-from core.PHASE_1.domain.knowledge_assets.versions import VersionManager, get_version_manager
+from core.PHASE_3.knowledge_assets.versions import VersionManager, get_version_manager
 
 if TYPE_CHECKING:
     pass

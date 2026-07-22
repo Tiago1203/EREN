@@ -2,7 +2,7 @@
 
 import pytest
 
-from core.PHASE_1.domain.knowledge_assets.types import (
+from core.PHASE_3.knowledge_assets.types import (
     AssetType,
     LifecycleState,
     PermissionLevel,
@@ -14,32 +14,32 @@ from core.PHASE_1.domain.knowledge_assets.types import (
     AssetStatistics,
     AssetSearchQuery,
 )
-from core.PHASE_1.domain.knowledge_assets.exceptions import (
+from core.PHASE_3.knowledge_assets.exceptions import (
     AssetNotFoundError,
     DuplicateAssetError,
 )
-from core.PHASE_1.domain.knowledge_assets.catalog import (
+from core.PHASE_3.knowledge_assets.catalog import (
     AssetCatalog,
     get_asset_catalog,
     reset_asset_catalog,
 )
-from core.PHASE_1.domain.knowledge_assets.collections import (
+from core.PHASE_3.knowledge_assets.collections import (
     AssetCollections,
     get_asset_collections,
     reset_asset_collections,
 )
-from core.PHASE_1.domain.knowledge_assets.versions import (
+from core.PHASE_3.knowledge_assets.versions import (
     VersionManager,
     get_version_manager,
     reset_version_manager,
 )
-from core.PHASE_1.domain.knowledge_assets.permissions import (
+from core.PHASE_3.knowledge_assets.permissions import (
     AuditLogger,
     PermissionChecker,
     get_audit_logger,
     reset_permissions,
 )
-from core.PHASE_1.domain.knowledge_assets.registry import KnowledgeAssetRegistry
+from core.PHASE_3.knowledge_assets.registry import KnowledgeAssetRegistry
 
 
 class TestAssetTypes:
