@@ -8,6 +8,10 @@ This module provides safety validation:
 - Hazard Detector
 - Critical Alerts
 - Human Override
+
+ARCHITECTURE NOTE:
+- Severity and RiskLevel are imported from Foundation (single source of truth)
+- Safety-specific enums (SafetyCategory, SafetyDecision, AlertLevel) remain local
 """
 
 from enum import Enum
@@ -15,13 +19,16 @@ from dataclasses import dataclass, field
 from datetime import datetime
 import re
 
+# Import shared enums from Foundation (SINGLE SOURCE OF TRUTH)
+from core.intelligence.foundation import Severity, RiskLevel
+
 
 # Version
 __version__ = "1.0.0"
 
 
 class SafetyCategory(Enum):
-    """Safety categories."""
+    """Safety categories. (Engine-specific enum)"""
     PATIENT_SAFETY = "patient_safety"
     ELECTRICAL_SAFETY = "electrical_safety"
     RADIATION_SAFETY = "radiation_safety"
@@ -34,24 +41,8 @@ class SafetyCategory(Enum):
     COMPLIANCE = "compliance"
 
 
-class Severity(Enum):
-    """Severity levels."""
-    CRITICAL = "critical"
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-
-
-class RiskLevel(Enum):
-    """Risk levels."""
-    CRITICAL = "critical"
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-
-
 class SafetyDecision(Enum):
-    """Safety decision outcomes."""
+    """Safety decision outcomes. (Engine-specific enum)"""
     ALLOW = "allow"
     ALLOW_WITH_WARNING = "allow_with_warning"
     BLOCK = "block"
@@ -59,7 +50,7 @@ class SafetyDecision(Enum):
 
 
 class AlertLevel(Enum):
-    """Alert escalation levels."""
+    """Alert escalation levels. (Engine-specific enum)"""
     LEVEL_1_SYSTEM = "level_1_system"
     LEVEL_2_SUPERVISOR = "level_2_supervisor"
     LEVEL_3_MANAGEMENT = "level_3_management"
@@ -72,7 +63,7 @@ class SafetyBlocker:
     blocker_id: str
     category: SafetyCategory
     reason: str
-    severity: Severity
+    severity: Severity  # From Foundation
     action: str
     alternative: str | None = None
 
@@ -94,7 +85,7 @@ class SafetyResult:
     blockers: list[SafetyBlocker]
     warnings: list[SafetyWarning]
     risk_score: float
-    risk_level: RiskLevel
+    risk_level: RiskLevel  # From Foundation
     recommendations: list[str]
     requires_human_review: bool
     critical_alert_triggered: bool

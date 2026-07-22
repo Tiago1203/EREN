@@ -11,6 +11,10 @@ This module provides clinical decision making:
 - Automation Evaluation
 - Recommendation Generation
 - Decision Recording
+
+ARCHITECTURE NOTE:
+- Severity, RiskLevel, and Priority are imported from Foundation (single source of truth)
+- AutomationLevel is extended here for decision-specific values
 """
 
 from enum import Enum
@@ -18,43 +22,21 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from typing import Optional
 
+# Import shared enums from Foundation (SINGLE SOURCE OF TRUTH)
+from core.intelligence.foundation import Severity, RiskLevel, Priority
+
 
 # Version
 __version__ = "1.0.0"
 
 
-# ============ ENUMS ============
+# ============ ENGINE-SPECIFIC ENUMS ============
 
-class Priority(Enum):
-    """Decision priority levels."""
-    CRITICAL = "critical"
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-    INFORMATIONAL = "informational"
-
-
-class AutomationLevel(Enum):
-    """Automation approval level."""
+class DecisionAutomationLevel(Enum):
+    """Automation approval level for decisions."""
     AUTO_APPROVED = "auto_approved"
     REQUIRES_REVIEW = "requires_review"
     BLOCKED = "blocked"
-
-
-class Severity(Enum):
-    """Severity levels."""
-    CRITICAL = "critical"
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-
-
-class RiskLevel(Enum):
-    """Risk assessment levels."""
-    CRITICAL = "critical"
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
 
 
 # ============ DOMAIN MODELS ============

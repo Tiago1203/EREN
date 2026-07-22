@@ -8,6 +8,9 @@ This module provides clinical validation:
 - Confidence Checking
 - Consistency Checking
 - Self-Correction
+
+ARCHITECTURE NOTE:
+- ValidationDecision is imported from Foundation (single source of truth)
 """
 
 from enum import Enum
@@ -15,17 +18,12 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
 
+# Import shared enums from Foundation (SINGLE SOURCE OF TRUTH)
+from core.intelligence.foundation import ValidationDecision
+
 
 # Version
 __version__ = "1.0.0"
-
-
-class ValidationDecision(Enum):
-    """Decision outcomes."""
-    APPROVED = "approved"
-    REJECTED = "rejected"
-    REQUIRES_CORRECTION = "requires_correction"
-    ESCALATE = "escalate"
 
 
 class CorrectionType(Enum):

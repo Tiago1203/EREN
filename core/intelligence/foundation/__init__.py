@@ -2,9 +2,49 @@
 Clinical Intelligence Foundation
 
 This module provides the foundational components for Clinical Intelligence,
-including DTOs, contracts, models, interfaces, and policies.
+including DTOs, contracts, models, interfaces, policies, and shared enums.
+
+ARCHITECTURE PRINCIPLES:
+1. SINGLE SOURCE OF TRUTH: All shared Enums are in enums.py
+2. DEPENDENCY RULE: Foundation has NO dependencies on other modules
+3. INTERFACE SEGREGATION: Contracts define what engines must implement
 """
 
+# =============================================================================
+# SHARED ENUMS - SINGLE SOURCE OF TRUTH
+# =============================================================================
+from core.intelligence.foundation.enums import (
+    # Severity & Risk
+    Severity,
+    RiskLevel,
+    # Confidence
+    ConfidenceLevel,
+    UncertaintyType,
+    # Validation
+    ValidationDecision,
+    ValidationSeverity,
+    ComplianceStatus,
+    # Decision
+    Priority,
+    AutomationLevel,
+    LanguageStyle,
+    # Evidence
+    EvidenceLevel,
+    # Learning
+    OutcomeType,
+    FeedbackType,
+    PatternType,
+    # Revision
+    RevisionStatus,
+    ApprovalDecision,
+    # Improvement
+    RollbackTrigger,
+    QualityDimension,
+)
+
+# =============================================================================
+# DTOs
+# =============================================================================
 from core.intelligence.foundation.dto import (
     ClinicalFinding,
     DiagnosisCandidate,
@@ -12,9 +52,12 @@ from core.intelligence.foundation.dto import (
     ClinicalAlert,
     PatientSummary,
 )
+
+# =============================================================================
+# MODELS
+# =============================================================================
 from core.intelligence.foundation.models import (
     Evidence,
-    EvidenceLevel,
     EvidenceSource,
     EvidenceChain,
     SafetyCheck,
@@ -22,22 +65,32 @@ from core.intelligence.foundation.models import (
     ClinicalWarning,
     ValidationResult,
     ValidationRule,
-    ValidationSeverity,
     ValidationPipeline,
     ConfidenceScore,
-    ConfidenceLevel,
 )
+
+# =============================================================================
+# CONTRACTS
+# =============================================================================
 from core.intelligence.foundation.contracts import (
     IClinicalReasoner,
     IEvidenceEvaluator,
     IClinicalValidator,
 )
+
+# =============================================================================
+# INTERFACES
+# =============================================================================
 from core.intelligence.foundation.interfaces import (
     IConfidenceCalculator,
     IKnowledgeBase,
     IMedicalOntology,
     IGuidelineRepository,
 )
+
+# =============================================================================
+# EXCEPTIONS
+# =============================================================================
 from core.intelligence.foundation.exceptions import (
     ClinicalIntelligenceError,
     EvidenceError,
@@ -46,18 +99,36 @@ from core.intelligence.foundation.exceptions import (
     ConfidenceError,
 )
 
-__version__ = "0.1.0"
+__version__ = "1.0.0"
 
 __all__ = [
-    # DTOs
+    # ========== SHARED ENUMS (SINGLE SOURCE OF TRUTH) ==========
+    "Severity",
+    "RiskLevel",
+    "ConfidenceLevel",
+    "UncertaintyType",
+    "ValidationDecision",
+    "ValidationSeverity",
+    "ComplianceStatus",
+    "Priority",
+    "AutomationLevel",
+    "LanguageStyle",
+    "EvidenceLevel",
+    "OutcomeType",
+    "FeedbackType",
+    "PatternType",
+    "RevisionStatus",
+    "ApprovalDecision",
+    "RollbackTrigger",
+    "QualityDimension",
+    # ========== DTOs ==========
     "ClinicalFinding",
     "DiagnosisCandidate",
     "TreatmentRecommendation",
     "ClinicalAlert",
     "PatientSummary",
-    # Models
+    # ========== MODELS ==========
     "Evidence",
-    "EvidenceLevel",
     "EvidenceSource",
     "EvidenceChain",
     "SafetyCheck",
@@ -65,20 +136,18 @@ __all__ = [
     "ClinicalWarning",
     "ValidationResult",
     "ValidationRule",
-    "ValidationSeverity",
     "ValidationPipeline",
     "ConfidenceScore",
-    "ConfidenceLevel",
-    # Contracts
+    # ========== CONTRACTS ==========
     "IClinicalReasoner",
     "IEvidenceEvaluator",
     "IClinicalValidator",
-    # Interfaces
+    # ========== INTERFACES ==========
     "IConfidenceCalculator",
     "IKnowledgeBase",
     "IMedicalOntology",
     "IGuidelineRepository",
-    # Exceptions
+    # ========== EXCEPTIONS ==========
     "ClinicalIntelligenceError",
     "EvidenceError",
     "SafetyError",
