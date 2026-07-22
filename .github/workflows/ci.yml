@@ -159,5 +159,5 @@ jobs:
       - name: Verify domain entities can be imported
         run: |
           cd apps/api
-          echo 'from core.device.domain.entities import Device; from core.incident.domain.entities import EngineeringIncident; print("Domain entities OK")' > /tmp/check_entities.py
+          echo 'from core.PHASE_1.domain.device.domain.entities import Device; from core.PHASE_1.domain.incident.domain.entities import EngineeringIncident; print("Domain entities OK")' > /tmp/check_entities.py
           PYTHONPATH="$GITHUB_WORKSPACE:$GITHUB_WORKSPACE/apps/api" uv run python /tmp/check_entities.py
