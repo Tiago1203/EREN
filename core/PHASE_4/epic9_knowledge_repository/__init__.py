@@ -246,8 +246,75 @@ class KnowledgeRepository:
         return results[:limit]
 
 
+# =============================================================================
+# IMPORTS FROM SUBMODULES
+# =============================================================================
+
+# Repository
+from core.PHASE_4.epic9_knowledge_repository.repository import (
+    RepositoryType,
+    RepositoryStatus,
+    RepositoryStats,
+    Repository,
+    SourceRegistryEntry,
+    BaseRepositoryManager,
+    InMemoryRepositoryManager,
+)
+
+# Versioning
+from core.PHASE_4.epic9_knowledge_repository.versioning import (
+    VersionStatus,
+    VersionType,
+    KnowledgeVersion,
+    VersionHistory,
+    BaseVersionManager,
+    InMemoryVersionManager,
+    VersionComparator,
+)
+
+# Collections
+from core.PHASE_4.epic9_knowledge_repository.collections import (
+    CollectionType,
+    CollectionStatus,
+    Collection,
+    CollectionMetadata,
+    BaseCollectionManager,
+    InMemoryCollectionManager,
+    CollectionSearcher,
+)
+
+
+# =============================================================================
+# EXPORTS
+# =============================================================================
+
 __all__ = [
+    # Version
+    "__version__",
+    # Repository Types
     "RepositoryType",
+    "RepositoryStatus",
     "RepositoryStats",
+    "Repository",
+    "SourceRegistryEntry",
+    "BaseRepositoryManager",
+    "InMemoryRepositoryManager",
+    # Versioning Types
+    "VersionStatus",
+    "VersionType",
+    "KnowledgeVersion",
+    "VersionHistory",
+    "BaseVersionManager",
+    "InMemoryVersionManager",
+    "VersionComparator",
+    # Collection Types
+    "CollectionType",
+    "CollectionStatus",
+    "Collection",
+    "CollectionMetadata",
+    "BaseCollectionManager",
+    "InMemoryCollectionManager",
+    "CollectionSearcher",
+    # Main
     "KnowledgeRepository",
 ]
