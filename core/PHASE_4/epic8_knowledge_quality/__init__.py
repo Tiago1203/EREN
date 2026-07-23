@@ -22,6 +22,9 @@ from core.PHASE_4.foundation import (
     Citation,
 )
 
+# Import unified QualityDimension from PHASE_3 (IMP-001 fix)
+from core.PHASE_3.intelligence.foundation.enums import QualityDimension
+
 
 class BiasType(str, Enum):
     """Tipos de sesgo."""
@@ -32,16 +35,6 @@ class BiasType(str, Enum):
     LANGUAGE = "language"                # Sesgo de idioma
     GEOGRAPHIC = "geographic"             # Sesgo geográfico
     TEMPORAL = "temporal"                # Sesgo temporal
-
-
-class QualityDimension(str, Enum):
-    """Dimensiones de calidad."""
-    ACCURACY = "accuracy"               # Exactitud
-    COMPLETENESS = "completeness"       # Completitud
-    CONSISTENCY = "consistency"         # Consistencia
-    CURRENCY = "currency"              # Actualización
-    RELEVANCE = "relevance"            # Relevancia
-    TRUSTWORTHINESS = "trustworthiness"  # Confiabilidad
 
 
 @dataclass

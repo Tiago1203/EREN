@@ -1,6 +1,6 @@
 [project]
 name = "eren-os"
-version = "0.3.0"
+version = "0.4.0"
 description = "EREN - Cognitive Operating System for Clinical Engineering"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -9,6 +9,9 @@ authors = [
     { name = "EREN Team", email = "team@eren-os.dev" }
 ]
 keywords = ["cognitive", "operating-system", "clinical", "engineering", "ai"]
+dependencies = [
+    "pyyaml>=6.0",
+]
 
 [project.optional-dependencies]
 dev = [
