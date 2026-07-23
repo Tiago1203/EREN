@@ -49,6 +49,13 @@ core/
 │   ├── integrations/     # Integraciones
 │   └── embeddings/       # Embeddings clínicos
 │
+├── PHASE_4/                 # Knowledge Infrastructure
+│   ├── embeddings/          # Clinical Embeddings
+│   ├── qdrant/             # Vector DB Integration
+│   ├── knowledge/           # Knowledge Retrieval
+│   ├── rag/                # Clinical RAG Pipeline
+│   └── citations/          # Citation Engine
+
 └── LEGACY/                  # Módulos sin clasificar
     ├── collaboration/
     └── tools/
@@ -61,6 +68,7 @@ core/
 | PHASE_1 | Business Domain | Entidades de negocio, Infraestructura | [Ver README](./PHASE_1/README.md) |
 | PHASE_2 | AI Core | Kernel de IA, Memoria, Agentes, RAG | [Ver README](./PHASE_2/README.md) |
 | PHASE_3 | Clinical Intelligence | Motores de inteligencia clínica | [Ver README](./PHASE_3/README.md) |
+| PHASE_4 | Knowledge Infrastructure | Embeddings, Qdrant, Retrieval, RAG, Citations | [Ver README](./PHASE_4/README.md) |
 | LEGACY | Sin clasificar | Módulos huérfanos | [Ver README](./LEGACY/README.md) |
 
 ## Engines (FASE 1-2)
@@ -105,4 +113,4 @@ Ver [docs/phases/](../../docs/phases/) para documentación detallada por fase.
 
 ---
 
-*Última actualización: 2026-07-22*
+*Última actualización: 2026-07-23*

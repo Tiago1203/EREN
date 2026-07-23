@@ -152,9 +152,9 @@ class DeviceNode:
     device_id: str
     manufacturer: str
     model: str
-    serial_number: Optional[str] = None
     category: str
     risk_class: str
+    serial_number: Optional[str] = None
     installed_date: Optional[str] = None
     location: Optional[str] = None
     status: str = "active"
