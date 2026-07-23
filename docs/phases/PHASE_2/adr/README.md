@@ -42,13 +42,13 @@ docs/phases/PHASE_2/adr/
 | **EPIC 7** | 3 | ✅ Complete |
 | **EPIC 8** | 3 | ✅ Complete |
 | **EPIC 9** | 3 | ✅ Complete |
-| **EPIC 10** | 5 | ✅ Complete |
+| **EPIC 10** | 6 | ✅ Complete |
 | **EPIC 10 Domain Bridge** | 5 | ✅ Complete |
-| **EPIC 11 Runtime** | 5 | ✅ Complete |
-| **EPIC 11-1 Fix** | 3 | ✅ Complete |
+| **EPIC 11 Runtime** | 3 | ✅ Complete |
+| **EPIC 11-1 Fix** | 2 | ✅ Complete |
 | **EPIC 11-2 Fix** | 1 | ✅ Complete |
 
-**Total: 42 ADRs (42 Complete, 0 Pending)**
+**Total: 52 ADRs (52 Complete, 0 Pending)**
 
 ---
 
