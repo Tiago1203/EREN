@@ -465,10 +465,56 @@ class EmbeddingOptimizer:
 
 
 # =============================================================================
+# IMPORTS FROM SUBMODULES
+# =============================================================================
+
+# Providers
+from core.PHASE_4.epic3_clinical_embeddings.providers import (
+    EmbeddingModel,
+    EmbeddingConfig,
+    GeneratedEmbedding,
+    BaseEmbeddingProvider,
+    MockEmbeddingProvider,
+    SentenceTransformerProvider,
+    OllamaProvider,
+    OpenAIProvider,
+    EmbeddingProviderFactory,
+)
+
+# Cache
+from core.PHASE_4.epic3_clinical_embeddings.cache import (
+    CachedEmbedding,
+    BaseEmbeddingCache,
+    InMemoryEmbeddingCache,
+    PersistentEmbeddingCache,
+)
+
+# Versioning
+from core.PHASE_4.epic3_clinical_embeddings.versioning import (
+    EmbeddingVersionStatus,
+    EmbeddingVersion,
+    BaseVersionManager,
+    InMemoryVersionManager,
+    VersionComparator,
+)
+
+# Pipelines
+from core.PHASE_4.epic3_clinical_embeddings.pipelines import (
+    EmbeddingBatch,
+    EmbeddingMetadata,
+    EmbeddingResult,
+    EmbeddingPipeline,
+    BatchGenerator,
+)
+
+
+# =============================================================================
 # EXPORTS
 # =============================================================================
 
 __all__ = [
+    # Version
+    "__version__",
     # Enums
     "EmbeddingModel",
     "EmbeddingDimension",
@@ -478,6 +524,8 @@ __all__ = [
     "CachedEmbedding",
     "EmbeddingVersion",
     "EmbeddingBatch",
+    "EmbeddingMetadata",
+    "EmbeddingResult",
     # Protocols
     "IEmbeddingProvider",
     "IEmbeddingCache",
@@ -487,4 +535,21 @@ __all__ = [
     # Engines
     "ClinicalEmbeddingEngine",
     "EmbeddingOptimizer",
+    # Providers (new)
+    "GeneratedEmbedding",
+    "BaseEmbeddingProvider",
+    "MockEmbeddingProvider",
+    "SentenceTransformerProvider",
+    "OllamaProvider",
+    "OpenAIProvider",
+    "EmbeddingProviderFactory",
+    # Cache (new)
+    "PersistentEmbeddingCache",
+    # Versioning (new)
+    "EmbeddingVersionStatus",
+    "InMemoryVersionManager",
+    "VersionComparator",
+    # Pipelines (new)
+    "EmbeddingPipeline",
+    "BatchGenerator",
 ]
