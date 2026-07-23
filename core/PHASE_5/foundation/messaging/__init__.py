@@ -2,6 +2,7 @@
 PHASE 5 - EPIC 0: Messaging
 
 Sistema de mensajería entre agentes.
+Incluye MessageBroker, MessageBuilder y AgentBus.
 """
 
 from __future__ import annotations
@@ -19,6 +20,14 @@ from core.PHASE_5.foundation.types import (
     AgentPriority,
 )
 from core.PHASE_5.foundation.domain import AgentMessage
+
+# Importar AgentBus
+from core.PHASE_5.foundation.messaging.agent_bus import (
+    AgentBus,
+    AgentBusConfig,
+    BusMessage,
+    BusSubscription,
+)
 
 
 # =============================================================================
@@ -288,6 +297,12 @@ class MessageBuilder:
 # =============================================================================
 
 __all__ = [
+    # Original
     "MessageBroker",
     "MessageBuilder",
+    # Nuevo - AgentBus
+    "AgentBus",
+    "AgentBusConfig",
+    "BusMessage",
+    "BusSubscription",
 ]

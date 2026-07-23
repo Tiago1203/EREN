@@ -3,6 +3,8 @@ PHASE 5 - EPIC 1: Agent Orchestrator
 
 Sistema de orquestación de agentes especializados.
 Coordina qué agentes participan, en qué orden, y cómo combinar sus resultados.
+
+MEJORA: Incluye OrchestratorAgent que conecta todos los EPICs en un flujo unificado.
 """
 
 from __future__ import annotations
@@ -64,6 +66,13 @@ from core.PHASE_5.epic1_orchestrator.aggregator import (
     AggregationConfig,
 )
 
+# Orchestrator Agent (NUEVO - Conecta todos los EPICs)
+from core.PHASE_5.epic1_orchestrator.orchestrator_agent import (
+    OrchestratorAgent,
+    EpicRegistry,
+    EpicConnection,
+)
+
 
 # =============================================================================
 # EXPORTS
@@ -102,4 +111,8 @@ __all__ = [
     # Aggregator
     "ResponseAggregator",
     "AggregationConfig",
+    # Orchestrator Agent (NUEVO)
+    "OrchestratorAgent",
+    "EpicRegistry",
+    "EpicConnection",
 ]

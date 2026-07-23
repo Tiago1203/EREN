@@ -281,9 +281,29 @@ class MultiPhaseGateway:
 # =============================================================================
 
 __all__ = [
+    # Originales (placeholder)
     "PHASE1Gateway",
     "PHASE2Gateway",
     "PHASE3Gateway",
     "PHASE4Gateway",
     "MultiPhaseGateway",
+    # Nuevos (integración real)
+    "IntegratedPhase1Gateway",
+    "IntegratedPhase2Gateway",
+    "IntegratedPhase3Gateway",
+    "IntegratedPhase4Gateway",
+    "IntegratedMultiPhaseGateway",
 ]
+
+
+# =============================================================================
+# IMPORTS FROM INTEGRATED GATEWAYS
+# =============================================================================
+
+from core.PHASE_5.foundation.gateways.integrated import (
+    IntegratedPhase1Gateway,
+    IntegratedPhase2Gateway,
+    IntegratedPhase3Gateway,
+    IntegratedPhase4Gateway,
+    IntegratedMultiPhaseGateway,
+)
