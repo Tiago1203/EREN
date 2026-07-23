@@ -70,9 +70,9 @@ class EventSeverity(str, Enum):
 @dataclass
 class AgentEvent:
     """Evento del sistema multiagente."""
-    event_id: str
-    event_type: AgentEventType
-    agent_id: str
+    event_id: str = ""  # Auto-generado si no se provee
+    event_type: AgentEventType = AgentEventType.TASK_CREATED
+    agent_id: str = ""
     
     # Content
     message: str = ""

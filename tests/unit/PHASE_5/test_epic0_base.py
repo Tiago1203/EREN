@@ -266,7 +266,7 @@ class TestEventBus:
     @pytest.mark.asyncio
     async def test_publish_event(self, event_bus):
         """Test publishing an event."""
-        from core.PHASE_5.foundation import AgentEvent
+        from core.PHASE_5.foundation.events import AgentEvent
         
         event = AgentEvent(
             event_id="evt_1",
@@ -282,7 +282,7 @@ class TestEventBus:
     @pytest.mark.asyncio
     async def test_event_history(self, event_bus):
         """Test event history retrieval."""
-        from core.PHASE_5.foundation import AgentEvent
+        from core.PHASE_5.foundation.events import AgentEvent
         
         # Publish some events
         for i in range(5):

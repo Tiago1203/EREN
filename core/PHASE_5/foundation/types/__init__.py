@@ -144,7 +144,7 @@ class AgentVersion:
         return self.patch < other.patch
 
 
-@dataclass(frozen=True)
+@dataclass
 class AgentMetrics:
     """Métricas de rendimiento de un agente."""
     tasks_completed: int = 0
