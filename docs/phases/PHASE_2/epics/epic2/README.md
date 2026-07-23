@@ -89,7 +89,7 @@ core/ai/context_builder/
 ## Uso
 
 ```python
-from core.ai.context_builder import (
+from core.PHASE_2.ai.context_builder import (
     ContextBuilder,
     ContextAssembler,
     ContextConfig,

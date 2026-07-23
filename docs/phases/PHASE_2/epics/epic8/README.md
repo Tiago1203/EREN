@@ -91,7 +91,7 @@ core/ai/sessions/
 ## Uso
 
 ```python
-from core.ai.sessions import (
+from core.PHASE_2.ai.sessions import (
     SessionManager,
     SessionContext,
     ConversationLimit,

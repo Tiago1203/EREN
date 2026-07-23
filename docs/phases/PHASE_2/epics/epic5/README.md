@@ -95,7 +95,7 @@ core/ai/tools/
 ## Uso
 
 ```python
-from core.ai.tools import (
+from core.PHASE_2.ai.tools import (
     ToolOrchestrator,
     ToolDefinition,
     ToolCategory,

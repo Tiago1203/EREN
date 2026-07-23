@@ -53,7 +53,7 @@ async def get_by_id(
 ) -> "HospitalDTO | None":
     """Obtiene campus/hospital por ID."""
     self._validate_tenant(tenant_id, "get_by_id")
-    from core.ai.domain import HospitalDTO
+    from core.PHASE_2.ai.domain import HospitalDTO
 
     async with self._uow_factory() as uow:
         model = await uow.capacity.get_hospital_by_id(hospital_id, tenant_id)

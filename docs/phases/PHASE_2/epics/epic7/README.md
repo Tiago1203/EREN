@@ -101,7 +101,7 @@ core/ai/providers/
 ## Uso
 
 ```python
-from core.ai.providers import (
+from core.PHASE_2.ai.providers import (
     ProviderManager,
     OpenAIProvider,
     AnthropicProvider,

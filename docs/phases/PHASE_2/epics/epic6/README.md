@@ -100,7 +100,7 @@ core/ai/response/
 ## Uso
 
 ```python
-from core.ai.response import (
+from core.PHASE_2.ai.response import (
     ResponseComposer,
     StreamingResponseComposer,
     ResponseType,

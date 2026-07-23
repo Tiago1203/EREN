@@ -150,8 +150,8 @@ async def initialize(self) -> None:
     # ... setup de otros componentes ...
     
     # EPIC 11.1: Conectar providers a ContextBuilder
-    from core.ai.context_builder.providers import get_providers_with_gateways
-    from core.ai.context_builder import providers_to_sources
+    from core.PHASE_2.ai.context_builder.providers import get_providers_with_gateways
+    from core.PHASE_2.ai.context_builder import providers_to_sources
     
     providers = get_providers_with_gateways(
         device_gateway=self._gateways.get("device"),

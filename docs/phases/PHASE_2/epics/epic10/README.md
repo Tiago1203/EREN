@@ -266,15 +266,15 @@ from core.incident.infrastructure import IncidentRepositoryImpl
 from core.knowledge.infrastructure import KnowledgeRepositoryImpl
 
 # ✅ CORRECTO
-from core.ai.domain import DeviceGateway, IncidentGateway, KnowledgeGateway
+from core.PHASE_2.ai.domain import DeviceGateway, IncidentGateway, KnowledgeGateway
 ```
 
 ### AI SOLO puede consumir
 
 ```python
 # ✅ PERMITIDO
-from core.ai.domain import DeviceGateway
-from core.ai.context_builder.providers import DeviceProvider
+from core.PHASE_2.ai.domain import DeviceGateway
+from core.PHASE_2.ai.context_builder.providers import DeviceProvider
 from core.application.services.query import DeviceQueryService  # Cuando exista EPIC 11
 ```
 

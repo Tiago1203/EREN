@@ -116,7 +116,7 @@ core/ai/integration/
 ## Uso
 
 ```python
-from core.ai.integration import AICoreController, AICoreConfig
+from core.PHASE_2.ai.integration import AICoreController, AICoreConfig
 
 # Crear controller
 config = AICoreConfig(

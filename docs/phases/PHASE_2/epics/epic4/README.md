@@ -91,7 +91,7 @@ core/ai/memory/
 ## Uso
 
 ```python
-from core.ai.memory import MemoryManager, MemoryType, MemoryImportance
+from core.PHASE_2.ai.memory import MemoryManager, MemoryType, MemoryImportance
 
 # Crear manager
 manager = MemoryManager()
