@@ -103,6 +103,30 @@ from core.PHASE_5.foundation.gateways import (
     MultiPhaseGateway,
 )
 
+# Shared Domain Objects (Resuelve duplicación DRY)
+from core.PHASE_5.foundation.domain.shared import (
+    SharedSessionStatus,
+    SharedMetricType,
+    SharedOptimizationType,
+    SharedMetricValue,
+    SharedAgentMetric,
+    SharedRecommendation,
+    SharedLearningSession,
+    SharedOptimizationReport,
+)
+
+# Agent Registry (Nueva funcionalidad)
+from core.PHASE_5.foundation.registry import (
+    AgentRegistry,
+    AgentLookup,
+)
+
+# Agent Bus (Nueva funcionalidad - comunicación entre agentes)
+from core.PHASE_5.foundation.messaging import (
+    AgentBus,
+    AgentBusConfig,
+)
+
 
 # =============================================================================
 # BASE AGENT - Clase base abstracta para agentes
@@ -242,6 +266,8 @@ __all__ = [
     # Messaging
     "MessageBroker",
     "MessageBuilder",
+    "AgentBus",
+    "AgentBusConfig",
     # Lifecycle
     "AgentLifecycleManager",
     "StateValidator",
@@ -260,4 +286,13 @@ __all__ = [
     "PHASE3Gateway",
     "PHASE4Gateway",
     "MultiPhaseGateway",
+    # Shared Domain Objects (Resuelve duplicación DRY)
+    "SharedSessionStatus",
+    "SharedMetricType",
+    "SharedOptimizationType",
+    "SharedMetricValue",
+    "SharedAgentMetric",
+    "SharedRecommendation",
+    "SharedLearningSession",
+    "SharedOptimizationReport",
 ]
