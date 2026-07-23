@@ -296,13 +296,82 @@ class SyncMonitor:
         }
 
 
+# =============================================================================
+# IMPORTS FROM SUBMODULES
+# =============================================================================
+
+# Sync
+from core.PHASE_4.epic10_sync_engine.sync import (
+    SyncSource,
+    SyncStatus,
+    SyncPriority,
+    SyncJob,
+    UpdatePackage,
+    SyncDelta,
+    BaseSyncManager,
+    InMemorySyncManager,
+    DeltaProcessor,
+)
+
+# Schedule
+from core.PHASE_4.epic10_sync_engine.schedule import (
+    ScheduleFrequency,
+    ScheduleStatus,
+    ScheduleConfig,
+    ScheduledJob,
+    BaseScheduler,
+    InMemoryScheduler,
+    CronParser,
+)
+
+# Monitor
+from core.PHASE_4.epic10_sync_engine.monitor import (
+    MonitorStatus,
+    ChangeType,
+    SourceHealth,
+    ChangeEvent,
+    MonitoringConfig,
+    BaseSourceMonitor,
+    InMemorySourceMonitor,
+    HealthChecker,
+    ChangeDetector,
+)
+
+
 __all__ = [
+    # Version
+    "__version__",
+    # Sync
     "SyncSource",
     "SyncStatus",
+    "SyncPriority",
+    "SyncJob",
+    "UpdatePackage",
+    "SyncDelta",
+    "BaseSyncManager",
+    "InMemorySyncManager",
+    "DeltaProcessor",
+    # Schedule
+    "ScheduleFrequency",
+    "ScheduleStatus",
+    "ScheduleConfig",
+    "ScheduledJob",
+    "BaseScheduler",
+    "InMemoryScheduler",
+    "CronParser",
+    # Monitor
+    "MonitorStatus",
+    "ChangeType",
+    "SourceHealth",
+    "ChangeEvent",
+    "MonitoringConfig",
+    "BaseSourceMonitor",
+    "InMemorySourceMonitor",
+    "HealthChecker",
+    "ChangeDetector",
+    # Legacy (from main module)
     "SyncEvent",
     "SyncConfig",
-    "SyncJob",
-    "SyncEvent",
     "ISyncSource",
     "PubMedSyncSource",
     "FDASyncSource",
