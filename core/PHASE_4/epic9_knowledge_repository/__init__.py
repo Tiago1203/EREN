@@ -67,10 +67,10 @@ class KnowledgeRepository:
         # Create initial version
         self._versions.setdefault(asset.asset_id, []).append(KnowledgeVersion(
             version_id=str(uuid.uuid4()),
-            asset_id=asset.asset_id,
-            version=asset.version,
+            document_id=asset.asset_id,
+            version_number=asset.version,
             created_at=datetime.now(UTC),
-            created_by=asset.created_by,
+            author=asset.created_by or "system",
         ))
         
         return asset.asset_id
@@ -102,10 +102,10 @@ class KnowledgeRepository:
         self._versions.setdefault(asset_id, []).append(KnowledgeVersion(
             version_id=str(uuid.uuid4()),
             asset_id=asset_id,
-            version=asset.version,
+            version_number=asset.version,
             changes_summary=updates.get("change_note", ""),
             created_at=datetime.now(UTC),
-            created_by=updated_by,
+            author=updated_by or "system",
         ))
         
         return True

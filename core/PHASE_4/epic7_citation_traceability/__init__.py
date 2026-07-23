@@ -487,10 +487,10 @@ class CitationChainBuilder:
 # IMPORTS FROM SUBMODULES
 # =============================================================================
 
-# Citations
+# Citations (import as aliases to avoid override)
 from core.PHASE_4.epic7_citation_traceability.citations import (
     CitationStyle,
-    Citation,
+    Citation as _Citation,
     BaseCitationBuilder,
     ClinicalCitationBuilder,
     CitationValidator,
@@ -507,11 +507,11 @@ from core.PHASE_4.epic7_citation_traceability.references import (
     ReferenceIndexer,
 )
 
-# Sources
+# Sources (import as aliases to avoid override)
 from core.PHASE_4.epic7_citation_traceability.sources import (
-    SourceType,
-    SourceStatus,
-    EvidenceLevel,
+    SourceType as _SourceType,
+    SourceStatus as _SourceStatus,
+    EvidenceLevel as _EvidenceLevel,
     SourceEvidence,
     BaseSourceVerifier,
     ClinicalSourceVerifier,

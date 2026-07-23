@@ -599,13 +599,10 @@ class ClinicalRAGPipeline:
 # IMPORTS FROM SUBMODULES
 # =============================================================================
 
-# Query
+# Query (import as alias to avoid override)
 from core.PHASE_4.epic6_clinical_rag.query import (
-    ClinicalQueryType,
-    QueryIntent,
-    ProcessedQuery,
+    ClinicalQueryProcessor as _QueryProcessor,
     BaseQueryProcessor,
-    ClinicalQueryProcessor,
 )
 
 # Context
