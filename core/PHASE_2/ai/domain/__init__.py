@@ -2,8 +2,35 @@
 AI Domain Integration Layer.
 
 This module provides the official facade between AI Core (FASE 2) and
-Business Domain (FASE 1). AI Core uses these gateways to access
-business data without coupling to domain implementations.
+Business Domain (FASE 1) and Clinical Intelligence (FASE 3).
+
+ARCHITECTURE FLOW:
+    PHASE_1 (Business Domain)
+            │
+            ▼
+    PHASE_2 (AI Core)
+            │
+            ├── AI Kernel
+            ├── Context Builder
+            └── Domain Gateways
+                    │
+                    ├── DeviceGateway ──────→ PHASE_1 Device
+                    ├── IncidentGateway ────→ PHASE_1 Incident
+                    ├── KnowledgeGateway ────→ PHASE_1 Knowledge
+                    ├── HospitalGateway ─────→ PHASE_1 Capacity
+                    ├── WorkOrderGateway ────→ PHASE_1 WorkOrder
+                    ├── RecommendationGateway ─→ PHASE_3 Recommendation
+                    └── ClinicalIntelligenceGateway ─→ PHASE_3 Clinical Intelligence
+                            │
+                            ▼
+                    PHASE_3 (Clinical Intelligence)
+                            │
+                            ├── Reasoning Engine
+                            ├── Evidence Retrieval
+                            ├── Confidence Engine
+                            ├── Decision Engine
+                            ├── Safety Engine
+                            └── Validation Engine
 """
 
 from .contracts import (
@@ -31,6 +58,11 @@ from .knowledge_gateway import KnowledgeGateway
 from .recommendation_gateway import RecommendationGateway
 from .hospital_gateway import HospitalGateway
 from .workorder_gateway import WorkOrderGateway
+from .clinical_intelligence_gateway import (
+    ClinicalIntelligenceGateway,
+    ClinicalQueryDTO,
+    ClinicalResponseDTO,
+)
 from .exceptions import (
     GatewayError,
     DeviceNotFoundError,
@@ -59,13 +91,17 @@ __all__ = [
     "IRecommendationGateway",
     "IHospitalGateway",
     "IWorkOrderGateway",
-    # Gateway Implementations
+    # Gateway Implementations - PHASE_1
     "DeviceGateway",
     "IncidentGateway",
     "KnowledgeGateway",
-    "RecommendationGateway",
     "HospitalGateway",
     "WorkOrderGateway",
+    # Gateway Implementations - PHASE_3
+    "RecommendationGateway",
+    "ClinicalIntelligenceGateway",
+    "ClinicalQueryDTO",
+    "ClinicalResponseDTO",
     # Exceptions
     "GatewayError",
     "DeviceNotFoundError",
