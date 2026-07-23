@@ -137,20 +137,45 @@ class LanguageStyle(Enum):
 # EVIDENCE & KNOWLEDGE
 # =============================================================================
 
-class EvidenceLevel(Enum):
+class EvidenceLevel(str, Enum):
     """
-    Level of clinical evidence (GRADE-inspired).
+    Level of clinical evidence (Oxford Hierarchy + Clinical Engineering extensions).
     
-    SHARED across: Evidence, Knowledge, Reasoning
+    SHARED across: Evidence, Knowledge, Reasoning, PHASE_4
+    
+    Unified system using Oxford hierarchy with extensions for clinical engineering.
+    This is the canonical EvidenceLevel for the entire EREN system.
+    
+    Oxford Hierarchy:
+    - 1a/1b: RCTs and systematic reviews
+    - 2a/2b: Cohort studies
+    - 3a/3b: Case-control studies
+    - 4: Case series
+    - 5: Expert opinion
+    
+    Clinical Engineering Extensions:
+    - device_spec: Device specifications and manuals
+    - manufacturer_data: Manufacturer documentation
+    - regulatory_clearance: FDA/EMA clearances
+    - clinical_expertise: Expert clinical opinion
+    - internal_standard: Hospital internal standards
     """
-    A_SYSTEMATIC = "a_systematic"  # Systematic reviews
-    A_RCT_HIGH = "a_rct_high"  # High-quality RCTs
-    B_COHORT = "b_cohort"  # Cohort studies
-    B_RCT_LOW = "b_rct_low"  # Low-quality RCTs
-    C_CASE_CONTROL = "c_case_control"  # Case-control
-    C_CASE_SERIES = "c_case_series"  # Case series
-    D_EXPERT_OPINION = "d_expert_opinion"  # Expert opinion
-    D_BENCH_RESEARCH = "d_bench_research"  # Bench research
+    # Oxford Hierarchy - Primary Evidence
+    LEVEL_1A = "1a"  # Systematic review of RCTs
+    LEVEL_1B = "1b"  # Individual RCT (with narrow confidence interval)
+    LEVEL_2A = "2a"  # Systematic review of cohort studies
+    LEVEL_2B = "2b"  # Individual cohort study (including low quality RCT)
+    LEVEL_3A = "3a"  # Systematic review of case-control studies
+    LEVEL_3B = "3b"  # Individual case-control study
+    LEVEL_4 = "4"    # Case series (and poor-quality cohort)
+    LEVEL_5 = "5"     # Expert opinion, bench research
+    
+    # Clinical Engineering Extensions
+    DEVICE_SPEC = "device_spec"  # Device specifications and manuals
+    MANUFACTURER_DATA = "manufacturer_data"  # Manufacturer documentation
+    REGULATORY_CLEARANCE = "regulatory_clearance"  # FDA/EMA clearances
+    CLINICAL_EXPERTISE = "clinical_expertise"  # Expert clinical opinion
+    INTERNAL_STANDARD = "internal_standard"  # Hospital internal standards
 
 
 # =============================================================================
@@ -223,14 +248,40 @@ class RollbackTrigger(Enum):
     EMERGENCY = "emergency"
 
 
-class QualityDimension(Enum):
-    """Dimensions of knowledge quality."""
+class QualityDimension(str, Enum):
+    """
+    Dimensions of knowledge quality.
+    
+    Unified across PHASE_3 and PHASE_4 for consistent quality assessment.
+    Combines clinical intelligence dimensions with knowledge infrastructure dimensions.
+    
+    Clinical Intelligence (PHASE_3):
+    - ACCURACY: Truthfulness and correctness of knowledge
+    - CONSISTENCY: Internal consistency with established facts
+    - EVIDENCE: Quality of supporting evidence
+    - REPEATABILITY: Reproducibility of findings
+    - COVERAGE: Breadth of knowledge coverage
+    - IMPACT: Clinical/practical significance
+    
+    Knowledge Infrastructure (PHASE_4 extensions):
+    - COMPLETENESS: Full coverage of topic
+    - CURRENCY: Up-to-date information
+    - RELEVANCE: Appropriateness to query/task
+    - TRUSTWORTHINESS: Source reliability and credibility
+    """
+    # Clinical Intelligence Dimensions
     ACCURACY = "accuracy"
     CONSISTENCY = "consistency"
     EVIDENCE = "evidence"
     REPEATABILITY = "repeatability"
     COVERAGE = "coverage"
     IMPACT = "impact"
+    
+    # Knowledge Infrastructure Dimensions
+    COMPLETENESS = "completeness"
+    CURRENCY = "currency"
+    RELEVANCE = "relevance"
+    TRUSTWORTHINESS = "trustworthiness"
 
 
 # =============================================================================

@@ -15,6 +15,9 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
+# Import unified QualityDimension from PHASE_3 (IMP-001 fix)
+from core.PHASE_3.intelligence.foundation.enums import QualityDimension
+
 
 class QualityLevel(str, Enum):
     """Niveles de calidad."""
@@ -23,15 +26,6 @@ class QualityLevel(str, Enum):
     FAIR = "fair"
     POOR = "poor"
     UNACCEPTABLE = "unacceptable"
-
-
-class QualityDimension(str, Enum):
-    """Dimensiones de calidad."""
-    ACCURACY = "accuracy"
-    COMPLETENESS = "completeness"
-    CONSISTENCY = "consistency"
-    CURRENCY = "currency"
-    RELEVANCE = "relevance"
 
 
 @dataclass
