@@ -484,27 +484,86 @@ class CitationChainBuilder:
 
 
 # =============================================================================
+# IMPORTS FROM SUBMODULES
+# =============================================================================
+
+# Citations
+from core.PHASE_4.epic7_citation_traceability.citations import (
+    CitationStyle,
+    Citation,
+    BaseCitationBuilder,
+    ClinicalCitationBuilder,
+    CitationValidator,
+)
+
+# References
+from core.PHASE_4.epic7_citation_traceability.references import (
+    ReferenceStatus,
+    Reference,
+    BaseReferenceManager,
+    InMemoryReferenceManager,
+    DOIResolver,
+    PubMedResolver,
+    ReferenceIndexer,
+)
+
+# Sources
+from core.PHASE_4.epic7_citation_traceability.sources import (
+    SourceType,
+    SourceStatus,
+    EvidenceLevel,
+    SourceEvidence,
+    BaseSourceVerifier,
+    ClinicalSourceVerifier,
+    SourceTracker,
+    AuditEntry,
+    AuditTrail,
+)
+
+
+# =============================================================================
 # EXPORTS
 # =============================================================================
 
 __all__ = [
+    # Version
+    "__version__",
     # Enums
     "CitationStyle",
     "SourceType",
+    "SourceStatus",
+    "ReferenceStatus",
+    "EvidenceLevel",
     # Data Classes
     "FormattedCitation",
     "CitationChain",
     "SourceTrace",
+    "Citation",
+    "Reference",
+    "SourceEvidence",
+    "AuditEntry",
     # Protocols
     "ICitationFormatter",
+    "BaseCitationBuilder",
+    "BaseReferenceManager",
+    "BaseSourceVerifier",
     # Formatters
     "APAFormatter",
     "VancouverFormatter",
+    "ClinicalCitationBuilder",
+    "CitationValidator",
     # Resolvers
     "DOIResolver",
     "PubMedLinker",
+    "PubMedResolver",
+    "ReferenceIndexer",
     # Engines
     "CitationEngine",
     "TraceabilityEngine",
     "CitationChainBuilder",
+    # New from submodules
+    "InMemoryReferenceManager",
+    "ClinicalSourceVerifier",
+    "SourceTracker",
+    "AuditTrail",
 ]
