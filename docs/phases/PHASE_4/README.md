@@ -77,5 +77,27 @@ FASE 3 (Clinical Intelligence) ────────────────�
 
 ---
 
+## Hacia PHASE 5
+
+PHASE 4 provee el **Knowledge Package** a **PHASE 5 - Multi-Agent System**:
+
+```
+PHASE 4 Output ──────────────────────────────────────────────────────────┐
+├── Knowledge Package                                                │
+├── Evidence Package                                                │
+├── Clinical Context                                                │
+├── Verified Citations                                               │
+└── Knowledge Repository (Gobernado, versionado, auditable)          │
+                                                                     │
+                                                                     ▼
+                                              PHASE 5 ─ Multi-Agent System
+```
+
+**PHASE 5** consume PHASE 4 a través del `PHASE5Contract` en Foundation.
+
+Ver: [PHASE 5 README](../PHASE_5/README.md)
+
+---
+
 *EREN PHASE 4 v2.0*
 *Architecture Board - 2026-07-23*

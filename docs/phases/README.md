@@ -12,6 +12,7 @@
 | **FASE 2** | ✅ COMPLETO | EPIC 0-11-2 | AI Core + Runtime Integration |
 | **FASE 3** | ✅ COMPLETO | EPIC 0-11 + 11.1 | Clinical Intelligence (EPIC 0-11 ✅ + EPIC 11.1 ✅ Consolidation) |
 | **FASE 4** | ✅ COMPLETO | EPIC 0-11 | Knowledge Infrastructure (Document Processing, Embeddings, RAG, Citations, Governance) |
+| **FASE 5** | 🚧 EN PROGRESO | EPIC 0-11 | Multi-Agent System (Foundation 🚧) |
 
 ---
 
@@ -33,6 +34,10 @@ EREN/
 │   │   ├── epics/             # epic0-11
 │   │   └── adr/               # ADRs epic0-11
 │   └── PHASE_4/               # ✅ COMPLETO
+│       ├── README.md
+│       ├── epics/              # epic0-11
+│       └── adr/                # ADRs epic0-11
+│   └── PHASE_5/               # 🚧 EN PROGRESO
 │       ├── README.md
 │       ├── epics/              # epic0-11
 │       └── adr/                # ADRs epic0-11
@@ -92,6 +97,20 @@ EREN/
 │   │   ├── epic9_knowledge_repository/  # EPIC 9: Knowledge Repository
 │   │   ├── epic10_sync_engine/          # EPIC 10: Sync Engine
 │   │   └── epic11_governance/           # EPIC 11: Governance
+│   │
+│   ├── PHASE_5/              # 🚧 EN PROGRESO
+│   │   ├── foundation/         # EPIC 0: Foundation (Shared Kernel)
+│   │   ├── epic1_orchestrator/     # EPIC 1: Agent Orchestrator
+│   │   ├── epic2_biomedical_agent/  # EPIC 2: Biomedical Agent
+│   │   ├── epic3_diagnostic_agent/    # EPIC 3: Diagnostic Agent
+│   │   ├── epic4_knowledge_agent/    # EPIC 4: Knowledge Agent
+│   │   ├── epic5_research_agent/     # EPIC 5: Research Agent
+│   │   ├── epic6_planning_agent/     # EPIC 6: Planning Agent
+│   │   ├── epic7_collaboration/     # EPIC 7: Collaboration Engine
+│   │   ├── epic8_consensus/          # EPIC 8: Consensus Engine
+│   │   ├── epic9_memory/            # EPIC 9: Agent Memory Engine
+│   │   ├── epic10_learning/         # EPIC 10: Agent Learning
+│   │   └── epic11_governance/        # EPIC 11: Multi-Agent Governance
 │   │
 │   └── LEGACY/              # Módulos sin clasificar
 │       ├── collaboration/
@@ -217,8 +236,41 @@ FASE 3 implementa Clinical Intelligence para transformar EREN en un Clinical Dec
 
 ---
 
+## 🎯 FASE 5 (Multi-Agent System) - 🚧 EN PROGRESO
+
+FASE 5 implementa un sistema cognitivo distribuido de agentes especializados:
+
+| Épica | Nombre | Descripción | Estado |
+|-------|--------|-------------|--------|
+| **EPIC 0** | Multi-Agent Architecture Foundation | Shared Kernel, Contracts, Interfaces | 🚧 EN PROCESO |
+| **EPIC 1** | Agent Orchestrator | Orquestación de agentes | 📋 PENDIENTE |
+| **EPIC 2** | Biomedical Agent | Agente especializado en biomedicina | 📋 PENDIENTE |
+| **EPIC 3** | Diagnostic Agent | Agente de diagnóstico clínico | 📋 PENDIENTE |
+| **EPIC 4** | Knowledge Agent | Agente de gestión de conocimiento | 📋 PENDIENTE |
+| **EPIC 5** | Research Agent | Agente de investigación | 📋 PENDIENTE |
+| **EPIC 6** | Planning Agent | Agente de planificación | 📋 PENDIENTE |
+| **EPIC 7** | Collaboration Engine | Motor de colaboración | 📋 PENDIENTE |
+| **EPIC 8** | Consensus Engine | Motor de consenso | 📋 PENDIENTE |
+| **EPIC 9** | Agent Memory Engine | Motor de memoria compartida | 📋 PENDIENTE |
+| **EPIC 10** | Agent Learning & Optimization | Aprendizaje y optimización | 📋 PENDIENTE |
+| **EPIC 11** | Multi-Agent Governance | Gobernanza del sistema | 📋 PENDIENTE |
+
+**Al terminar FASE 5:**
+- Sistema multiagente orquestado
+- Agentes especializados en dominios clínicos
+- Colaboración entre agentes
+- Memoria compartida
+- Gobernanza y compliance
+- **EREN será un Cognitive Multi-Agent System completo**
+
+**Progreso actual:** 1/12 EPICs - FASE 5 INICIADA
+
+---
+
 ## 📂 Acceso Rápido
 
 - [FASE 1 README](./PHASE_1/README.md)
 - [FASE 2 README](./PHASE_2/README.md)
 - [FASE 3 README](./PHASE_3/README.md)
+- [FASE 4 README](./PHASE_4/README.md)
+- [FASE 5 README](./PHASE_5/README.md)
