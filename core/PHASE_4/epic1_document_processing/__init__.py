@@ -6,6 +6,13 @@ Procesa documentos biomédicos de múltiples formatos:
 - DOCX con estilos y tablas
 - HTML con estructura semántica
 - Markdown con sintaxis estructurada
+
+Este módulo normaliza documentos clínicos antes de convertirlos en conocimiento.
+
+Dependencias:
+- EPIC 0: Foundation (usa tipos y contratos)
+- FASE 1: Consume Device, Knowledge contexts
+- FASE 2: Extiende embeddings y retrieval
 """
 
 from __future__ import annotations
@@ -21,6 +28,11 @@ from core.PHASE_4.foundation import (
     ProcessingStatus,
     ProcessedDocument,
     KnowledgeDomain,
+    DocumentParseError,
+    UnsupportedFormatError,
+    EventType,
+    DomainEvent,
+    InMemoryEventPublisher,
 )
 
 
@@ -409,10 +421,56 @@ class MetadataExtractor:
 
 
 # =============================================================================
+# IMPORTS FROM SUBMODULES
+# =============================================================================
+
+# Parsers
+from core.PHASE_4.epic1_document_processing.parsers import (
+    ParsedContent,
+    BaseParser,
+    PDFParser,
+    DOCXParser,
+    HTMLParser,
+    MarkdownParser,
+    TextParser,
+    ParserFactory,
+)
+
+# Extractors
+from core.PHASE_4.epic1_document_processing.extractors import (
+    Table,
+    Figure,
+    MedicalMetadata,
+    Section,
+    Attachment,
+    BaseExtractor,
+    TableExtractor,
+    FigureExtractor,
+    MetadataExtractor,
+    SectionExtractor,
+    LanguageDetector,
+)
+
+# Normalizers
+from core.PHASE_4.epic1_document_processing.normalizers import (
+    NormalizationResult,
+    BaseNormalizer,
+    MedicalCleaner,
+    ContentCleaner,
+    StructureNormalizer,
+    TerminologyNormalizer,
+    CompositeNormalizer,
+    MedicalNormalizerFactory,
+)
+
+
+# =============================================================================
 # EXPORTS
 # =============================================================================
 
 __all__ = [
+    # Version
+    "__version__",
     # Enums
     "TextExtractionMethod",
     "TableExtractionStrategy",
@@ -423,6 +481,12 @@ __all__ = [
     "ExtractedTable",
     "FigureReference",
     "ProcessingOptions",
+    "ParsedContent",
+    "Table",
+    "Figure",
+    "MedicalMetadata",
+    "Attachment",
+    "NormalizationResult",
     # Protocols
     "IDocumentParser",
     # Processors
@@ -435,4 +499,26 @@ __all__ = [
     "DocumentProcessingPipeline",
     "TextNormalizer",
     "MetadataExtractor",
+    # Parsers
+    "BaseParser",
+    "PDFParser",
+    "DOCXParser",
+    "HTMLParser",
+    "MarkdownParser",
+    "TextParser",
+    "ParserFactory",
+    # Extractors
+    "BaseExtractor",
+    "TableExtractor",
+    "FigureExtractor",
+    "SectionExtractor",
+    "LanguageDetector",
+    # Normalizers
+    "BaseNormalizer",
+    "MedicalCleaner",
+    "ContentCleaner",
+    "StructureNormalizer",
+    "TerminologyNormalizer",
+    "CompositeNormalizer",
+    "MedicalNormalizerFactory",
 ]
