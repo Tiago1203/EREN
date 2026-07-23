@@ -119,6 +119,9 @@ from core.PHASE_5.foundation.domain.shared import (
 from core.PHASE_5.foundation.registry import (
     AgentRegistry,
     AgentLookup,
+    IAgentRepository,
+    InMemoryAgentRepository,
+    JsonFileAgentRepository,
 )
 
 # Agent Bus (Nueva funcionalidad - comunicación entre agentes)
@@ -275,6 +278,9 @@ __all__ = [
     # Registry
     "AgentRegistry",
     "AgentLookup",
+    "IAgentRepository",
+    "InMemoryAgentRepository",
+    "JsonFileAgentRepository",
     # Context
     "ContextManager",
     "SessionManager",

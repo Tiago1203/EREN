@@ -73,6 +73,12 @@ from core.PHASE_5.epic1_orchestrator.orchestrator_agent import (
     EpicConnection,
 )
 
+# Multi-Agent Orchestrator (NUEVO - Orquestador completo)
+from core.PHASE_5.epic1_orchestrator.multi_agent_orchestrator import (
+    MultiAgentOrchestrator,
+    ExecutionResult,
+)
+
 
 # =============================================================================
 # EXPORTS
@@ -115,4 +121,7 @@ __all__ = [
     "OrchestratorAgent",
     "EpicRegistry",
     "EpicConnection",
+    # Multi-Agent Orchestrator (NUEVO)
+    "MultiAgentOrchestrator",
+    "ExecutionResult",
 ]
