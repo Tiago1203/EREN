@@ -488,10 +488,49 @@ class QueryExpander:
 
 
 # =============================================================================
+# IMPORTS FROM SUBMODULES
+# =============================================================================
+
+# Search
+from core.PHASE_4.epic5_hybrid_retrieval.search import (
+    SearchParams,
+    ScoredResult,
+    SearchResponse,
+    BaseSearcher,
+    VectorSearcher,
+    KeywordSearcher,
+    SemanticSearcher,
+)
+
+# BM25
+from core.PHASE_4.epic5_hybrid_retrieval.bm25 import (
+    BaseBM25,
+    BM25Classic,
+    BM25L,
+    BM25Plus,
+    BM25Searcher,
+)
+
+# Fusion
+from core.PHASE_4.epic5_hybrid_retrieval.fusion import (
+    FusionResult,
+    BaseFusionMethod,
+    ReciprocalRankFusion,
+    WeightedAverageFusion,
+    CombSUMFusion,
+    CombMNZFusion,
+    ScoreNormalizer,
+    HybridRanker,
+)
+
+
+# =============================================================================
 # EXPORTS
 # =============================================================================
 
 __all__ = [
+    # Version
+    "__version__",
     # Enums
     "RetrievalStrategy",
     "BM25Variant",
@@ -509,4 +548,23 @@ __all__ = [
     "BM25Searcher",
     "HybridRetrievalEngine",
     "QueryExpander",
+    # Search (new)
+    "SearchParams",
+    "SearchResponse",
+    "BaseSearcher",
+    "VectorSearcher",
+    "KeywordSearcher",
+    "SemanticSearcher",
+    # BM25 (new)
+    "BaseBM25",
+    "BM25Classic",
+    "BM25L",
+    "BM25Plus",
+    # Fusion (new)
+    "ReciprocalRankFusion",
+    "WeightedAverageFusion",
+    "CombSUMFusion",
+    "CombMNZFusion",
+    "ScoreNormalizer",
+    "HybridRanker",
 ]
