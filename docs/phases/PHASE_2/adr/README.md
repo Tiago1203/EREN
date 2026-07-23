@@ -21,14 +21,9 @@ docs/phases/PHASE_2/adr/
 ├── epic9/                    # ✅ COMPLETO (3 ADRs)
 ├── epic10/                   # ✅ COMPLETO (5 ADRs)
 ├── epic10-domain-bridge/    # ✅ COMPLETO (5 ADRs)
-├── epic11-reasoning/         # ✅ COMPLETO (1 ADR) - 2026-07-22
 ├── epic11-runtime-integration/  # ✅ COMPLETO (5 ADRs)
 ├── epic11-1-runtime-fix/      # ✅ COMPLETO (3 ADRs)
-├── epic11-2-runtime-fix-phase2/ # ✅ COMPLETO (1 ADR)
-├── epic12-rag/               # ✅ COMPLETO (1 ADR) - 2026-07-22
-├── epic13-orchestrator/      # ✅ COMPLETO (1 ADR) - 2026-07-22
-├── epic14-agents/            # ✅ COMPLETO (1 ADR) - 2026-07-22
-└── epic15-memory/            # ✅ COMPLETO (1 ADR) - 2026-07-22
+└── epic11-2-runtime-fix-phase2/ # ✅ COMPLETO (1 ADR)
 ```
 
 ---
@@ -49,16 +44,11 @@ docs/phases/PHASE_2/adr/
 | **EPIC 9** | 3 | ✅ Complete |
 | **EPIC 10** | 5 | ✅ Complete |
 | **EPIC 10 Domain Bridge** | 5 | ✅ Complete |
-| **EPIC 11 (Reasoning)** | 1 | ✅ Complete (2026-07-22) |
 | **EPIC 11 Runtime** | 5 | ✅ Complete |
 | **EPIC 11-1 Fix** | 3 | ✅ Complete |
 | **EPIC 11-2 Fix** | 1 | ✅ Complete |
-| **EPIC 12 (RAG)** | 1 | ✅ Complete (2026-07-22) |
-| **EPIC 13 (Orchestrator)** | 1 | ✅ Complete (2026-07-22) |
-| **EPIC 14 (Agents)** | 1 | ✅ Complete (2026-07-22) |
-| **EPIC 15 (Memory)** | 1 | ✅ Complete (2026-07-22) |
 
-**Total: 49 ADRs (49 Complete, 0 Pending)**
+**Total: 42 ADRs (42 Complete, 0 Pending)**
 
 ---
 
@@ -207,56 +197,6 @@ docs/phases/PHASE_2/adr/
 | ADR-2113 | SessionEvent Naming Conflict Resolution | ✅ Accepted |
 
 **Ubicación:** `docs/phases/PHASE_2/adr/epic11-2-runtime-fix-phase2/`
-
----
-
-## 📋 EPIC 11 (Reasoning) - ADR Completos
-
-| ADR | Título | Estado |
-|-----|--------|--------|
-| ADR-2120 | Reasoning Engine Architecture | ✅ Accepted |
-
-**Ubicación:** `docs/phases/PHASE_2/adr/epic11-reasoning/`
-
----
-
-## 📋 EPIC 12 (RAG) - ADR Completos
-
-| ADR | Título | Estado |
-|-----|--------|--------|
-| ADR-2121 | RAG Pipeline Architecture | ✅ Accepted |
-
-**Ubicación:** `docs/phases/PHASE_2/adr/epic12-rag/`
-
----
-
-## 📋 EPIC 13 (Orchestrator) - ADR Completos
-
-| ADR | Título | Estado |
-|-----|--------|--------|
-| ADR-2122 | Orchestrator Engine Architecture | ✅ Accepted |
-
-**Ubicación:** `docs/phases/PHASE_2/adr/epic13-orchestrator/`
-
----
-
-## 📋 EPIC 14 (Agents) - ADR Completos
-
-| ADR | Título | Estado |
-|-----|--------|--------|
-| ADR-2123 | Agent Runtime Architecture | ✅ Accepted |
-
-**Ubicación:** `docs/phases/PHASE_2/adr/epic14-agents/`
-
----
-
-## 📋 EPIC 15 (Memory) - ADR Completos
-
-| ADR | Título | Estado |
-|-----|--------|--------|
-| ADR-2124 | Memory & Learning System Architecture | ✅ Accepted |
-
-**Ubicación:** `docs/phases/PHASE_2/adr/epic15-memory/`
 
 ---
 

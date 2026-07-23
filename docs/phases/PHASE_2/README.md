@@ -65,20 +65,8 @@ EPIC 7 (Providers)                  EPIC 8 (Sessions)
                ▼
         ┌──────┴──────┐
         ▼             ▼
-   EPIC 11        EPIC 12
-(Reasoning)        (RAG)
-        │             │
-        └──────┬──────┘
-               ▼
-        ┌─────────────┐
-        │ EPIC 13    │
-        │(Orchestr.) │
-        └──────┬──────┘
-               │
-        ┌──────┴──────┐
-        ▼             ▼
-   EPIC 14        EPIC 15
-  (Agents)      (Memory)
+    EPIC 11-1    EPIC 11-2
+    (Runtime Fix)  (Runtime Int.)
         │             │
         └──────┬──────┘
                ▼
@@ -105,13 +93,8 @@ EPIC 7 (Providers)                  EPIC 8 (Sessions)
 | **EPIC 8** | Sessions | Gestión de sesiones | ✅ COMPLETE |
 | **EPIC 9** | AI Integration | Integración completa | ✅ COMPLETE |
 | **EPIC 10** | Domain Integration Layer | Conectar AI Core con Dominio | ✅ COMPLETE |
-| **EPIC 11** | Reasoning Engine | Razonamiento explicable | ✅ COMPLETE |
-| **EPIC 12** | RAG Pipeline | Retrieval Augmentation | ✅ COMPLETE |
-| **EPIC 13** | Orchestrator | Coordinación de motores | ✅ COMPLETE |
-| **EPIC 14** | Agent Runtime | Sistema multi-agente | ✅ COMPLETE |
-| **EPIC 15** | Memory & Learning | Memoria institucional | ✅ COMPLETE |
-| **EPIC 11 Runtime** | Runtime Integration | AI Core ↔ Business Domain | ✅ COMPLETE |
-| **EPIC 11-2** | Runtime Fix Phase 2 | Bug fixes y estabilización | ✅ COMPLETE |
+| **EPIC 11-1** | Runtime Fix Phase 2 | Bug fixes y estabilización | ✅ COMPLETE |
+| **EPIC 11-2** | Runtime Integration | AI Core ↔ Business Domain | ✅ COMPLETE |
 
 ---
 
@@ -368,8 +351,8 @@ result = await kernel.process(request)
 ## Actualización
 
 *Última actualización: 2026-07-22*
-- Añadidos ADRs para EPICs 11-15 (ADR-2120 a ADR-2124)
 - Corregidas rutas anticuadas en documentación (`core.ai.*` → `core.PHASE_2.ai.*`)
+- Eliminados EPICs 11-15 inválidos (eran obsoletos, los válidos son 11-1, 11-2, 11-runtime)
 
 ---
 
