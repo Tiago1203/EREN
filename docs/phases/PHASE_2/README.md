@@ -63,7 +63,17 @@ EPIC 7 (Providers)                  EPIC 8 (Sessions)
     EPIC 10 (Domain Integration Layer)
                │
                ▼
-    FASE 1 Business Domain
+        ┌──────┴──────┐
+        ▼             ▼
+    EPIC 11-1    EPIC 11-2
+    (Runtime Fix)  (Runtime Int.)
+        │             │
+        └──────┬──────┘
+               ▼
+        ┌─────────────┐
+        │  FASE 3    │
+        │Clinical Int.│
+        └─────────────┘
 ```
 
 ---
@@ -83,8 +93,8 @@ EPIC 7 (Providers)                  EPIC 8 (Sessions)
 | **EPIC 8** | Sessions | Gestión de sesiones | ✅ COMPLETE |
 | **EPIC 9** | AI Integration | Integración completa | ✅ COMPLETE |
 | **EPIC 10** | Domain Integration Layer | Conectar AI Core con Dominio | ✅ COMPLETE |
-| **EPIC 11** | Runtime Integration | AI Core ↔ Business Domain | ✅ COMPLETE |
-| **EPIC 11-2** | Runtime Fix Phase 2 | Bug fixes y estabilización | ✅ COMPLETE |
+| **EPIC 11-1** | Runtime Fix Phase 2 | Bug fixes y estabilización | ✅ COMPLETE |
+| **EPIC 11-2** | Runtime Integration | AI Core ↔ Business Domain | ✅ COMPLETE |
 
 ---
 
@@ -325,7 +335,7 @@ tests/unit/PHASE_2/
 ## Quick Start
 
 ```python
-from core.ai.foundation import AIKernel
+from core.PHASE_2.ai.foundation import AIKernel
 
 # Initialize AI Core
 kernel = AIKernel()
@@ -336,5 +346,15 @@ result = await kernel.process(request)
 
 ---
 
-*EREN FASE 2 v1.0 - AI Core*
-*Architecture Board - 2026-07-20*
+---
+
+## Actualización
+
+*Última actualización: 2026-07-22*
+- Corregidas rutas anticuadas en documentación (`core.ai.*` → `core.PHASE_2.ai.*`)
+- Eliminados EPICs 11-15 inválidos (eran obsoletos, los válidos son 11-1, 11-2, 11-runtime)
+
+---
+
+*EREN FASE 2 v1.1 - AI Core*
+*Architecture Board - 2026-07-22*

@@ -96,7 +96,7 @@ core/ai/prompt/
 ## Uso
 
 ```python
-from core.ai.prompt import (
+from core.PHASE_2.ai.prompt import (
     PromptBuilder,
     PromptTemplate,
     PromptStrategyType,

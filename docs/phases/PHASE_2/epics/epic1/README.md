@@ -99,7 +99,7 @@ core/ai/conversation/
 ## Uso
 
 ```python
-from core.ai.conversation import ConversationController
+from core.PHASE_2.ai.conversation import ConversationController
 
 # Create controller
 controller = ConversationController()

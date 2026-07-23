@@ -22,6 +22,7 @@ docs/phases/PHASE_2/adr/
 ├── epic10/                   # ✅ COMPLETO (5 ADRs)
 ├── epic10-domain-bridge/    # ✅ COMPLETO (5 ADRs)
 ├── epic11-runtime-integration/  # ✅ COMPLETO (5 ADRs)
+├── epic11-1-runtime-fix/      # ✅ COMPLETO (3 ADRs)
 └── epic11-2-runtime-fix-phase2/ # ✅ COMPLETO (1 ADR)
 ```
 
@@ -43,8 +44,9 @@ docs/phases/PHASE_2/adr/
 | **EPIC 9** | 3 | ✅ Complete |
 | **EPIC 10** | 5 | ✅ Complete |
 | **EPIC 10 Domain Bridge** | 5 | ✅ Complete |
-| **EPIC 11** | 5 | ✅ Complete |
-| **EPIC 11-2** | 1 | ✅ Complete |
+| **EPIC 11 Runtime** | 5 | ✅ Complete |
+| **EPIC 11-1 Fix** | 3 | ✅ Complete |
+| **EPIC 11-2 Fix** | 1 | ✅ Complete |
 
 **Total: 42 ADRs (42 Complete, 0 Pending)**
 
