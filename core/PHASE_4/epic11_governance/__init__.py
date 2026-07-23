@@ -386,14 +386,73 @@ class GovernanceEngine:
         }
 
 
+# =============================================================================
+# IMPORTS FROM SUBMODULES
+# =============================================================================
+
+# Lifecycle
+from core.PHASE_4.epic11_governance.lifecycle import (
+    LifecycleStage,
+    ArchiveReason,
+    KnowledgeSnapshot,
+    RollbackPlan,
+    BaseLifecycleManager,
+    InMemoryLifecycleManager,
+    RollbackManager,
+)
+
+# Compliance
+from core.PHASE_4.epic11_governance.compliance import (
+    RetentionPolicy,
+    ComplianceStatus,
+    GovernancePolicy,
+    ComplianceReport,
+    BaseComplianceManager,
+    InMemoryComplianceManager,
+    RetentionEnforcer,
+)
+
+# Audit
+from core.PHASE_4.epic11_governance.audit import (
+    AuditAction,
+    AuditSeverity,
+    AuditEntry,
+    AuditQuery,
+    BaseAuditManager,
+    InMemoryAuditManager,
+    AuditReporter,
+)
+
+
 __all__ = [
+    # Version
+    "__version__",
+    # Enums
     "AuditAction",
     "RetentionPolicy",
+    "LifecycleStage",
+    "ArchiveReason",
+    "ComplianceStatus",
+    "AuditSeverity",
+    # Data Classes
     "AuditEntry",
+    "KnowledgeSnapshot",
+    "GovernancePolicy",
     "ComplianceReport",
     "RollbackPlan",
+    "AuditQuery",
+    # Managers
     "AuditLogger",
     "RetentionManager",
     "RollbackManager",
     "GovernanceEngine",
+    # New from submodules
+    "BaseLifecycleManager",
+    "InMemoryLifecycleManager",
+    "BaseComplianceManager",
+    "InMemoryComplianceManager",
+    "RetentionEnforcer",
+    "BaseAuditManager",
+    "InMemoryAuditManager",
+    "AuditReporter",
 ]
