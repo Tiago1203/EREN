@@ -549,10 +549,48 @@ class VectorSearchEngine:
 
 
 # =============================================================================
+# IMPORTS FROM SUBMODULES
+# =============================================================================
+
+# Qdrant
+from core.PHASE_4.epic4_vector_indexing.qdrant import (
+    DistanceMetric,
+    QdrantConfig,
+    BaseQdrantClient,
+    InMemoryQdrantClient,
+    QdrantClientWrapper,
+)
+
+# Collections
+from core.PHASE_4.epic4_vector_indexing.collections import (
+    CollectionType,
+    IndexType,
+    CollectionConfig,
+    CollectionStats,
+    VectorPoint,
+    VectorCollection,
+    BaseCollectionManager,
+    InMemoryCollectionManager,
+    CollectionFactory,
+)
+
+# Payloads
+from core.PHASE_4.epic4_vector_indexing.payloads import (
+    VectorPayload,
+    BasePayloadBuilder,
+    KnowledgePayloadBuilder,
+    EntityPayloadBuilder,
+    PayloadSchema,
+)
+
+
+# =============================================================================
 # EXPORTS
 # =============================================================================
 
 __all__ = [
+    # Version
+    "__version__",
     # Enums
     "DistanceMetric",
     "IndexType",
@@ -562,12 +600,28 @@ __all__ = [
     "IndexPayload",
     "IndexingResult",
     "CollectionStats",
+    "VectorPoint",
+    "VectorCollection",
+    "VectorPayload",
     # Protocols
     "IQdrantClient",
+    "BaseQdrantClient",
+    "BaseCollectionManager",
+    "BasePayloadBuilder",
     # Implementations
     "InMemoryQdrantClient",
+    "QdrantClientWrapper",
+    "InMemoryCollectionManager",
+    "KnowledgePayloadBuilder",
+    "EntityPayloadBuilder",
     # Managers
     "CollectionManager",
     "VectorIndexer",
     "VectorSearchEngine",
+    # Factory
+    "CollectionFactory",
+    # Schema
+    "PayloadSchema",
+    # Config
+    "QdrantConfig",
 ]
