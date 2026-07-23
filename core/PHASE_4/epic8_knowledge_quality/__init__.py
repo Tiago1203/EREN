@@ -650,16 +650,58 @@ class DuplicateDetector:
 
 
 # =============================================================================
+# IMPORTS FROM SUBMODULES
+# =============================================================================
+
+# Quality
+from core.PHASE_4.epic8_knowledge_quality.quality import (
+    QualityLevel,
+    QualityDimension,
+    QualityScore,
+    QualityReport,
+    BaseQualityAnalyzer,
+    ClinicalQualityAnalyzer,
+)
+
+# Bias
+from core.PHASE_4.epic8_knowledge_quality.bias import (
+    BiasType,
+    BiasSeverity,
+    BiasIndicator,
+    BiasReport,
+    BaseBiasDetector,
+    ClinicalBiasDetector,
+)
+
+# Ranking
+from core.PHASE_4.epic8_knowledge_quality.ranking import (
+    EvidenceRank,
+    RankedEvidence,
+    BaseRankingEngine,
+    QualityRankingEngine,
+    ClinicalRankingEngine,
+    DuplicateDetector,
+)
+
+
+# =============================================================================
 # EXPORTS
 # =============================================================================
 
 __all__ = [
+    # Version
+    "__version__",
     # Enums
     "BiasType",
     "QualityDimension",
+    "QualityLevel",
+    "BiasSeverity",
+    "EvidenceRank",
     # Data Classes
     "QualityScore",
+    "QualityReport",
     "BiasReport",
+    "BiasIndicator",
     "DuplicateGroup",
     "DuplicateCandidate",
     "EvidenceRanking",
@@ -669,4 +711,12 @@ __all__ = [
     "QualityAssessor",
     "BiasDetector",
     "DuplicateDetector",
+    # New from submodules
+    "BaseQualityAnalyzer",
+    "ClinicalQualityAnalyzer",
+    "BaseBiasDetector",
+    "ClinicalBiasDetector",
+    "BaseRankingEngine",
+    "QualityRankingEngine",
+    "ClinicalRankingEngine",
 ]
