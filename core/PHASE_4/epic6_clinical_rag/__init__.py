@@ -596,10 +596,47 @@ class ClinicalRAGPipeline:
 
 
 # =============================================================================
+# IMPORTS FROM SUBMODULES
+# =============================================================================
+
+# Query
+from core.PHASE_4.epic6_clinical_rag.query import (
+    ClinicalQueryType,
+    QueryIntent,
+    ProcessedQuery,
+    BaseQueryProcessor,
+    ClinicalQueryProcessor,
+)
+
+# Context
+from core.PHASE_4.epic6_clinical_rag.context import (
+    ClinicalContext,
+    ContextChunk,
+    ContextConfig,
+    BaseContextBuilder,
+    ClinicalContextBuilder,
+    ContextOptimizer,
+    PromptContextGenerator,
+)
+
+# Evidence
+from core.PHASE_4.epic6_clinical_rag.evidence import (
+    EvidenceQuality,
+    EvidenceType,
+    EvidenceItem,
+    EvidencePackage,
+    BaseEvidenceBuilder,
+    ClinicalEvidenceBuilder,
+)
+
+
+# =============================================================================
 # EXPORTS
 # =============================================================================
 
 __all__ = [
+    # Version
+    "__version__",
     # Enums
     "ClinicalQueryType",
     "QueryIntent",
@@ -614,4 +651,20 @@ __all__ = [
     "PromptContextBuilder",
     # Pipeline
     "ClinicalRAGPipeline",
+    # Query (new)
+    "BaseQueryProcessor",
+    # Context (new)
+    "ContextChunk",
+    "ContextConfig",
+    "BaseContextBuilder",
+    "ClinicalContextBuilder",
+    "ContextOptimizer",
+    "PromptContextGenerator",
+    # Evidence (new)
+    "EvidenceQuality",
+    "EvidenceType",
+    "EvidenceItem",
+    "EvidencePackage",
+    "BaseEvidenceBuilder",
+    "ClinicalEvidenceBuilder",
 ]
