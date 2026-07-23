@@ -1,6 +1,6 @@
 # EREN FASE 3 — Clinical Intelligence
 
-*Version 1.2 - 2026-07-22*
+*Version 1.3 - 2026-07-23*
 
 **El motor de inteligencia clínica.**
 
@@ -24,6 +24,43 @@ FASE 3 transforma EREN en un **Clinical Decision Support System (CDSS)** que:
 - **Decision**: Clinical Decision Engine (EPIC 9) ✅ COMPLETO
 - **Learning**: Continuous Learning Engine (EPIC 10) ✅ COMPLETO
 - **Improvement**: Continuous Improvement (EPIC 11) ✅ COMPLETO
+
+---
+
+## Estructura del Código
+
+```
+core/PHASE_3/
+├── intelligence/
+│   ├── foundation/      # DTOs, enums, contratos base
+│   ├── knowledge/       # Motor de conocimiento biomédico
+│   ├── reasoning/       # Motor de razonamiento clínico
+│   ├── evidence/        # Recuperación de evidencia
+│   ├── confidence/      # Cálculo de confianza
+│   ├── explainability/  # Explicabilidad
+│   ├── rules/           # Reglas biomédicas
+│   ├── safety/          # Motor de seguridad
+│   ├── validation/      # Validación clínica
+│   ├── decision/        # Motor de decisión
+│   ├── learning/        # Motor de aprendizaje
+│   └── improvement/     # Mejora continua
+├── recommendation/      # Sistema de recomendaciones
+├── embeddings/          # Embeddings clínicos
+├── integrations/        # Integraciones
+└── knowledge_assets/    # Assets de conocimiento
+```
+
+---
+
+## Métricas
+
+| Métrica | Valor |
+|---------|-------|
+| EPICs | 15 |
+| ADRs | 58 |
+| Archivos Python | ~123 |
+| Tests | 131 |
+| Tests Pasando | 100% |
 
 ---
 
