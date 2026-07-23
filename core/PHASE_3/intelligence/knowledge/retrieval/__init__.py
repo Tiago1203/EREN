@@ -20,6 +20,8 @@ from core.PHASE_3.intelligence.knowledge.retrieval.evidence_store import (
     EvidenceWithRelevance,
     EvidenceChain,
     EvidenceStore,
+    InMemoryEvidenceStore,
+    create_evidence_store,
 )
 
 __all__ = [
@@ -33,4 +35,6 @@ __all__ = [
     "EvidenceWithRelevance",
     "EvidenceChain",
     "EvidenceStore",
+    "InMemoryEvidenceStore",
+    "create_evidence_store",
 ]

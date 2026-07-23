@@ -42,7 +42,7 @@ class StandardCategory(Enum):
     STERILIZATION = "sterilization"
     PACKAGING = "packaging"
     ENVIRONMENTAL = "environmental"
-   cybersecurity = "cybersecurity"
+    CYBERSECURITY = "cybersecurity"
 
 
 class VerificationMethod(Enum):
