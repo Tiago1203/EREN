@@ -113,10 +113,9 @@ class AuditLogger:
             action=action,
             user_id=user_id,
             timestamp=datetime.now(UTC),
-            previous_value=kwargs.get("previous_value", ""),
-            new_value=kwargs.get("new_value", ""),
-            change_summary=kwargs.get("change_summary", ""),
-            reason=kwargs.get("reason", ""),
+            previous_state=kwargs.get("previous_state", ""),
+            new_state=kwargs.get("new_state", ""),
+            details=kwargs.get("details", {}),
         )
         
         self._entries.append(entry)

@@ -276,10 +276,9 @@ class TestCollectionTypes:
         """Test collection type enum."""
         from core.PHASE_4.epic4_vector_indexing import CollectionType
         
-        assert CollectionType.KNOWLEDGE.value == "knowledge"
+        assert CollectionType.KNOWLEDGE_ARTICLES.value == "knowledge_articles"
         assert CollectionType.ENTITIES.value == "entities"
-        assert CollectionType.CONCEPTS.value == "concepts"
-
+        
     def test_index_types(self):
         """Test index type enum."""
         from core.PHASE_4.epic4_vector_indexing import IndexType

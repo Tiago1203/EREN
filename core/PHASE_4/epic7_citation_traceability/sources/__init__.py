@@ -15,6 +15,9 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
+# Use EvidenceLevel from foundation to avoid duplication
+from core.PHASE_4.foundation import EvidenceLevel as FoundationEvidenceLevel
+
 
 class SourceType(str, Enum):
     """Tipos de fuente."""
@@ -37,14 +40,8 @@ class SourceStatus(str, Enum):
     RETRACTED = "retracted"
 
 
-class EvidenceLevel(str, Enum):
-    """Niveles de evidencia."""
-    LEVEL_1 = "1"  # Systematic review, RCT
-    LEVEL_2 = "2"  # RCT, cohort study
-    LEVEL_3 = "3"  # Case-control, case series
-    LEVEL_4 = "4"  # Expert opinion, case report
-    LEVEL_5 = "5"  # Animal studies, bench research
-    UNKNOWN = "unknown"
+# Re-export EvidenceLevel from foundation for backward compatibility
+EvidenceLevel = FoundationEvidenceLevel
 
 
 @dataclass
@@ -64,7 +61,7 @@ class SourceEvidence:
     content_hash: str = ""
     
     # Evidence level
-    evidence_level: EvidenceLevel = EvidenceLevel.UNKNOWN
+    evidence_level: EvidenceLevel = EvidenceLevel.LEVEL_5
     
     # Timestamps
     first_seen: str = ""
@@ -122,16 +119,16 @@ class ClinicalSourceVerifier(BaseSourceVerifier):
     def _determine_evidence_level(self, source: SourceEvidence) -> EvidenceLevel:
         """Determina nivel de evidencia."""
         type_to_level = {
-            SourceType.PUBMED: EvidenceLevel.LEVEL_2,
-            SourceType.PMC: EvidenceLevel.LEVEL_2,
-            SourceType.CLINICAL_GUIDELINE: EvidenceLevel.LEVEL_1,
-            SourceType.REGULATORY: EvidenceLevel.LEVEL_2,
+            SourceType.PUBMED: EvidenceLevel.LEVEL_2B,
+            SourceType.PMC: EvidenceLevel.LEVEL_2B,
+            SourceType.CLINICAL_GUIDELINE: EvidenceLevel.LEVEL_1A,
+            SourceType.REGULATORY: EvidenceLevel.LEVEL_2A,
             SourceType.MANUFACTURER: EvidenceLevel.LEVEL_4,
             SourceType.TEXTBOOK: EvidenceLevel.LEVEL_4,
             SourceType.WEBSITE: EvidenceLevel.LEVEL_5,
         }
         
-        return type_to_level.get(source.source_type, EvidenceLevel.UNKNOWN)
+        return type_to_level.get(source.source_type, EvidenceLevel.LEVEL_5)
 
 
 class SourceTracker:

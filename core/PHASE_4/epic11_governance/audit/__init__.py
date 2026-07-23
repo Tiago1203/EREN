@@ -57,6 +57,7 @@ class AuditEntry:
     # What
     entity_type: str = ""
     entity_id: str = ""
+    asset_id: str = ""
     
     # Details
     details: dict = field(default_factory=dict)

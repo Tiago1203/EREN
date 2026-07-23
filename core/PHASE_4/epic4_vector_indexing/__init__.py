@@ -42,6 +42,7 @@ class IndexType(str, Enum):
 
 class CollectionType(str, Enum):
     """Tipos de colección."""
+    KNOWLEDGE = "knowledge"
     KNOWLEDGE_ARTICLES = "knowledge_articles"
     DEVICE_MANUALS = "device_manuals"
     CLINICAL_GUIDELINES = "clinical_guidelines"
@@ -50,6 +51,7 @@ class CollectionType(str, Enum):
     CLINICAL_NOTES = "clinical_notes"
     EVIDENCE_BASE = "evidence_base"
     SAFETY_ALERTS = "safety_alerts"
+    ENTITIES = "entities"
 
 
 @dataclass
@@ -554,7 +556,7 @@ class VectorSearchEngine:
 
 # Qdrant
 from core.PHASE_4.epic4_vector_indexing.qdrant import (
-    DistanceMetric,
+    DistanceMetric as _DistanceMetric,
     QdrantConfig,
     BaseQdrantClient,
     InMemoryQdrantClient,
@@ -563,7 +565,7 @@ from core.PHASE_4.epic4_vector_indexing.qdrant import (
 
 # Collections
 from core.PHASE_4.epic4_vector_indexing.collections import (
-    CollectionType,
+    CollectionType as _CollectionType,
     IndexType,
     CollectionConfig,
     CollectionStats,

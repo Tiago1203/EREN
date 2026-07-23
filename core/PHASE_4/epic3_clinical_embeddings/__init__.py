@@ -470,7 +470,7 @@ class EmbeddingOptimizer:
 
 # Providers
 from core.PHASE_4.epic3_clinical_embeddings.providers import (
-    EmbeddingModel,
+    EmbeddingModel as _EmbeddingModel,
     EmbeddingConfig,
     GeneratedEmbedding,
     BaseEmbeddingProvider,
