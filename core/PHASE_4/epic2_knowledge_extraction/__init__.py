@@ -605,10 +605,49 @@ class KnowledgeExtractionPipeline:
 
 
 # =============================================================================
+# IMPORTS FROM SUBMODULES
+# =============================================================================
+
+# Extractors
+from core.PHASE_4.epic2_knowledge_extraction.extractors import (
+    EntityCategory,
+    ConceptCategory,
+    RelationCategory,
+    BiomedicalEntity,
+    BiomedicalConcept,
+    MedicalRelation,
+    EntityExtractor,
+    ConceptExtractor,
+    RelationExtractor,
+    MedicalNER,
+)
+
+# Mappers
+from core.PHASE_4.epic2_knowledge_extraction.mappers import (
+    OntologyReference,
+    MappingResult,
+    SNOMEDMapper,
+    UMLSMapper,
+    MeSHMapper,
+    ICDMapper,
+    TerminologyMapperFactory,
+)
+
+# Pipelines
+from core.PHASE_4.epic2_knowledge_extraction.pipelines import (
+    ExtractedKnowledge,
+    EntityPipeline,
+    KnowledgeExtractionPipeline,
+)
+
+
+# =============================================================================
 # EXPORTS
 # =============================================================================
 
 __all__ = [
+    # Version
+    "__version__",
     # Enums
     "EntityType",
     "ConceptCategory",
@@ -634,4 +673,25 @@ __all__ = [
     "MedicalCodeLinker",
     # Pipeline
     "KnowledgeExtractionPipeline",
+    # Extractors (new)
+    "EntityCategory",
+    "RelationCategory",
+    "BiomedicalEntity",
+    "BiomedicalConcept",
+    "MedicalRelation",
+    "EntityExtractor",
+    "ConceptExtractor",
+    "RelationExtractor",
+    "MedicalNER",
+    # Mappers (new)
+    "OntologyReference",
+    "MappingResult",
+    "SNOMEDMapper",
+    "UMLSMapper",
+    "MeSHMapper",
+    "ICDMapper",
+    "TerminologyMapperFactory",
+    # Pipelines (new)
+    "ExtractedKnowledge",
+    "EntityPipeline",
 ]
