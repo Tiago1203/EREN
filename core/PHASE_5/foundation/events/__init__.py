@@ -119,11 +119,11 @@ class EventSubscriber:
     subscriber_id: str
     agent_id: str
     
+    # Handler (required, no default)
+    handler: Callable[[AgentEvent], None]
+    
     # Topics
     event_types: list[AgentEventType] = field(default_factory=list)
-    
-    # Handler
-    handler: Callable[[AgentEvent], None]
     
     # Filters
     agent_filter: str | None = None

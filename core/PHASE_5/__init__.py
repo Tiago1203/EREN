@@ -119,6 +119,37 @@ EPICS = {
 
 
 # =============================================================================
+# EPIC 1 - Agent Orchestrator (exports)
+# =============================================================================
+
+from core.PHASE_5.epic1_orchestrator import (
+    # Orchestrator Engine
+    OrchestratorEngine,
+    OrchestratorConfig,
+    # Domain
+    Workflow,
+    WorkflowStep,
+    WorkflowStatus,
+    OrchestrationPlan,
+    PlanStep,
+    PlanStatus,
+    AgentExecution,
+    ExecutionResult,
+    ExecutionStatus,
+    OrchestrationStrategy,
+    ExecutionMode,
+    AggregationMethod,
+    # Components
+    TaskDispatcher,
+    DispatchStrategy,
+    TaskScheduler,
+    ScheduleStrategy,
+    ResponseAggregator,
+    AggregationConfig,
+)
+
+
+# =============================================================================
 # EXPORTS
 # =============================================================================
 
@@ -149,6 +180,27 @@ __all__ = [
     "SessionManager",
     "AgentLookup",
     "MultiPhaseGateway",
+    # EPIC 1 - Orchestrator
+    "OrchestratorEngine",
+    "OrchestratorConfig",
+    "Workflow",
+    "WorkflowStep",
+    "WorkflowStatus",
+    "OrchestrationPlan",
+    "PlanStep",
+    "PlanStatus",
+    "AgentExecution",
+    "ExecutionResult",
+    "ExecutionStatus",
+    "OrchestrationStrategy",
+    "ExecutionMode",
+    "AggregationMethod",
+    "TaskDispatcher",
+    "DispatchStrategy",
+    "TaskScheduler",
+    "ScheduleStrategy",
+    "ResponseAggregator",
+    "AggregationConfig",
     # Constants
     "PHASE_5_DEPENDENCIES",
     "EPICS",
