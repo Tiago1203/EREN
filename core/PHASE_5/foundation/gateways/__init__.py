@@ -307,3 +307,16 @@ from core.PHASE_5.foundation.gateways.integrated import (
     IntegratedPhase4Gateway,
     IntegratedMultiPhaseGateway,
 )
+
+
+# =============================================================================
+# IMPORTS FROM REAL GATEWAYS
+# =============================================================================
+
+from core.PHASE_5.foundation.gateways.real import (
+    Phase1Gateway,
+    Phase2Gateway,
+    Phase3Gateway,
+    Phase4Gateway,
+    MultiPhaseGateway as RealMultiPhaseGateway,
+)

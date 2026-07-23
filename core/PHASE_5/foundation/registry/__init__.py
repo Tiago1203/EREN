@@ -15,6 +15,13 @@ from core.PHASE_5.foundation.types import (
 )
 from core.PHASE_5.foundation.domain import Agent
 
+# Import Agent Repository
+from core.PHASE_5.foundation.registry.agent_repository import (
+    IAgentRepository,
+    InMemoryAgentRepository,
+    JsonFileAgentRepository,
+)
+
 
 # =============================================================================
 # AGENT REGISTRY - Registro de agentes
@@ -240,4 +247,8 @@ class AgentLookup:
 __all__ = [
     "AgentRegistry",
     "AgentLookup",
+    # Repository (NUEVO)
+    "IAgentRepository",
+    "InMemoryAgentRepository",
+    "JsonFileAgentRepository",
 ]
