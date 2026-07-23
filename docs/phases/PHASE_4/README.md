@@ -1,199 +1,81 @@
 # EREN PHASE 4 — Knowledge Infrastructure
 
-*Version 1.0 - 2026-07-23*
+*Version 2.0 - 2026-07-23*
 
-**La capa de infraestructura de conocimiento.**
-
-FASE 4 implementa Knowledge Infrastructure — embeddings clínicos, integración Qdrant, recuperación de conocimiento, pipeline RAG clínico, y sistema de citación.
+**Comprehensive Knowledge Infrastructure with 12 EPICs**
 
 ---
 
 ## Overview
 
-FASE 4 conecta todas las capacidades anteriores:
+PHASE 4 es la capa de infraestructura de conocimiento que conecta todas las fases anteriores y provee capacidades para:
 
-- **PHASE_1**: Consume conocimiento del dominio (10 Bounded Contexts)
-- **PHASE_2**: Extiende embeddings, retrieval, y RAG
-- **PHASE_3**: Integra con motores de inteligencia clínica
+- Procesamiento de documentos biomédicos
+- Extracción de conocimiento estructurado
+- Embeddings clínicos especializados
+- Indexación vectorial en Qdrant
+- Retrieval híbrido (vector + keyword)
+- Pipeline RAG clínico
+- Sistema de citación y trazabilidad
+- Calidad de conocimiento
+- Repositorio versionado
+- Sincronización con fuentes externas
+- Gobernanza y compliance
 
 ---
 
-## Arquitectura
+## Arquitectura con 12 EPICs
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                      PHASE 4 — Knowledge Infrastructure               │
-│                                                                     │
-│  ┌──────────────┐ ┌──────────────┐ ┌──────────────────────────────┐ │
-│  │  EMBEDDINGS  │ │   QDRANT    │ │         KNOWLEDGE           │ │
-│  │   Clinical   │ │   Vector    │ │        Retrieval            │ │
-│  │   Provider   │ │    Store     │ │                             │ │
-│  └──────────────┘ └──────────────┘ └──────────────────────────────┘ │
-│                                                                     │
-│  ┌──────────────┐ ┌──────────────┐ ┌──────────────────────────────┐ │
-│  │     RAG      │ │  CITATIONS   │ │       INTEGRATION           │ │
-│  │   Pipeline   │ │   Engine     │ │      (PHASE 2/3)            │ │
-│  └──────────────┘ └──────────────┘ └──────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────────┘
+FASE 1 (Business Domain) ───────────────────────────────────────────────┐
+FASE 2 (AI Core) ──────────────────────────────────────────────────────┤
+FASE 3 (Clinical Intelligence) ────────────────────────────────────────▶│
+                                                                         │
+                                                                         ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                        PHASE 4 — Knowledge Infrastructure              │
+├────────────────────────────────────────────────────────────────────────┤
+│ EPIC 0: Foundation ─ Shared Kernel, Contracts, Gateways               │
+│ EPIC 1: Document Processing ─ PDF, DOCX, HTML, OCR                   │
+│ EPIC 2: Knowledge Extraction ─ NER, Concepts, Relations              │
+│ EPIC 3: Clinical Embeddings ─ BioBERT, PubMedBERT                    │
+│ EPIC 4: Vector Indexing ─ Qdrant, Collections, Payloads               │
+│ EPIC 5: Hybrid Retrieval ─ Vector + BM25 + RRF Fusion                │
+│ EPIC 6: Clinical RAG ─ Query Processor, Context, Evidence            │
+│ EPIC 7: Citation & Traceability ─ DOI, PubMed, Source Tracking       │
+│ EPIC 8: Knowledge Quality ─ Evidence Ranking, Bias Detection          │
+│ EPIC 9: Knowledge Repository ─ Versions, Collections, Governance       │
+│ EPIC 10: Sync Engine ─ PubMed, FDA, EMA Synchronization              │
+│ EPIC 11: Governance ─ Audit, Retention, Rollback, Compliance         │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
 ## Módulos
 
-### Embeddings
-
-```
-core/PHASE_4/embeddings/
-├── __init__.py
-├── medical_embedding.py    # Providers para embeddings biomédicos
-├── clinical_chunker.py     # Chunking especializado
-└── types.py               # Tipos y enums
-```
-
-### Qdrant
-
-```
-core/PHASE_4/qdrant/
-├── __init__.py
-├── client.py              # Cliente Qdrant
-├── collection_manager.py   # Gestión de colecciones
-├── vector_store.py        # Operaciones de vector store
-└── hybrid_search.py       # Búsqueda híbrida
-```
-
-### Knowledge
-
-```
-core/PHASE_4/knowledge/
-├── __init__.py
-├── retriever.py           # Recuperador de conocimiento
-├── evidence_searcher.py   # Buscador de evidencia
-└── article_retriever.py   # Recuperador de artículos
-```
-
-### RAG
-
-```
-core/PHASE_4/rag/
-├── __init__.py
-├── clinical_pipeline.py   # Pipeline RAG clínico
-├── orchestrator.py        # Orquestador
-└── query_processor.py     # Procesador de queries
-```
-
-### Citations
-
-```
-core/PHASE_4/citations/
-├── __init__.py
-├── citation_builder.py    # Generador de citas
-├── source_attributor.py   # Atribución de fuentes
-└── evidence_tracer.py    # Trazabilidad de evidencia
-```
-
----
-
-## Dependencias
-
-### PHASE_1 (Consume)
-
-- Device Context
-- Incident Context
-- Knowledge Context
-- Recommendation Context
-- Asset Context
-- Organization Context
-- Inventory Context
-- Department Context
-- Staffing Context
-- Capacity Context
-- PostgreSQL
-- UnitOfWork
-- Domain Events
-
-### PHASE_2 (Extiende)
-
-- Context Builder
-- Prompt Builder
-- Provider Manager
-- Memory Manager
-- Embedding Services
-- Retrieval Services
-- RAG Services
-- Runtime Integration
-
-### PHASE_3 (Integra)
-
-- Biomedical Knowledge Engine
-- Reasoning Engine
-- Medical Evidence Engine
-- Confidence Engine
-- Explainability Engine
-- Safety Engine
-- Clinical Validation Engine
-- Decision Engine
-
----
-
-## Quick Start
-
-```python
-from core.PHASE_4 import (
-    MedicalEmbeddingProvider,
-    QdrantClient,
-    KnowledgeRetriever,
-    ClinicalRAGPipeline,
-    CitationBuilder,
-)
-
-# Initialize components
-embedding_provider = MedicalEmbeddingProvider()
-qdrant_client = QdrantClient(url="http://localhost:6333")
-knowledge_retriever = KnowledgeRetriever(vector_store=qdrant_client)
-citation_builder = CitationBuilder()
-
-# Create RAG pipeline
-pipeline = ClinicalRAGPipeline(
-    knowledge_retriever=knowledge_retriever,
-    citation_builder=citation_builder,
-)
-
-# Query
-response = await pipeline.query(
-    "What are the safety protocols for infusion pumps?"
-)
-```
-
----
-
-## ADR Index
-
-Ver `adr/README.md` para ADRs de arquitectura.
-
----
-
-## EPICs
-
-| EPIC | Nombre | Descripción |
-|------|--------|-------------|
-| EPIC 0 | Architecture Foundation | Estructura base, contracts, interfaces |
-| EPIC 1 | Clinical Embeddings | Embeddings especializados para conocimiento biomédico |
-| EPIC 2 | Qdrant Integration | Integración con vector DB |
-| EPIC 3 | Knowledge Retriever | Recuperador específico para conocimiento clínico |
-| EPIC 4 | RAG Orchestrator | Pipeline RAG clínico |
-| EPIC 5 | Citation Engine | Generación de citas y atribución de fuentes |
-| EPIC 6 | Integration | Integración con PHASE_2 y PHASE_3 |
-| EPIC 7 | Testing & Validation | Tests y validación |
-| EPIC 8 | Documentation | Documentación completa |
+| EPIC | Módulo | Componentes Principales |
+|------|--------|------------------------|
+| 0 | foundation | Enums, Contracts, Entities, Gateways |
+| 1 | epic1_document_processing | DocumentProcessingPipeline, TextNormalizer |
+| 2 | epic2_knowledge_extraction | BiomedicalNerRecognizer, KnowledgeExtractionPipeline |
+| 3 | epic3_clinical_embeddings | PubMedBERTProvider, ClinicalEmbeddingEngine |
+| 4 | epic4_vector_indexing | InMemoryQdrantClient, VectorIndexer |
+| 5 | epic5_hybrid_retrieval | BM25Searcher, HybridRetrievalEngine |
+| 6 | epic6_clinical_rag | ClinicalQueryProcessor, ClinicalRAGPipeline |
+| 7 | epic7_citation_traceability | CitationEngine, TraceabilityEngine |
+| 8 | epic8_knowledge_quality | QualityAssessor, BiasDetector |
+| 9 | epic9_knowledge_repository | KnowledgeRepository |
+| 10 | epic10_sync_engine | SyncScheduler, PubMedSyncSource |
+| 11 | epic11_governance | AuditLogger, GovernanceEngine |
 
 ---
 
 ## Status
 
-**PHASE 4 Status:** 🚧 IN PROGRESS
+**PHASE 4 Status:** ✅ COMPLETE
 
 ---
 
-*EREN PHASE 4 v1.0*
+*EREN PHASE 4 v2.0*
 *Architecture Board - 2026-07-23*
