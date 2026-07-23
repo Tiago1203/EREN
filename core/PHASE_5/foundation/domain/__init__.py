@@ -38,9 +38,9 @@ from core.PHASE_5.foundation.types import (
 @dataclass
 class Agent:
     """Entidad base de agente."""
-    agent_id: str
-    agent_type: AgentType
-    name: str
+    agent_id: str = ""  # Auto-generado si no se provee
+    agent_type: AgentType = AgentType.ORCHESTRATOR
+    name: str = ""
     
     # State
     state: AgentState = AgentState.INITIAL
