@@ -1,6 +1,7 @@
 """Unit tests for PHASE 4 Knowledge Infrastructure."""
 
 import pytest
+import asyncio
 
 
 class TestPHASE4Imports:
@@ -14,7 +15,7 @@ class TestPHASE4Imports:
 
 
 class TestFoundation:
-    """Tests for Foundation module."""
+    """Tests for Foundation module (EPIC 0)."""
 
     def test_document_format_values(self):
         """Test DocumentFormat enum."""
@@ -50,6 +51,79 @@ class TestFoundation:
         assert GovernanceStatus.DRAFT.value == "draft"
         assert GovernanceStatus.APPROVED.value == "approved"
         assert GovernanceStatus.PUBLISHED.value == "published"
+
+    def test_evidence_level(self):
+        """Test EvidenceLevel enum."""
+        from core.PHASE_4 import EvidenceLevel
+        assert EvidenceLevel.LEVEL_1A.value == "1a"
+        assert EvidenceLevel.LEVEL_1B.value == "1b"
+        assert EvidenceLevel.LEVEL_5.value == "5"
+
+    def test_base_knowledge_service(self):
+        """Test BaseKnowledgeService."""
+        from core.PHASE_4 import BaseKnowledgeService
+        service = BaseKnowledgeService()
+        assert service._initialized is False
+
+    def test_base_chunker(self):
+        """Test BaseChunker."""
+        from core.PHASE_4 import BaseChunker
+        chunker = BaseChunker(chunk_size=100, overlap=10)
+        text = "This is a long text that needs to be chunked. " * 10
+        chunks = chunker.chunk(text)
+        assert len(chunks) > 0
+
+    def test_knowledge_asset_factory(self):
+        """Test KnowledgeAssetFactory."""
+        from core.PHASE_4 import KnowledgeAssetFactory, KnowledgeDomain
+        asset = KnowledgeAssetFactory.create(
+            title="Test Asset",
+            content="Test content",
+            domain=KnowledgeDomain.CARDIOLOGY,
+            created_by="test",
+        )
+        assert asset.title == "Test Asset"
+        assert asset.domain == KnowledgeDomain.CARDIOLOGY
+        assert asset.version == "1.0.0"
+        assert asset.governance_status.value == "draft"
+
+    def test_phase4_config(self):
+        """Test PHASE4Config."""
+        from core.PHASE_4 import PHASE4Config
+        config = PHASE4Config()
+        assert config.service_name == "eren-phase4"
+        assert config.environment.value == "development"
+
+    def test_phase4_metrics(self):
+        """Test PHASE4Metrics."""
+        from core.PHASE_4 import PHASE4Metrics
+        metrics = PHASE4Metrics()
+        metrics.documents_processed = 10
+        assert metrics.documents_processed == 10
+        assert metrics.to_dict()["documents_processed"] == 10
+
+    def test_event_publisher(self):
+        """Test InMemoryEventPublisher."""
+        from core.PHASE_4 import InMemoryEventPublisher, DomainEvent, EventType
+        
+        async def test():
+            publisher = InMemoryEventPublisher()
+            event = DomainEvent.create(
+                event_type=EventType.DOCUMENT_PROCESSED,
+                correlation_id="test-123",
+            )
+            result = await publisher.publish(event)
+            assert result is True
+            assert len(publisher.get_published_events()) == 1
+        
+        asyncio.run(test())
+
+    def test_constants(self):
+        """Test constants module."""
+        from core.PHASE_4 import VERSION, DEFAULT_TOP_K, MAX_RESULTS
+        assert VERSION == "2.0.0"
+        assert DEFAULT_TOP_K == 10
+        assert MAX_RESULTS == 100
 
 
 class TestDocumentProcessing:

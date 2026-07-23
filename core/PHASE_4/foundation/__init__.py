@@ -1,8 +1,10 @@
 """
 PHASE 4 - EPIC 0: Knowledge Infrastructure Foundation
 
-Shared kernel que conecta PHASE 1, 2, 3 con los EPICs de PHASE 4.
-Proporciona contratos, interfaces y tipos comunes.
+Shared Kernel que conecta PHASE 1, 2, 3 con los EPICs de PHASE 4.
+Proporciona contratos, interfaces, tipos comunes y configuración base.
+
+Este módulo es el fundamento sobre el cual se construyen todos los demás EPICs.
 """
 
 from __future__ import annotations
@@ -10,8 +12,14 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from enum import Enum
-from typing import Protocol, Optional
+from typing import Protocol, Optional, TypeVar, Generic
 import uuid
+
+# Importar submódulos del foundation
+from core.PHASE_4.foundation.constants import *
+from core.PHASE_4.foundation.exceptions import *
+from core.PHASE_4.foundation.events import *
+from core.PHASE_4.foundation.config import *
 
 
 # =============================================================================
@@ -83,6 +91,15 @@ class GovernanceStatus(str, Enum):
 
 
 # =============================================================================
+# GENERIC TYPE VARIABLES
+# =============================================================================
+
+T = TypeVar("T")
+TEntity = TypeVar("TEntity")
+TId = TypeVar("TId", bound=str)
+
+
+# =============================================================================
 # CONTRACTS - Interfaces para los gateways y servicios
 # =============================================================================
 
@@ -134,23 +151,19 @@ class IHybridRetriever(Protocol):
         ...
 
 
-class IKnowledgeRepository(Protocol):
-    """Protocolo para repositorio de conocimiento."""
+class IKnowledgeRepository(Protocol[TEntity, TId]):
+    """Protocolo genérico para repositorio de conocimiento."""
     
-    async def store(self, knowledge: KnowledgeAsset) -> str:
-        """Almacena asset de conocimiento."""
+    async def store(self, entity: TEntity) -> TId:
+        """Almacena entidad."""
         ...
     
-    async def get(self, id: str) -> Optional[KnowledgeAsset]:
-        """Recupera asset por ID."""
+    async def get(self, id: TId) -> Optional[TEntity]:
+        """Recupera entidad por ID."""
         ...
     
-    async def update(self, id: str, knowledge: KnowledgeAsset) -> bool:
-        """Actualiza asset."""
-        ...
-    
-    async def list_versions(self, id: str) -> list[KnowledgeVersion]:
-        """Lista versiones de un asset."""
+    async def update(self, id: TId, entity: TEntity) -> bool:
+        """Actualiza entidad."""
         ...
 
 
@@ -163,6 +176,26 @@ class ICitationTracker(Protocol):
     
     async def get_trace(self, citation_id: str) -> Optional[EvidenceTrace]:
         """Obtiene trace de citación."""
+        ...
+
+
+class IChunker(Protocol):
+    """Protocolo para chunking de documentos."""
+    
+    def chunk(self, text: str, chunk_size: int, overlap: int) -> list[str]:
+        """Divide texto en chunks."""
+        ...
+
+
+class IBaseService(Protocol[T]):
+    """Protocolo base para servicios."""
+    
+    async def initialize(self) -> None:
+        """Inicializa el servicio."""
+        ...
+    
+    async def health_check(self) -> dict:
+        """Verifica salud del servicio."""
         ...
 
 
@@ -211,6 +244,87 @@ class MedicalCode:
     code: str
     display: str = ""
     version: str = ""
+
+
+# =============================================================================
+# DOMAIN OBJECTS - Objetos de dominio adicionales
+# =============================================================================
+
+@dataclass
+class KnowledgeSource:
+    """Fuente de conocimiento."""
+    source_id: str
+    source_type: str  # pubmed, fda, guideline, manual, etc
+    name: str
+    url: str = ""
+    description: str = ""
+    credibility_score: float = 0.5
+    last_synced: datetime | None = None
+    metadata: dict = field(default_factory=dict)
+
+
+@dataclass
+class KnowledgeMetadata:
+    """Metadata de conocimiento."""
+    title: str
+    domain: KnowledgeDomain
+    medical_specialty: str = ""
+    device_categories: list[str] = field(default_factory=list)
+    icd_codes: list[str] = field(default_factory=list)
+    snomed_codes: list[str] = field(default_factory=list)
+    loinc_codes: list[str] = field(default_factory=list)
+    keywords: list[str] = field(default_factory=list)
+    language: str = "en"
+    source: str = ""
+    confidence: float = 0.0
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+
+
+@dataclass
+class KnowledgeChunk:
+    """Chunk de conocimiento."""
+    chunk_id: str
+    content: str
+    position: int  # Order in document
+    document_id: str
+    metadata: KnowledgeMetadata = field(default_factory=KnowledgeMetadata)
+    embedding: EmbeddingVector | None = None
+
+
+@dataclass
+class KnowledgeCollection:
+    """Colección de conocimiento."""
+    collection_id: str
+    name: str
+    description: str = ""
+    domain: KnowledgeDomain = KnowledgeDomain.GENERAL
+    document_count: int = 0
+    chunk_count: int = 0
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+
+
+@dataclass
+class RetrievalContext:
+    """Contexto de retrieval."""
+    query: str
+    retrieved_chunks: list[KnowledgeChunk] = field(default_factory=list)
+    citations: list[Citation] = field(default_factory=list)
+    metadata: dict = field(default_factory=dict)
+    retrieval_time_ms: int = 0
+
+
+@dataclass
+class SearchRequest:
+    """Solicitud de búsqueda."""
+    query: str
+    domain: KnowledgeDomain | None = None
+    filters: dict = field(default_factory=dict)
+    top_k: int = 10
+    min_score: float = 0.5
+    include_metadata: bool = True
+    request_id: str = field(default_factory=lambda: str(uuid.uuid4()))
 
 
 # =============================================================================
@@ -288,7 +402,7 @@ class IndexedVector:
     vector_id: str
     embedding: EmbeddingVector
     collection: str
-    payload: dict = field(default_factory=dict)  # Document metadata, tags, etc
+    payload: dict = field(default_factory=dict)
     indexed_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
 
@@ -415,16 +529,123 @@ class KnowledgePackage:
 
 
 # =============================================================================
+# BASE IMPLEMENTATIONS - Implementaciones base para servicios
+# =============================================================================
+
+class BaseKnowledgeService:
+    """Clase base para servicios de conocimiento."""
+    
+    def __init__(self, config: PHASE4Config | None = None):
+        self.config = config or PHASE4Config()
+        self._initialized = False
+        self._event_publisher = InMemoryEventPublisher()
+    
+    async def initialize(self) -> None:
+        """Inicializa el servicio."""
+        self._initialized = True
+    
+    async def health_check(self) -> dict:
+        """Verifica salud del servicio."""
+        return {
+            "service": self.__class__.__name__,
+            "initialized": self._initialized,
+            "status": "healthy" if self._initialized else "not_initialized",
+        }
+
+
+class BaseRetriever:
+    """Clase base para retrievers."""
+    
+    def __init__(self, config: RetrievalConfig | None = None):
+        self.config = config or RetrievalConfig()
+
+
+class BaseIndexer:
+    """Clase base para indexadores."""
+    
+    def __init__(self, config: VectorStoreConfig | None = None):
+        self.config = config or VectorStoreConfig()
+
+
+class BaseChunker:
+    """Clase base para chunkers."""
+    
+    def __init__(self, chunk_size: int = 512, overlap: int = 50):
+        self.chunk_size = chunk_size
+        self.overlap = overlap
+    
+    def chunk(self, text: str) -> list[str]:
+        """Divide texto en chunks."""
+        if len(text) <= self.chunk_size:
+            return [text]
+        
+        chunks = []
+        start = 0
+        
+        while start < len(text):
+            end = start + self.chunk_size
+            chunk = text[start:end]
+            
+            # Try to break at sentence or paragraph
+            if end < len(text):
+                for sep in ['.\n', '.\n\n', '\n\n', '. ']:
+                    last_sep = chunk.rfind(sep)
+                    if last_sep > self.chunk_size // 2:
+                        chunk = chunk[:last_sep + len(sep.strip())]
+                        end = start + len(chunk)
+                        break
+            
+            chunks.append(chunk.strip())
+            start = end - self.overlap
+        
+        return chunks
+
+
+class BaseEmbeddingProvider:
+    """Clase base para providers de embedding."""
+    
+    def __init__(self, config: EmbeddingConfig | None = None):
+        self.config = config or EmbeddingConfig()
+
+
+class BaseVectorRepository:
+    """Clase base para repositorio vectorial."""
+    
+    def __init__(self, config: VectorStoreConfig | None = None):
+        self.config = config or VectorStoreConfig()
+
+
+class BaseCitationBuilder:
+    """Clase base para constructores de citación."""
+    
+    def __init__(self, config: CitationConfig | None = None):
+        self.config = config or CitationConfig()
+
+
+class BaseRAGPipeline:
+    """Clase base para pipelines RAG."""
+    
+    def __init__(self, config: RAGConfig | None = None):
+        self.config = config or RAGConfig()
+
+
+# =============================================================================
 # GATEWAYS - Conexiones con otras fases
 # =============================================================================
 
 class PHASE1Gateway:
-    """Gateway para consumir conocimiento de PHASE 1."""
+    """Gateway para consumir conocimiento de PHASE 1.
+    
+    Proporciona acceso a:
+    - Knowledge Context (KnowledgeArticle, Category, Tag)
+    - Device Context (manuales, especificaciones)
+    - Incident Context (reportes, resolutions)
+    """
     
     def __init__(self):
-        self._knowledge_repo = None  # PHASE_1 KnowledgeRepository
-        self._device_repo = None      # PHASE_1 DeviceRepository
-        self._incident_repo = None    # PHASE_1 IncidentRepository
+        self._knowledge_repo = None
+        self._device_repo = None
+        self._incident_repo = None
     
     async def get_knowledge_articles(self, domain: KnowledgeDomain, limit: int = 100) -> list[dict]:
         """Obtiene artículos de conocimiento del dominio."""
@@ -438,15 +659,27 @@ class PHASE1Gateway:
     async def get_incident_reports(self, device_id: str) -> list[dict]:
         """Obtiene reportes de incidentes."""
         return []
+    
+    async def get_related_knowledge(self, entity_id: str, entity_type: str) -> list[dict]:
+        """Obtiene conocimiento relacionado a una entidad."""
+        return []
 
 
 class PHASE2Gateway:
-    """Gateway para extender funcionalidades de PHASE 2."""
+    """Gateway para extender funcionalidades de PHASE 2.
+    
+    Proporciona acceso a:
+    - Context Builder
+    - Prompt Builder
+    - Embedding Services
+    - Memory Manager
+    """
     
     def __init__(self):
         self._embedding_manager = None
         self._retrieval_engine = None
         self._context_builder = None
+        self._prompt_builder = None
     
     async def get_embeddings(self, texts: list[str], model: str) -> list[EmbeddingVector]:
         """Genera embeddings usando PHASE 2."""
@@ -455,10 +688,22 @@ class PHASE2Gateway:
     async def retrieve_context(self, query: str) -> dict:
         """Obtiene contexto de PHASE 2."""
         return {}
+    
+    async def build_prompt_context(self, query: str, retrieved: list) -> str:
+        """Construye contexto para prompt."""
+        return ""
 
 
 class PHASE3Gateway:
-    """Gateway para integrar con PHASE 3 Clinical Intelligence."""
+    """Gateway para integrar con PHASE 3 Clinical Intelligence.
+    
+    Proporciona acceso a:
+    - Reasoning Engine
+    - Evidence Retrieval
+    - Confidence Engine
+    - Safety Engine
+    - Decision Engine
+    """
     
     def __init__(self):
         self._reasoning_engine = None
@@ -477,18 +722,35 @@ class PHASE3Gateway:
     async def get_evidence_score(self, citations: list[Citation]) -> float:
         """Obtiene score de evidencia de PHASE 3."""
         return 0.8
+    
+    async def enhance_with_reasoning(self, knowledge_package: KnowledgePackage) -> KnowledgePackage:
+        """Mejora paquete de conocimiento con razonamiento."""
+        return knowledge_package
 
 
 class PHASE5Contract:
-    """Contrato para output hacia PHASE 5."""
+    """Contrato para output hacia PHASE 5.
+    
+    PHASE 4 produce:
+    - Knowledge Package
+    - Evidence Package
+    - Clinical Context
+    - Verified Citations
+    """
+    
+    def __init__(self):
+        self._client = None
     
     async def provide_knowledge_package(self, package: KnowledgePackage) -> bool:
         """Proporciona Knowledge Package a PHASE 5."""
-        # Placeholder - would send to PHASE 5
         return True
     
     async def provide_evidence_package(self, evidence: list[EvidenceTrace]) -> bool:
         """Proporciona Evidence Package a PHASE 5."""
+        return True
+    
+    async def provide_clinical_context(self, context: RetrievalContext) -> bool:
+        """Proporciona Clinical Context a PHASE 5."""
         return True
 
 
@@ -525,7 +787,6 @@ class KnowledgeAssetFactory:
         updated_by: str,
     ) -> KnowledgeAsset:
         """Crea nueva versión de un asset existente."""
-        # Parse version
         parts = previous.version.split(".")
         new_patch = int(parts[2]) + 1
         new_version = f"{parts[0]}.{parts[1]}.{new_patch}"
@@ -543,8 +804,76 @@ class KnowledgeAssetFactory:
         )
 
 
+class DocumentFactory:
+    """Fábrica para crear documentos procesados."""
+    
+    @staticmethod
+    def create(
+        document_id: str,
+        content: str,
+        format: DocumentFormat,
+        metadata: dict | None = None,
+    ) -> ProcessedDocument:
+        """Crea un documento procesado."""
+        return ProcessedDocument(
+            document_id=document_id,
+            content=content,
+            format=format,
+            metadata=metadata or {},
+        )
+
+
+class ChunkFactory:
+    """Fábrica para crear chunks de conocimiento."""
+    
+    @staticmethod
+    def create(
+        content: str,
+        position: int,
+        document_id: str,
+        metadata: KnowledgeMetadata | None = None,
+    ) -> KnowledgeChunk:
+        """Crea un chunk de conocimiento."""
+        return KnowledgeChunk(
+            chunk_id=str(uuid.uuid4()),
+            content=content,
+            position=position,
+            document_id=document_id,
+            metadata=metadata or KnowledgeMetadata(title="", domain=KnowledgeDomain.GENERAL),
+        )
+
+
 # =============================================================================
-# EVENTS - Eventos de dominio
+# METRICS - Métricas del sistema
+# =============================================================================
+
+@dataclass
+class PHASE4Metrics:
+    """Métricas de PHASE 4."""
+    documents_processed: int = 0
+    documents_failed: int = 0
+    embeddings_generated: int = 0
+    vectors_indexed: int = 0
+    queries_answered: int = 0
+    citations_generated: int = 0
+    avg_retrieval_time_ms: float = 0.0
+    avg_processing_time_ms: float = 0.0
+    
+    def to_dict(self) -> dict:
+        return {
+            "documents_processed": self.documents_processed,
+            "documents_failed": self.documents_failed,
+            "embeddings_generated": self.embeddings_generated,
+            "vectors_indexed": self.vectors_indexed,
+            "queries_answered": self.queries_answered,
+            "citations_generated": self.citations_generated,
+            "avg_retrieval_time_ms": self.avg_retrieval_time_ms,
+            "avg_processing_time_ms": self.avg_processing_time_ms,
+        }
+
+
+# =============================================================================
+# KNOWLEDGE EVENT ENUM (alias for backward compatibility)
 # =============================================================================
 
 class KnowledgeEvent(str, Enum):
@@ -564,6 +893,10 @@ class KnowledgeEvent(str, Enum):
 # =============================================================================
 
 __all__ = [
+    # Version
+    "VERSION",
+    "PHASE",
+    "EPIC",
     # Enums
     "DocumentFormat",
     "KnowledgeDomain", 
@@ -572,6 +905,8 @@ __all__ = [
     "EvidenceLevel",
     "GovernanceStatus",
     "KnowledgeEvent",
+    "Environment",
+    "EventType",
     # Contracts
     "IDocumentProcessor",
     "IKnowledgeExtractor",
@@ -580,11 +915,20 @@ __all__ = [
     "IHybridRetriever",
     "IKnowledgeRepository",
     "ICitationTracker",
+    "IChunker",
+    "IBaseService",
     # Value Objects
     "EmbeddingVector",
     "SourceReference",
     "Citation",
     "MedicalCode",
+    # Domain Objects
+    "KnowledgeSource",
+    "KnowledgeMetadata",
+    "KnowledgeChunk",
+    "KnowledgeCollection",
+    "RetrievalContext",
+    "SearchRequest",
     # Entities
     "ProcessedDocument",
     "ExtractedKnowledge",
@@ -605,6 +949,41 @@ __all__ = [
     "PHASE2Gateway",
     "PHASE3Gateway",
     "PHASE5Contract",
+    # Base Implementations
+    "BaseKnowledgeService",
+    "BaseRetriever",
+    "BaseIndexer",
+    "BaseChunker",
+    "BaseEmbeddingProvider",
+    "BaseVectorRepository",
+    "BaseCitationBuilder",
+    "BaseRAGPipeline",
     # Factories
     "KnowledgeAssetFactory",
+    "DocumentFactory",
+    "ChunkFactory",
+    # Config
+    "PHASE4Config",
+    "EmbeddingConfig",
+    "VectorStoreConfig",
+    "DocumentProcessingConfig",
+    "RetrievalConfig",
+    "RAGConfig",
+    "CitationConfig",
+    "QualityConfig",
+    "GovernanceConfig",
+    "SyncConfig",
+    "LoggingConfig",
+    "ObservabilityConfig",
+    # Exceptions
+    "PHASE4BaseException",
+    "KnowledgeNotFoundError",
+    "DocumentParseError",
+    "EmbeddingFailedError",
+    # Events
+    "DomainEvent",
+    "InMemoryEventPublisher",
+    "IEventPublisher",
+    # Metrics
+    "PHASE4Metrics",
 ]

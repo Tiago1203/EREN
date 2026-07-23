@@ -27,13 +27,44 @@ __phase__ = "PHASE_4"
 
 # EPIC 0: Foundation
 from core.PHASE_4.foundation import (
+    # Version
+    VERSION, PHASE, EPIC,
+    # Enums
     DocumentFormat, KnowledgeDomain, ProcessingStatus, QualityLevel,
-    EvidenceLevel, GovernanceStatus, KnowledgeEvent,
+    EvidenceLevel, GovernanceStatus, KnowledgeEvent, Environment, EventType,
+    # Contracts
+    IDocumentProcessor, IKnowledgeExtractor, IClinicalEmbedder,
+    IVectorIndexer, IHybridRetriever, IKnowledgeRepository, ICitationTracker,
+    IChunker, IBaseService,
+    # Value Objects
+    EmbeddingVector, SourceReference, Citation, MedicalCode,
+    # Domain Objects
+    KnowledgeSource, KnowledgeMetadata, KnowledgeChunk, KnowledgeCollection,
+    RetrievalContext, SearchRequest,
+    # Entities
     ProcessedDocument, ExtractedKnowledge, ExtractedEntity, ExtractedConcept,
     ExtractedRelation, IndexedVector, SearchResult, KnowledgeQuery,
     RetrievalResult, KnowledgeAsset, KnowledgeVersion, TracedCitation,
-    EvidenceTrace, KnowledgePackage, KnowledgeAssetFactory,
+    EvidenceTrace, KnowledgePackage,
+    # Gateways
     PHASE1Gateway, PHASE2Gateway, PHASE3Gateway, PHASE5Contract,
+    # Base Implementations
+    BaseKnowledgeService, BaseRetriever, BaseIndexer, BaseChunker,
+    BaseEmbeddingProvider, BaseVectorRepository, BaseCitationBuilder, BaseRAGPipeline,
+    # Factories
+    KnowledgeAssetFactory, DocumentFactory, ChunkFactory,
+    # Config
+    PHASE4Config, EmbeddingConfig, VectorStoreConfig, DocumentProcessingConfig,
+    KnowledgeExtractionConfig, RetrievalConfig, RAGConfig, CitationConfig,
+    QualityConfig, GovernanceConfig, SyncConfig, LoggingConfig, ObservabilityConfig,
+    # Exceptions
+    PHASE4BaseException, KnowledgeNotFoundError, DocumentParseError, EmbeddingFailedError,
+    # Events
+    DomainEvent, InMemoryEventPublisher, IEventPublisher,
+    # Metrics
+    PHASE4Metrics,
+    # Constants
+    DEFAULT_TOP_K, MAX_RESULTS,
 )
 
 # EPIC 1: Document Processing
