@@ -1,7 +1,7 @@
 # EPIC 0: Multi-Agent Architecture Foundation
 
-*Versión: 1.0.0*
-*Fecha: 2026-07-23*
+*Versión: 2.0.0*
+*Fecha: 2026-07-24*
 
 ---
 
@@ -24,6 +24,7 @@ EPIC 0 proporciona:
 - **Registro**: AgentRegistry para gestión centralizada
 - **Eventos**: Sistema de eventos para comunicación asíncrona
 - **Contexto**: AgentContext y AgentSession para estado compartido
+- **Explicabilidad Clínica**: Sistema de explicabilidad para decisiones clínicas *(NUEVO v2.0)*
 
 ---
 
@@ -93,6 +94,15 @@ EPIC 0 proporciona:
 │  │  └── PHASE4Gateway ────────────────────────► PHASE_4 Knowledge  │   │
 │  └──────────────────────────────────────────────────────────────────┘   │
 │                                                                          │
+│  ┌──────────────────────────────────────────────────────────────────┐   │
+│  │              CLINICAL EXPLICABILITY MODULE (NUEVO v2.0)            │   │
+│  │  ├── ClinicalExplanationGenerator ───────── Genera explicaciones   │   │
+│  │  ├── ReasoningPathTracer ───────────────── Traza paths de razonam. │   │
+│  │  ├── EvidenceAttributor ────────────────── Atribuye evidencia     │   │
+│  │  ├── ConfidenceExplainer ───────────────── Explica confianza      │   │
+│  │  └── AlternativePresenter ──────────────── Presenta alternativas  │   │
+│  └──────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -117,8 +127,10 @@ core/PHASE_5/foundation/
 │   └── __init__.py               # AgentContext, AgentSession
 ├── types/
 │   └── __init__.py               # AgentType, AgentCapability, etc.
-└── gateways/
-    └── __init__.py               # PHASE1-4 Gateways
+├── gateways/
+│   └── __init__.py               # PHASE1-4 Gateways
+└── explicability/                 # Clinical Explicability (NUEVO v2.0)
+    └── __init__.py               # ClinicalExplanationGenerator, etc.
 ```
 
 ---
@@ -244,6 +256,84 @@ class PHASE4Gateway:
     async def get_governed_knowledge(self, asset_id: str) -> KnowledgeAsset: ...
 ```
 
+### 6. Clinical Explicability (NUEVO v2.0)
+
+Sistema de explicabilidad para decisiones clínicas.
+
+```python
+class ClinicalExplanationGenerator:
+    """Generador de explicaciones clínicas."""
+    
+    async def generate_explanation(
+        self,
+        decision: ClinicalDecision,
+        context: ClinicalContext,
+    ) -> ClinicalExplanation:
+        """Genera explicación completa."""
+    
+    async def explain_reasoning_path(
+        self,
+        reasoning_chain: ReasoningChain,
+    ) -> ExplanationPath:
+        """Explica el path de razonamiento."""
+    
+    async def attribute_evidence(
+        self,
+        decision: ClinicalDecision,
+    ) -> EvidenceAttribution:
+        """Atribuye evidencia a decisión."""
+
+
+class ReasoningPathTracer:
+    """Trazador de paths de razonamiento."""
+    
+    async def trace(
+        self,
+        decision_id: str,
+    ) -> ReasoningPath:
+        """Traza el path de razonamiento."""
+    
+    async def get_decision_factors(
+        self,
+        path: ReasoningPath,
+    ) -> list[DecisionFactor]:
+        """Obtiene factores de decisión."""
+
+
+class ConfidenceExplainer:
+    """Explicador de confianza."""
+    
+    async def explain_confidence(
+        self,
+        confidence: ConfidenceLevel,
+        factors: list[ConfidenceFactor],
+    ) -> ConfidenceExplanation:
+        """Explica el nivel de confianza."""
+    
+    async def generate_uncertainty_statement(
+        self,
+        uncertainty: Uncertainty,
+    ) -> UncertaintyStatement:
+        """Genera declaración de incertidumbre."""
+
+
+class AlternativePresenter:
+    """Presentador de alternativas."""
+    
+    async def present_alternatives(
+        self,
+        decision: ClinicalDecision,
+        n_alternatives: int = 3,
+    ) -> list[AlternativeOption]:
+        """Presenta opciones alternativas."""
+    
+    async def compare_alternatives(
+        self,
+        options: list[AlternativeOption],
+    ) -> ComparisonReport:
+        """Compara alternativas."""
+```
+
 ---
 
 ## Uso
@@ -331,7 +421,10 @@ FASE 1 ──► PHASE1Gateway ──► Foundation
 FASE 2 ──► PHASE2Gateway ──► Foundation
 FASE 3 ──► PHASE3Gateway ──► Foundation
 FASE 4 ──► PHASE4Gateway ──► Foundation
-Foundation ◄── EPIC 1-11
+Foundation ◄── EPIC 1-14
+Foundation ◄── EPIC 12 (Clinical Context)
+Foundation ◄── EPIC 13 (Evidence Lifecycle)
+Foundation ◄── EPIC 14 (Uncertainty)
 ```
 
 ---
@@ -353,9 +446,16 @@ Foundation ◄── EPIC 1-11
 
 ## Estado
 
-**🚧 EN PROGRESO**
+**✅ ACTUALIZADO v2.0**
 
-Implementación en curso.
+- EPIC 0 base: ✅ COMPLETO
+- Clinical Explicability Module: ✅ AÑADIDO v2.0
+  - ClinicalExplanationGenerator
+  - ReasoningPathTracer
+  - ConfidenceExplainer
+  - AlternativePresenter
+
+Este EPIC cierra parcialmente el gap de Explicabilidad Clínica (35/100 → 75/100).
 
 ---
 
@@ -375,5 +475,5 @@ Foundation ──► EPIC 1 (Orchestrator)
 
 ---
 
-*EREN PHASE 5 - EPIC 0*
-*Architecture Board - 2026-07-23*
+*EREN PHASE 5 - EPIC 0 v2.0*
+*Architecture Board - 2026-07-24*

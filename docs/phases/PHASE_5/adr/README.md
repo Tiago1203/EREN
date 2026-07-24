@@ -6,10 +6,24 @@
 
 ## Index de ADRs
 
+### ADRs Originales
+
 | ADR | Título | Estado | Descripción |
 |-----|--------|--------|-------------|
 | ADR-0051 | Multi-Agent System Architecture | ✅ Aprobado | Arquitectura general del sistema multiagente |
 | ADR-0052 | Agent Communication Protocol | ✅ Aprobado | Protocolo de mensajería entre agentes |
+
+### ADRs de Evolución Cognitiva (v3.0)
+
+| ADR | Título | Estado | Descripción |
+|-----|--------|--------|-------------|
+| ADR-0066 | Clinical Context Architecture | ✅ Aprobado | Modelo de contexto clínico |
+| ADR-0067 | Evidence Lifecycle Model | ✅ Aprobado | Ciclo de vida de evidencia |
+| ADR-0068 | Uncertainty Quantification Model | ✅ Aprobado | Cuantificación de incertidumbre |
+| ADR-0069 | Deliberative Consensus Enhancement | ✅ Aprobado | Consenso deliberativo |
+| ADR-0070 | Clinical Explicability Enhancement | ✅ Aprobado | Explicabilidad clínica |
+| ADR-0071 | Cognitive Memory Enhancement | ✅ Aprobado | Memoria cognitiva |
+| ADR-0072 | Validated Learning Enhancement | ✅ Aprobado | Aprendizaje validado |
 
 ---
 
@@ -105,4 +119,4 @@ Cada ADR sigue el formato de Michael Nygard:
 
 ---
 
-*Última actualización: 2026-07-23*
+*Última actualización: 2026-07-24 (v3.0 - Cognitive Evolution)*
