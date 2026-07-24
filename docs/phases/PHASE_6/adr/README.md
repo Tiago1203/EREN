@@ -9,7 +9,8 @@
 | ADR | Título | Estado | Descripción |
 |-----|--------|--------|-------------|
 | ADR-0001 | Frontend Architecture Decision | ✅ Aprobado | Arquitectura feature-first modular |
-| ADR-0002 | Dashboard Migration Strategy | 🚧 En progreso | Estrategia de migración del dashboard |
+| ADR-0002 | Dashboard Migration Strategy | ✅ Aprobado | Estrategia de migración del dashboard |
+| ADR-0003 | Operations Center Architecture | ✅ Aprobado | Arquitectura del centro de operaciones |
 
 ---
 
