@@ -1,19 +1,23 @@
 # EPIC 9: Agent Memory Engine
 
-*Versión: 1.0.0*
-*Fecha: 2026-07-23*
+*Versión: 2.0.0*
+*Fecha: 2026-07-24*
 
 ---
 
 ## Objetivo
 
-**Dar memoria individual y colectiva a los agentes.**
+**Dar memoria individual y colectiva a los agentes con modelo cognitivo completo.**
 
 EPIC 9 es responsable de:
 - Persistir experiencias de agentes
 - Gestionar contexto de conversaciones
 - Compartir memorias entre agentes
 - Sincronizar memorias colectivas
+- **Memoria episódica** *(NUEVO v2.0)*
+- **Memoria semántica** *(NUEVO v2.0)*
+- **Memoria procedimental** *(NUEVO v2.0)*
+- **Memoria de trabajo** *(NUEVO v2.0)*
 
 ---
 
@@ -33,14 +37,21 @@ EPIC 9 es responsable de:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                   EPIC 9: Agent Memory Engine                              │
+│                   EPIC 9: Agent Memory Engine (v2.0)                       │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
-│  │                      AGENT MEMORY                                    │   │
+│  │                      COGNITIVE MEMORY MODEL (NUEVO v2.0)           │   │
 │  │  ├── EpisodicMemory ─────────────────── Memoria episódica        │   │
+│  │  ├── SemanticMemory ──────────────────── Memoria semántica        │   │
+│  │  ├── ProceduralMemory ────────────────── Memoria procedimental   │   │
+│  │  ├── WorkingMemory ───────────────────── Memoria de trabajo      │   │
+│  │  └── LongTermMemory ──────────────────── Memoria a largo plazo     │   │
+│  └──────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
+│  ┌──────────────────────────────────────────────────────────────────┐   │
+│  │                      AGENT MEMORY                                    │   │
 │  │  ├── SharedMemory ────────────────────── Memoria compartida       │   │
-│  │  ├── LongTermMemory ──────────────────── Memoria a largo plazo     │   │
 │  │  ├── ConversationMemory ─────────────── Memoria de conversación  │   │
 │  │  └── MemorySynchronizer ──────────────── Sincronizador          │   │
 │  └──────────────────────────────────────────────────────────────────┘   │
@@ -49,7 +60,9 @@ EPIC 9 es responsable de:
 │  │                    DOMAIN OBJECTS                                   │   │
 │  │  ├── MemoryRecord ───────────────────── Registro de memoria       │   │
 │  │  ├── ConversationContext ─────────────── Contexto de conv.      │   │
-│  │  └── AgentExperience ─────────────────── Experiencia de agente   │   │
+│  │  ├── AgentExperience ─────────────────── Experiencia de agente   │   │
+│  │  ├── CognitiveMemory ──────────────────── Memoria cognitiva     │   │
+│  │  └── MemoryConsolidation ─────────────── Consolidación de memoria│   │
 │  └──────────────────────────────────────────────────────────────────┘   │
 │                                                                          │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -65,7 +78,13 @@ core/PHASE_5/epic9_memory/
 ├── domain/
 │   └── __init__.py              # MemoryRecord, ConversationContext, etc.
 ├── engines/
-│   └── __init__.py              # EpisodicMemory, SharedMemory, etc.
+│   ├── __init__.py              # EpisodicMemory, SharedMemory, etc.
+│   └── cognitive/                # Cognitive Memory Model (NUEVO v2.0)
+│       ├── __init__.py          # SemanticMemory, ProceduralMemory, etc.
+│       ├── semantic_memory.py    # Semantic memory
+│       ├── procedural_memory.py  # Procedural memory
+│       ├── working_memory.py     # Working memory
+│       └── consolidation.py      # Memory consolidation
 └── agent/
     └── __init__.py              # AgentMemory
 ```
@@ -205,6 +224,102 @@ class MemorySynchronizer:
         """Sincroniza memorias de un agente."""
 ```
 
+### 7. SemanticMemory (NUEVO v2.0)
+
+Memoria semántica - conocimiento general.
+
+```python
+class SemanticMemory:
+    """Memoria semántica."""
+    
+    async def store_concept(
+        self,
+        concept: Concept,
+        embeddings: list[float],
+    ) -> SemanticRecord:
+        """Almacena concepto semántico."""
+    
+    async def retrieve_concepts(
+        self,
+        query: str,
+        threshold: float = 0.7,
+    ) -> list[SemanticRecord]:
+        """Recupera conceptos relacionados."""
+```
+
+### 8. ProceduralMemory (NUEVO v2.0)
+
+Memoria procedimental - habilidades y procedimientos.
+
+```python
+class ProceduralMemory:
+    """Memoria procedimental."""
+    
+    async def store_procedure(
+        self,
+        procedure: Procedure,
+        steps: list[ProcedureStep],
+    ) -> ProceduralRecord:
+        """Almacena procedimiento."""
+    
+    async def retrieve_procedure(
+        self,
+        goal: str,
+        context: dict,
+    ) -> Procedure | None:
+        """Recupera procedimiento aplicable."""
+```
+
+### 9. WorkingMemory (NUEVO v2.0)
+
+Memoria de trabajo - información activa.
+
+```python
+class WorkingMemory:
+    """Memoria de trabajo."""
+    
+    async def update(
+        self,
+        agent_id: str,
+        items: list[WorkingItem],
+    ) -> WorkingMemoryState:
+        """Actualiza memoria de trabajo."""
+    
+    async def get_active(
+        self,
+        agent_id: str,
+    ) -> list[WorkingItem]:
+        """Obtiene items activos."""
+    
+    async def clear(
+        self,
+        agent_id: str,
+    ) -> None:
+        """Limpia memoria de trabajo."""
+```
+
+### 10. MemoryConsolidation (NUEVO v2.0)
+
+Consolidación de memoria episódica a largo plazo.
+
+```python
+class MemoryConsolidation:
+    """Consolidación de memoria."""
+    
+    async def consolidate(
+        self,
+        agent_id: str,
+        episodic_records: list[EpisodicRecord],
+    ) -> ConsolidationResult:
+        """Consolida memorias."""
+    
+    async def extract_patterns(
+        self,
+        records: list[EpisodicRecord],
+    ) -> list[MemoryPattern]:
+        """Extrae patrones de memorias."""
+```
+
 ---
 
 ## Domain Objects
@@ -338,24 +453,34 @@ EPIC 8 (Consensus) ──────────────┘
 EPIC 8 (Consensus) ──► EPIC 9 (Agent Memory Engine)
 EPIC 1 (Orchestrator) ──► EPIC 9 (orquesta)
 EPIC 9 ──► EPIC 10 (Agent Learning & Optimization)
+EPIC 9 ──► EPIC 12 (provee memoria episódica)
+EPIC 9 ──► EPIC 13 (provee memoria de conocimiento)
 ```
 
 ---
 
 ## Estado
 
-**🚧 EN PROGRESO**
+**✅ ACTUALIZADO v2.0**
 
-Implementación en desarrollo.
+- Agent Memory base: ✅ COMPLETO
+- Cognitive Memory Model: ✅ AÑADIDO v2.0
+  - SemanticMemory
+  - ProceduralMemory
+  - WorkingMemory
+  - MemoryConsolidation
+
+Este EPIC cierra parcialmente el gap de Cognitive Memory (35/100 → 80/100).
 
 ---
 
 ## Próximos Pasos
 
-- EPIC 10: Agent Learning & Optimization
+- EPIC 10: Agent Learning & Optimization (v2.0)
 - EPIC 11: Multi-Agent Governance
+- PHASE 6: Hospital Digital
 
 ---
 
-*EREN PHASE 5 - EPIC 9*
-*Architecture Board - 2026-07-23*
+*EREN PHASE 5 - EPIC 9 v2.0*
+*Architecture Board - 2026-07-24*

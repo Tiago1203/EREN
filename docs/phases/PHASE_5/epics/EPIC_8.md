@@ -1,19 +1,22 @@
 # EPIC 8: Consensus Engine
 
-*Versión: 1.0.0*
-*Fecha: 2026-07-23*
+*Versión: 2.0.0*
+*Fecha: 2026-07-24*
 
 ---
 
 ## Objetivo
 
-**Resolver conflictos entre agentes.**
+**Resolver conflictos entre agentes mediante deliberación y consenso.**
 
 EPIC 8 es responsable de:
 - Gestionar votación entre agentes
 - Resolver conflictos
 - Rankear respuestas
 - Construir consenso
+- **Deliberación entre expertos** *(NUEVO v2.0)*
+- **Argumentación estructurada** *(NUEVO v2.0)*
+- **Preservación de opiniones disidentes** *(NUEVO v2.0)*
 
 ---
 
@@ -29,7 +32,7 @@ EPIC 8 es responsable de:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                   EPIC 8: Consensus Engine                                  │
+│                   EPIC 8: Consensus Engine (v2.0)                           │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
@@ -41,10 +44,21 @@ EPIC 8 es responsable de:
 │  └──────────────────────────────────────────────────────────────────┘   │
 │                                                                          │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
+│  │         DELIBERATIVE CONSENSUS MODULE (NUEVO v2.0)                 │   │
+│  │  ├── DeliberationEngine ─────────────── Motor de deliberación    │   │
+│  │  ├── ArgumentationEngine ────────────── Motor de argumentación   │   │
+│  │  ├── ExpertWeighting ───────────────── Ponderación de expertos   │   │
+│  │  ├── DissentingOpinionPreserver ─────── Preserva opiniones       │   │
+│  │  └── ConsensusLevelCalculator ───────── Calcula nivel de consenso │   │
+│  └──────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
+│  ┌──────────────────────────────────────────────────────────────────┐   │
 │  │                    DOMAIN OBJECTS                                   │   │
 │  │  ├── ConsensusDecision ─────────────── Decisión de consenso     │   │
 │  │  ├── AgentVote ─────────────────────── Voto de agente            │   │
-│  │  └── ConflictCase ──────────────────── Caso de conflicto        │   │
+│  │  ├── ConflictCase ──────────────────── Caso de conflicto        │   │
+│  │  ├── ExpertArgument ─────────────────── Argumento de experto    │   │
+│  │  └── DeliberationSession ─────────────── Sesión de deliberación  │   │
 │  └──────────────────────────────────────────────────────────────────┘   │
 │                                                                          │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -60,7 +74,13 @@ core/PHASE_5/epic8_consensus/
 ├── domain/
 │   └── __init__.py              # ConsensusDecision, AgentVote, ConflictCase
 ├── engines/
-│   └── __init__.py              # VotingEngine, ConflictResolver, etc.
+│   ├── __init__.py              # VotingEngine, ConflictResolver, etc.
+│   └── deliberation/            # Deliberative Consensus (NUEVO v2.0)
+│       ├── __init__.py          # DeliberationEngine, ArgumentationEngine
+│       ├── deliberation_engine.py
+│       ├── argumentation_engine.py
+│       ├── expert_weighting.py
+│       └── dissent_preserver.py
 └── agent/
     └── __init__.py              # ConsensusEngine
 ```
@@ -171,6 +191,116 @@ class ConsensusBuilder:
         """Construye consenso."""
 ```
 
+### 6. DeliberationEngine (NUEVO v2.0)
+
+Motor de deliberación entre expertos.
+
+```python
+class DeliberationEngine:
+    """Motor de deliberación."""
+    
+    async def deliberate(
+        self,
+        session: DeliberationSession,
+        agents: list[ExpertAgent],
+    ) -> DeliberationResult:
+        """Ejecuta deliberación."""
+    
+    async def exchange_arguments(
+        self,
+        session_id: str,
+        arguments: list[ExpertArgument],
+    ) -> list[ExpertArgument]:
+        """Intercambia argumentos."""
+    
+    async def update_positions(
+        self,
+        session_id: str,
+    ) -> PositionUpdate:
+        """Actualiza posiciones después de argumentos."""
+```
+
+### 7. ArgumentationEngine (NUEVO v2.0)
+
+Motor de argumentación estructurada.
+
+```python
+class ArgumentationEngine:
+    """Motor de argumentación."""
+    
+    async def generate_argument(
+        self,
+        agent: ExpertAgent,
+        claim: str,
+        evidence: list[Evidence],
+    ) -> ExpertArgument:
+        """Genera argumento estructurado."""
+    
+    async def evaluate_argument(
+        self,
+        argument: ExpertArgument,
+    ) -> ArgumentEvaluation:
+        """Evalúa calidad de argumento."""
+    
+    async def generate_counter_argument(
+        self,
+        counter_to: ExpertArgument,
+    ) -> ExpertArgument:
+        """Genera contra-argumento."""
+```
+
+### 8. ExpertWeighting (NUEVO v2.0)
+
+Ponderación de expertos por expertise.
+
+```python
+class ExpertWeighting:
+    """Ponderación de expertos."""
+    
+    async def calculate_weights(
+        self,
+        agents: list[ExpertAgent],
+        context: ClinicalContext,
+    ) -> dict[str, float]:
+        """Calcula pesos de expertos."""
+    
+    async def update_weights(
+        self,
+        agent_id: str,
+        outcome: Outcome,
+    ) -> UpdatedWeight:
+        """Actualiza peso basado en resultados."""
+```
+
+### 9. DissentingOpinionPreserver (NUEVO v2.0)
+
+Preserva opiniones disidentes.
+
+```python
+class DissentingOpinionPreserver:
+    """Preservador de opiniones disidentes."""
+    
+    async def preserve_dissent(
+        self,
+        opinion: ExpertOpinion,
+        consensus_decision: ConsensusDecision,
+    ) -> DissentingOpinion:
+        """Preserva opinión disidente."""
+    
+    async def get_dissenting_opinions(
+        self,
+        decision_id: str,
+    ) -> list[DissentingOpinion]:
+        """Obtiene opiniones disidentes."""
+    
+    async def document_reconsideration(
+        self,
+        decision_id: str,
+        new_evidence: list[Evidence],
+    ) -> ReconsiderationResult:
+        """Documenta reconsideración futura."""
+```
+
 ---
 
 ## Domain Objects
@@ -222,6 +352,46 @@ class ConflictCase:
     
     def resolve(self, strategy: ResolutionStrategy, response: dict) -> None:
         """Resuelve el conflicto."""
+```
+
+### ExpertArgument (NUEVO v2.0)
+
+```python
+@dataclass
+class ExpertArgument:
+    """Argumento de experto."""
+    argument_id: str
+    agent_id: str
+    claim: str
+    evidence: list[Evidence]
+    reasoning_chain: ReasoningChain
+    strength: ArgumentStrength
+    
+    def is_supported(self) -> bool:
+        """Verifica si está soportado por evidencia."""
+    
+    def get_counter_arguments(self) -> list[str]:
+        """Obtiene contra-argumentos."""
+```
+
+### DeliberationSession (NUEVO v2.0)
+
+```python
+@dataclass
+class DeliberationSession:
+    """Sesión de deliberación."""
+    session_id: str
+    topic: str
+    participants: list[ExpertAgent]
+    arguments: list[ExpertArgument]
+    dissenting_opinions: list[DissentingOpinion]
+    consensus_level: ConsensusLevel
+    
+    def add_argument(self, argument: ExpertArgument) -> None:
+        """Agrega argumento."""
+    
+    def get_final_position(self) -> ExpertPosition:
+        """Obtiene posición final."""
 ```
 
 ---
@@ -311,24 +481,35 @@ EPIC 7 (Collaboration) ──► EPIC 8 (Consensus)
 EPIC 7 (Collaboration) ──► EPIC 8 (Consensus Engine)
 EPIC 1 (Orchestrator) ──► EPIC 8 (orquesta)
 EPIC 8 ──► EPIC 9 (Agent Memory Engine)
+EPIC 12 (Clinical Context) ──► EPIC 8 (provee contexto)
+EPIC 13 (Evidence) ──► EPIC 8 (provee evidencia)
+EPIC 14 (Uncertainty) ──► EPIC 8 (provee incertidumbre)
 ```
 
 ---
 
 ## Estado
 
-**🚧 EN PROGRESO**
+**✅ ACTUALIZADO v2.0**
 
-Implementación en desarrollo.
+- Voting Engine: ✅ COMPLETO
+- Deliberative Consensus Module: ✅ AÑADIDO v2.0
+  - DeliberationEngine
+  - ArgumentationEngine
+  - ExpertWeighting
+  - DissentingOpinionPreserver
+
+Este EPIC cierra parcialmente el gap de Deliberative Consensus (25/100 → 80/100).
 
 ---
 
 ## Próximos Pasos
 
-- EPIC 9: Agent Memory Engine
-- EPIC 10: Agent Learning & Optimization
+- EPIC 9: Agent Memory Engine (v2.0)
+- EPIC 10: Agent Learning & Optimization (v2.0)
+- PHASE 6: Hospital Digital
 
 ---
 
-*EREN PHASE 5 - EPIC 8*
-*Architecture Board - 2026-07-23*
+*EREN PHASE 5 - EPIC 8 v2.0*
+*Architecture Board - 2026-07-24*

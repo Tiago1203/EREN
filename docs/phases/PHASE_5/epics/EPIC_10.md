@@ -1,19 +1,22 @@
 # EPIC 10: Agent Learning & Optimization
 
-*Versión: 1.0.0*
-*Fecha: 2026-07-23*
+*Versión: 2.0.0*
+*Fecha: 2026-07-24*
 
 ---
 
 ## Objetivo
 
-**Optimizar continuamente el comportamiento de los agentes.**
+**Optimizar continuamente el comportamiento de los agentes con aprendizaje validado.**
 
 EPIC 10 es responsable de:
 - Analizar rendimiento de agentes
 - Detectar mejoras
 - Optimizar estrategias
 - Mejorar colaboración
+- **Aprendizaje basado en resultados clínicos** *(NUEVO v2.0)*
+- **Validación de predicciones** *(NUEVO v2.0)*
+- **Feedback loop cerrado** *(NUEVO v2.0)*
 
 ---
 
@@ -32,7 +35,7 @@ EPIC 10 es responsable de:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                   EPIC 10: Agent Learning & Optimization                     │
+│           EPIC 10: Agent Learning & Optimization (v2.0)                    │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
@@ -44,10 +47,21 @@ EPIC 10 es responsable de:
 │  └──────────────────────────────────────────────────────────────────┘   │
 │                                                                          │
 │  ┌──────────────────────────────────────────────────────────────────┐   │
+│  │              VALIDATED LEARNING MODULE (NUEVO v2.0)                │   │
+│  │  ├── OutcomeTracker ───────────────────── Rastreo de resultados   │   │
+│  │  ├── PredictionValidator ───────────────── Validador de predicciones│   │
+│  │  ├── ClinicalFeedbackLoop ──────────────── Feedback loop clínico │   │
+│  │  ├── LearningFromOutcome ──────────────── Aprendizaje de resultados│   │
+│  │  └── ModelUpdater ─────────────────────── Actualizador de modelos  │   │
+│  └──────────────────────────────────────────────────────────────────┘   │
+│                                                                          │
+│  ┌──────────────────────────────────────────────────────────────────┐   │
 │  │                    DOMAIN OBJECTS                                   │   │
 │  │  ├── AgentMetric ─────────────────────── Métrica de agente       │   │
 │  │  ├── LearningSession ─────────────────── Sesión de aprendizaje   │   │
-│  │  └── OptimizationReport ────────────────── Reporte de optimización│   │
+│  │  ├── OptimizationReport ────────────────── Reporte de optimización│   │
+│  │  ├── ClinicalOutcome ──────────────────── Resultado clínico     │   │
+│  │  └── PredictionValidation ──────────────── Validación de predicción│   │
 │  └──────────────────────────────────────────────────────────────────┘   │
 │                                                                          │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -63,7 +77,13 @@ core/PHASE_5/epic10_learning/
 ├── domain/
 │   └── __init__.py              # AgentMetric, LearningSession, etc.
 ├── engines/
-│   └── __init__.py              # PerformanceAnalyzer, StrategyOptimizer, etc.
+│   ├── __init__.py              # PerformanceAnalyzer, StrategyOptimizer, etc.
+│   └── validated/                # Validated Learning (NUEVO v2.0)
+│       ├── __init__.py          # OutcomeTracker, PredictionValidator, etc.
+│       ├── outcome_tracker.py     # Outcome tracking
+│       ├── prediction_validator.py # Prediction validation
+│       ├── feedback_loop.py       # Clinical feedback loop
+│       └── model_updater.py      # Model updating
 └── agent/
     └── __init__.py              # AgentLearningEngine
 ```
@@ -160,6 +180,100 @@ class CollaborationOptimizer:
         collaboration_data: dict,
     ) -> CollabOptimizationResult:
         """Optimiza la colaboración."""
+```
+
+### 6. OutcomeTracker (NUEVO v2.0)
+
+Rastreo de resultados clínicos.
+
+```python
+class OutcomeTracker:
+    """Rastreador de resultados."""
+    
+    async def track(
+        self,
+        decision_id: str,
+        prediction: ClinicalPrediction,
+    ) -> TrackedOutcome:
+        """Registra resultado de predicción."""
+    
+    async def get_outcome(
+        self,
+        decision_id: str,
+    ) -> ClinicalOutcome | None:
+        """Obtiene resultado final."""
+```
+
+### 7. PredictionValidator (NUEVO v2.0)
+
+Validación de predicciones contra resultados.
+
+```python
+class PredictionValidator:
+    """Validador de predicciones."""
+    
+    async def validate(
+        self,
+        prediction: ClinicalPrediction,
+        outcome: ClinicalOutcome,
+    ) -> PredictionValidation:
+        """Valida predicción contra resultado."""
+    
+    async def calculate_accuracy(
+        self,
+        agent_id: str,
+        time_window: TimeWindow,
+    ) -> AccuracyMetrics:
+        """Calcula métricas de accuracy."""
+```
+
+### 8. ClinicalFeedbackLoop (NUEVO v2.0)
+
+Loop de feedback clínico cerrado.
+
+```python
+class ClinicalFeedbackLoop:
+    """Loop de feedback clínico."""
+    
+    async def process_feedback(
+        self,
+        outcome: ClinicalOutcome,
+        decision_id: str,
+    ) -> FeedbackResult:
+        """Procesa feedback de resultado."""
+    
+    async def update_knowledge(
+        self,
+        feedback: FeedbackResult,
+    ) -> KnowledgeUpdate:
+        """Actualiza base de conocimiento."""
+    
+    async def close_loop(
+        self,
+        decision_id: str,
+    ) -> ClosedLoopResult:
+        """Cierra el loop de feedback."""
+```
+
+### 9. LearningFromOutcome (NUEVO v2.0)
+
+Aprendizaje de resultados clínicos.
+
+```python
+class LearningFromOutcome:
+    """Aprendizaje de resultados."""
+    
+    async def learn(
+        self,
+        validated_outcome: PredictionValidation,
+    ) -> LearningResult:
+        """Aprende de resultado validado."""
+    
+    async def extract_lessons(
+        self,
+        outcomes: list[PredictionValidation],
+    ) -> list[ClinicalLesson]:
+        """Extrae lecciones de múltiples resultados."""
 ```
 
 ---
@@ -295,23 +409,34 @@ FASE 3 (Learning/Improvement) ──► EPIC 10 (Agent Learning)
 EPIC 9 (Agent Memory) ──► EPIC 10 (Agent Learning & Optimization)
 EPIC 1 (Orchestrator) ──► EPIC 10 (orquesta)
 EPIC 10 ──► EPIC 11 (Multi-Agent Governance)
+EPIC 12 (Clinical Context) ──► EPIC 10 (provee contexto)
+EPIC 13 (Evidence) ──► EPIC 10 (valida predicciones)
 ```
 
 ---
 
 ## Estado
 
-**🚧 EN PROGRESO**
+**✅ ACTUALIZADO v2.0**
 
-Implementación en desarrollo.
+- Agent Learning base: ✅ COMPLETO
+- Validated Learning Module: ✅ AÑADIDO v2.0
+  - OutcomeTracker
+  - PredictionValidator
+  - ClinicalFeedbackLoop
+  - LearningFromOutcome
+
+Este EPIC cierra parcialmente el gap de Validated Learning (30/100 → 80/100).
 
 ---
 
 ## Próximos Pasos
 
 - EPIC 11: Multi-Agent Governance
+- PHASE 5 Cognitive Evolution completa
+- PHASE 6: Hospital Digital
 
 ---
 
-*EREN PHASE 5 - EPIC 10*
-*Architecture Board - 2026-07-23*
+*EREN PHASE 5 - EPIC 10 v2.0*
+*Architecture Board - 2026-07-24*
