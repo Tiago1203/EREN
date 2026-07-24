@@ -13,6 +13,7 @@
 | ADR-0003 | Operations Center Architecture | ✅ Aprobado | Arquitectura del centro de operaciones |
 | ADR-0004 | AI Center Architecture | ✅ Aprobado | Arquitectura del centro de IA |
 | ADR-0005 | Knowledge Center Architecture | ✅ Aprobado | Arquitectura del centro de conocimiento |
+| ADR-0006 | Analytics & Reports Architecture | ✅ Aprobado | Arquitectura de analytics y reportes |
 
 ---
 
