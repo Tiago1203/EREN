@@ -71,8 +71,8 @@ PHASE 6 transforma EREN en una plataforma lista para usuarios finales.
 | EPIC 2 | Operations Center | ✅ | Work Orders, Incidents |
 | EPIC 3 | AI Center & Chat | ✅ | Chat AI, Agentes |
 | EPIC 4 | Knowledge Center | ✅ | Artículos, Búsqueda |
-| EPIC 5 | Analytics & Reports | 🚧 | Métricas, Reportes |
-| EPIC 6 | Notifications & Workspace | 📋 | Notificaciones, Tareas |
+| EPIC 5 | Analytics & Reports | ✅ | Métricas, Reportes |
+| EPIC 6 | Notifications & Workspace | 🚧 | Notificaciones, Tareas |
 | EPIC 7 | Administration & Connectors | 📋 | Admin, Framework |
 
 ---
