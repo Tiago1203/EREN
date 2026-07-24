@@ -14,6 +14,7 @@
 | ADR-0004 | AI Center Architecture | ✅ Aprobado | Arquitectura del centro de IA |
 | ADR-0005 | Knowledge Center Architecture | ✅ Aprobado | Arquitectura del centro de conocimiento |
 | ADR-0006 | Analytics & Reports Architecture | ✅ Aprobado | Arquitectura de analytics y reportes |
+| ADR-0007 | Notifications & Workspace Architecture | ✅ Aprobado | Arquitectura de notificaciones y workspace |
 
 ---
 
