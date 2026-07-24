@@ -67,8 +67,8 @@ PHASE 6 transforma EREN en una plataforma lista para usuarios finales.
 | EPIC | Nombre | Estado | Descripción |
 |------|--------|--------|-------------|
 | EPIC 0 | Platform Foundation | ✅ | Estructura base modular |
-| EPIC 1 | Dashboard & Navigation | 🚧 | Dashboard migrado + Nav |
-| EPIC 2 | Operations Center | 📋 | Work Orders, Incidents |
+| EPIC 1 | Dashboard & Navigation | ✅ | Dashboard migrado + Nav |
+| EPIC 2 | Operations Center | 🚧 | Work Orders, Incidents |
 | EPIC 3 | AI Center & Chat | 📋 | Chat AI, Agentes |
 | EPIC 4 | Knowledge Center | 📋 | Artículos, Búsqueda |
 | EPIC 5 | Analytics & Reports | 📋 | Métricas, Reportes |
