@@ -12,6 +12,7 @@
 | ADR-0002 | Dashboard Migration Strategy | ✅ Aprobado | Estrategia de migración del dashboard |
 | ADR-0003 | Operations Center Architecture | ✅ Aprobado | Arquitectura del centro de operaciones |
 | ADR-0004 | AI Center Architecture | ✅ Aprobado | Arquitectura del centro de IA |
+| ADR-0005 | Knowledge Center Architecture | ✅ Aprobado | Arquitectura del centro de conocimiento |
 
 ---
 
