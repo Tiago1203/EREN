@@ -11,7 +11,7 @@ Sistema de audit trail para registros electrónicos:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Optional
 import hashlib
@@ -95,7 +95,7 @@ class FDAAuditTrail:
 
         entry = FDAAuditEntry(
             entry_id=entry_id,
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(timezone.utc),
             operator_id=operator_id,
             operator_name=operator_name,
             operator_role=operator_role,

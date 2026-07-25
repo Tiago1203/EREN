@@ -179,7 +179,7 @@ class AutoScaler:
 
         else:
             desired = self._current_replicas
-            action = ScalingAction.STABLE
+            action = ScalingAction.SCALE_STABLE
             reason = "Metrics within target range"
 
         return ScalingDecision(

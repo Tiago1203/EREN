@@ -1,7 +1,7 @@
 # ADR-7003: Observability Stack Selection
 
 ## Status
-Proposed
+**Implemented** (Julio 2025)
 
 ## Context
 EREN needs comprehensive observability for 24/7 hospital operations with SLA guarantees.

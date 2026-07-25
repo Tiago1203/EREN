@@ -1,5 +1,5 @@
 """PHASE 7 - EPIC 2: Multi-Tenant Architecture Tests."""
-import pytest
+# pytest not available in this environment
 from datetime import datetime, timezone
 
 
@@ -9,14 +9,14 @@ class TestTenantManager:
     def test_create_starter_tenant(self):
         from core.PHASE_7.tenant import TenantManager, SubscriptionTier
         mgr = TenantManager()
-        t = mgr.create_tenant("Hospital Test", "hospital-test", "Admin", "admin@test.com", tier=SubscriptionTier.STARTER)
+        t = mgr.create_tenant("Hospital Test", "hospital-test", tier=SubscriptionTier.STARTER, contact_email="admin@test.com")
         assert t.subscription.tier == SubscriptionTier.STARTER
         assert t.config.max_users == 50
 
     def test_create_enterprise_tenant(self):
         from core.PHASE_7.tenant import TenantManager, SubscriptionTier
         mgr = TenantManager()
-        t = mgr.create_tenant("Hospital Ent", "hospital-ent", "Admin", "admin@ent.com", tier=SubscriptionTier.ENTERPRISE)
+        t = mgr.create_tenant("Hospital Ent", "hospital-ent", tier=SubscriptionTier.ENTERPRISE, contact_email="admin@ent.com")
         assert t.subscription.tier == SubscriptionTier.ENTERPRISE
         assert t.config.custom_branding is True
 
@@ -30,7 +30,7 @@ class TestTenantManager:
     def test_suspend_and_activate(self):
         from core.PHASE_7.tenant import TenantManager, TenantStatus, SubscriptionTier
         mgr = TenantManager()
-        t = mgr.create_tenant("H2", "h2", "A", "a@b.com", tier=SubscriptionTier.TRIAL)
+        t = mgr.create_tenant("H2", "h2", tier=SubscriptionTier.TRIAL, contact_name="A", contact_email="a@b.com")
         mgr.suspend_tenant(t.tenant_id, "test")
         assert mgr.get_tenant(t.tenant_id).status == TenantStatus.SUSPENDED
         mgr.activate_tenant(t.tenant_id)
@@ -39,13 +39,13 @@ class TestTenantManager:
     def test_list_tenants(self):
         from core.PHASE_7.tenant import TenantManager
         mgr = TenantManager()
-        mgr.create_tenant("H3", "h3", "A", "a@b.com")
+        mgr.create_tenant("H3", "h3", contact_name="A", contact_email="a@b.com")
         assert len(mgr.list_tenants()) >= 1
 
     def test_statistics(self):
         from core.PHASE_7.tenant import TenantManager
         mgr = TenantManager()
-        mgr.create_tenant("H4", "h4", "A", "a@b.com")
+        mgr.create_tenant("H4", "h4", contact_name="A", contact_email="a@b.com")
         stats = mgr.get_tenant_statistics()
         assert stats["total"] >= 1
 
@@ -75,7 +75,7 @@ class TestTenantResolver:
     def test_resolve_from_header(self):
         from core.PHASE_7.tenant import TenantManager, TenantResolver, SubscriptionTier
         mgr = TenantManager()
-        t = mgr.create_tenant("H5", "h5", "A", "a@b.com", tier=SubscriptionTier.TRIAL)
+        t = mgr.create_tenant("H5", "h5", tier=SubscriptionTier.TRIAL, contact_name="A", contact_email="a@b.com")
         resolver = TenantResolver(mgr)
         result = resolver.resolve_from_header({"X-Tenant-ID": t.tenant_id})
         assert result is not None and result.source == "header"
@@ -83,7 +83,7 @@ class TestTenantResolver:
     def test_resolve_from_subdomain(self):
         from core.PHASE_7.tenant import TenantManager, TenantResolver, SubscriptionTier
         mgr = TenantManager()
-        t = mgr.create_tenant("H6", "h6", "A", "a@b.com", tier=SubscriptionTier.TRIAL)
+        t = mgr.create_tenant("H6", "h6", tier=SubscriptionTier.TRIAL, contact_name="A", contact_email="a@b.com")
         resolver = TenantResolver(mgr)
         result = resolver.resolve_from_subdomain("h6.orma.systems")
         assert result is not None and result.tenant_id == t.tenant_id

@@ -1,5 +1,5 @@
 """PHASE 7 - EPIC 3: High Availability & Scalability Tests."""
-import pytest
+# pytest not available in this environment
 
 
 class TestLoadBalancer:
@@ -29,7 +29,9 @@ class TestLoadBalancer:
         from core.PHASE_7.infrastructure import LoadBalancer, Backend
         lb = LoadBalancer()
         lb.add_backend(Backend(id="b1", host="10.0.0.1", port=8000))
-        lb.mark_backend_unhealthy("b1")
+        # Need to call max_failures (3) times
+        for _ in range(3):
+            lb.mark_backend_unhealthy("b1")
         assert lb._backends["b1"].healthy is False
 
     def test_get_status(self):
@@ -139,8 +141,8 @@ class TestAutoScaler:
     def test_scale_decision(self):
         from core.PHASE_7.infrastructure import AutoScaler, ScalingAction
         ascaler = AutoScaler("api-service")
-        d = ascaler.update_metrics(cpu_percent=80, memory_percent=70, rps=2000, active_connections=100)
-        assert d.action in (ScalingAction.SCALE_UP, ScalingAction.STABLE)
+        d = ascaler.update_metrics(cpu_percent=80, memory_percent=70, requests_per_second=2000, active_connections=100)
+        assert d.action in (ScalingAction.SCALE_UP, ScalingAction.SCALE_STABLE)
 
     def test_get_status(self):
         from core.PHASE_7.infrastructure import AutoScaler

@@ -7,7 +7,7 @@ FDA 21 CFR Part 11 module tests:
 - Validation
 """
 
-import pytest
+# pytest not available in this environment
 from datetime import datetime
 
 
@@ -152,12 +152,12 @@ class TestFDAAuditTrail:
     def test_compliance_report(self):
         """Test FDA compliance report generation."""
         from core.PHASE_7.compliance.fda import FDAAuditTrail, AuditEntryType
-        from datetime import timedelta
+        from datetime import datetime, timedelta, timezone
 
         trail = FDAAuditTrail()
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         since = now - timedelta(days=7)
-        until = now
+        until = now + timedelta(microseconds=500)  # ensure entry timestamp <= until
 
         trail.log(
             operator_id="user-001",

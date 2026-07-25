@@ -50,7 +50,7 @@ class LogAggregator:
         self._entries_by_source: dict[str, list[LogEntry]] = {}
         self._entries_by_level: dict[str, list[LogEntry]] = {}
         self._max_entries = max_entries
-        self._lock = threading.Lock()
+        self._lock = threading.RLock()
 
     def ingest(
         self,

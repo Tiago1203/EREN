@@ -55,8 +55,8 @@ modules/{module}/
 Todos los módulos del frontend siguiendo el patrón Feature-First unificado.
 
 ## Status
-- [ ] Dashboard - Fix routing adapter
-- [ ] Equipos - Migrate to feature-first
-- [ ] Mantenimientos - Migrate to feature-first
-- [ ] Establecimientos - Migrate to feature-first
-- [ ] KPIs - Migrate to feature-first
+- [x] Dashboard - Fix routing adapter
+- [x] Equipos - Migrate to feature-first
+- [x] Mantenimientos - Migrate to feature-first
+- [x] Establecimientos - Migrate to feature-first
+- [x] KPIs - Migrate to feature-first
