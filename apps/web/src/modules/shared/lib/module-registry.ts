@@ -1,6 +1,5 @@
 /**
  * Module Registry - Registro central de módulos
-<<<<<<< HEAD
  * PHASE 6 EPIC 0 - Platform Foundation
  * 
  * REGLAS DE CONSOLIDACIÓN:
@@ -8,8 +7,6 @@
  * - NO eliminar módulos definidos por el roadmap aunque aún sean placeholders.
  * - NO renombrar módulos oficiales.
  * - NO mover carpetas oficialmente definidas.
-=======
->>>>>>> origin/main
  */
 
 import { isFeatureEnabled } from './feature-flags';
@@ -23,6 +20,7 @@ export interface ModuleConfig {
   enabled: boolean;
   permissions: string[];
   order: number;
+  badge?: string;
 }
 
 export const MODULE_REGISTRY: ModuleConfig[] = [
@@ -97,7 +95,6 @@ export const MODULE_REGISTRY: ModuleConfig[] = [
     order: 11,
   },
   {
-<<<<<<< HEAD
     id: 'reports',
     name: 'Reportes',
     description: 'Generación de reportes',
@@ -108,8 +105,6 @@ export const MODULE_REGISTRY: ModuleConfig[] = [
     order: 12,
   },
   {
-=======
->>>>>>> origin/main
     id: 'operations',
     name: 'Operaciones',
     description: 'Centro de operaciones',
@@ -150,19 +145,11 @@ export const MODULE_REGISTRY: ModuleConfig[] = [
     order: 16,
   },
   {
-<<<<<<< HEAD
     id: 'administration',
     name: 'Administración',
     description: 'Panel de administración',
     icon: 'Settings',
     path: '/administration',
-=======
-    id: 'admin',
-    name: 'Administración',
-    description: 'Panel de administración',
-    icon: 'Settings',
-    path: '/admin',
->>>>>>> origin/main
     enabled: isFeatureEnabled('ADMINISTRATION'),
     permissions: ['admin'],
     order: 20,
@@ -195,9 +182,9 @@ class ModuleRegistry {
   }
 
   private registerModules(): void {
-    for (const module of MODULE_REGISTRY) {
-      if (module.enabled) {
-        this.modules.set(module.id, module);
+    for (const mod of MODULE_REGISTRY) {
+      if (mod.enabled) {
+        this.modules.set(mod.id, mod);
       }
     }
   }
@@ -217,8 +204,8 @@ class ModuleRegistry {
   }
 
   hasPermission(moduleId: string, permission: string): boolean {
-    const module = this.modules.get(moduleId);
-    return module ? module.permissions.includes(permission) : false;
+    const modItem = this.modules.get(moduleId);
+    return modItem ? modItem.permissions.includes(permission) : false;
   }
 
   isModuleEnabled(id: string): boolean {

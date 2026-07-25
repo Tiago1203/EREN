@@ -1,9 +1,8 @@
 /**
- * $m - Legacy Module Adapter
- * 
- * This module is maintained in app/(dashboard)/$m/page.tsx
+ * Establecimientos Page
+ * Placeholder para la estructura feature-first
  * Full migration to feature-first structure pending PHASE 7
  */
-export default function ${m}PagePlaceholder() {
-  return null; // Delegated to legacy app/(dashboard)/$m/page.tsx
+export default function EstablecimientosPagePlaceholder() {
+  return null;
 }

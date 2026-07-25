@@ -1,9 +1,9 @@
 'use client';
 
 interface WelcomeHeaderProps {
-  userName?: string;
+  userName?: string | null;
   isAdmin: boolean;
-  establishmentName?: string;
+  establishmentName?: string | null;
 }
 
 /**

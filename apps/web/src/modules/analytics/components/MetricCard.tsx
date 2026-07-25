@@ -63,7 +63,7 @@ export function MetricCard({ metric, onClick }: MetricCardProps) {
             <span className="text-lg">{trendIcons[metric.trend]}</span>
             {metric.trendValue !== undefined && (
               <span className="text-sm font-medium">
-                {metric.trend > 0 ? '+' : ''}{metric.trendValue.toFixed(1)}%
+                {Number(metric.trend) > 0 ? '+' : ''}{metric.trendValue.toFixed(1)}%
               </span>
             )}
           </div>

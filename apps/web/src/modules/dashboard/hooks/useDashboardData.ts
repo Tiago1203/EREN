@@ -5,12 +5,13 @@ import { useAuth } from '@/hooks/useAuth';
 import { useDashboardStore } from '../stores/dashboard.store';
 import { dashboardService } from '../services/dashboard.service';
 import { fetchEquipos, fetchEventos, fetchEstablecimientos } from '@/lib/queries';
-import type { DashboardStats, Kpi } from '../types/dashboard.types';
+import type { DashboardStats, Establecimiento } from '../types/dashboard.types';
+import type { KpiResult } from '@/lib/kpis';
 
 export interface UseDashboardDataReturn {
   stats: DashboardStats;
-  kpis: Kpi[];
-  establishment: ReturnType<typeof useDashboardStore>['establishment'];
+  kpis: KpiResult[];
+  establishment: Establecimiento | null;
   loading: boolean;
   error: string | null;
   isAdmin: boolean;

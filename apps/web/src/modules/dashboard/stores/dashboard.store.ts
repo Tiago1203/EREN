@@ -1,18 +1,18 @@
 'use client';
 
 import { create } from 'zustand';
-import type { DashboardStats, Kpi, Establecimiento } from '../types/dashboard.types';
+import type { DashboardStats, Establecimiento } from '../types/dashboard.types';
+import type { KpiResult } from '@/lib/kpis';
 
 interface DashboardState {
   stats: DashboardStats;
-  kpis: Kpi[];
+  kpis: KpiResult[];
   establishment: Establecimiento | null;
   loading: boolean;
   error: string | null;
-  
-  // Actions
+
   setStats: (stats: DashboardStats) => void;
-  setKpis: (kpis: Kpi[]) => void;
+  setKpis: (kpis: KpiResult[]) => void;
   setEstablishment: (establishment: Establecimiento | null) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
@@ -27,7 +27,7 @@ const initialState = {
     incidentes: 0,
     alertas: 0,
   },
-  kpis: [],
+  kpis: [] as KpiResult[],
   establishment: null,
   loading: true,
   error: null,
