@@ -100,6 +100,9 @@ pytest tests/unit/PHASE_2/
 # PHASE 3
 pytest tests/unit/PHASE_3/
 
+# PHASE 7 - EPIC 0 (Compliance & Security)
+pytest tests/unit/PHASE_7/ -v
+
 # LEGACY
 pytest tests/unit/LEGACY/
 ```
@@ -114,9 +117,12 @@ pytest tests/integration/
 - [core/PHASE_1/](../core/PHASE_1/) - Código de FASE 1
 - [core/PHASE_2/](../core/PHASE_2/) - Código de FASE 2
 - [core/PHASE_3/](../core/PHASE_3/) - Código de FASE 3
+- [core/PHASE_4/](../core/PHASE_4/) - Código de PHASE 4
+- [core/PHASE_5/](../core/PHASE_5/) - Código de PHASE 5
+- [core/PHASE_7/](../core/PHASE_7/) - Código de PHASE 7 (EPIC 0)
 - [core/LEGACY/](../core/LEGACY/) - Código LEGACY
 - [docs/phases/](../docs/phases/) - Documentación por fases
 
 ---
 
-*Última actualización: 2026-07-22*
+*Última actualización: 2026-07-25*

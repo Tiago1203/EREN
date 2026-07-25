@@ -25,4 +25,4 @@ compliance/
 | IEC 62304:2006 | Software lifecycle for medical device software |
 
 ## Status
-- [ ] Pending implementation
+- [x] Implemented - EPIC 0 Complete
