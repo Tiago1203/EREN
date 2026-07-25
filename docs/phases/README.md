@@ -13,7 +13,11 @@
 | **FASE 3** | ✅ COMPLETO | EPIC 0-11 + 11.1 | Clinical Intelligence (EPIC 0-11 ✅ + EPIC 11.1 ✅ Consolidation) |
 | **FASE 4** | ✅ COMPLETO | EPIC 0-11 | Knowledge Infrastructure (Document Processing, Embeddings, RAG, Citations, Governance) |
 | **FASE 5** | ✅ COMPLETO v3.0 | EPIC 0-14 | Multi-Agent System (Cognitive Evolution: Clinical Context, Evidence Lifecycle, Uncertainty Quantification) |
+<
 | **FASE 6** | ⚠️ CONSOLIDADA | EPIC 0-7 | Hospital Platform (Feature-First Modular, ModuleRegistry, Routing Adapters) |
+
+| **FASE 6** | ⚠️ CONSOLIDADA | EPIC 0-7 | Hospital Platform (Feature-First Modular Architecture, AI Center, Analytics, Operations, Knowledge, Workspace, Administration) |
+>
 
 ---
 
@@ -42,7 +46,11 @@ EREN/
 │       ├── README.md
 │       ├── epics/              # epic0-14
 │       └── adr/                # ADRs epic0-14
+<
 │   └── PHASE_6/               # ⚠️ CONSOLIDADA
+
+│   └── PHASE_6/               # ✅ COMPLETO
+>
 │       ├── README.md
 │       ├── epics/              # EPIC_0-7
 │       └── adr/                # ADRs EPIC_0-8

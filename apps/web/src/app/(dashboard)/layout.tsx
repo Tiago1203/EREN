@@ -6,7 +6,6 @@ import { useEffect } from 'react'
 import { NotificationBell } from '@/components/ui/Notifications'
 import { moduleRegistry } from '@/modules/shared/lib/module-registry'
 
-// Icon paths for module navigation
 const ICONS: Record<string, string> = {
   LayoutDashboard: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
   Monitor: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
@@ -37,8 +36,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const { user, profile, loading, profileError, signOut, isAdmin } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
-  
-  // Get modules from registry - filter by admin permissions
+
   const modules = moduleRegistry.getEnabledModules()
     .filter(m => !m.permissions.includes('admin') || isAdmin)
 
@@ -68,7 +66,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen flex bg-[var(--background)]">
-      {/* Sidebar */}
       <aside className="hidden md:flex md:w-64 flex-col bg-[var(--sidebar)] text-[var(--sidebar-text)]">
         <div className="px-6 py-5 border-b border-slate-700">
           <div className="flex items-center justify-between">
@@ -130,15 +127,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </aside>
 
-      {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Mobile header */}
         <header className="md:hidden bg-[var(--card)] border-b border-[var(--card-border)] px-4 py-3 flex items-center justify-between">
           <h1 className="text-sm font-semibold">BioMédico</h1>
           <button onClick={handleSignOut} className="text-xs text-[var(--muted)]">Salir</button>
         </header>
 
-        {/* Mobile nav */}
         <nav className="md:hidden flex border-b border-[var(--card-border)] bg-[var(--card)] overflow-x-auto">
           {modules.map((module) => (
             <button

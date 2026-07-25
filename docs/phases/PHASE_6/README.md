@@ -14,6 +14,7 @@ PHASE 6 transforma EREN en una plataforma lista para usuarios finales.
 
 ---
 
+<<<<<<< HEAD
 ## ⚠️ REGLAS DE CONSOLIDACIÓN
 
 > **IMPORTANTE:** La arquitectura oficial del Roadmap tiene prioridad absoluta.
@@ -45,14 +46,20 @@ Pendiente de validar:
 
 ---
 
+=======
+>>>>>>> origin/main
 ## ✅ Estado General
 
 | Aspecto | Estado |
 |---------|--------|
 | EPICs | 8 (EPIC 0-7) |
 | Estructura | Feature-first modular ✅ |
+<<<<<<< HEAD
 | Routing Adapters | 14 rutas ✅ |
 | ModuleRegistry | Integrado ✅ |
+=======
+| AI Integration | Preparada ✅ |
+>>>>>>> origin/main
 | Feature Flags | Implementados ✅ |
 
 ---
@@ -86,12 +93,19 @@ Pendiente de validar:
      │               │               │
      └───────────────┼───────────────┘
                      │
+<<<<<<< HEAD
          ┌───────────┴───────────┐
          │                       │
          ▼                       ▼
 ┌─────────────────┐    ┌─────────────────┐
 │  Administration  │    │   Connectors    │
 └─────────────────┘    └─────────────────┘
+=======
+                     ▼
+            ┌─────────────────┐
+            │  Administration │
+            └─────────────────┘
+>>>>>>> origin/main
 ```
 
 ---
@@ -100,7 +114,11 @@ Pendiente de validar:
 
 | EPIC | Nombre | Estado | Descripción |
 |------|--------|--------|-------------|
+<<<<<<< HEAD
 | EPIC 0 | Platform Foundation | ✅ | Estructura base modular, ModuleRegistry |
+=======
+| EPIC 0 | Platform Foundation | ✅ | Estructura base modular |
+>>>>>>> origin/main
 | EPIC 1 | Dashboard & Navigation | ✅ | Dashboard migrado + Nav |
 | EPIC 2 | Operations Center | ✅ | Work Orders, Incidents |
 | EPIC 3 | AI Center & Chat | ✅ | Chat AI, Agentes |
@@ -119,6 +137,7 @@ apps/web/src/
 │   ├── (auth)/                   # Auth routes
 │   ├── (dashboard)/              # Dashboard routes
 │   │   ├── dashboard/page.tsx   # → modules/dashboard
+<<<<<<< HEAD
 │   │   ├── equipos/page.tsx     # → modules/equipos (LEGACY)
 │   │   ├── mantenimientos/       # → modules/mantenimientos (LEGACY)
 │   │   ├── establecimientos/    # → modules/establecimientos (LEGACY)
@@ -158,6 +177,44 @@ apps/web/src/
 │       ├── lib/               # ModuleRegistry, FeatureFlags, Constants
 │       ├── types/             # Tipos globales
 │       └── utils/             # Utilidades
+=======
+│   │   ├── equipos/page.tsx     # → LEGACY
+│   │   ├── mantenimientos/       # → LEGACY
+│   │   ├── establecimientos/    # → LEGACY
+│   │   ├── kpis/page.tsx       # → LEGACY
+│   │   ├── ai/page.tsx          # → modules/ai
+│   │   ├── analytics/page.tsx  # → modules/analytics
+│   │   ├── operations/page.tsx  # → modules/operations
+│   │   ├── knowledge/page.tsx   # → modules/knowledge
+│   │   ├── workspace/page.tsx   # → modules/workspace
+│   │   ├── admin/page.tsx       # → modules/admin
+│   │   ├── notifications/       # → modules/notifications
+│   │   └── connectors/page.tsx  # → modules/connectors
+│   └── layout.tsx               # Root layout
+│
+├── modules/                     # Feature-first modules
+│   ├── dashboard/               # ✅ Completado
+│   ├── equipos/                  # ⚠️ Estructura (LEGACY en app/)
+│   ├── mantenimientos/          # ⚠️ Estructura (LEGACY en app/)
+│   ├── establecimientos/       # ⚠️ Estructura (LEGACY en app/)
+│   ├── kpis/                   # ⚠️ Estructura (LEGACY en app/)
+│   │
+│   ├── ai/                      # ✅ EPIC 3
+│   ├── analytics/               # ✅ EPIC 5
+│   ├── notifications/           # ✅ EPIC 6
+│   ├── operations/              # ✅ EPIC 2
+│   ├── knowledge/               # ✅ EPIC 4
+│   ├── workspace/              # ✅ EPIC 6
+│   ├── admin/                  # ✅ EPIC 7
+│   ├── connectors/              # ✅ EPIC 7 (placeholder)
+│   │
+│   └── shared/                  # ✅ Infraestructura
+│       ├── components/          # Sidebar, ModuleRegistry
+│       ├── hooks/               # Hooks globales
+│       ├── lib/                 # ModuleRegistry, FeatureFlags
+│       ├── types/               # Tipos globales
+│       └── utils/               # Utilidades
+>>>>>>> origin/main
 ```
 
 ---
@@ -217,16 +274,26 @@ EPIC 0 (Foundation)
         ├── EPIC 2 (Operations)
         ├── EPIC 3 (AI Center)
         ├── EPIC 4 (Knowledge)
+<<<<<<< HEAD
         ├── EPIC 5 (Analytics & Reports)
         ├── EPIC 6 (Notifications & Workspace)
         └── EPIC 7 (Administration & Connectors)
+=======
+        ├── EPIC 5 (Analytics)
+        ├── EPIC 6 (Notifications)
+        └── EPIC 7 (Admin & Connectors)
+>>>>>>> origin/main
 ```
 
 ---
 
 ## 🔄 Roadmap
 
+<<<<<<< HEAD
 ### PHASE 6 ✅ CONSOLIDADA (validación pendiente)
+=======
+### PHASE 6 ✅ INICIADA
+>>>>>>> origin/main
 ### PHASE 7: Enterprise & Production (Futuro)
   - HIPAA Compliance
   - FDA Support

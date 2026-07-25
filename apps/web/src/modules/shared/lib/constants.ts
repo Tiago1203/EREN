@@ -1,6 +1,9 @@
 /**
  * Constantes compartidas
+<<<<<<< HEAD
  * PHASE 6 EPIC 0 - Platform Foundation
+=======
+>>>>>>> origin/main
  */
 
 export const APP_NAME = 'EREN';
@@ -16,12 +19,19 @@ export const PATHS = {
   KPIs: '/kpis',
   AI: '/ai',
   ANALYTICS: '/analytics',
+<<<<<<< HEAD
   REPORTS: '/reports',
+=======
+>>>>>>> origin/main
   NOTIFICATIONS: '/notifications',
   OPERATIONS: '/operations',
   WORKSPACE: '/workspace',
   KNOWLEDGE: '/knowledge',
+<<<<<<< HEAD
   ADMINISTRATION: '/administration',
+=======
+  ADMIN: '/admin',
+>>>>>>> origin/main
   CONNECTORS: '/connectors',
 } as const;
 
