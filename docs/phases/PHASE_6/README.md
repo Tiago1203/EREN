@@ -104,3 +104,22 @@ Modules are designed for future Module Federation integration, enabling:
 ✅ EPIC 2: Module Implementation - Complete
 ✅ EPIC 3: Platform Services - Complete
 ✅ EPIC 4: Testing Infrastructure - Complete
+
+### Module Status
+
+| Módulo | Estado | Notas |
+|--------|--------|-------|
+| ai | ✅ Migrated | Routing adapter + full impl |
+| analytics | ✅ Migrated | Routing adapter + full impl |
+| connectors | ✅ Prepared | Routing adapter + placeholder |
+| notifications | ✅ Migrated | Routing adapter + full impl |
+| operations | ✅ Migrated | Routing adapter + full impl |
+| reports | ✅ Migrated | Routing adapter + full impl |
+| workspace | ✅ Migrated | Routing adapter + full impl |
+| knowledge | ✅ Migrated | Routing adapter + full impl |
+| administration | ✅ Prepared | Routing adapter + placeholder |
+| dashboard | ⚠️ Conflict | OLD impl in app/ conflicts with NEW in modules/ |
+| equipos | ❌ Pending | Placeholder - pending PHASE 7 EPIC 5a |
+| mantenimientos | ❌ Pending | Placeholder - pending PHASE 7 EPIC 5a |
+| establecimientos | ❌ Pending | Placeholder - pending PHASE 7 EPIC 5a |
+| kpis | ❌ Pending | Placeholder - pending PHASE 7 EPIC 5a |
