@@ -81,34 +81,46 @@ PHASE 6 transforma EREN en una plataforma lista para usuarios finales.
 
 ```
 apps/web/src/
-├── app/                          # Rutas Next.js
+├── app/                          # Rutas Next.js (delegación a modules/)
 │   ├── (auth)/                   # Auth routes
 │   ├── (dashboard)/              # Dashboard routes
+│   │   ├── dashboard/page.tsx   # → modules/dashboard
+│   │   ├── equipos/page.tsx     # → LEGACY
+│   │   ├── mantenimientos/       # → LEGACY
+│   │   ├── establecimientos/    # → LEGACY
+│   │   ├── kpis/page.tsx       # → LEGACY
+│   │   ├── ai/page.tsx          # → modules/ai
+│   │   ├── analytics/page.tsx  # → modules/analytics
+│   │   ├── operations/page.tsx  # → modules/operations
+│   │   ├── knowledge/page.tsx   # → modules/knowledge
+│   │   ├── workspace/page.tsx   # → modules/workspace
+│   │   ├── admin/page.tsx       # → modules/admin
+│   │   ├── notifications/       # → modules/notifications
+│   │   └── connectors/page.tsx  # → modules/connectors
 │   └── layout.tsx               # Root layout
 │
 ├── modules/                     # Feature-first modules
-│   ├── dashboard/               # ✅ Migrado
-│   ├── kpis/                    # ✅ Migrado
-│   ├── equipos/                  # ✅ Migrado
-│   ├── mantenimientos/          # ✅ Migrado
-│   ├── establecimientos/        # ✅ Migrado
+│   ├── dashboard/               # ✅ Completado
+│   ├── equipos/                  # ⚠️ Estructura (LEGACY en app/)
+│   ├── mantenimientos/          # ⚠️ Estructura (LEGACY en app/)
+│   ├── establecimientos/       # ⚠️ Estructura (LEGACY en app/)
+│   ├── kpis/                   # ⚠️ Estructura (LEGACY en app/)
 │   │
-│   ├── ai/                      # 🆕 AI Center
-│   ├── analytics/               # 🆕 Analytics
-│   ├── reports/                 # 🆕 Reports
-│   ├── notifications/           # 🆕 Notifications
-│   ├── operations/              # 🆕 Operations
-│   ├── administration/          # 🆕 Administration
-│   ├── connectors/              # 🆕 Connectors (preparado)
-│   ├── knowledge/               # 🆕 Knowledge
-│   └── workspace/               # 🆕 Workspace
-│
-└── shared/                      # Utilidades compartidas
-    ├── components/               # UI base
-    ├── hooks/                    # Hooks globales
-    ├── lib/                     # Configuración
-    ├── types/                   # Tipos globales
-    └── utils/                   # Utilidades
+│   ├── ai/                      # ✅ EPIC 3
+│   ├── analytics/               # ✅ EPIC 5
+│   ├── notifications/           # ✅ EPIC 6
+│   ├── operations/              # ✅ EPIC 2
+│   ├── knowledge/               # ✅ EPIC 4
+│   ├── workspace/              # ✅ EPIC 6
+│   ├── admin/                  # ✅ EPIC 7
+│   ├── connectors/              # ✅ EPIC 7 (placeholder)
+│   │
+│   └── shared/                  # ✅ Infraestructura
+│       ├── components/          # Sidebar, ModuleRegistry
+│       ├── hooks/               # Hooks globales
+│       ├── lib/                 # ModuleRegistry, FeatureFlags
+│       ├── types/               # Tipos globales
+│       └── utils/               # Utilidades
 ```
 
 ---

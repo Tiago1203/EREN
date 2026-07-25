@@ -15,12 +15,11 @@ export const PATHS = {
   KPIs: '/kpis',
   AI: '/ai',
   ANALYTICS: '/analytics',
-  REPORTS: '/reports',
   NOTIFICATIONS: '/notifications',
   OPERATIONS: '/operations',
   WORKSPACE: '/workspace',
   KNOWLEDGE: '/knowledge',
-  ADMINISTRATION: '/administration',
+  ADMIN: '/admin',
   CONNECTORS: '/connectors',
 } as const;
 
