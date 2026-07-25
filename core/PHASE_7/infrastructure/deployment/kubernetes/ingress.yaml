@@ -1,0 +1,88 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: eren-ingress
+  namespace: eren
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "120"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+    nginx.ingress.kubernetes.io/websocket-services: eren-api
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    prometheus.io/scrape: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - api.eren.hospital.com
+        - eren.hospital.com
+      secretName: eren-tls
+  rules:
+    - host: eren.hospital.com
+      http:
+        paths:
+          - path: /api/v1
+            pathType: Prefix
+            backend:
+              service:
+                name: eren-api
+                port:
+                  number: 80
+          - path: /health
+            pathType: Exact
+            backend:
+              service:
+                name: eren-api
+                port:
+                  number: 80
+    - host: api.eren.hospital.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: eren-api
+                port:
+                  number: 80
+---
+# Ingress for monitoring
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: eren-monitoring-ingress
+  namespace: eren-monitoring
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - prometheus.eren.hospital.com
+        - grafana.eren.hospital.com
+      secretName: eren-monitoring-tls
+  rules:
+    - host: prometheus.eren.hospital.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prometheus
+                port:
+                  number: 9090
+    - host: grafana.eren.hospital.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 3000
