@@ -1,7 +1,24 @@
 # ADR-7002: Multi-Tenant Isolation Strategy
 
 ## Status
-Accepted
+**Implemented** ✅ (Julio 2025)
+
+## Implementation
+
+### core/PHASE_7/tenant/isolation/row_level_security.py
+- `RowLevelSecurityManager`: Generates `CREATE POLICY` SQL for all 13 protected tables
+- SET tenant: `SET app.current_tenant = '{tenant_id}'`
+- 13 protected tables: users, establishments, departments, equipment, patients, medical_records, maintenances, kpis, reports, notifications, audit_logs
+
+### core/PHASE_7/tenant/isolation/query_filter.py
+- `QueryFilter`: Automatic tenant filtering, raises `CrossTenantQueryError`
+- Super-admin bypass: only for `is_super_admin = True`
+- EPIC 1 integration: logs cross-tenant attempts
+
+### core/PHASE_7/tenant/isolation/cache_isolation.py
+- `CacheIsolation`: Key format `t:{tenant_id}:v{version}:{namespace}:{key}`
+- 7 namespaces with configurable TTLs: session (24h), user (1h), equipment (5min), kpis (1min)
+- `TenantRateLimiter`: sliding window rate limiting per tier
 
 ## Context
 EREN needs to serve multiple hospital tenants on a single deployment while guaranteeing data isolation for regulatory compliance (HIPAA, FDA).
