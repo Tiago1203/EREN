@@ -1,5 +1,15 @@
 /**
  * Module Registry - Registro central de módulos
+<<<<<<< HEAD
+ * PHASE 6 EPIC 0 - Platform Foundation
+ * 
+ * REGLAS DE CONSOLIDACIÓN:
+ * - La arquitectura oficial del Roadmap tiene prioridad absoluta.
+ * - NO eliminar módulos definidos por el roadmap aunque aún sean placeholders.
+ * - NO renombrar módulos oficiales.
+ * - NO mover carpetas oficialmente definidas.
+=======
+>>>>>>> origin/main
  */
 
 import { isFeatureEnabled } from './feature-flags';
@@ -87,6 +97,19 @@ export const MODULE_REGISTRY: ModuleConfig[] = [
     order: 11,
   },
   {
+<<<<<<< HEAD
+    id: 'reports',
+    name: 'Reportes',
+    description: 'Generación de reportes',
+    icon: 'FileText',
+    path: '/reports',
+    enabled: isFeatureEnabled('REPORTS'),
+    permissions: [],
+    order: 12,
+  },
+  {
+=======
+>>>>>>> origin/main
     id: 'operations',
     name: 'Operaciones',
     description: 'Centro de operaciones',
@@ -127,11 +150,19 @@ export const MODULE_REGISTRY: ModuleConfig[] = [
     order: 16,
   },
   {
+<<<<<<< HEAD
+    id: 'administration',
+    name: 'Administración',
+    description: 'Panel de administración',
+    icon: 'Settings',
+    path: '/administration',
+=======
     id: 'admin',
     name: 'Administración',
     description: 'Panel de administración',
     icon: 'Settings',
     path: '/admin',
+>>>>>>> origin/main
     enabled: isFeatureEnabled('ADMINISTRATION'),
     permissions: ['admin'],
     order: 20,
