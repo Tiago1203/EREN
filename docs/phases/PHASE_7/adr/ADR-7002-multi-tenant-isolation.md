@@ -1,7 +1,7 @@
 # ADR-7002: Multi-Tenant Isolation Strategy
 
 ## Status
-Proposed
+Accepted
 
 ## Context
 EREN needs to serve multiple hospital tenants on a single deployment while guaranteeing data isolation for regulatory compliance (HIPAA, FDA).
