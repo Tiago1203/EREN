@@ -87,16 +87,6 @@ export const MODULE_REGISTRY: ModuleConfig[] = [
     order: 11,
   },
   {
-    id: 'reports',
-    name: 'Reportes',
-    description: 'Generación de reportes',
-    icon: 'FileText',
-    path: '/reports',
-    enabled: isFeatureEnabled('REPORTS'),
-    permissions: [],
-    order: 12,
-  },
-  {
     id: 'operations',
     name: 'Operaciones',
     description: 'Centro de operaciones',
@@ -137,13 +127,13 @@ export const MODULE_REGISTRY: ModuleConfig[] = [
     order: 16,
   },
   {
-    id: 'administration',
+    id: 'admin',
     name: 'Administración',
     description: 'Panel de administración',
     icon: 'Settings',
-    path: '/administration',
+    path: '/admin',
     enabled: isFeatureEnabled('ADMINISTRATION'),
-    permissions: [],
+    permissions: ['admin'],
     order: 20,
   },
   {
