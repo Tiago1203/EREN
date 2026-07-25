@@ -8,21 +8,26 @@ import type {
   IncidentFilters,
   AlertFilters,
   TimelineFilters,
+  WorkOrder,
+  Incident,
+  Alert,
+  DeviceStatus,
+  OperationsStats,
 } from '../types/operations.types';
 
 export interface UseOperationsReturn {
   // Data
-  workOrders: ReturnType<typeof useOperationsStore>['workOrders'];
-  incidents: ReturnType<typeof useOperationsStore>['incidents'];
-  alerts: ReturnType<typeof useOperationsStore>['alerts'];
-  deviceStatuses: ReturnType<typeof useOperationsStore>['deviceStatuses'];
-  stats: ReturnType<typeof useOperationsStore>['stats'];
-  
+  workOrders: WorkOrder[];
+  incidents: Incident[];
+  alerts: Alert[];
+  deviceStatuses: DeviceStatus[];
+  stats: OperationsStats;
+
   // State
   loading: boolean;
   error: string | null;
-  activeTab: ReturnType<typeof useOperationsStore>['pageState']['activeTab'];
-  
+  activeTab: 'overview' | 'workorders' | 'incidents' | 'alerts' | 'timeline';
+
   // Actions
   loadData: () => Promise<void>;
   loadWorkOrders: (filters?: WorkOrderFilters) => Promise<void>;
@@ -31,10 +36,10 @@ export interface UseOperationsReturn {
   loadDeviceStatuses: () => Promise<void>;
   loadStats: () => Promise<void>;
   loadTimeline: (filters?: TimelineFilters) => Promise<void>;
-  
+
   // Tab
   setActiveTab: (tab: 'overview' | 'workorders' | 'incidents' | 'alerts' | 'timeline') => void;
-  
+
   // Alert Actions
   acknowledgeAlert: (id: string) => void;
   dismissAlert: (id: string) => void;
@@ -133,8 +138,6 @@ export function useOperations(): UseOperationsReturn {
   }, [setStats]);
 
   const loadTimeline = useCallback(async (_filters?: TimelineFilters) => {
-    // Timeline se construye desde los datos existentes
-    // En una implementación real, haríamos una llamada específica
     await loadData();
   }, [loadData]);
 

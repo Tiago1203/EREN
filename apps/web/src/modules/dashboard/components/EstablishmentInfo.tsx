@@ -2,16 +2,16 @@
 
 import { useState } from 'react';
 import { getSignedUrlForPath } from '@/lib/storage';
-import type { Establishment } from '../types/dashboard.types';
+import type { Establecimiento } from '../types/dashboard.types';
 
-interface EstablishmentInfoProps {
-  establishment: Establishment;
+interface EstablecimientoInfoProps {
+  establishment: Establecimiento;
 }
 
 /**
- * EstablishmentInfo - Información del establecimiento
+ * EstablecimientoInfo - Información del establecimiento
  */
-export function EstablishmentInfo({ establishment }: EstablishmentInfoProps) {
+export function EstablecimientoInfo({ establishment }: EstablecimientoInfoProps) {
   const [loadingCert, setLoadingCert] = useState(false);
 
   const handleViewCert = async () => {
@@ -69,4 +69,4 @@ export function EstablishmentInfo({ establishment }: EstablishmentInfoProps) {
   );
 }
 
-export default EstablishmentInfo;
+export default EstablecimientoInfo;

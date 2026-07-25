@@ -3,7 +3,7 @@
  * Consumes PHASE 1 and PHASE 3
  */
 
-import type { Metric, ChartData, ChartConfig, DateRange, KPI, Trend } from '../types/analytics.types';
+import type { Metric, ChartData, ChartConfig, DateRange, KPI, TrendData } from '../types/analytics.types';
 
 export class AnalyticsService {
   /**
@@ -33,7 +33,7 @@ export class AnalyticsService {
   /**
    * Obtiene tendencias
    */
-  async getTrends(dateRange: DateRange): Promise<Trend[]> {
+  async getTrends(dateRange: DateRange): Promise<TrendData[]> {
     // TODO: Integrar con PHASE 3
     return this.getMockTrends();
   }
@@ -179,7 +179,7 @@ export class AnalyticsService {
     ];
   }
 
-  private getMockTrends(): Trend[] {
+  private getMockTrends(): TrendData[] {
     return [
       { metricId: 'disponibilidad', direction: 'up', changePercent: 2.4, changeValue: 2.4 },
       { metricId: 'mtbf', direction: 'up', changePercent: 6.5, changeValue: 15 },

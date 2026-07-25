@@ -4,14 +4,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { useKnowledgeStore } from '../stores/knowledge.store';
 import { knowledgeService } from '../services/knowledge.service';
 import { searchService } from '../services/search.service';
-import type { SearchFilters, KnowledgeArticle } from '../types/knowledge.types';
+import type { SearchFilters, KnowledgeArticle, Category, Tag, SearchResult } from '../types/knowledge.types';
 
 export interface UseKnowledgeReturn {
   // Data
   articles: KnowledgeArticle[];
-  categories: ReturnType<typeof useKnowledgeStore>['categories'];
-  tags: ReturnType<typeof useKnowledgeStore>['tags'];
-  searchResults: ReturnType<typeof useKnowledgeStore>['searchResults'];
+  categories: Category[];
+  tags: Tag[];
+  searchResults: SearchResult[];
   selectedArticle: KnowledgeArticle | null;
   
   // State

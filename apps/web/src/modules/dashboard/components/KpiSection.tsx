@@ -1,10 +1,10 @@
 'use client';
 
 import { KpiGrid } from '@/components/ui/KpiGrid';
-import type { Kpi } from '../types/dashboard.types';
+import type { KpiResult } from '@/lib/kpis';
 
 interface KpiSectionProps {
-  kpis: Kpi[];
+  kpis: KpiResult[];
   isAdmin: boolean;
 }
 

@@ -5,7 +5,7 @@ import { ReadOnlyBanner } from '@/components/ui/ReadOnlyBanner';
 import { WelcomeHeader } from '../components/WelcomeHeader';
 import { DashboardGrid } from '../components/DashboardGrid';
 import { KpiSection } from '../components/KpiSection';
-import { EstablishmentInfo } from '../components/EstablishmentInfo';
+import { EstablecimientoInfo } from '../components/EstablishmentInfo';
 import { useDashboardData } from '../hooks/useDashboardData';
 import type { StatCard } from '../types/dashboard.types';
 
@@ -72,7 +72,7 @@ export default function DashboardPage() {
       <KpiSection kpis={kpis} isAdmin={isAdmin} />
 
       {establishment && !isAdmin && (
-        <EstablishmentInfo establishment={establishment} />
+        <EstablecimientoInfo establishment={establishment} />
       )}
     </div>
   );

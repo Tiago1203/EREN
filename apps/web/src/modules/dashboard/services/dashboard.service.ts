@@ -3,35 +3,32 @@
  * Consume datos del Business Domain (PHASE 1)
  */
 
-import type { DashboardStats, Kpi, Establecimiento } from '../types/dashboard.types';
+import type { DashboardStats, Establecimiento } from '../types/dashboard.types';
+import type { KpiResult } from '@/lib/kpis';
 import { fetchEquipos, fetchEventos, fetchEstablecimientos } from '@/lib/queries';
 
 export interface Equipo {
   id: string;
   nombre: string;
-  // ... otros campos
 }
 
 export interface Evento {
   id: string;
   tipo: string;
   fecha: string;
-  // ... otros campos
 }
 
 export class DashboardService {
-  /**
-   * Obtiene estadísticas del dashboard
-   */
   async getStats(
     isAdmin: boolean,
-    establishmentId?: string
+    establishmentId?: string | null
   ): Promise<DashboardStats> {
     try {
+      const estId = establishmentId ? parseInt(establishmentId, 10) : null;
       const [eqRes, evRes, estRes] = await Promise.all([
-        fetchEquipos(isAdmin, establishmentId),
-        fetchEventos(isAdmin, establishmentId),
-        fetchEstablecimientos(isAdmin, establishmentId),
+        fetchEquipos(isAdmin, estId),
+        fetchEventos(isAdmin, estId),
+        fetchEstablecimientos(isAdmin, estId),
       ]);
 
       const equipos = eqRes.data || [];
@@ -42,8 +39,8 @@ export class DashboardService {
         equipos: equipos.length,
         mantenimientos: eventos.length,
         establecimientos: isAdmin ? establecimientos.length : 1,
-        incidentes: 0, // TODO: Integrar con PHASE 1 Incident Context
-        alertas: 0, // TODO: Integrar con PHASE 1 Alert
+        incidentes: 0,
+        alertas: 0,
       };
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
@@ -57,78 +54,35 @@ export class DashboardService {
     }
   }
 
-  /**
-   * Calcula KPIs basado en equipos y eventos
-   */
-  getKpis(equipos: Equipo[], eventos: Evento[]): Kpi[] {
+  getKpis(equipos: Equipo[], eventos: Evento[]): KpiResult[] {
     const totalEquipos = equipos.length;
     const totalEventos = eventos.length;
-    
-    // Cálculo de mantenimientos preventivos vs correctivos
     const preventivos = eventos.filter(e => e.tipo === 'preventivo').length;
     const correctivos = eventos.filter(e => e.tipo === 'correctivo').length;
-    
-    // Tasa de disponibilidad (ejemplo)
     const eventosUltimoMes = eventos.filter(e => {
       const fecha = new Date(e.fecha);
       const ahora = new Date();
       const haceUnMes = new Date(ahora.setMonth(ahora.getMonth() - 1));
       return fecha >= haceUnMes;
     }).length;
+    const disponibilidad = totalEquipos > 0
+      ? ((totalEquipos - correctivos) / totalEquipos * 100).toFixed(1)
+      : '100';
 
     return [
-      {
-        id: 'total-equipos',
-        label: 'Total Equipos',
-        value: totalEquipos,
-        status: 'info',
-      },
-      {
-        id: 'total-eventos',
-        label: 'Eventos Totales',
-        value: totalEventos,
-        status: 'info',
-      },
-      {
-        id: 'preventivos',
-        label: 'Preventivos',
-        value: preventivos,
-        unit: 'eventos',
-        status: 'success',
-      },
-      {
-        id: 'correctivos',
-        label: 'Correctivos',
-        value: correctivos,
-        unit: 'eventos',
-        status: 'warning',
-      },
-      {
-        id: 'eventos-mes',
-        label: 'Eventos Último Mes',
-        value: eventosUltimoMes,
-        status: 'info',
-      },
-      {
-        id: 'tasa-disponibilidad',
-        label: 'Tasa Disponibilidad',
-        value: totalEquipos > 0 
-          ? ((totalEquipos - correctivos) / totalEquipos * 100).toFixed(1) 
-          : '100',
-        unit: '%',
-        status: 'success',
-      },
+      { label: 'Total Equipos', value: String(totalEquipos), status: 'neutral' },
+      { label: 'Eventos Totales', value: String(totalEventos), status: 'neutral' },
+      { label: 'Preventivos', value: `${preventivos} eventos`, status: 'ok' },
+      { label: 'Correctivos', value: `${correctivos} eventos`, status: 'warning' },
+      { label: 'Eventos Último Mes', value: String(eventosUltimoMes), status: 'neutral' },
+      { label: 'Tasa Disponibilidad', value: `${disponibilidad}%`, status: 'ok' },
     ];
   }
 
-  /**
-   * Obtiene información del establecimiento
-   */
-  async getEstablishmentInfo(
-    establishmentId: string
-  ): Promise<Establecimiento | null> {
+  async getEstablishmentInfo(establishmentId: string): Promise<Establecimiento | null> {
     try {
-      const response = await fetchEstablecimientos(true, establishmentId);
+      const estId = parseInt(establishmentId, 10);
+      const response = await fetchEstablecimientos(true, estId);
       const establishments = response.data || [];
       return establishments.length > 0 ? establishments[0] : null;
     } catch (error) {

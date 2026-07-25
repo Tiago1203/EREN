@@ -3,13 +3,13 @@
 import { useCallback, useEffect } from 'react';
 import { useAnalyticsStore } from '../stores/analytics.store';
 import { analyticsService } from '../services/analytics.service';
-import type { DateRange } from '../types/analytics.types';
+import type { DateRange, Metric, ChartConfig, ChartData, AnalyticsState } from '../types/analytics.types';
 
 export interface UseAnalyticsReturn {
   // Data
-  metrics: ReturnType<typeof useAnalyticsStore>['metrics'];
-  charts: ReturnType<typeof useAnalyticsStore>['charts'];
-  chartData: ReturnType<typeof useAnalyticsStore>['chartData'];
+  metrics: Metric[];
+  charts: ChartConfig[];
+  chartData: Record<string, ChartData>;
   dateRange: DateRange;
   
   // State

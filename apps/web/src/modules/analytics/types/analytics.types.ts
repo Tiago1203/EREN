@@ -112,7 +112,7 @@ export interface KPI {
 
 // ============== TREND ==============
 
-export interface Trend {
+export interface TrendData {
   metricId: string;
   direction: 'up' | 'down' | 'stable';
   changePercent: number;

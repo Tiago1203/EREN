@@ -3,12 +3,12 @@
 import { useCallback, useEffect } from 'react';
 import { useChatStore } from '../stores/chat.store';
 import { chatService } from '../services/chat.service';
-import type { ChatMessage, ClinicalContext } from '../types/ai.types';
+import type { ChatMessage, ClinicalContext, ConversationSummary } from '../types/ai.types';
 
 export interface UseChatReturn {
   // Data
   messages: ChatMessage[];
-  conversations: ReturnType<typeof useChatStore>['conversations'];
+  conversations: ConversationSummary[];
   activeConversationId: string | null;
   sending: boolean;
   error: string | null;
