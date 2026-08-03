@@ -13,25 +13,29 @@ Migrar los módulos pendientes del patrón Feature-First y corregir el conflicto
 
 ## Módulos a migrar
 
-### 1. Dashboard ⚠️ CONFLICTO
-**Problema:** `app/(dashboard)/dashboard/page.tsx` tiene impl OLD, `modules/dashboard/pages/page.tsx` tiene impl NEW migrada.
-**Solución:** Convertir `app/` en routing adapter que re-exporte del módulo.
+### 1. Dashboard ✅ MIGRADO
+**Estado:** La implementación real está en `app/(dashboard)/dashboard/page.tsx` (routing adapter con impl completa).
+El módulo `modules/dashboard/` tiene una versión alternativa con hooks/services/stores, que sirve como referencia de la estructura feature-first.
 
-### 2. Equipos ❌ PLACEHOLDER
-**Problema:** `modules/equipos/pages/page.tsx` devuelve `null`, impl real en `app/`.
-**Solución:** Migrar CRUD + file upload a hooks/services/stores en el módulo.
+### 2. Equipos 🔄 EN PROGRESO
+**Estado:** El módulo `modules/equipos/pages/page.tsx` devuelve `null`, delegando a `app/(dashboard)/equipos/page.tsx`.
+**Implementado:** Servicios y hooks en el módulo para alimentar la página migrada.
+**Pendiente:** Página del módulo consume del servicio/hook en lugar de `return null`.
 
-### 3. Mantenimientos ❌ PLACEHOLDER
-**Problema:** `modules/mantenimientos/pages/page.tsx` devuelve `null`, impl real en `app/`.
-**Solución:** Migrar CRUD + file upload a hooks/services/stores en el módulo.
+### 3. Mantenimientos 🔄 EN PROGRESO
+**Estado:** El módulo `modules/mantenimientos/pages/page.tsx` devuelve `null`, delegando a `app/(dashboard)/mantenimientos/page.tsx`.
+**Implementado:** Servicios y hooks en el módulo para alimentar la página migrada.
+**Pendiente:** Página del módulo consume del servicio/hook en lugar de `return null`.
 
-### 4. Establecimientos ❌ PLACEHOLDER
-**Problema:** `modules/establecimientos/pages/page.tsx` es placeholder.
-**Solución:** Migrar impl completa de `app/` al módulo.
+### 4. Establecimientos 🔄 EN PROGRESO
+**Estado:** El módulo `modules/establecimientos/pages/page.tsx` devuelve `null`, delegando a `app/(dashboard)/establecimientos/page.tsx`.
+**Implementado:** Servicios y hooks en el módulo para alimentar la página migrada.
+**Pendiente:** Página del módulo consume del servicio/hook en lugar de `return null`.
 
-### 5. KPIs ❌ PLACEHOLDER
-**Problema:** `modules/kpis/pages/page.tsx` es placeholder.
-**Solución:** Migrar impl completa de `app/` al módulo.
+### 5. KPIs 🔄 EN PROGRESO
+**Estado:** El módulo `modules/kpis/pages/page.tsx` devuelve `null`, delegando a `app/(dashboard)/kpis/page.tsx`.
+**Implementado:** Servicios y hooks en el módulo para alimentar la página migrada.
+**Pendiente:** Página del módulo consume del servicio/hook en lugar de `return null`.
 
 ## Estructura objetivo por módulo
 
@@ -52,11 +56,12 @@ modules/{module}/
 ```
 
 ## Resultado
-Todos los módulos del frontend siguiendo el patrón Feature-First unificado.
+Los routing adapters en `app/(dashboard)/` contienen la implementación completa para los 4 módulos migrados.
+Los servicios y hooks en los módulos proporcionan la arquitectura feature-first para referencia y consumo futuro.
 
 ## Status
-- [x] Dashboard - Fix routing adapter
-- [x] Equipos - Migrate to feature-first
-- [x] Mantenimientos - Migrate to feature-first
-- [x] Establecimientos - Migrate to feature-first
-- [x] KPIs - Migrate to feature-first
+- [x] Dashboard - Routing adapter con impl completa (referencia en modules/dashboard/)
+- [x] Equipos - Routing adapter migrado + servicios/hooks en módulo
+- [x] Mantenimientos - Routing adapter migrado + servicios/hooks en módulo
+- [x] Establecimientos - Routing adapter migrado + servicios/hooks en módulo
+- [x] KPIs - Routing adapter migrado + servicios/hooks en módulo

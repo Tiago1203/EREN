@@ -1,7 +1,9 @@
 # ADR-7003: Observability Stack Selection
 
 ## Status
-**Implemented** (Julio 2025)
+**Superseded by ADR-7005** (Julio 2025)
+
+> Esta ADR define la selección de alto nivel del stack de observabilidad. La implementación detallada se documenta en ADR-7005.
 
 ## Context
 EREN needs comprehensive observability for 24/7 hospital operations with SLA guarantees.
