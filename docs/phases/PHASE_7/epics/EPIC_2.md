@@ -102,5 +102,5 @@ Arquitectura multi-tenant que permite múltiples hospitales en una instancia con
 | `admin_api.py` | AdminAPIService, health checks, emergency suspend, cross-tenant reports |
 
 ## Tests
-- **42 tests passing** covering all modules
-- `tests/unit/PHASE_7/tenant/test_tenant.py`
+- **35 tests passing** covering all modules
+- `tests/unit/PHASE_7/tenant/test_tenant.py` - TenantManager, Context, Resolver, Validator, Quotas

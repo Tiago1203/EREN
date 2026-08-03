@@ -101,5 +101,5 @@ Sistema de auditoría que proporciona trazabilidad completa y reportes de cumpli
 | `compliance_dashboard.py` | HIPAA/FDA/ISO compliance scores, alerts, remediation |
 
 ## Tests
-- **25 tests passing** covering all modules
-- `tests/unit/PHASE_7/audit/` - Integration tests
+- **26 tests passing** covering all modules
+- `tests/unit/PHASE_7/audit/test_audit.py` - AuditLogger, Repository, Archive, Export

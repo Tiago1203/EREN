@@ -1,10 +1,7 @@
 /**
  * Feature Flags para PHASE 6
  * Controla qué módulos están habilitados
-<<<<<<< HEAD
  * PHASE 6 EPIC 0 - Platform Foundation
-=======
->>>>>>> origin/main
  */
 
 export interface FeatureFlags {

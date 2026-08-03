@@ -38,7 +38,7 @@ El EPIC 0 (Compliance & Security Foundation) es la base sobre la que se construy
 | EPIC 2 | Multi-Tenant Architecture | Core | Alta | Completo |
 | EPIC 3 | High Availability & Scalability | Infrastructure | Media | Completo |
 | EPIC 4 | Monitoring & Observability | Infrastructure | Media | Completo |
-| EPIC 5a | Module Migration | Frontend | Media | En Progreso |
+| EPIC 5a | Module Migration | Frontend | Media | Completo | ✅ Migrado |
 | EPIC 5b | Admin Panel & System Management | Frontend | Media | Completo |
 
 ---
@@ -126,7 +126,7 @@ EPIC 0 (Compliance) es arquitectonica, no de import de codigo en runtime.
   +-- mantenimientos/                    <- EPIC 5a
   +-- establecimientos/                  <- EPIC 5a
 
-  tests/unit/PHASE_7/                    <- 143 tests (100% passing)
+  tests/unit/PHASE_7/                    <- 153 tests (100% passing)
   +-- admin/                              13 tests
   +-- audit/                             26 tests
   +-- compliance/                        32 tests
@@ -150,13 +150,14 @@ EPIC 0 (Compliance) es arquitectonica, no de import de codigo en runtime.
 
 ## Testing
 
-143 tests implemented cubriendo todos los EPICs (100% passing):
+153 tests implemented cubriendo todos los EPICs (100% passing):
 - tests/unit/PHASE_7/admin/ -- 13 tests (AdminService, MigrationService, AdminAPI)
 - tests/unit/PHASE_7/audit/ -- 26 tests (AuditLogger, Repository, Archive, Export)
 - tests/unit/PHASE_7/tenant/ -- 35 tests (TenantManager, Context, Resolver, Validator, Quotas)
 - tests/unit/PHASE_7/infrastructure/ -- 32 tests (HA, Scaling, Recovery, Deployment)
 - tests/unit/PHASE_7/observability/ -- 15 tests (Metrics, Logging, Tracing, Alerts, Dashboards)
 - tests/unit/PHASE_7/compliance/ -- 32 tests (Security, HIPAA, FDA)
+- apps/web/tests/unit/web/ -- 38 tests vitest (frontend modules)
 
 ---
 
