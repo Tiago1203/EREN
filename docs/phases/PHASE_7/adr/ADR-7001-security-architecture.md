@@ -1,7 +1,7 @@
 # ADR-7001: Security Architecture for Production
 
 ## Status
-Accepted
+**Implemented** (Julio 2025)
 
 ## Context
 EREN PHASE 7 will be deployed in production hospital environments requiring compliance with HIPAA, FDA 21 CFR Part 11, ISO 13485, and IEC 62304. We need a security architecture that protects PHI data while enabling the platform's clinical intelligence capabilities.

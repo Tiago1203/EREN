@@ -85,12 +85,16 @@ class SLOManager:
                 self._measurements[slo_id] = []
 
             ts = timestamp or datetime.now(timezone.utc)
+            # Normalize to UTC if naive
+            if ts.tzinfo is None:
+                ts = ts.replace(tzinfo=timezone.utc)
             self._measurements[slo_id].append((ts, value))
 
             # Keep 30 days of measurements
             cutoff = datetime.now(timezone.utc) - timedelta(days=30)
             self._measurements[slo_id] = [
-                (t, v) for t, v in self._measurements[slo_id] if t >= cutoff
+                (t, v) for t, v in self._measurements[slo_id]
+                if t >= cutoff
             ]
 
     def get_current_status(self, slo_id: str) -> Optional[SLOStatusRecord]:

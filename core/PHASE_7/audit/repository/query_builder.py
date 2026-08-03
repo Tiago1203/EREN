@@ -225,6 +225,7 @@ class AuditQueryBuilder:
             return (
                 builder
                 .category(AuditCategory.PHI_ACCESS.value)
+                .phi_only()
                 .last_days(365)
                 .sort(by="timestamp", order="desc")
                 .pagination(limit=1000)
