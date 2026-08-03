@@ -3,7 +3,7 @@
 Cross-cutting **test suites** that span more than one app or core engine
 (integration, end-to-end, contract tests).
 
-> **Status:** placeholder. No suites are implemented yet.
+> **Status:** ✅ PHASE 1-7 unit tests implemented (153 pytest + 38 vitest).
 
 ## Guidance
 

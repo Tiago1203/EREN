@@ -29,8 +29,7 @@ core/
 │   ├── rag/              # RAG Pipeline
 │   ├── registry/         # Registro de servicios
 │   ├── retrieval/        # Motor de recuperación
-│   ├── session/          # Gestión de sesiones
-│   └── [otros módulos]
+│   └── session/          # Gestión de sesiones
 │
 ├── PHASE_3/                 # Clinical Intelligence
 │   ├── intelligence/       # Motores de inteligencia clínica
@@ -55,7 +54,17 @@ core/
 │   ├── knowledge/           # Knowledge Retrieval
 │   ├── rag/                # Clinical RAG Pipeline
 │   └── citations/          # Citation Engine
-
+│
+├── PHASE_5/                 # Multi-Agent System
+│   └── agents/              # Agent Framework
+│
+├── PHASE_6/                 # Platform Foundation
+│   ├── routing/             # Next.js Routing
+│   ├── modules/            # Feature-First Modules
+│   ├── services/            # API Services
+│   ├── hooks/              # Shared Hooks
+│   └── stores/              # State Management
+│
 └── LEGACY/                  # Módulos sin clasificar
     ├── collaboration/
     └── tools/
@@ -69,6 +78,8 @@ core/
 | PHASE_2 | AI Core | Kernel de IA, Memoria, Agentes, RAG | [Ver README](./PHASE_2/README.md) |
 | PHASE_3 | Clinical Intelligence | Motores de inteligencia clínica | [Ver README](./PHASE_3/README.md) |
 | PHASE_4 | Knowledge Infrastructure | Embeddings, Qdrant, Retrieval, RAG, Citations | [Ver README](./PHASE_4/README.md) |
+| PHASE_5 | Multi-Agent System | Agent Framework | [Ver README](./PHASE_5/README.md) |
+| PHASE_6 | Platform Foundation | Routing, Modules, Services, Hooks, Stores | [Ver README](./PHASE_6/README.md) |
 | LEGACY | Sin clasificar | Módulos huérfanos | [Ver README](./LEGACY/README.md) |
 
 ## Engines (FASE 1-2)

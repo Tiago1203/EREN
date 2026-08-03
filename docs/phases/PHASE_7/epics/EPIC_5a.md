@@ -56,12 +56,22 @@ modules/{module}/
 ```
 
 ## Resultado
-Los routing adapters en `app/(dashboard)/` contienen la implementación completa para los 4 módulos migrados.
-Los servicios y hooks en los módulos proporcionan la arquitectura feature-first para referencia y consumo futuro.
+Los routing adapters en `app/(dashboard)/` re-exportan de `modules/{name}/pages/page.tsx`
+para 4 módulos (equipos, mantenimientos, establecimientos, kpis).
+El routing adapter de Dashboard mantiene implementación completa por decisión de diseño.
+Los servicios, hooks y types en los módulos proporcionan la arquitectura feature-first completa.
 
 ## Status
-- [x] Dashboard - Routing adapter con impl completa (referencia en modules/dashboard/)
-- [x] Equipos - Routing adapter migrado + servicios/hooks en módulo
-- [x] Mantenimientos - Routing adapter migrado + servicios/hooks en módulo
-- [x] Establecimientos - Routing adapter migrado + servicios/hooks en módulo
-- [x] KPIs - Routing adapter migrado + servicios/hooks en módulo
+- [x] Dashboard - Routing adapter con impl completa (referencia en modules/dashboard/) — excepción intencional
+- [x] Equipos - Routing adapter re-exporta de modules/equipos/pages/page.tsx
+- [x] Mantenimientos - Routing adapter re-exporta de modules/mantenimientos/pages/page.tsx
+- [x] Establecimientos - Routing adapter re-exporta de modules/establecimientos/pages/page.tsx
+- [x] KPIs - Routing adapter re-exporta de modules/kpis/pages/page.tsx
+
+**Nota:** El routing adapter de Dashboard mantiene implementación completa por decisión de diseño
+(EPIC 5a). Los módulos equipos, mantenimientos, establecimientos, kpis usan patrón re-export.
+Consistencia: los 4 routing adapters migrados son re-exports limpios. Dashboard es excepción.
+
+## Tests
+- **38 tests vitest passing** covering frontend modules
+- `apps/web/tests/unit/` - Dashboard service, Analytics service, Components

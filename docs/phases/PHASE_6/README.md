@@ -118,8 +118,8 @@ Modules are designed for future Module Federation integration, enabling:
 | workspace | ✅ Migrated | Routing adapter + full impl |
 | knowledge | ✅ Migrated | Routing adapter + full impl |
 | administration | ✅ Prepared | Routing adapter + placeholder |
-| dashboard | ⚠️ Conflict | OLD impl in app/ conflicts with NEW in modules/ |
-| equipos | ❌ Pending | Placeholder - pending PHASE 7 EPIC 5a |
-| mantenimientos | ❌ Pending | Placeholder - pending PHASE 7 EPIC 5a |
-| establecimientos | ❌ Pending | Placeholder - pending PHASE 7 EPIC 5a |
-| kpis | ❌ Pending | Placeholder - pending PHASE 7 EPIC 5a |
+| dashboard | ✅ Migrated | Routing adapter con impl completa (excepción intencional EPIC 5a) |
+| equipos | ✅ Migrated | Routing adapter re-exporta de modules/equipos/pages/page.tsx |
+| mantenimientos | ✅ Migrated | Routing adapter re-exporta de modules/mantenimientos/pages/page.tsx |
+| establecimientos | ✅ Migrated | Routing adapter re-exporta de modules/establecimientos/pages/page.tsx |
+| kpis | ✅ Migrated | Routing adapter re-exporta de modules/kpis/pages/page.tsx |

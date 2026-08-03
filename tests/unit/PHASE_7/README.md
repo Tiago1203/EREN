@@ -1,63 +1,59 @@
 # PHASE 7 - Enterprise & Production - Tests
 
-Tests para EPIC 0: Compliance & Security Foundation.
+153 tests cubriendo todos los EPICs de PHASE 7 (100% passing).
 
 ## Estructura
 
 ```
 tests/unit/PHASE_7/
-└── compliance/
-    ├── test_security.py       # Encryption, Access Control, Data Classification
-    ├── test_hipaa.py          # HIPAA Controls, Assessment, Compliance Checker
-    └── test_fda.py            # FDA Traceability, Audit Trail, Validation
+├── admin/
+│   └── test_admin.py              # 13 tests — AdminService, MigrationService, AdminAPI
+├── audit/
+│   └── test_audit.py              # 26 tests — AuditLogger, Repository, Archive, Export
+├── compliance/
+│   ├── test_security.py          # 14 tests — AES-256, RBAC, PHI/PII classification
+│   ├── test_hipaa.py             # 9 tests — HIPAA controls, assessment, compliance checker
+│   └── test_fda.py               # 9 tests — FDA traceability, audit trail, validation
+├── infrastructure/
+│   └── test_infrastructure.py    # 32 tests — HA, Scaling, Recovery, Deployment
+├── observability/
+│   └── test_observability.py     # 15 tests — Metrics, Logging, Tracing, Alerts
+└── tenant/
+    └── test_tenant.py             # 35 tests — TenantManager, Context, Resolver, Quotas
+
+apps/web/tests/unit/web/           # 38 tests vitest — frontend modules (vitest)
 ```
 
 ## Ejecución
 
 ```bash
-# Todos los tests de PHASE 7
+# Todos los tests de PHASE 7 (Python)
 pytest tests/unit/PHASE_7/ -v
 
-# Solo tests de seguridad
-pytest tests/unit/PHASE_7/compliance/test_security.py -v
+# Solo tests de backend
+pytest tests/unit/PHASE_7/admin/ -v
+pytest tests/unit/PHASE_7/audit/ -v
+pytest tests/unit/PHASE_7/compliance/ -v
+pytest tests/unit/PHASE_7/infrastructure/ -v
+pytest tests/unit/PHASE_7/observability/ -v
+pytest tests/unit/PHASE_7/tenant/ -v
 
-# Solo tests de HIPAA
-pytest tests/unit/PHASE_7/compliance/test_hipaa.py -v
-
-# Solo tests de FDA
-pytest tests/unit/PHASE_7/compliance/test_fda.py -v
+# Tests de frontend (vitest)
+cd apps/web && npx vitest --run
 ```
 
 ## Cobertura
 
-| Módulo | Tests |
-|--------|-------|
-| EncryptionService | 5 tests |
-| AccessControl | 3 tests |
-| DataClassifier | 3 tests |
-| SecurityConfigManager | 3 tests |
-| HIPAAComplianceManager | 4 tests |
-| HIPAARiskAssessment | 2 tests |
-| HIPAAComplianceChecker | 3 tests |
-| FDATraceabilityManager | 4 tests |
-| FDAAuditTrail | 3 tests |
-| FDAValidationManager | 2 tests |
+| Módulo | Tests | Dominio |
+|--------|-------|---------|
+| AdminService, MigrationService, AdminAPI | 13 | EPIC 5b |
+| AuditLogger, Repository, Archive, Export | 26 | EPIC 1 |
+| Encryption, RBAC, PHI/PII classification | 14 | EPIC 0 |
+| HIPAA controls, assessment, compliance | 9 | EPIC 0 |
+| FDA traceability, audit trail, validation | 9 | EPIC 0 |
+| HA, Scaling, Recovery, Deployment | 32 | EPIC 3 |
+| Metrics, Logging, Tracing, Alerts | 15 | EPIC 4 |
+| TenantManager, Context, Resolver, Quotas | 35 | EPIC 2 |
+| Frontend modules (vitest) | 38 | EPIC 5a/5b |
 
-**Total: ~30 tests**
-
-## Dominios Probados
-
-- AES-256-GCM encryption/decryption roundtrip
-- PHI tokenization y detokenization
-- PHI hashing para búsqueda
-- RBAC permission granting y revocation
-- Emergency access override
-- PHI/PII field classification
-- Password validation
-- Security headers generation
-- HIPAA controls implementation tracking
-- Risk assessment y gap identification
-- Encryption violation detection
-- FDA electronic signature creation y verification
-- FDA audit trail chain integrity
-- Document version control y linking
+**Total: 191 tests** (153 Python + 38 TypeScript)

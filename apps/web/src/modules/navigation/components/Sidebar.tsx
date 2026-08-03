@@ -5,7 +5,7 @@
  * 
  * Components:
  * - Sidebar
- * - BreadcrumbNav
+
  * - MobileNav
  * - TabNav
  */
